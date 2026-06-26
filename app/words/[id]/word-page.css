@@ -1,0 +1,35 @@
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #2980b9;
+    --text-color: #333;
+    --bg-light: #f8f9fa;
+    --border-color: #e2e8f0;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px 0 20px;
+    box-sizing: border-box;
+    flex: 1; /* Занимает всё доступное пространство по вертикали */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Важно: удерживает внутренний скролл */
+    color: var(--text-color);
+}
+
+.scroll-container {
+    flex: 1; /* Занимает всё оставшееся место снизу */
+    overflow-y: auto; /* Включает вертикальную прокрутку */
+    padding-bottom: 40px; /* Отступ снизу, чтобы последняя карточка не прижималась к краю */
+
+    /* Красивый тонкий скроллбар для современных браузеров (Chrome, Edge, Safari) */
+    scrollbar-width: thin;
+
+    /* Скрытие скроллбара для Firefox */
+    scrollbar-width: none;
+
+    /* Скрытие скроллбара для IE и старого Edge */
+    -ms-overflow-style: none;
+}

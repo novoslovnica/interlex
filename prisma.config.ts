@@ -1,0 +1,25 @@
+// prisma.config.ts
+import "dotenv/config";
+import { defineConfig, env } from "@prisma/config";
+
+const dbType = process.env.DB_TYPE;
+
+// 1. Создаем переменную для конфигурации
+let config;
+
+if (dbType === "auth") {
+    config = defineConfig({
+        schema: "prisma/auth.schema.prisma",
+        migrations: { path: "prisma/migrations/auth" },
+        datasource: { url: env("AUTH_DATABASE_URL") ?? "file:./auth.db" },
+    });
+} else {
+    config = defineConfig({
+        schema: "prisma/data.schema.prisma",
+        migrations: { path: "prisma/migrations/data" },
+        datasource: { url: env("DATA_DATABASE_URL") ?? "file:./app.db" },
+    });
+}
+
+// 2. Экспортируем её один раз в самом конце файла
+export default config;
