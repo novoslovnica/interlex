@@ -16,7 +16,7 @@ export default function TablePage() {
     return (
         <QueryClientProvider client={queryClient}>
             <main className="p-8">
-                <h1 className="text-2xl font-bold mb-4">Бесконечная таблица</h1>
+                <h1 className="text-2xl font-bold mb-4">Таблица переводов</h1>
                 <InfiniteEditableTable />
             </main>
         </QueryClientProvider>

@@ -21,7 +21,7 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
         setValue(e.target.value);
     };
 
-    const onBlur = () => {
+    const onSave = () => {
         // Вызываем метод обновления данных из meta-свойств таблицы
         (table.options.meta as any)?.updateData(row.index, column.id, value);
     };
@@ -30,7 +30,13 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
         <input
             value={value}
             onChange={onChange}
-            onBlur={onBlur}
+            onBlur={onSave}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    onSave();
+                    (e.target as HTMLInputElement).blur(); // Убираем фокус при Enter
+                }
+            }}
             className="w-full bg-transparent px-2 py-1 border border-transparent hover:border-gray-300 focus:border-blue-500 focus:bg-white outline-none rounded transition"
         />
     );
