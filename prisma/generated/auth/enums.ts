@@ -16,3 +16,11 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const ScriptPreference = {
+  CYRILLIC: 'CYRILLIC',
+  LATIN: 'LATIN'
+} as const
+
+export type ScriptPreference = (typeof ScriptPreference)[keyof typeof ScriptPreference]

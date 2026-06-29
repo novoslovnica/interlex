@@ -55,7 +55,8 @@ export const ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  FeaturePermission: 'FeaturePermission'
+  FeaturePermission: 'FeaturePermission',
+  UserSettings: 'UserSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -128,6 +129,16 @@ export const FeaturePermissionScalarFieldEnum = {
 } as const
 
 export type FeaturePermissionScalarFieldEnum = (typeof FeaturePermissionScalarFieldEnum)[keyof typeof FeaturePermissionScalarFieldEnum]
+
+
+export const UserSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  script: 'script',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
 
 
 export const SortOrder = {

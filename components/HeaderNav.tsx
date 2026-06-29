@@ -1,4 +1,3 @@
-// components/HeaderNav.tsx
 'use client'
 
 import Link from "next/link"
@@ -23,20 +22,26 @@ export default function HeaderNav({ session }: HeaderNavProps) {
             {/* Динамическая часть: инфо о юзере и кнопки */}
             {user ? (
                 <>
-                    <li className="nav-link flex items-center gap-2 cursor-default">
-                        {user.image && (
-                            <img
-                                src={user.image}
-                                alt={user.name || "Аватар"}
-                                className="w-5 h-5 rounded-full border border-gray-300 inline-block align-middle"
-                            />
-                        )}
-                        <span className="text-sm font-medium">{user.name}</span>
+                    {/* Сделали блок пользователя кликабельной ссылкой в настройки */}
+                    <li>
+                        <Link
+                            href="/settings"
+                            className="nav-link flex items-center gap-2 hover:opacity-80 transition-opacity"
+                        >
+                            {user.image && (
+                                <img
+                                    src={user.image}
+                                    alt={user.name || "Аватар"}
+                                    className="w-5 h-5 rounded-full border border-gray-300 inline-block align-middle"
+                                />
+                            )}
+                            <span className="text-sm font-medium">{user.name}</span>
+                        </Link>
                     </li>
                     <li>
                         <button
                             onClick={() => signOut({ callbackUrl: "/" })}
-                            className="nav-link border-none bg-transparent cursor-pointer font-inherit"
+                            className="nav-link border-none bg-transparent cursor-pointer"
                             style={{ font: 'inherit', color: 'inherit' }}
                         >
                             Выйти
@@ -47,7 +52,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 <li>
                     <button
                         onClick={() => signIn("yandex", { callbackUrl: "/admin" })}
-                        className="nav-link border-none bg-transparent cursor-pointer font-inherit"
+                        className="nav-link border-none bg-transparent cursor-pointer"
                         style={{ font: 'inherit', color: 'inherit' }}
                     >
                         Войти

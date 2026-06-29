@@ -42,3 +42,8 @@ export type VerificationToken = Prisma.VerificationTokenModel
  * 
  */
 export type FeaturePermission = Prisma.FeaturePermissionModel
+/**
+ * Model UserSettings
+ * 
+ */
+export type UserSettings = Prisma.UserSettingsModel

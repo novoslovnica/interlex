@@ -175,6 +175,23 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type EnumScriptPreferenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ScriptPreference[]
+  notIn?: $Enums.ScriptPreference[]
+  not?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel> | $Enums.ScriptPreference
+}
+
+export type EnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ScriptPreference[]
+  notIn?: $Enums.ScriptPreference[]
+  not?: Prisma.NestedEnumScriptPreferenceWithAggregatesFilter<$PrismaModel> | $Enums.ScriptPreference
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -351,6 +368,23 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedDateTimeFilter<$PrismaModel>
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
+}
+
+export type NestedEnumScriptPreferenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ScriptPreference[]
+  notIn?: $Enums.ScriptPreference[]
+  not?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel> | $Enums.ScriptPreference
+}
+
+export type NestedEnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ScriptPreference[]
+  notIn?: $Enums.ScriptPreference[]
+  not?: Prisma.NestedEnumScriptPreferenceWithAggregatesFilter<$PrismaModel> | $Enums.ScriptPreference
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
 }
 
 

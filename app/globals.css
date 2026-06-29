@@ -86,3 +86,20 @@ body {
   color: #ffffff;
 }
 
+/* Добавьте этот класс в глобальные стили */
+.no-scrollbar {
+  /* Для Firefox */
+  scrollbar-width: none;
+
+  /* Для Internet Explorer и Edge Legacy */
+  -ms-overflow-style: none;
+}
+
+/* Для Chrome, Safari, Opera и новых версий Edge */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+
