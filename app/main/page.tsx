@@ -1,6 +1,6 @@
 import { prismaData as db } from "@/lib/prisma" // Ваша SQLite база данных лексикона
 import { TRANSLATION_LANGUAGES } from "@/config/features" // Массив наших 16 языков
-import { MainClient } from "./main-client"
+import MainClient from "./main-client"
 
 export default async function MainPage() {
     // Параллельно собираем живую статистику из базы данных для инфографики

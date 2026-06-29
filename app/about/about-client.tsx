@@ -165,8 +165,8 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                     <div className="p-4 border rounded-xl bg-background space-y-1">
                         <span className="font-bold text-xs block text-foreground">Электронная почта</span>
                         <span className="text-xs text-muted-foreground block">
-              Для официальных запросов и координации:
-            </span>
+                          Для официальных запросов и координации:
+                        </span>
                         <a
                             href="mailto:support@interslavic-lexicon.com"
                             className="text-xs text-blue-600 dark:text-blue-400 hover:underline inline-block pt-1 font-mono"

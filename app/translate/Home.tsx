@@ -4,7 +4,7 @@ import {useRouter} from "next/navigation";
 import {standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 
-import "./translate/main-page.css";
+import "./main-page.css";
 
 const options = [
     <option key="ru" value="ru">Русский</option>,

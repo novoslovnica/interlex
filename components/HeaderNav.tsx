@@ -15,8 +15,10 @@ export default function HeaderNav({ session }: HeaderNavProps) {
             {user && (
                 <li><Link href="/admin" className="nav-link">Админка</Link></li>
             )}
+            <li><Link href="/lexicon" className="nav-link">Лексикон</Link></li>
+            <li><Link href="/translate" className="nav-link">Перевод</Link></li>
             <li><Link href="/library" className="nav-link">Библиотека</Link></li>
-            <li><Link href="/textbook" className="nav-link">Учебник</Link></li>
+            <li><Link href="/textbook/ru" className="nav-link">Учебник</Link></li>
             <li><Link href="/about" className="nav-link">О программе</Link></li>
 
             {/* Динамическая часть: инфо о юзере и кнопки */}

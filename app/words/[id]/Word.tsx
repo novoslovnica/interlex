@@ -1,9 +1,9 @@
 'use client';
 import {isvToCyr, isvToTranscription, standardToSimple, standardToSimpleCyr} from "@/lib/isv";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 
-const Word = ({ item }: any) => {
+const Word = ({ item, currentScript }: any) => {
     const [cognateWords, setCognateWords] = useState<any[]>([]);
 
     const word = item.value;
@@ -50,6 +50,13 @@ const Word = ({ item }: any) => {
         "Эсперанто": item.eo?.value,
     };
 
+    const title = useMemo(() => {
+        if (currentScript === "CYRILLIC") {
+            return `${cyrillicVariant} (${word})`
+        }
+        return `${word} (${cyrillicVariant})`;
+    }, [currentScript, word, cyrillicVariant]);
+
     useEffect(() => {
         if (item.roots) {
             const rootId = item.roots[0]?.id;
@@ -61,8 +68,6 @@ const Word = ({ item }: any) => {
         }
     }, [item.roots]);
 
-    // console.log(item);
-
     if (!item) {
         return (
             <div>
@@ -70,7 +75,6 @@ const Word = ({ item }: any) => {
             </div>
         );
     }
-    // Это страница слова {item.value}
 
     // Толкование на русском: https://gufo.me/dict/ozhegov/:word
     return (
@@ -78,7 +82,7 @@ const Word = ({ item }: any) => {
 
             {/* 1. Заголовок (Слово и Транскрипция) */}
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
-                <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{word} ({cyrillicVariant})</h1>
+                <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
                 <span className="font-mono text-slate-400 text-lg">{transcription}</span>
             </header>
 
@@ -141,7 +145,7 @@ const Word = ({ item }: any) => {
                                 href={`/words/${item.id}`}
                                 className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 border border-slate-200/70 hover:border-blue-200 px-3 py-1.5 rounded-xl text-slate-800 hover:text-blue-700 font-medium text-sm transition-all duration-150 shadow-sm"
                             >
-                                <span>{item.value}</span>
+                                <span>{currentScript === "CYRILLIC" ? isvToCyr(item.value) : item.value}</span>
                                 <span className="text-[10px] text-slate-400 font-normal uppercase bg-slate-200/50 px-1 rounded">
                                   {item.pos}
                                 </span>
