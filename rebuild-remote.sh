@@ -3,4 +3,4 @@ git checkout main
 git pull
 npm i
 npm run build
-sudo systemctl restart interslavic-lexicon.servic
+sudo systemctl restart interslavic-lexicon.service
