@@ -62,14 +62,20 @@ body {
 }
 
 /* Меню навигации */
+.header-nav-container {
+  position: relative;
+}
+
+/* Меню навигации (Десктоп) */
 .header-nav {
-  display: flex !important;
-  flex-direction: row !important; /* Силой выстраиваем пункты в строку */
+  display: flex;
+  flex-direction: row;
   gap: 24px;
   list-style: none;
   padding: 0;
   margin: 0;
-  white-space: nowrap; /* Запрещаем пунктам меню переноситься */
+  white-space: nowrap;
+  align-items: center;
 }
 
 .nav-link {
@@ -84,6 +90,71 @@ body {
 
 .nav-link:hover {
   color: #ffffff;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.hamburger span {
+  width: 100%;
+  height: 2px;
+  background-color: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+/* Мобильные стили (до 768px) */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex; /* Показываем гамбургер */
+  }
+
+  /* Анимация превращения гамбургера в крестик при открытии */
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Мобильное выпадающее меню */
+  .header-nav {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    top: 100%; /* Открывается ровно под шапкой */
+    right: 0;
+    width: 200px; /* Ширина выпадающего блока */
+    background-color: #1e293b; /* Задайте фоновый цвет вашей шапки */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    z-index: 99; /* Чтобы было поверх контента */
+  }
+
+  /* Класс для открытия меню */
+  .header-nav.open {
+    display: flex;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 4px 0;
+  }
 }
 
 /* Добавьте этот класс в глобальные стили */
