@@ -21,7 +21,7 @@ export default async function AboutPage() {
     }
 
     return (
-        <div className="min-h-screen bg-transparent py-10">
+        <div className="min-h-screen py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
             <TechnicalAboutClient data={technicalData} />
         </div>
     )

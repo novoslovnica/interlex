@@ -104,7 +104,11 @@ export const WordScalarFieldEnum = {
   frequency: 'frequency',
   intelligibility: 'intelligibility',
   addition: 'addition',
-  sameInLanguages: 'sameInLanguages'
+  sameInLanguages: 'sameInLanguages',
+  proto: 'proto',
+  paradigm: 'paradigm',
+  protoStemClass: 'protoStemClass',
+  stemExtension: 'stemExtension'
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
