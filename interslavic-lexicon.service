@@ -9,7 +9,7 @@ ExecStart=/home/admin/.nvm/versions/node/v20.20.2/bin/npm run start --prefix /va
 
 Restart=on-failure
 User=admin
-WorkingDirectory=/var/www/interslavic-language.com/interlex
+WorkingDirectory=/var/www/interslavic-lexicon.com/interlex
 
 [Install]
 WantedBy=multi-user.target
