@@ -5,7 +5,9 @@ Description=Interslavic Lexicon
 Environment="PATH=/home/admin/.nvm/versions/node/v20.20.2/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 Environment=NODE_ENV=production
-ExecStart=/home/admin/.nvm/versions/node/v20.20.2/bin/npm run start --prefix /var/www/interslavic-language.com/interlex -- -p 80
+ExecStart=/home/admin/.nvm/versions/node/v20.20.2/bin/npm run start --prefix /var/www/interslavic-lexicon.com/interlex -- -p 3010
+Environment=AUTH_TRUST_HOST=true
+Environment=NEXTAUTH_URL=https://www.interslavic-lexicon.com
 
 Restart=on-failure
 User=admin
