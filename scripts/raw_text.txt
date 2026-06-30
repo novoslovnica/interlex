@@ -1,0 +1,2633 @@
+Common Slavic
+accentological word list
+by
+Thomas Olander
+Editiones Olander
+Copenhagen 2001
+Introduction
+Alphabet: a b c č d ʒ e ę ě f g i ь j k l m n o ǫ p r s š t u ъ v x z ž
+(Gammelt *x foran *ě af diftongisk oprindelse (> vestsl. *š, syd- og østsl. *s)
+noteres som <x>.)
+Literature:
+IRU 	Колесов, В.В. История русского ударения. Именная акцентуация в
+древнерусском языке. Ленинград 1972.
+MP 	Дыбо, В.А. Морфонологизованные парадигматические акцентные
+парадигмы?, I. Типология и генезис. Москва 2000.
+NA 	Illich-Svitych. Nominal accentuation in Baltic and Slavic. Cambridge,
+Massachusetts – London 1979. (Oversat fra Имменая акцентуация в
+балтийском и славянском, Москва 1963.)
+OSA 	Дыбо, В.А., Замятина, Г.И., Николаев, С.Л. Основы славянской акцен-
+тологии. Москва 1990.
+PR 	Зализняк, А.А. От праславянской акцентуации к русской. Москва
+1985.
+SA 	Дыбо, В.А. Славянская акцентология. Москва 1981.
+RPT 	Николаев, С.Л. Рефлексы праславянских тонов в восточнославян-
+ских языках. Балто-славянские исследования 14, pp. 83-113.
+ap. a = accent on the root
+ap. b = accent on the root or on the first syllable of the ending
+ap. c = mobile accent
+ap. d = in NA.sg. enclinomenal status, otherwise like ap. b
+Derivatives: first letter denotes the ap. of the derivative, second (superscript)
+letter denotes the ap. of the base word.
+Fra IRU og OSA er kun udvalgte ord taget med i listen. Fra PR er listerne på
+side 131-40 taget med. Fra MP er til og med s. 26 taget med. Fra RPT er s. 83-
+97 taget med.
+Derivater er som regel ikke taget med (dette gælder især SA, kap. II).
+Ved verberne anføres infinitiv og 1. og 3.sg. præsens.
+Verber med -nǫ-suffiks er noteret med bevaret udlydende rodlukkelyd, fx sъpnǫti,
+selv om sådanne konsonantforbindelser ellers ikke findes.
+Ord af typen volja voljǫ tilskrives ap. b* (SA betegner kozja som ap. a).
+Ord af typen čęšča tilskrives ap. a:b.
+Ord som af OSA osv. tilskrives ap. d, tilhører i PR ap. c. Dette er helt
+automatisk, og der er således ikke grund til at anføre tilhørsforholdet if. PR.
+G.sg. af bløde feminine a-stammer anføres som -ě.
+
+-- 1 of 14 --
+
+a
+a but, and (PR 146).
+ablъko -a a (PR 132).
+adъ -a a helvede (PR 131).
+agnę -ęte a (SA 142; PR 132).
+agoda -y a (PR 132).
+aje -a c æg (NA 116, 135f., 139, 143; SA 24,
+150).
+ajьce -a bc æg (PR 135).
+astrębъ a (PR 132).
+avjǫ -iti c (SA 240, 257; PR 140).
+b
+baba -y a (SA 22, 69, 166, 199; PR 132; MP
+17; RPT 110).
+bagrъ b rød maling (PR 134).
+bajǫ -ati a (SA 205, 247; PR 133).
+banja -ě a (PR 132).
+banъ b (SA 174).
+bara -y a (157).
+batogъ b stok, pisk (PR 134).
+bavjǫ -iti a (SA 260; PR 133; MP 26).
+bebrъ (bobrъ) -u b bæver (NA 128f.; SA 21;
+PR 134).
+bedra -y c lår (PR 138).
+bergǫ bertji c skåne, bevare (PR 139).
+bergъ -a d (OSA 139f.; PR 137).
+bermę -ene a byrde (NA 133, 143; SA 24;
+PR 132).
+berǫ bьrati c (SA 204, 236; PR 139).
+?berska -y a (RPT 107).
+bersto -a a (PR 132).
+berstъ -a b elm (NA 120; SA 156).
+berza -y a (SA 155, 177; PR 132; RPT 107,
+111).
+besěda -y a (PR 132).
+bez (prep. and prefix) (PR 146).
+běda -y b (SA 78; PR 135).
+bědjǫ -iti c sejre (PR 139).
+běgajǫ -ati a (PR 123, 133).
+běgnǫ -nǫnti a (PR 133).
+běgъ c løb, flugt (PR 137).
+bělъ -a -o b hvid (NA 125f.; SA 103, 108,
+110; PR 136).
+běsjǫ -iti b blive rasende (PR 137).
+běsъ běsa c (SA 81; PR 137; RPT 98, 102).
+běžjǫ -ěti c run (PR 139).
+bijǫ -ti a (SA 204, 212f., 246; MP 23, 27); b
+(PR 136).
+bьčela bьčely b/c bee (PR 135).
+bьrvьno -a b (SA 149; PR 135).
+blaznjǫ -iti b forføre (PR 137).
+blędǫ blęsti[?] c tage fejl (PR 139).
+blědъ -a -o c (SA 109; PR 138).
+blějǫ -jati c (SA 205, 234, 236).
+blizъ -a -o b (SA 105f., 188); a/b (PR 133).
+bljudo -a a (PR 132; RPT 111).
+bljujǫ bljьvati c (SA 204, 207, 236; PR 133).
+bljudǫ bljusti c passe på (PR 139).
+bljьvǫ bljuti ?c (SA 207).
+blǫdjǫ -iti b forføre (PR 137).
+blǫdъ blǫda c (SA 81, 88, 187; PR 137); d
+(RPT 102).
+blъxa blъxy b (NA 89f., 141, 143; SA 20);
+b/c (PR 135).
+bo (encl.) fordi (PR 145)
+bobъ b bønne (PR 134; MP 19; RPT 85ff.).
+bobrъ: se bebrъ.
+bodъ boda c prick (NA 101).
+bogъ boga c God (NA 101; SA 167, 171,
+199; PR 137).
+bojati (sę): bojǫ bojitь c frygte (PR 139).
+bojь b kamp (PR 134).
+bokъ boka d (OSA 140; PR 137; RPT 84).
+bolěti: boljǫ bolitь c gøre ondt (PR 139).
+bolgo c gode (PR 138).
+bolgъ bolga bolgo c (SA 109, 111, 122; PR
+138).
+bolь boli f. c (SA 81; PR 138).
+bolnъ bolna b (cover, pillow case); cloud
+(sek. bolno) (NA 114).
+bolto a (SA 151; PR 132).
+borda bordy c beard (NA 89, 140, 141; SA
+24; PR 135, 138).
+?borkъ c bryllup (PR 137).
+borna borny c harve (PR 135, 138).
+borniti: bornjǫ bornitь b beskytte (PR 137).
+bornь borni c (SA 25; PR 138).
+borti: borjǫ borjetь b (SA 203, 248f., 251;
+PR 136).
+borъ c fyrreskov (PR 137).
+boršьno c mel (PR 138).
+borvъ borva c (SA 167; PR 137); d (OSA
+140; RPT 84, 105).
+borzda b fure (PR 135).
+bosti: bodǫ bodetь c støde (PR 139).
+bosъ bosa boso c barefoot (NA 123, 142;
+SA 25; PR 138).
+-botěti: -botějǫ -botějetь a ?blive tyk (PR
+134).
+bǫbьnъ a (PR 131).
+bratrъ bratra a brother (NA 133; SA 24, 69,
+146f., 158, 171; PR 131; MP 23, 26; RPT
+99, 101).
+bresti: bredǫ bredetь c vade (PR 139).
+bręknǫ bręknetь a (SA 211).
+bridъ brida brido c (SA 106f.; PR 138).
+brinъ a (SA 155).
+?brisati a (MP 27).
+briti: brijǫ brijetь a (SA 204, 207; PR 133;
+MP 27).
+brьjati: brějǫ brějetь a (SA 204, 207, 246).
+brjuxo c bug (PR 138).
+broditi: brodjǫ broditь b vade (PR 137).
+brodъ broda c ford (NA 123; SA 177; PR
+137).
+?brusiti (MP 27).
+brudъ a (RPT 97).
+brusъ brusa d (OSA 140), b/d (RPT 97,
+102).
+?bruxo c (RPT 111).
+brъnja b brynje (PR 135).
+brъsiti: brъsjǫ brъsitь b kaste, rive (PR
+137).
+bryzžjǫ bryzžjetь a (SA 209; PR 133).
+buditi: budjǫ buditь c (SA 260; PR 139).
+buky, G. bukъve a (PR 133).
+burja a (PR 132; RPT 110).
+bъděti: bъdjǫ bъditь c våge (PR 139).
+bъdnǫ bъdnetь b (SA 211, 260).
+bъdrъ bъdra b bъdro (SA 21, 108, 110f.;
+PR 136).
+bъrščь b bjørneklo (PR 134).
+bъrzъ bъrza bъrzo c hurtig (PR 138).
+byčę byčęte b (SA 142).
+bykъ byka b (SA 167; PR 134; RPT 97, 101).
+bystrъ bystra bystro a (PR 133).	
+1
+byti: bǫdǫ bǫdetь a (SA 208, 234, 236, 260;
+PR 133; MP 22).	
+2
+byti (st. by-): jesmь c være (PR 139).
+c
+cěditi: cědjǫ cěditь c si, filtrere (PR 140).
+cěliti: cěljǫ cělitь c helbrede (PR 140).
+cělъ cěla cělo c hel (SA 109; PR 138).
+cěna cěny c price (NA 86, 141; SA 24, 43;
+PR 138).
+cěniti (MP 27).
+cěpiti: cěpjǫ cěpitь b hænge på (PR 137).
+cěpъ cěpa d flail (NA 101; SA 22, 156; OSA
+41, 140; RPT 98).
+cěsta a (SA 177).
+cěstiti: cěstjǫ cěstitь a rense (PR 133).
+cěva cěvy b pipe, bobbin (NA 92, 141; SA
+20).
+cьrky a (PR 133).
+cьsarь: se cěsarь.
+cěsarь (cьsarь) b kejser (PR 134).
+č
+čadъ a/c (RPT 99, 101f.).
+čajati: čajǫ čajetь c (SA 205, 234, 236; PR
+133).
+časъ a (PR 134); d (OSA 140f.); a/d (RPT
+99, 101f.) time.
+čaša a (PR 132; RPT 109).
+čelnъ c (PR 131).
+čelo b (SA 152; PR 135; MP 25).
+čepь f. c kæde (PR 138).
+čerda čerdy b herd; row; turn (NA 92, 141;
+PR 135).
+čerdъ čerda b turn, sequence (NA 110, 141;
+SA 21).
+černъ černa b type of vessel; part of the
+hearth (sek. černo) (NA 111, 141; SA 21).
+čerpjǫ čerpjetь b (SA 210).
+čerpti: čьrpǫ čьrpetь c skabe (PR 139).
+čerpъ čerpa c crock, fragment (NA 99; PR
+137).
+čerslo čersla b plowshare (NA 113, 142; PR
+135).
+čersъ (prep. and prefix) (PR 146).
+červo c (PR) / b (MP[24]) mave (PR 138; MP
+24).
+česati: česjǫ česjetь b kæmme, hækle (SA
+210; PR 136).
+česnǫti: česnǫ česnetь b forsvinde (PR
+137).
+četvero a fire (koll.) (PR 133).
+četvьrtъ a fjerde (PR 133).
+četvьrtъ a fjerde (PR 133).
+četyre a fire (PR 133).
+čexlъ čexla b (sek. čexlo) case, cover (NA
+114).
+čędo a (PR 132).
+čęstь f. c del (PR 138).
+čęstъ čęsta čęsto c tæt, hyppig (SA 111, 188;
+PR 138).
+čęšča b/a:b (PR 132).
+-čęti: -čьnǫ -čьnetь b (SA 203, 247, 251; PR
+136).
+čěstъ čěsta čěsto a (SA 23).
+čijь čija čije b hvis (PR 136).
+činiti: činjǫ činitь c gøre, udrette (PR 140).
+činъ c rang, værdighed (PR 137).
+
+-- 2 of 14 --
+
+čislo b tal (PR 135).
+čisti: čьtǫ čьtetь c læse, ære (PR 139).
+čistiti a (MP 26).
+čistъ čista čisto a (SA 23, 123, 188, 199; PR
+133; MP 22).
+-čiti: -čijǫ -čijetь a hvile (SA 204; PR 133;
+MP 27).
+čitъ čita čito a (SA 23).
+čьbьrъ čьbьra b tub (NA 122; SA 21).
+čьlnъ čьlna d (OSA 141; PR 137).
+čьrmь čьrmi b (SA 21).
+čьrmь, L. čьrmi c (SA 85).
+čьrm(ьnъ) c rød(håret) (PR 138).
+čьrnъ čьrna čьrno b black (NA 125, 142;
+SA 108, 146, 172, 199; PR 136).
+čьrpati: čьrpajǫ čьrpajetь a øse (PR 133).
+čьrstvъ čьrstva čьrstvo c fast, hård (PR
+138).
+čьrta čьrty b line (NA 90; SA 20; PR 135).
+čьrtъ c djævel (PR 137).
+čьrvь čьrvi b (SA 21); c (PR 138). [køn?]
+čьstь čьsti f. b (IRU 78); c (SA 83; PR 138)
+honor.
+čьto: se kъto.
+čьvanъ a (PR 132).
+čubъ b/d (RPT 97).
+čuditi a (MP 27).
+čudo čudese a (SA 74, 199; PR 132; RPT
+111).
+čuti: čujǫ čujetь a (SA 204, 246; PR 133;
+MP 23, 27).
+?čutiti (MP 28).
+d
+1
+da yes (PR 133).	
+2
+da (encl. and + after procl.; procl. and - in
+other positions) and; let (PR 118f., 145).
+dajati: dajǫ dajetь c (SA 205, 234, 236, 239;
+PR 139).
+danь f. c afgift (PR 138).
+-dariti: -darjǫ -daritь a hit (PR 133; MP 27).
+darъ daru c (NA 137; PR 137; RPT 102).
+dati [st. da- (PR)]: damь c give (SA 234, 236,
+239; PR 139).
+dav- b ancient (PR 136).
+daviti: davjǫ davitь b press (PR 137).
+debelъ debela debelo c stark, fat (PR 138).
+delto b (SA 151).
+dernъ derna b Cornel sherry (NA 111, 142;
+SA 21).
+derti: dьrǫ dьretь c (SA 203, 235, 251).
+dervo dervese / derva c (SA 139, 150, 157,
+188, 199; PR 138; RPT 85).
+desętь m. c ten (NA 130; PR 138).
+desętъjь b tiende (PR 136).
+desnъ desna desno c right (PR 138).
+deševъ deševa deševo c cheap (PR 138).
+devętь f. c nine (PR 138).
+devętъjь b ninth (PR 136).
+dědъ / dědę a (SA 158; PR 131; RPT 98,
+101).
+dějati: dějǫ dějetь c (SA 205, 234, 236; PR
+133).
+děliti: děljǫ dělitь c dele (PR 140).
+dělo děla a (SA 149, 199; PR 132; MP 20;
+RPT 111).
+dělъ děla b part; boundary, watershed (NA
+118f.).
+dětę c (SA 143).
+děti f.pl.tant. c children (PR 138).
+děva a (PR 132; RPT 110).
+děverь a (NA 136, 139, 143; SA 18, 158); c
+(PR 138).
+divo divese c (SA 82; PR 138).
+dьbrь f. c dal, slugt (PR 138).
+dьjakъ b scribe (PR 134).
+dьlgъ dьlga dьlgo long a (NA 136, 138,
+143; SA 23; PR 133; MP 22).
+dьnь c (OSA 210; PR 138)
+dьrati: derǫ deretь c (SA 204, 236; PR 139).
+?dьrznǫti: dьrznǫ dьrznetь b ? (PR 137).
+dьržati: dьržjǫ dьržitь c holde (PR 139).
+do (prep. and prefix) (PR 146).
+dobjь dobja dobje b tapper (PR 136).
+dobrъ dobra dobro b (SA 123; (PR 135); PR
+136).
+dojiti: dojǫ dojitь c malke (PR 139).
+-dolěti: -dolějǫ -dolějetь a vinde (PR 134).
+dolja b* del (PR 135).
+dolka a (SA 155).
+dolnь a (PR 132).
+dolto b mejsel (PR 135).
+dolъ c (NA 126; PR 137); d (OSA 42).
+domъ domu c (SA 84, 177; PR 137; RPT 84,
+86).
+Donъ c Don (river) (PR 137).
+dorga a (SA 177; PR 132).
+dorgъ dorga dorgo c dyr, kær (SA 109; PR
+138).
+dovolъ dovola a" (SA 73f.).
+dǫbъ c (NA 126; PR 137); d (RPT 102).
+dǫga dǫgy b arc, hoop; rainbow (NA 93f.,
+142; PR 135).
+dǫti: dъmǫ dъmetь b (SA 203, 248, 250;
+PR 136).
+drev(ьnjь) c gammeldags (PR 139).
+dręxlъ dręxla dręxlo b sørgmodig, dårlig
+(PR 136).
+drěmati: drěmjǫ drěmjetь b slumre (SA
+210; PR 136).
+dristjǫ dristjetь b (SA 210).
+drobiti: drobjǫ drobitь c findele (PR 139).
+drobь f. c lille stykke, lever (PR 138).
+drozdъ c drossel (PR 137).
+drǫgъ drǫga b lever, stick (NA 121).
+drugъ druga c friend (NA 98; SA 156, 158;
+PR 137; RPT 97, 102).
+drugъ druga drugo c anden (PR 138).
+drъgnǫti: drъgnǫ drъgnetь b begynde at
+ryste (PR 137).
+drъvo drъva c log, wood (opr. plur. tantum)
+(NA 116).
+drъžati: drъžjǫ drъžitь c sitre (PR 139).
+dujǫ dujetь a (SA 204; PR 133).
+dulo a (SA 151).
+duma a (PR 132).
+dunǫti: dunǫ dunetь a puste (SA 205; PR
+133).
+duplo b (SA 151).
+duša dušě c sjæl (PR 138).
+dušiti: dušjǫ dušitь c (SA 260; PR 139).
+duxъ duxa c breathing; odor (NA 97; SA 94,
+156; PR 137; RPT 97, 102). [u-st.?]
+dъkti dъktere c daughter (NA 131; SA 26;
+PR 138; RPT 85).
+dъlgъ dъlga c (SA 81, 187; PR 137; MP 16).
+Dъněprъ b Dnjepr (PR 134).
+dъno dъna b bottom (NA 106, 141; SA 150,
+199; PR 135).
+dъrva c brænde (pl. tant.) (PR 138).
+[=drъvo?]
+dъska dъsky c bræt (PR 138).
+dъva dъvě dъvě c two (SA 35f., 243f.; PR
+139), cf. Table X.
+dъxnǫti: dъxnǫ dъxnetь b (SA 211, 260;
+PR 137).
+dъždžь b regn (PR 134).
+dvig(nǫ)ti: dvignǫ dvignetь a (SA 252; PR
+133; MP 27).
+dvigati: dvižǫ dvižetь a (PR 133).
+dvižěti: dvižǫ dvižitь a (PR 133).
+dvьrь dvьri b (SA 21, 148, 199; IRU 79, 94;
+PR 136).
+dvorъ dvora b court (NA 108, 141; SA 21,
+69, 146, 199; PR 134; RPT 83ff.).
+dymъ dyma a smoke (NA 136, 138, 143; SA
+18; PR 131; MP 19; RPT 97, 101).
+dynja a (PR 132; RPT 110).
+dyxati: dyšǫ dyšetь a? ånde (PR 133).
+dyšati: dyšjǫ dyšitь c ånde (PR 139).
+f
+?Foma Fomy b Thomas (PR 135).
+fonarь b laterne (PR 134).
+g
+gadъ gada a reptile (NA 115; PR 131; RPT
+99, 101).
+gajь b (RPT 99).
+gasiti: gasjǫ gasitь c slukke (SA 259; PR
+139).
+gasnǫti: gasnǫ gasnetь a (SA 211, 259; PR
+133).
+gladiti: gladjǫ gladitь a stryge (PR 133; MP
+26).
+gladъ glada glado a (SA 23, 105f.; PR 133).
+glazъ c kugle (PR 137).
+ględati: ględajǫ ględajetь a (PR 123, 133).
+glina gliny a (SA 75, 137, 155, 187; PR 132;
+RPT 107, 111).
+glista glisty b worm (PR 135).
+glistъ glista b worm (NA 122; SA 21; RPT
+101).
+glodati. glodjǫ glodjetь b (SA 210, 252).
+glupъ glupa glupo b (SA 108; PR 136).
+glusiti: glusjǫ glusitь c (SA 259).
+gluxъ gluxa gluxo c døv (PR 138).
+gluzdъ d (RPT 97).
+?-glъtiti: -glъtjǫ -glъtitь b ? (PR 137).
+glъxnǫti: glъxnǫ glъxnetь b blive døv (SA
+259; PR 137).
+glyba a (RPT 109).
+gnesti: gnetǫ gnetetь c trykke (PR 139).
+gnědъ gněda gnědo c brun (PR 138).
+gněvъ c vrede (PR 137; RPT 102).
+gnězdo, pl. gnězda / gnězda b feather (NA
+105; SA 156; PR 135).
+gnida gnidy a (SA 22; RPT 111).
+gnilъ gnila gnilo c rådden (PR 138).
+gniti: gnijǫ gnijetь c rådne (SA 204, 234;
+PR 139).
+goditi: godjǫ goditь c vente, tøve (PR 139).
+godъ c tid, frist (PR 137; RPT 84ff.).
+gnojь gnoja c (SA 82; PR 137).
+gojь goja c abundance, peaceful life (NA
+101).
+
+-- 3 of 14 --
+
+goldъ golda d (OSA 42; PR 137; RPT 105).
+golěnь f. c skinneben (PR 138).
+golgolati: golgoljǫ golgoljetь b (SA 204);
+b/c (PR 136, 139) speak.
+golgolъ a/b (PR 131).
+golǫbь c due (PR 138).
+golǫbъ golǫba golǫbo c blå (PR 138).
+golsъ golsa c voice (NA 96; SA 26, 147; PR
+137; RPT 105).
+golъ gola golo b nøgen (PR 136).
+golva golvy c head (NA 134, 140, 143; SA
+24, 27, 30f., 33, 84, 172, 243; PR 135, 138;
+MP 20).
+golvьnja golvьnjy c? brand (PR 138).
+goneznǫti: se gonьznǫti.
+goniti: gonjǫ gonitь b jage (PR 137).
+gonьznǫti 	(goneznǫti): 	gonьznǫ
+gonьznetь b komme sig (PR 137).
+gonъ gona b plowed furrow (NA 120).
+gora gory b/c (SA 69f., 157); b*? (PR 135,
+138).
+?gorditi: gordjǫ gorditь c ? (PR 139).
+gordja a:b (PR 132).
+gordъ gorda d enclosed fortified place (NA
+102; SA 22, 70, 146f.; OSA 41, 141; PR
+137; MP 20; RPT 105).
+gorěti: gorjǫ goritь c brænde (PR 139).
+gor(ъkъ) c bitter (PR 138).
+gorje c (NA 117; PR 138); d (?RPT 111)]
+suffering.
+gorxъ a (PR 131; MP 19).
+gospoda gospody b herskab (PR 135).
+gospodь gospodi c (SA 71, 158, 171); a/c
+(PR 132, 138).
+gospodja gospodjě b dame, frue (PR 135).
+?gospodъ c (PR 137).
+gostь c (SA 156; PR 138).
+gotovъ gotova gotovo a parat (PR 133).
+gověti: govějǫ govějetь a faste (PR 134).
+govьno b lort (PR 135).
+govoriti: govorjǫ govoritь c tale (PR 139).
+gǫba a labium, spongia, sinus maris (PR 132;
+RPT 110).
+gǫsь gǫsi m. c (SA 25; PR 138).
+gǫsli a (SA 177; PR 133).
+gǫstъ gǫsta gǫsto c tæt (PR 138).
+gǫšča a:b (PR 132).
+gǫžь gǫža b (SA 126; RPT 101).
+grabiti: grabjǫ grabitь a røve (PR 133; MP
+26f.).
+gradъ grada a (SA 23; PR 131; RPT 99,
+101).
+granь f. c grænse (PR 138).
+grebti: grebǫ grebetь c grave, ro (PR 139).
+gręda grędy c beam, crossbeam; garden bed
+(NA 87, 141, 144; SA 24; PR 138).
+grędь grędi c (SA 25, 28f.).
+gręsti: grędǫ grędetь c gå, skride (PR 139).
+gręzь f. c smuds, slam (PR 138).
+gręznǫti: gręznǫ gręznetь b (SA 211, 259;
+PR 137).
+grějati: grějǫ grějetь a (SA 205, 207, 247;
+PR 133; MP 27).
+grěti: grějǫ grějetь a (SA 204, 207, 246; PR
+133; MP 27).
+grěxъ grěxa b (SA 78, 187, 199; PR 134; MP
+16; RPT 98, 101).
+gribъ b (RPT 101); d (RPT 101).
+griva grivy a mane (NA 136, 138, 143; SA
+18; PR 132; RPT 110).
+grьměti: grьmjǫ grьmitь c tordne (PR 139).
+grobъ groba b (NA 118; SA 177; RPT 84); c
+(PR 137) grav.
+gromъ groma c torden (NA 100f.; PR 137).
+groza grozy c frygt, uvejr, trussel (PR 138).
+grozdъ b (SA 156); c (PR 137) drue.
+grǫbъ grǫba grǫbo b (SA 21); c (PR 138)
+grov.
+grǫdь f. c bryst (PR 138).
+grǫdъ grǫda b hill (NA 122; SA 21).
+grǫziti: grǫzjǫ grǫzitь b (SA 259); c (PR
+139) fragte, laste.
+grǫzъ c (RPT 102).
+gruda a (SA 155; RPT 107, 110).
+gruša: se kruša.
+gruzdъ d (RPT 101f.).
+grъtanь a (PR 132).
+gryzti: gryzǫ gryzetь c (SA 208, 252, 255;
+PR 139).
+gryža a (PR 132).
+gubiti: gubjǫ gubitь c ødelægge (SA 240,
+259; PR 139).
+gukъ c (RPT 97).
+gulъ c (RPT 97).
+gumьno b lo (PR 135).
+gъbnǫti (gъnoti): gъbnǫ gъbnetь b bøje
+(SA 211; PR 137).
+gъnati: ženǫ ženetь b (SA 204); c (PR 139)
+drive, jage.
+gъnǫti: se gъbnǫti.
+gъrbъ gъrba d (OSA 141).
+gъrdlo a (SA 155); a/b (PR 132).
+gъrdъ gъrda gъrdo c stolt (SA 111; PR
+138).
+gъrmъ b (SA 156).
+gъrno gъrna b furnace, coals (NA 106, 141).
+gъrnъ gъrna c hearth (NA 97).
+gvězda gvězdy b (NA 91f., 141; SA 20, 156);
+b/c (PR 138) star.
+gvozdь c søm (PR 138).
+gvozdъ gvozda b forest, thicket (NA 119f.;
+SA 156).
+gybnǫti: gybnǫ gybnetь a (SA 211, 259; PR
+133; MP 22).
+i
+i and (PR 146).
+Ilьja Ilьjě b Elias (PR 135).
+ilъ ilu a (PR 131; RPT 101).
+inakъ inaka inako (SA 36, 200).
+inьjь (SA 155; PR 132).
+inъ ina ino a (SA 36, 199; PR 133).
+iskati: iskjǫ iskjetь b søge (PR 136).
+istina istiny a (SA 73, 144f.).
+istъ ista isto a (SA 144, 146; PR 133).
+iti: jьdǫ jьdetь b gå (PR 136).
+iva ivy a willow (NA 132, 143; SA 23; PR
+132; RPT 111).
+iz (prep. and prefix) (PR 146).
+j
+ja I: cf. table X.
+jadъ a (NA 115); c (PR 137; RPT 99) gift.
+jagoda a (MP 21f.).
+jakъ jaka jako c (SA 36, 109, 200; PR 139).
+jama a hole (PR 132; RPT 107, 110f.).
+jarę a (SA 142).
+jaro c (NA 116, 135).
+jarъ jara jaro c ivrig, hidsig (SA 111; PR
+138).
+jasjǫ jasjetь a køre (SA 209).
+(po-)jasjǫ (po-)jasjetь a (SA 209; PR 133).
+jasli a krybbe (PR 133).
+jasti: jamь c spise (PR 139).
+jato, pl. jata a flock, herd (NA 136, 138, 143;
+SA 18).
+jaxati: jadǫ jadetь a rejse (SA 208; PR 133).
+jazva a (PR 132; RPT 110).
+jedinъ b 1 (PR 136).
+jelenь a (PR 132).
+jelьxa (olьxa) a elletræ (PR 132).
+-jemjǫ -jemjetь b (SA 204).
+jeresь f. c? kætteri (PR 138).
+jesenь f. c efterår (PR 138).
+ješče a endnu (PR 133).
+jezditi: jezdjǫ jezditь a køre (PR 133).
+jezerъ jezera c (sek. jezero jezera c) (NA
+117; SA 152; PR 138; MP 25).
+jędro, pl. jędra / jędra b kernel, seed (NA
+105, 141; PR 135).
+jęti: jьmǫ jьmetь b (SA 203, 212f., 247, 251;
+PR 136).
+jętra / jętra (pl. tant.) b viscera, liver (NA
+106, 141; MP 25).
+językъ a (SA 187; PR 132).
+jiskra a (PR 132).
+jь ja je he: cf. Table X (SA 35f., 244; PR
+138).
+jьgra jьgry b spil (PR 135).
+jьgrati spille (MP 28).
+jьgъla jьgъly c nål (PR 138).
+jьmamь b have (PR 136).
+jьmati: [jemjǫ jemjetь c (SA)] / [b/c (PR)]
+tage (SA 204; PR 136, 139).
+jьmę jьmena c navn (NA 131; PR 138).
+jьměti: jьmamь b have (PR 136).
+jьměti: jьmějǫ jьmějetь a have (PR 134).
+jьstъba jьstъby c kammer, stue (PR 138).
+jьti: jьdǫ jьdetь b (SA 208).
+jь-že c (PR 139).
+jugъ a (SA 155; PR 131).
+junę c (SA 143).
+junъ juna juno c ung (NA 139, 143; SA 25,
+42, 111, 114, 123; PR 138).
+jutro a (PR 132).
+juxa juxy b suppe (PR 135).
+k
+kadilo kadila (SA 75).
+kaditi: kadjǫ kaditь c røge (PR 140).
+kajati: kajǫ kajetь a (SA 205, 247; PR 133).
+kakъ kaka kako c (SA 36; PR 139).
+kamy kamene a (SA 73, 155; PR 132).
+kaplja a (PR 132; RPT 109).
+kapati: kapljǫ kapljetь a (PR 13; MP 233).
+kapnǫti: kapnǫ kapnetь a (PR 133).
+kaša a (PR 132; RPT 107, 110).
+kašьljь a (PR 132).
+kašljǫ kašljetь a (SA 209).
+katiti: katjǫ katitь c rulle, vælte (PR 140).
+kazati: kazjǫ kazjetь b? vise (SA 210; PR
+136).
+kaziti: kazjǫ kazitь c beskadige (PR 140).
+kazniti: kaznjǫ kaznitь b straffe, henrette
+(PR 137).
+kaznь a (PR 132).
+kistь kvast (PR 132).
+
+-- 4 of 14 --
+
+klanjati: klanjajǫ klanjajetь a (PR 123,
+133).
+klasti: kladǫ kladetь c (SA 208f., 252, 255;
+PR 139).
+klenъ c ahorn (PR 137).
+klepati: klepjǫ klepjetь b banke (SA 210;
+PR 136).
+?klesati (MP 27).
+klevetati: klevetjǫ klevetjetь b bagtale (PR
+136).
+klęknǫ klęknetь a (SA 211).
+klęti: klьnǫ klьnetь c bande, sværge (SA
+203; PR 139).
+klętva a:b ed (PR 132).
+klěščь b (RPT 98, 101).
+klětь f. c forrådskammer, bur (PR 138).
+klica a (SA 155).
+?klicati a (MP 27).
+kličǫ kličetь a råbe (PR 133).
+kliknǫti: kliknǫ kliknetь a (PR 133).
+klinъ a (SA 146, 155, 199; PR 131; MP 20,
+26; RPT 97, 101).
+kljьvati: kljujǫ kljujetь c (SA 204, 207, 236;
+PR 139).
+ključiti: ključjǫ ključitь c låse (PR 140).
+ključь ključa b nøgle (SA 126, 177; PR 134;
+MP 17; RPT 97, 101).
+kljuti: kljьvǫ kljьvetь ?c (SA 207).
+kloniti: klonjǫ klonitь c vælte (PR 140).
+klopotъ c støj (PR 137).
+klopъ (?kъlopъ) b væggelus (PR 134).
+?klos- b ? (PR 136).
+knęʒь knęʒa c (SA 70).
+kobelь b (SA 158).
+kokošь kokoši f. c høne (SA 167; PR 138;
+MP 20).
+?kolbъ c kugle, rundt brød (PR 137).
+kolda (PR 132; RPT 107, 111).
+koldęʒь a (PR 132).
+kolěbati: kolěbjǫ kolěbjetь b bevæge, vugge
+(PR 136).
+kolěno a (SA 149; PR 132).
+kolkolъ c klokke (PR 137; MP 20).
+kolo kolese c (SA 150; PR 138); d (RPT 85).
+kolsъ c (SA 156; PR 137); d (RPT 105).
+kolti: koljǫ koljetь b (SA 203, 248-51; PR
+136; MP 27).
+koltъ kolta b (sek. kolto) beetle (NA 114).
+kolъ b (SA 147, 156; PR 134).
+kolyxati: kolyxjǫ kolyxjetь b bevæge (PR
+136).
+komarъ b myg (PR 134).
+komora a forrådskammer (PR 132).
+konьcь a[?] (PR 132).
+konjь konja b (SA 69, 147, 177; PR 134; MP
+19).
+kopa kopy c bunke (PR 138).
+kopьna kopьny c stak (PR 138).
+konopja konopjě b (SA 138).
+kopati: kopajǫ kopajetь a grave (PR 134).
+kopьje b lanse, spyd (SA 150; PR 135).
+kopyto a (SA 177; PR 132; MP 17, 21).
+kora b*? bark (PR 135f.).
+korabjь b skib (SA 146; PR 134).
+korbi c kurv (PR 138).
+korbъ korba c (NA 98; PR 137); d (RPT)
+kurv. [sidetal RPT?]
+korenь c (SA 156; PR 138; MP 20).
+koriti: korjǫ koritь c dadle (PR 140).
+korka korky a (SA 22).
+korljь b (SA 174, 199; PR 134; MP 19).
+kormola kormoly b/c fæstning (PR 135).
+korpъ c karpe (RPT 105).
+korsta a (PR 132).
+(sъ-)kortiti: -kortjǫ -kortitь b forkorte (PR
+140).
+kortъ korta b time, occurrence (NA 122; SA
+21).
+kortъ korta korto b (SA 21, 105f.; PR 136).
+korva korvy a ko (NA 75; SA 166, 177; PR
+132; MP 21; RPT 109).
+koryto a (SA 149; PR 132).
+kosa kosy c braid; combed hair (NA 88, 141;
+SA 24; PR 138).
+kosa kosy b (NA 90, 141; SA 20, 156); c (PR
+138) scythe, curved blade.
+kosjь b kurv (SA 147, 177; PR 134).
+kosnǫti: kosnǫ kosnetь b røre (PR 137).
+kostь kosti f. b (IRU 89, 94); c (SA 139, 199;
+PR 138).
+kosъ kosa koso c skæv (PR 138).
+kotьlъ b kedel (PR 134).
+kotora kotory b/a (SA 187 / PR 132).
+kotъ b hankat (PR 134).
+kovarjь kovarja b (SA 80).
+kovati: kujǫ kujetь c (SA 204, 212, 214, 236;
+PR 139).
+koza kozy b (SA 166, 199; PR 138).
+kozьlę kozьlęte b (SA 142f.).
+kozьlъ kozьla b gedebuk (SA 167; PR 134).
+kozja kozjě b* (SA 138; PR 135; MP 19).
+kǫpati: kǫpjǫ kǫpjetь b bade, svømme (PR
+136f.).
+kǫsъ c (SA 147; PR 137).
+kǫtati: kǫtajǫ kǫtajetь a indhylle, gemme
+(PR 133).
+kǫtъ kǫta b corner, shelter (NA 102f.; SA
+147; PR 134; RPT 85, 101).
+krajь a (PR 131; RPT 99, 101).
+krasa krasy b (SA 78; PR 135; MP 16).
+krasiti: krasjǫ krasitь b farve (PR 137).
+krasti: kradǫ kradetь a (SA 208; PR 133).
+?kremljь b fæstning (PR 134).
+krętjǫ krętjetь b (SA 210).
+krěpъ krěpa krěpo c (SA 105f., 122; PR
+138).
+krěsiti: krěsjǫ krěsitь b (SA 260); c (PR
+140).
+krěslo, pl. krěsla a (NA 137; SA 23; RPT
+111).
+kričati: kričjǫ kričitь c skrige (PR 139).
+?krida a (RPT 107).
+kridlo b (SA 152; PR 135; MP 24).
+kriknǫti: kriknǫ kriknetь b ?skrige (PR
+137).
+krivъ kriva krivo c skæv, krum (SA 109; PR
+138).
+(vъz-)krьsnǫti: 	-krьsnǫ 	-krьsnetь 	b
+genopstå (PR 137).
+krьstiti: krьstjǫ krьstitь c døbe (PR 140).
+kromě b udenfor, pånær (PR 136).
+kropiti: kropjǫ kropitь c sprøjte (PR 140).
+krosno, pl. krosna c (opr. plur. tantum)
+bloom (NA 116).
+krot(ъkъ) c mild (PR 138).
+krovъ b tag (SA 157; PR 134).
+krǫglъ krǫglo krǫgla b rund (PR 136).
+krǫgъ krǫga d (OSA 141f.; PR 137; RPT
+102).
+krǫtja a:b (PR 132).
+krǫtъ krǫta krǫto c stejl, voldsom (SA 109,
+188; PR 138).
+krupa krupy b groats, grain, hail stone (NA
+90f., 141; SA 20; PR 135).
+kruša (gruša) krušy a (SA 23; PR 132; RPT
+111).
+krušiti: krušjǫ krušitь c ødelægge (PR 140).
+krьsnǫ krьsnetь b (SA 260).
+krьstъ b kors (PR 134).
+krъšjь b (SA 156).
+krъxa krъxy c (NA 88, 141f.; SA 24); b/c
+(PR 135) crumb.
+kry krъvi c (SA 84f.; PR 138; RPT 85).
+kryti: kryjǫ kryjetь a (SA 204, 246; PR 133;
+MP 23, 27).
+kuča a (RPT 108f.).
+?kulja a (RPT 107).
+kumъ c (RPT 97, 102).
+kuna kuny b/c mår (PR 135).
+kupa a (RPT 109).
+kupiti: kupjǫ kupitь b købe (PR 137).
+(sъ-vъ-)kupiti: 	-kupjǫ 	-kupitь 	b
+sammenfatte (PR 137).
+kuplja a:b (PR 132).
+?kupъ kupu a bunke (MP 26).
+kurъ kura a hane (SA 166; PR 131).
+kurę a (SA 142).
+kusiti: kusjǫ kusitь b bide (PR 137).
+(iz-)kusiti: -kusjǫ -kusitь b forsøge (PR
+137).
+kustъ a (PR 131); b (RPT 101).
+kušati: kušajǫ kušajetь a smage (PR 123,
+133).
+kuti: kovǫ kovetь c (SA 204, 236).
+kъ (prep. and prefix) (PR 146).
+kъlějь c (SA 157).
+?kъlopъ: se klopъ.
+kъmetъ kъmeti (L.) kъmeti (SA 69).
+kъnęʒь c (SA 158, 171, 174; PR 137).
+kъnjiga a (SA 172, 187; PR 132).
+kъrčjь b (SA 156).
+kъrma kъrmy b/c agterstavn (PR 135).
+kъrmiti: kъrmjǫ kъrmitь b fodre (PR 137).
+kъrmlja a:b (PR 132).
+kъrmъ c foder (PR 137).
+kъto čьto c (SA 36; PR 139).
+kvasiti: kvasjǫ kvasitь a syrne (PR 123,
+133).
+kvasъ c (SA 123, 187, 211; PR 137; RPT 99,
+102); a (SA 211) surdej. [hvad siger SA?]
+květъ c (SA 156; PR 137); d (OSA 142; RPT
+98, 101f.).
+kvisti: kvьtǫ kvьtetь c blomstre (PR 139).
+kydati: kydajǫ kydajetь a kaste (PR 133;
+MP 22).
+kyjь kyju/kyja ?c (NA 138); d (OSA 142)
+hammer. [tjek den]
+kyla kyly a (SA 22; PR 132).
+kypěti: kypjǫ kypitь c koge, syde (PR 139).
+kysьlъ a (SA 211); b (PR 134) frugtgrød.
+kysnǫ kysnetь a (SA 211; PR 133).
+kyta a (SA 155).
+l
+ladъ a/d (RPT 99, 101, 103).
+lagati (MP 27).
+lajati: lajǫ lajetь a (SA 205, 247; PR 133;
+MP 23, 26).
+
+-- 5 of 14 --
+
+lanǫ lanetь a (SA 205).
+lapa lapy a (SA 22).
+?larь b stor kasse (PR 134).
+laska a (PR 132).
+lastovica a Schwalbe (MP 21).
+lava lavy a (SA 22).
+laziti: lazjǫ lazitь a klatre (PR 133).	
+1
+lazъ a smuthul (RPT 101).	
+2
+lazъ d meadow (RPT 101).
+lebedь, lebędь: se olbǫdь.
+ledъ ledu / ledu ? c ice (NA 126, 128; SA
+25, 139; PR 137).
+legti: lęgǫ lęžetь a lægge sig (SA 208, 260;
+PR 133).
+lelějati: lelějǫ lelějetь a vugge (PR 133).
+letati (MP 28).
+letěti: letjǫ letitь c flyve (PR 139).
+lękati: lęčjǫ lęčjetь b forskrække (SA 210;
+PR 137).
+lęda a (RPT 111).
+lędo c deposit; mark (NA 116, 135).
+lěčiti: lěčjǫ lěčitь c? helbrede (PR 140).
+lěnъ lěna lěno c doven (SA 109, 111, 114,
+122, 199; PR 138).
+lěpiti: lěpjǫ lěpitь c klæbe (SA 259; PR 140).
+lěpъ lěpa lěpo c smuk (SA 123f.; PR 138).
+lěska lěsky b (SA 156).
+lěsъ c (SA 157, 177; PR 137; RPT 98, 102).
+lěto a summer (NA 115, 133, 143; SA 23,
+199; PR 132; MP 24; RPT 111).
+lěxa lěxy b bed for cultivation (NA 89, 141;
+SA 20).
+lěvъ lěva lěvo c venstre (PR 138).
+lězti: lězǫ lězetь a (SA 208, 252; PR 133).	
+1
+li eller (konj., ikke pkl.) (PR 133).	
+2
+li (encl.) whether (PR 145).
+?lice b ansigt, person (PR 135; MP 24).
+likъ c mængde, tal (PR 137).
+linǫ linetь c (SA 205).
+linъ b (RPT 97).
+lipa lipy a (SA 22, 155; PR 132; RPT 107,
+110).
+listъ c (SA 156, 177; PR 137); d (OSA 142f.;
+RPT 97, 102).
+lisъ a (RPT 101).
+lišiti: lišjǫ lišitь c berøve (PR 140).
+liti: lijǫ lijetь c (SA 204, 234, 237; PR 139).
+Litъva Litъvy b Lithuania (PR 135).
+lixъ lixa lixo c dårlig, ond (PR 138).
+lixva a (PR 132).
+lizati: lizjǫ lizjetь b slikke (SA 210; PR 137).
+lьgъ lьga lьgo b (SA 21; PR 136).
+lьjati: lějǫ lějetь c (SA 205, 212, 214, 236;
+PR 139).
+lьnъ lьna b (NA 109, 141); c (SA 21, 139; PR
+137) flax.
+lьpnǫ lьpnetь b (SA 211, 259).
+lьstь f. c smiger, bedrag (PR 138).
+lьvь b løve (PR 134).
+ljubiti: ljubjǫ ljubitь b elske (PR 137).
+ljubъ ljuba ljubo b (SA 108; PR 138).
+ljuby ljubъve b (N. a) kærlighed (SA 187;
+134).
+ljudьje c folk (PR 138).
+ljudъ / ljudь ljuda c (SA 70, 171; RPT 97,
+102).
+ljutъ ljuta ljuto b (SA 108, 110; PR 136).
+lobъzati: lobъžjǫ lobъžjetь b kysse (PR
+136).
+ločiti (MP 28).
+ločjǫ ločjetь b (SA 210).
+logъ loga c lair, den; riverbed, ravine (NA
+101).
+lojь c talg; tragt (PR 137).
+loka loky b (NA 141).
+loky, A. lokъvь, G. lokъve b puddle (NA
+130, 142; SA 22).
+lomiti: lomjǫ lomitь b brække (PR 137).
+lono b skød (PR 135).
+lopuxъ b (SA 156).
+lošadь f. c hest (PR 138).
+loviti: lovjǫ lovitь c (SA 257; PR 140).
+lovja b* jagt (PR 135).
+lovъ c fangst, jagt (PR 137).
+loza lozy c neg, ris (PR 138).
+ložiti: ložjǫ ložitь b (SA 260; PR 140).
+?lože b seng (PR 135).
+ložje c (SA 150).
+lǫčь b (SA 156).
+lǫgъ lǫga c (NA 134, 139, 143; SA 26f., 31,
+33; PR 137); d (RPT 102) meadow,
+underbrush.
+lǫka lǫky b bend, curve; meadow at a river
+bend (NA 91, 144; SA 20; PR 135).
+lǫkъ lǫka d hoop, arc; bow (NA 100; SA 22;
+OSA 41; PR 137).
+lǫkьno b (SA 150).
+lubъ luba c (træ)bark (SA 41).
+luča lučy b stråle (PR 135).
+lučiti: lučjǫ lučitь c give, tillade (PR 140).
+lučь luča b stråle (SA 126; RPT 97, 101f.).
+Luka Luky b Lukas (PR 135).
+lukъ a (SA 147; PR 131; RPT 101).
+luna luny b (SA 20; PR 135).
+lunъ d (RPT 97).
+lupiti: lupjǫ lupitь b skrælle, pille (PR 137).
+lužja a (SA 155).
+lъbъ b? pande (PR 134).
+lъgati: lъžjǫ lъžjetь b lyve (SA 210; PR
+136f.).
+lъža lъžě b løgn (PR 135).
+lyčь lyča b (RPT 97f.).
+lykъ lyka a (sek. lyko) (NA 115, 137; SA 23,
+155; PR 132; RPT 111).
+m
+mačjǫ mačjetь b (SA 210).
+majati: majǫ majetь c (SA 205, 234, 236).
+makъ a (PR 131; RPT 99, 101).
+malъ mala malo a (SA 107, 188; PR 133;
+MP 22).
+manǫti: manǫ manetь c vinke (SA 205; PR
+139).
+maslo masla a (SA 137, 177; PR 132).
+mastь f. c fedt, farve (PR 138).
+mati matere mother (NA 136, 139, 143; SA
+18; PR 133).
+maxati: maxjǫ maxjetь b svinge, vinke (PR
+137).
+maxъ c (RPT 99).
+mazati: mazjǫ mazjetь a smøre (SA 209;
+PR 133; MP 23, 27).
+mečь (?mьčь) b sværd (PR 134).
+medja medjě b (NA 92, 141; SA 20); b/c (PR
+135) boundary.
+medjь b located in the middle (NA 125, 142;
+SA 21).
+medъ medu c honey (NA 126, 128, 142; SA
+25, 140, 177; PR 137).
+medvědь a (PR 132).
+melčjь b (SA 156).
+melko b mælk (SA 177; PR 135).
+melti: meljǫ meljetь b (SA 203, 248f., 251;
+PR 136; ?MP 27).
+melzti: mьlzǫ mьlzetь c (SA 208, 255).
+merti: mьrǫ mьretь c dø (SA 203, 212f.,
+233, 235; PR 139).
+meržja a (SA 155).
+mesti: metǫ metetь c feje (PR 139).
+metati: metjǫ metjetь b kaste (SA 210; PT
+136).
+metnǫti: metnǫ metnetь b ? (PR 137).
+męčь męča b (SA 126f.; RPT 102).
+męknǫti: męknǫ męknetь a (SA 211; PR
+133).
+męk(ъkъ) c blød (PR 138).
+(po-)męnǫti (po-)męnǫ (po-)męnetь c (SA
+205, 240; PR 139).
+męso męsa c (NA 116, 135, 143; SA 24, 152,
+199; PR 138; MP 17, 25); d (RPT 111)]
+meat. [tjek RPT]
+męsti: mętǫ mętetь c blande, forvirre (PR
+139).
+męti: mьnǫ mьnetь b (SA 203, 248, 251;
+PR 136; ?MP 27).
+męta b pebermynte (PR 132; RPT 109).
+mědь mědi, L.sg. mědi a (SA 137, 188, 199;
+PR 132; MP 16).
+mělъ c kalk, mel (PR 137).
+měna měny b/c vekslen (PR 135).
+měniti: měnjǫ měnitь c blande (PR 140).
+měra a (PR 132; RPT 109).
+měriti a (MP 26).
+měsęcь a (PR 132).
+měsiti: měsjǫ měsitь b blande, ælte (PR
+137).
+město a (PR 132; MP 24; RPT 111).
+mětiti: mětjǫ mětitь a hentyde (PR 133).
+měxъ měxa c (NA 96; SA 26; PR 137); c/d
+(RPT 98, 102) fur; sack; bellows.
+(sъ-)měžiti: -měžjǫ -měžitь c lukke øjnene
+(PR 140).
+migъ miga c twinkling, instant (NA 96).
+milъ mila milo a (SA 23, 107, 110; PR 133;
+MP 22).
+minǫti: minǫ minetь c (SA 205, 240; PR
+139; MP 22).
+mirъ miru / miru fred; verden c (SA 25, 70,
+82; PR 137; RPT 97, 102).
+mьčь: se mečь.
+mьčьtъ b/c drøm (PR 137).
+mьdlъ (mьdьlъ?) mьdlo mьdla b langsom
+(SA 108; PR 136).
+mьgla mьgly b haze, mist (NA 90, 141; SA
+20, 138).
+mьlčati: mьlčjǫ mьlčitь c tie (PR 139).
+mьlknǫti: mьlknǫ mьlknetь b (SA 211; PR
+137).
+mьrknǫti: mьrknǫ mьrknetь a (SA 211,
+259; PR 133).
+mьrtvъ mьrtvo mьrtva b (SA 110; PR 136).
+mьrz- a rædselsfuld (PR 133).
+mьrzěti: mьržǫ mьrzitь a? (PR 133).
+mьrznǫti: mьrznǫ mьrznetь a (SA 211,
+259; PR 133).
+mьstь f. c hævn (PR 138).
+mьzda mьzdy b løn (PR 135).
+mlaka a (SA 155).
+
+-- 6 of 14 --
+
+močiti: močjǫ močitь b fugte (SA 260; PR
+137).
+modrъ modra modro b (SA 108, 111).
+mogti: mogǫ možetь b (SA 208, 252; PR
+136; MP 19).
+mogyla a (SA 155; PR 132).
+mok(nǫ)ti: moknǫ moknetь b (SA 252,
+260; PR 137).
+mokrъ mokra mokro b (SA 111; PR 136).
+moktь, G.pl. moktьjь c (NA 117, SA 71; PR
+138).
+moldъ molda moldo c (SA 109, 146, 172;
+PR 138).
+moliti: moljǫ molitь b bede (PR 137).
+molь b? møl (PR 135).
+moltiti: moltjǫ moltitь b tærske (PR 137;
+MP 27).
+moltъ molta d (OSA 143; PR 137; RPT
+105).
+morčiti: morčjǫ morčitь a (SA 259).
+moriti: morjǫ moritь c slå ihjel (PR 140).
+morje morja c (NA 117; SA 71, 152; PR 138;
+MP 20, 25); d (RPT 111). [tjek MP]
+morkъ morka d (OSA 143; PR 137).
+mormorъ mormora a (SA 75).
+morъ c pest (PR 137).
+morziti: morzjǫ morzitь a (SA 259).
+morzъ a (SA 211; PR 131; MP 16, 19).
+Mosky Moskъve b i N.: a Moskva (PR
+134).
+mostъ c (SA 157; PR 137).
+mošьna mošьny b taske (PR 135).
+motriti: motrjǫ motritь b se (PR 137).
+mozgъ c hjerne (PR 137).
+mǫdrъ mǫdra mǫdro b (SA 21, 108, 110f.,
+146, 199; PR 136).
+mǫka mǫky a pine (PR 132; RPT 110).
+mǫka mǫky b mel (SA 177; PR 135).
+mǫtiti: mǫtjǫ mǫtitь c gøre grumset,
+omrøre (PR 140).
+mǫty, A. mǫtъvь, G. mǫtъve b churn-staff,
+mixer (NA 131, 142).
+mǫžь mǫža c (SA 70, 158, 171; PR 137; RPT
+102).
+mulъ d (RPT 97).
+muxa a (RPT 107, 110).
+mъčati: mъčjǫ mъčitь c jage (PR 139).
+mъknǫti: mъknǫ mъknetь b lukke (PR
+137).
+mъlni mъlnьje b i N.: a lyn (PR 134).
+mъlva a tale (PR 132).
+mъlviti: mъlvjǫ mъlvitь a tale (PR 133).
+mъnogъ a (sek. immobil accent) (SA 155;
+PR 133).
+muxa a (RPT 107, 110).
+mъrda a (RPT 110).
+mъrky, A. mъrkъvь, G. mъrkъve b carrot
+(NA 130, 142; SA 22; PR 134).
+mъxъ mъxa b moss (NA 109f., 141; SA 21,
+139; PR 134).
+my we: cf. table X (SA 34ff., 244).
+myčjǫ myčjetь a (SA 209).
+mydlo, pl. mydla a (for †mydlъ) (NA 115;
+SA 151).
+mysliti a denken (MP 26f.).
+myslь a (PR 132).
+myšь myši a (SA 23, 148, 166, 199; PR 132;
+RPT 97).
+myti: myjǫ myjetь a (SA 204, 212f., 246; PR
+133; MP 23, 27).
+myto b afgift, told (PR 135).
+n
+na (prep. and prefix) (PR 146).
+nadъ (prep. and prefix) (PR 146).
+naglъ nagla naglo b (SA 108; PR 136).
+nagъ naga nago c naked, bare (NA 135,
+139, 143; SA 25, 40f., 109; PR 138).
+G.-L.du. naju, D.-I. nama we two (SA 35f.;
+MP 25)
+ne not (PR 146).
+nebo nebesa d (NA 131; PR 138; MP 17;
+RPT 111).
+nedělja neděljě a (SA 75).
+nedugъ neduga a (SA 76).
+nerstъ (norstъ) nersta c (NA 122f.; PR 137);
+d (OSA 42, 143) spawning, roe.
+nesti: nesǫ nesetь c bære (PR 139; MP 22).
+nevěsta a (PR 132).
+ně- (indef. pref.) (PR 146).
+němъ něma němo c stum (PR 138).
+ni (pcl.) (PR 146).
+niknǫti: niknǫ niknetь a (SA 211; PR 133).
+niščь nišča nišče a (SA 123, 146; PR 133).
+nitь niti niti a (SA 137f., 155, 188; PR 132).
+-niziti: -nizjǫ -nizitь a (PR 133).
+nizati: nizjǫ nizjetь b sætte på række (SA
+210; PR 137).
+nizъ niza nizo a/b (PR 133); b (SA 105f.); d
+(RPT 102).
+nizъ nizu nizovi d (OSA 143; RPT 97).
+?-nьrǫ -nьretь ?c ? (PR 139).
+-nьzti: -nьzǫ -nьzetь c gennembore (PR
+139).
+njiva a (PR 132; RPT 110).
+njǫxъ c (RPT 102).
+noga nogy c foot (NA 88, 141; SA 24, 85;
+PR 138; MP 20).
+nogъtь c negl (PR 138).
+noktь nokti c nat (NA 130; SA 85, 94; PR
+138; MP 16).
+norstъ: see nerstъ.
+norviti: norvjǫ norvitь c sørge for (PR 140).
+norvъ d skik (PR 131, 137; RPT 105).
+nositi: nosjǫ nositь b (SA 257; PR 137).
+nosja b* kurv; dragt (PR 135).
+nosъ d næse (PR 137; MP 20; RPT 84).
+novъ nova novo b ny (NA 125, 142; SA 21;
+PR 138).
+nozdrь c næsebor (PR 135, 138).
+nozdrja b* næsebor (PR 135, 138).
+nozjь nozja b kniv (SA 80, 177; PR 134).
+nǫtro b indvolde (PR 135).
+nuda nudy c (SA 24).
+nuditi: nudjǫ nuditь a tvinge (PR 133; MP
+27).
+nudja nudjě a (SA 72; PR 132).
+nъ but (PR 146).
+nyti: nyjǫ nyjetь a nage (SA 204; PR 133).
+o
+o(b) (prep. and prefix) (PR 146).
+oba obě, GL. oboju, DI. oběma c both (SA
+35f., 243f.; PR 139).
+obolkъ c cloud (MP 20).
+obъtjъ obъtje obъtja b/a fælles (PR 136).
+obvilъ a (SA 155).
+ocьtъ b eddike (PR 134).
+odrь b seng (PR 134).
+ognь ogni b fire (NA 129f., 142; SA 21, 80,
+138f.; PR 135).
+oje c (SA 152).
+Oka b Oka (flod) (PR 135).
+oko, du.NA. oči, GL. očьju (očiju), DI.
+očima c (SA 37f., 151, 243f.; PR 138; RPT
+85, 111).
+okrǫglъ okrǫgla okrǫglo b (SA 108).
+okъno b (SA 149; PR 135).
+olbǫdь (lebedь, lebędь) f. c svane (PR 138).
+oldi c båd (PR 138).
+Olьgъ b Oleg (PR 134).
+olьxa a: se jelьxa.
+olkati: olčjǫ olčjetь a (PR 133).
+olkъtь c albue (PR 138).
+oln(i) c sidste år (PR 138).
+olovъ olova (sek. olovo) c (NA 117, SA 139,
+188; PR 138).
+olъ olu c a kind of drink (NA 128; SA
+25).[ap.]
+olsь c elg (PR 138).
+olъtarъ b alter (PR 134).
+omelo b (SA 156).
+onъ ona ono b (SA 200; PR 136).
+onakъ onaka onako b (SA 36, 199).	
+1
+orati: or[j]ǫ or[j]etь c pløje (SA 204, 236;
+PR 136, 139).	
+2
+orati: orǫ oretь c skrige (PR 139).
+?orba b slavinde (PR 135).
+orbъ b? slave (PR 134).
+ordlo, pl. ordla a (for †ordlъ) plow (NA
+115, 137; SA 23).
+orěxъ a (SA 155; PR 132).
+-oriti: -orjǫ -oritь c ødelægge (PR 140).
+orьlę orьlęte b (SA 143).
+orьlъ orьla b ørn (SA 167; PR 134).
+orka a (PR 132).
+orkyta a (SA 155).
+ormę a (PR 132).
+orǫdьje: se -rǫd-.
+orǫžьje: se -rǫž-.
+orǫžь c (SA 156).
+orsti: orstǫ orstetь c vokse (PR 139).
+orstiti: orstjǫ orstitь c/b lade spire (PR
+140).
+orstja b* lund (PR 135).
+orstъ c vækst (PR 137).
+orv- b lige (PR 136).
+1orz- (prefix) (PR 146).
+2orz- b udskilt, forskellig (PR 136).
+?oržьnъ b grillspyd (PR 134).
+osa osy b wasp (NA 91, 141; SA 20, 167; PR
+135).
+osetrъ b stør (PR 134).
+osьlę osьlęte b (SA 142f.).
+osьlъ b (SA 172; PR 134).
+osmь b eight (NA 129; PR 135).
+osmъjь b ottende (PR 136).
+ostь osti b beard (of grain), thorn (NA 129,
+142; SA 21).
+ostь c (SA 156) [=foreg.?].
+ostьnъ b spids, stage (PR 134).
+os[t]rovъ os[t]rova c (SA 70; PR 137).
+ostrъ ostra ostro b sharp (NA 125, 142; SA
+21, 156; PR 136).
+otьcь otьca b (SA 171); a? (PR 132).
+ot(ъ) (prep. and prefix) (PR 146).
+
+-- 7 of 14 --
+
+ovьca ovьcě b/c (SA 166f.; PR 135, 138); c
+(NA 85, 141) sheep. [tjek henvisninger]
+ovьnъ b vædder (PR 134).
+ovьsъ ovьsa b havre (SA 138, 146, 188; PR
+134).
+ovotjь a frugt (PR 134).
+ovъ ova ovo b/c denne (PR 136, 139).
+ǫ
+ǫda a (PR 132).
+ǫditi: ǫdjǫ ǫditь c (SA 259).
+ǫglь a kul (PR 132).
+ǫgъlъ c hjørne (PR 137).
+ǫsъ d (RPT 102).
+ǫtę a (SA 142).
+ǫtьlъ ǫtьla ǫtьlo b hullet, svag (PR 136).
+ǫtro ǫtra b viscera, womb (NA 105, 141).
+ǫty a and (PR 133).
+ǫza a (PR 132).
+ǫzъ ǫza ǫzo b (SA 105f.; PR 136).
+ǫžь b (RPT 102).
+p
+pa- (prefix) (PR 146).
+paliti: paljǫ palitь b brænde (PR 137).
+panъ b? herre (PR 134).
+papa a far (PR 132).	
+1
+para a damp (PR 132; RPT 109).	
+2
+para a par (PR 132).
+pariti: parjǫ paritь a flyve (PR 133; MP 26).
+parъ a (RPT 101).
+pasmo, pl. pasma a (SA 23).	
+1
+pasti: padǫ padetь a (SA 208; PR 139).	
+2
+pasti: pasǫ pasetь c (SA 209, 252; PR 139).
+paxati: pašjǫ pašjetь b pløje (PR 137).
+pazъ paza d (OSA 143f.; RPT 101f.).
+pečatь a (PR 132).
+pekti: pekǫ pečetь c bage (PR 139).
+pektь f. c ovn (PR 138).
+pelena (pelna) peleny b/c låg (PR 135).
+pelna: se pelena.
+pelnъ pelna c booty, loot; captivity (NA 98;
+SA 26; PR 134, 137).
+pelti: peljǫ peljetь b (SA 248).
+pelvǫ pelvetь c (SA 204).
+pepelъ (popelъ) c aske (PR 137).
+per- (prefix) (PR 146).
+perdъ (prep. and prefix) (PR 146).
+?(vъ-)periti: -perjǫ -peritь c rette mod (PR
+140).
+pero b feather (NA 105, 141; SA 156; PR
+135; MP 25).
+perǫ peretь c (SA 204).
+perti: pьrǫ pьretь c låse, lukke (SA 203, 235,
+251; PR 139).
+Petrъ b Peter (PR 134).
+pędь f. c? afstand, tomme (PR 138).
+pęstь f. c knytnæve (PR 138).
+pęta pęty c hæl (PR 138).
+pęti: pьnǫ pьnetь c (SA 203, 212f., 235, 251;
+PR 139).
+pętь f. c fem (NA 129; SA 25; PR 138).
+pętъjь b femte (PR 136).
+pętrъ pętra b (sek. pętro) wooden floor, tier
+(NA 114).
+pěna a (PR 132; RPT 109).
+pěnęʒь a (PR 132).
+pěsnь a (PR 132).
+pěsta pěsty b pestle; hub (NA 92f, 141; SA
+20).
+pěstovati: pěstujǫ pěstujetь a vente barn
+(PR 133).
+pěstъ pěsta b (sek. pěsto) instrument for
+pounding, crushing (NA 112, 142; SA 20;
+RPT 102).
+pěsъkъ pěsъka b (SA 138, 188; PR 134).
+pěšь pěša pěše a til fods (SA 123; PR 133).
+pěti: pojǫ pojetь c synge (SA 204; PR 139).
+pila pily b/c sav (PR 135).
+pirogъ b kage (PR 134).
+pirъ pira a type of grain (NA 136; SA 155).
+pirъ piru c gæstemåltid (NA 137; PR 137).
+pisati: se pьsati.
+pisьmo b (SA 150; PR 135; MP 24).
+piskati: piskjǫ piskjetь b fløjte (PR 137).
+piskъ a (RPT 97); c (PR 137) fløjten.
+pitati: pitajǫ pitajetь a ernære (PR 134).
+pitěti: pitějǫ pitějetь a ernære (PR 134).
+piti: pijǫ pijetь c (SA 204, 234, 236f.; PR
+139).
+pitja a (PR 132).
+pivo c (NA 116, 135; SA 152; PR 138).
+pьklo b ild, helvede (NA 114; PR 135).
+pьklъ pьkla b hell (NA 114).
+pьlnъ pьlna pьlno full (NA 136, 139, 143;
+SA 23, 107; PR 133; MP 22).
+pьlstь f. c filt, dug (PR 138).
+pьlzti: pьlzǫ pьlzetь c krybe (PR 139).
+pьpьrъ pьpьra b peber (SA 138, 146, 188;
+PR 134).
+pьrati: perǫ peretь c vaske (SA 204, 236; PR
+139).
+(po-)pьrati: -perǫ -peretь c sparke, trykke
+(PR 139).
+pьrěti: pьrjǫ pьritь c stride (PR 139).
+pьrsь pьrsi a (SA 23; PR 133).
+pьrstъ pьrsta b finger (NA 111f., 142; SA
+20).
+pьrstь pьrsti c (SA 139) [=foreg.?].
+pьrvъ pьrva pьrvo c (NA 138); a (PR 133)
+first.
+pьrxъ pьrxa c dust (NA 101).
+pьsati (pisati): pisjǫ pisjetь b skrive (SA
+210, 252; PR 137; MP 27).
+pьstrъ b motley (NA 120; PR 136).
+pьsъ pьsa b (SA 166).
+pьšeno b hirse (PR 135).
+pьxnǫti: pьxnǫ pьxnetь b støde (PR 137).
+plačь a (PR 131; RPT 99, 101).
+plakati: plačjǫ plačjetь a græde (SA 209;
+PR 133; MP 23).
+plastъ plasta b (SA 126, 156; RPT 99, 102).
+plaščь b frakke (PR 134; RPT 99).
+plata a (SA 212).
+platja b (SA 212).
+platъ plata d (OSA 144; PR 137).
+plavati: plavajǫ plavajetь a svømme (PR
+123, 133).
+plaviti: plavjǫ plavitь a flyde (PR 133).
+plektje, pl. plektja / plektja b (NA 117; MP
+25).
+plemę plemene b i N: a stamme (SA 199;
+PR 134).
+?plesati (MP 27).
+plesčjǫ plesčjetь b (SA 210).
+plesti: pletǫ pletetь c flætte (PR 139).
+pletь f. c pisk (PR 138).
+pletje b skulder (PR 135).
+Plьskovъ c Pskov (bynavn) (PR 137).
+pljinǫti: pljinǫ pljinetь a (SA 205, 257; PR
+133).
+pljьvati: pljujǫ pljujetь a (SA 204, 246; PR
+133).
+pl[j]utja / pl[j]utja (pl. tant.) b lungs (NA
+107, 142; PR 135; MP 24).
+ploditi: plodjǫ ploditь b fremstille, avle (PR
+137).
+plodъ c/b (NA 126 / PR 134).
+ploskědь f. c plads (PR 138).
+ploskъ plosko ploska b (PR 136).
+plotъ c (SA 157).
+ploxъ ploxa ploxo c dårlig (PR 138).
+plugъ a (SA 155; PR 131; RPT 97, 101).
+pluščiti: pluščjǫ pluščitь a (PR 133).
+pluti: plovǫ plovetь c (SA 204, 235f.; PR
+139).
+pluto pluta b float (NA 113, 142).
+plъtь plъti c kød, krop (SA 70, 85, 140; PR
+138).
+plъtъ plъta b raft (NA 119; PR 134).
+plynǫ plynetь c (SA 205).
+plytvъ plytvo plytva b (SA 108).
+po (prep. and prefix) (PR 146).
+podoba podoby a (SA 73).	
+1
+podъ (prep. and prefix) (PR 146).	
+2
+podъ poda b floor, bottom (NA 108f., 141;
+SA 21).
+po-jasъ c bælte (PR 137).
+pojiti: pojǫ pojitь c give at drikke (PR 140).
+polata a sal (PR 132).
+polěno a (SA 149; PR 132).
+polěti: poljǫ politь c brænde (PR 139).
+polьʒa polьʒě a" (SA 74).
+polje c (SA 71, 152; PR 138; MP 20, 25; RPT
+111).
+polmy polmene a (SA 74).
+polniti: polnjǫ polnitь c tage til fange (PR
+140).
+polnǫ polnetь a (SA 205).
+polnъ polno polna c (SA 109).
+polovъ polova polovo c køns- (PR 138).
+polsa polsy c plowed strip (NA 84f., 141; SA
+24).	
+1
+polti: poljǫ poljetь b vinke, ryste (SA 203,
+248, 250f.; ?PR 136; ?MP 27).	
+2
+polti: poljǫ poljetь b brænde (SA 203, 248,
+250f.; ?PR 136; ?MP 27).
+poltьno poltьna b (SA 138, 149, 177, 188;
+PR 135).	
+1
+polъ c køn, halvdel (PR 137).	
+2
+polъ c belægning (PR 137).
+polxъ polxa polxo a (SA 107).
+polzъ polza d (OSA 144; PR 137; RPT 105).
+pomogtь c (MP 20).
+popelъ: se pepelъ.
+popъ popa b (NA 94; PR 134; MP 19; RPT
+84).
+pora pory c (godt) tidspunkt (PR 138).
+porgъ a (PR 131).
+pormъ a (PR 131).
+porokъ poroka a" (SA 74).
+porsę porsęte c (SA 142f.; MP 20).
+porti: porjǫ porjetь b (SA 203, 248f., 251;
+PR 136).
+porxъ d støv, pulver (PR 137; RPT 105).
+porzъ c tyr (PR 137).
+
+-- 8 of 14 --
+
+porž- b tom (PR 136).
+?poržь 	porža 	porže 	b 	? 	(PR 	136)
+(=forudg.?).
+posьlě (?poslě) b senere (PR 136).
+poskonь f. c mandlig hamp (PR 138).
+po-soxъ c stav (PR 137).
+postiti: postjǫ postitь c faste (PR 140).
+postъ b faste (PR 134).
+potъ c sved (PR 137).
+pǫgy a knop (PR 133).
+pǫpъ a (PR 131); b (SA 156); d (RPT 102).
+pǫtь pǫti b bridge (NA 131, 142; SA 126,
+199; PR 135; MP 16).
+pǫto a (SA 235; RPT 111).
+pra- (pref.) (PR 146).
+pragnǫ pragnetь a (SA 211).
+praviti: pravjǫ pravitь a udrette (PR 133;
+MP 26).
+pravьda pravьdy a (SA 73).
+pravo a (PR 132; RPT 111).
+pravъ prava pravo (SA 108, 110, 123, 144;
+PR 133; MP 22).
+prędati: prędajǫ prędajetь a hoppe (PR
+133).
+?-prędnǫti: -prędnǫ -prędnetь a ?spinde
+(PR 133).
+pręgnǫti: pręgnǫ pręgnetь b ?spænde for
+(SA 211).
+pręgti: pręgǫ pręžetь c spænde for (PR
+139).
+pręmъ: se prěmъ.
+prěsnъ prěsna prěsno c usyret, frisk (PR
+138).
+pręsti: prędǫ prędetь c spinde (SA 208, 255;
+PR 139).
+prętati: prętjǫ prętetь a gemme (PR 133).
+prěmъ prěma prěmo c direkte (PR 138).
+pri (prep. and prefix) (PR 146).
+pridъ prida b addition (NA 112, 142; SA
+20).
+prisnъ prisna prisno a (PR 133).
+pro (prep. and prefix) (PR 146).
+pročь proča proče b følgende (PR 136).
+prositi: prosjǫ prositь b bede (PR 137).
+proso prosa, pl. prosa c (SA 139, 157, 188,
+199; PR 138; MP 20; RPT 111).
+prostiti: prostjǫ prostitь c tilgive (PR 140).
+prostъ prosta prosto c enkel (PR 138).
+prǫdъ prǫda b dam (SA 79, 126, 156; PR
+134; RPT 102).
+prǫglo b fælde, slynge (PR 135).
+prǫgъ c høtyv (PR 137).
+prǫtъ prǫta c (SA 156; PR 137); d (OSA 144;
+RPT). [henvisning til RPT]
+prygati: prygajǫ prygajetь a hoppe (PR
+133).
+pryščь b blære (PR 134; RPT 102).
+prysčjǫ prysčjetь a (SA 209; PR 133).
+psalъmъ b salme (PR 134).
+pustiti: pustjǫ pustitь c lade (PR 140).
+pustъ pusta pusto c øde (PR 138).
+puxъ d (RPT 97, 103).
+pъlkъ b hær (PR 134).
+pъlzati: pъlzajǫ pъlzajetь a krybe (PR 123,
+133).
+pъrtiti: pъrtjǫ pъrtitь a fordærve (PR 133).
+pъrtъ pъrta / pъrtu c klæde (SA 139; PR
+137).
+pъtica a (SA 177).
+pъtičę a (SA 142).
+-pъvati: -pъvajǫ -pъvajetь a håbe (PR 134).
+pylь f. c støv (SA 148; PR 138).
+pyrъ pyra a (NA 138, 143; SA 18).
+pyxati: pyšjǫ pyšjetь a stønne (PR 133).
+r
+raditi (roditi): radjǫ raditь c sørge for (PR
+140).
+radlo a (PR 132).
+radъ rada rado a (SA 108, 110, 122; PR
+133).
+rajь raja a (SA 69; RPT 99, 101).
+rakъ raka rako c (SA 114).
+rakъ raka a (SA 166, 199; PR 131; MP 23;
+RPT 99, 101).
+rana a (PR 132; RPT 109).
+raniti: ranjǫ ranitь a såre (PR 133; MP 26).
+ranъ a (SA 155, 188).
+ratь a (SA 187; PR 132).
+raziti: razjǫ razitь c slå (PR 140).
+razъ raza c (SA 41; RPT 99, 102).
+rebro b (SA 151, 156; PR 135).
+rekti: rekǫ rečetь c (SA 252; PR 139).
+rešeto b (SA 150; PR 135).
+rędъ rędu c (NA 126; PR 137); d (OSA 144;
+RPT 99, 103).
+ręsa ręsy c/a (SA 156f./PR 132).
+rěčь f. c tale, ord (PR 138).
+rěditi: rědjǫ rěditь b ordne (PR 137).
+rědъ rěda rědo b (SA 105f.).
+rějati: rějǫ rějetь a strømme; støde (PR 133).
+rěka rěky b (SA 156; PR 135).
+rěpa a (PR 132; RPT 111).
+-rěsti: -ręt[j]ǫ -ręt[j]etь a (SA 208).
+rěšiti: rěšjǫ rěšitь c beslutte, befri (PR 140).
+?-rětiti: -rětjǫ -rětitь a møde (PR 133).
+rězati: rězjǫ rězjetь a (SA 209, 252; PR 133;
+MP 23, 27).
+rězъ rěza c (SA 41, 156).
+?rězvъ rězva rězvo b vild (PR 136).
+Rimъ Rima b (SA 69).
+rinǫti: rinǫ rinetь a (SA 205, 257; PR 133;
+MP 22).
+ristati: ristjǫ ristjetь b løbe, spurte (SA 210;
+PR 137).
+?riva a (RPT 107).
+riza a (PR 132).
+?rьjati / rějati: rějǫ rějetь a (SA 204, 246f.).
+rjuti: rovǫ (revǫ) rovetь c (SA 237f.; PR
+139).	
+1
+roditi: rodjǫ roditь c avle, føde (PR 140).	
+2
+roditi: se raditi.
+rodъ c slægt (PR 137).
+rogozъ a (sek. immobil acc.?) (SA 155).
+rogъ roga d horn (NA 102; SA 22; OSA 41,
+144f.; PR 137; RPT 85ff.).
+rojь roja b / rojь roja d swarm (NA 120f.;
+PR 134 / OSA 145).
+ropotъ c (SA 187).
+rosa rosy c moisture (NA 85f., 141; SA 24,
+140; PR 138).
+rota roty b/c ed (PR 135).
+rovǫ rovetь c (SA 204).
+rovъ b/c grav (PR 137).
+rozga rozgy b/c kvist (PR 135).	
+1
+rǫbъ rǫba c seam, hem, edge (NA 123; SA
+156).	
+2
+rǫbъ rǫba c las, pjalt (PR 137).
+(o)rǫd(ьje) c værktøj (PR 138).
+(sъ-o-)rǫditi: -rǫdjǫ -rǫditь c bygge (PR
+140).
+rǫka rǫky c hand (NA 87, 141f.; SA 24, 199;
+PR 138; MP 15f.).
+(o)rǫž(ьje) c våben (PR 138).
+(vъ-o-)rǫžiti: -rǫžjǫ -rǫžitь c bevæbne (PR
+140).
+?rubljь b træstykke; rubel (PR 134).
+ruda rudy b malm (SA 78, 177; PR 135).
+rudmenъ b (SA 156).
+rudъ ruda rudo c red (NA 124f., 142; SA 25,
+109).
+runo b skind (PR 135).
+rusъ rusa ruso a? mørkblond (PR 133).
+rušiti a move (MP 26).
+ruti (rъvati): rъvǫ rъvetь c brække, rive ud
+(SA 204, 206; PR 139).
+ruxlo b mobilia (PR 135).
+ruxъ ruxa c disorderly movement (NA 96).
+rъdja rъdjě b rust (PR 135).
+rъtutь a kviksølv (PR 132).
+rъtъ b mund (PR 134).	
+1
+rъvati: rujǫ rujetь c (SA 204, 206, 230,
+236).	
+2
+rъvati: se ruti.
+rъxlъ rъxlo rъxla b (SA 108).
+rъzati: rъzjǫ rъzjetь b vrinske (SA 210; PR
+136).
+rъžь rъži f. c rug (SA 139, 188; PR 138).
+ryba ryby a (SA 166, 172; PR 132; MP 19;
+RPT 107, 109).
+rydati: rydajǫ rydajetь a ræbe, brække sig,
+hulke (PR 134).
+rydlo a (SA 149).
+ryti: ryjǫ ryjetь a (MP 23, 27); c (SA 204,
+230, 236; PR 133).
+rysь rysi a (SA 23; RPT 97).
+s
+saditi: sadjǫ saditь c (SA 260; PR 140).
+sadja a (PR 132; RPT 110).
+sadlo a (SA 151; PR 132).
+sadъ sadu c (NA 126; SA 156; PR 137); d
+(RPT 99, 101, 103).
+-sagnǫti: -sagnǫ -sagnetь a ?gifte (PR 133).
+samъ sama samo c (PR 139).
+sani f.pl.tant. c slæde (PR 138).
+sanъ c rang (PR 137).
+sapogъ sapoga b støvle (SA 79; PR 134).
+satana satany b Satan (PR 135).
+sčipjǫ sčipjetь b (SA 210).
+se (sь) (encl.) (PR 145).
+sedьlo b (SA 149; PR 135; MP 25).
+sedmь b seven (NA 129; PR 135).
+sedmъjь b syvende (PR 136).
+?seliti: seljǫ selitь c bosætte (PR 140).
+selo, G. sela b (SA 69, 151; PR 135; MP 25).
+serda serdy c (SA 114, 188; PR 138).
+sernъ serna b hoar-frost (NA 119).
+sestra sestry b sister (NA 131, 142; SA 22;
+PR 135).
+sęknǫti: sęknǫ sęknetь b (SA 211; PR 137).
+?sęgati: sęžjǫ sęžjetь b gribe efter (SA 210;
+PR 137).
+sěča a slag (PR 132).
+sěděti: sědjǫ sěditь c sidde (PR 139).
+sěkti: sěkǫ sěčetь c (SA 209, 255; PR 139;
+?MP 27).
+
+-- 9 of 14 --
+
+sějati: sějǫ sějetь a (SA 204, 207, 212, 214,
+247; PR 133; MP 26).
+sěmę sěmena a (SA 24, 155).
+sěmьja sěmьjě c familie, ægtefælle (PR 138).
+sěnь a (PR 132).
+sěno c (NA 116, 135; SA 152; PR 138; MP
+25; RPT 111).
+sěra a (PR 132).
+sěsti: sędǫ sędetь a (SA 208, 260; PR 133;
+MP 22).
+sěti: sějǫ sějetь a (SA 204, 207; PR 133).
+-sětiti: -sětjǫ -sětjetь a besøge (PR 133).
+sětь a net (PR 132).
+sětovati: sětujǫ sětujetь a klage (PR 133).
+sěverъ a (PR 132).
+sicь sica sice b (SA 36, 200).
+sidlo sidla b noose, loop (NA 105f., 141; PR
+135).
+sila sily a (SA 22, 72; PR 132; MP 15f.; RPT
+107, 111).
+siliti a (MP 26).
+sinjь sinja sinje b blå (PR 133).
+sirъ sira siro c ensom, hittet (SA 123f.; PR
+138).
+sito a (NA 137; SA 23, 149, 177; PR 132;
+RPT 111).
+sitъ sita b name of plant used for weaving
+rope (NA 110, 141; SA 21, 156).
+sь si se c (SA 36, 199; PR 139).
+sьcati: sьčjǫ sьčjetь c tisse (PR 139).
+sьjati: sějǫ sějetь a (SA 205, 246).
+sьjati: sьjajǫ sьjajetь a ?så (PR 134).
+sьrati: ser[j]ǫ ser[j]etь b skide (SA 204,
+212f.; PR 137).
+sьrbъ sьrba a (SA 69).
+sьrd(ьce) c hjerte (PR 138).
+sьrdьce b/c hjerte (PR 135).
+sьrebro sьrebra b sølv (SA 80; PR 135).
+sьrna sьrny b rådyr (PR 135).
+sьrpъ sьrpa c (SA 156); b (PR 134); d (OSA
+42, 147) segl.
+sьrstь f. c dyrehår, uld (PR 138).
+skakati: skačjǫ skačjetь b hoppe (SA 210;
+PR 137).
+?skala a (RPT 107).
+skitъ a (PR 131).
+skočiti: skočjǫ skočitь b hoppe (PR 137).
+skolbiti: skolbjǫ skolbitь a le (PR 133).
+skopiti: skopjǫ skopitь c beskære, kastrere
+(PR 140).
+skora b*? hud (PR 135f.).
+skorъ skora skoro b (SA 114; PR 138).
+skotъ skota b kvæg (SA 70; PR 134).
+skovorda skovordy c (stege)pande (PR 138).
+skǫpъ skǫpa skǫpo b gerrig, dyr (PR 136).
+skripъ d (RPT 97).
+skrižalь a bord (PR 133).
+skrьgъtati: skrьgъtjǫ skrьgъtjetь b knirke
+(PR 136).
+skudělь, L.sg. skuděli a (SA 75).
+skъrběti: skъrbjǫ skъrbitь c/a sørge (PR
+139).
+skъrbь a/c (PR 132, 138).
+skvьrǫ skvьretь c (SA 203).
+slabъ slaba slabo a (SA 108, 144; PR 133;
+MP 22).
+slastь f. c sødme (PR 138).
+slava slavy a (SA 72, 104, 155; PR 132; RPT
+110).
+slęknǫ slęknetь b (SA 211).
+slědъ slěda / slědu c (SA 26; PR 137); d
+(OSA 145; RPT 98, 102).
+slěpiti: slěpjǫ slěpitь c (SA 260).
+slěpъ slěpa slěpo c blind (SA 199; PR 138).
+slin(j)a a (PR 132; RPT 109).
+sliva a (SA 155, 177; PR 132; RPT 111).
+(o-)slьpnǫti: slьpnǫ slьpnetь b gøre blind
+(SA 211, 260; PR 137).
+slьza slьzy c tåre (PR 138).
+slojь sloja b / slojь sloja d layer (NA 117f. /
+OSA146).
+slonъ b/c elefant (PR 137).
+slovo slovese c (SA 150; PR 138); d (RPT85,
+111).
+sluga slugy b (SA 104; PR 135).
+sluti: slovǫ slovetь c (SA 204, 212f., 235; PR
+139).
+sluxъ d hørelse, rygte (PR 137; RPT 97,
+102f.).
+služiti: služjǫ služitь b tjene (PR 137).
+slyšěti: slyšjǫ slyšitь a se (PR 133).
+smerka a (SA 155).
+směxъ b/c (PR 137); d (RPT 98, 102) latter.
+smьjati: smějǫ smějetь c (SA 205, 236; PR
+139).
+smьrděti: smьrdjǫ smьrditь c stinke (PR
+139).
+smoky smokъve b i N.: a figen (PR 134).
+smola smoly b (SA 156); c (PR 138) tjære.
+smordъ smorda c stink (NA 134, 139, 143;
+SA 26; RPT 105).
+smučjǫ smučjetь b (SA 210).
+smъrčjǫ smъrčjetь a (SA 209).
+smyčjǫ smyčjetь a (SA 209).
+sněgъ sněga d snow (NA 102; SA 22, 140,
+199; OSA 41; PR 137; RPT 98, 103).
+snětь b (SA 156).
+snopъ b neg, bundt (SA 156f.; PR 134; MP
+17, 19).
+snovati: snujǫ snujetь c (SA 204, 206, 236;
+PR 139).
+snuti: snovǫ snovetь c (SA 204, 206, 238).
+snъxa snъxy b/c (PR 135); c (NA 86, 141;
+SA 24) daughter-in-law.
+sobolь b/a (PR 134).
+sočiti: sočjǫ sočitь b ?kræve retsligt (PR
+137).
+sokolъ b (SA 158; PR 134).
+sokъ soka c juice (NA 95; PR 137).
+soldъ c malt (PR 137; RPT 105).
+soldъ solda soldo c sød (SA 25, 106, 156f.;
+PR 138).
+solь f. c salt (PR 138).
+solma a (PR 132; RPT 111).
+solna solny b < a? (NA 138)] / [c (PR)]
+hoarfrost (NA ; PR 138).
+solnъ solna solno c salt (SA 109, 188; PR
+138).
+solpъ solpa c waterfall (NA 122).
+solvъ solva solvo c gulgrå (PR 138).
+somъ soma b (NA 122; SA 21; PR 134); d
+(OSA 42)] sheat-fish.
+sopělь sopěli a (SA 75).
+sorka sorky a (SA 22, 166; PR 132).
+?sorkъ c 40; bundt på 40 zobelskind (PR
+137).
+sormiti: sormjǫ sormitь b blamere (PR
+140).
+sormъ c skændsel (PR 137; RPT 105).
+sosna sosny b/b* fyr (PR 135f.).
+sotona: se satana.
+sova sovy b ugle (PR 135).
+sovati: sujǫ sujetь a (SA 204, 212, 214, 246;
+PR 133).
+soxa soxy c forked branch; wooden plow
+(NA 88, 141; SA 24; PR 138).
+sǫ- (prefix) (PR 146).
+sǫdi sǫdьje b i N.: a dommer (PR 134).
+sǫditi: sǫdjǫ sǫditь b dømme (PR 137).	
+1
+sǫdъ sǫda b ret, dom (SA 79; PR 134; ?RPT
+102).	
+2
+sǫdъ c kar; båd (PR 137).
+sǫkъ sǫku c (NA 127; SA 25; PR 137); d
+(OSA 146; RPT 83, 101, 103) bough; peg.
+spějati: spějǫ spějetь a (SA 205, 207, 247;
+PR 133; MP 23).
+spěšiti: spěšjǫ spěšitь c skynde sig (PR
+140).
+spěti: spějǫ spějetь a (SA 204, 207; PR 133;
+MP 23, 27).
+spěxъ c (RPT 98).
+spina a (PR 132).
+sporъ b profitable, abundant (NA 126).
+stado a (PR 132).
+staja a (RPT 109).
+stajǫ stajetь a/c (SA 205).
+stanъ stanu c (NA 126, 137; SA 156; PR
+137); d (RPT 99).
+starъ stara staro a (SA 23, 108, 110, 122,
+146, 172, 199; PR 133; MP 22).
+stati: stanǫ stanetь a (PR 133; MP 22).
+staviti: stavjǫ stavitь a (SA 257; PR 133;
+MP 26).
+stavъ stava d (OSA 146).
+stegno b (SA 150; PR 135; MP 25).
+stenati (stonati): stenjǫ stenjetь b stønne
+(SA 204; PR 136).
+stepenь a (PR 132).
+stergti: stergǫ steržetь c overvåge (SA 209,
+255; PR 139).
+-sterti: -stьrǫ -stьretь c udbrede (SA 203,
+212f., 235, 251; PR 139).
+stěna stěny c væg (PR 138).
+stěnь b skygge (PR 132).
+stęgъ d lang stang (PR 137; RPT 103).
+stignǫti: stignǫ stignetь a (SA 211; PR
+133).
+stixъ b vers (PR 134).
+stižjǫ stižjetь a (SA 209).
+stьbьlo / stьbъlo b (SA 150).
+stьʒa stьʒě b sti (PR 135).
+stьklo stьkla, pl. stьkla b (SA 138, 150, 188,
+199; PR 135; MP 25).
+stьlati: steljǫ steljetь b brede ud, dække
+bord (SA 204; PR 136).
+stьrnь c (SA 156).
+stogъ stoga b (NA 119); c (PR 137); d (OSA
+146) haystack.
+stojati: stojǫ stojitь c stå (PR 139).
+stolъ stola b table, chair (NA 118; SA 146f.,
+172, 177; PR 134).
+stonati: se stenati.
+stopa stopy b fod(spor) (PR 135).
+storna storny c (SA 71, 83, 104; PR 135,
+138).
+storža a:b vagt (PR 132, 135; MP 19).
+storžь c/?b (PR 134, 137); c (RPT 105) vagt.
+stǫkъ: se stukъ.
+
+-- 10 of 14 --
+
+stǫpa a morter (PR 132; RPT 109).
+stǫpiti: stǫpjǫ stǫpitь b skridte (PR 137).
+strada strady b besvær (PR 135).
+stradati: stradjǫ stradjetь b lide, anstrenge
+sig (SA 210; PR 137).
+strastь f. c lidenskab (PR 138).
+straxъ straxa c (SA 83; PR 137); d (RPT 99,
+103).
+strěčjǫ strěčjetь b (SA 210).
+strěla strěly c pil (PR 138).
+strigti / ?strěgti: strigǫ strižetь c (SA 209,
+255; PR 139; MP 27).
+?strojiti: strojǫ strojitь b bygge (PR 137).
+stroka stroky c linje (PR 138).
+strǫkъ strǫka b (NA 121); b/d (RPT 102)
+pod, stem.
+?struga a (RPT 107).
+strugъ c ?høvl/?jolle (PR 137).
+struna a (PR 132).
+strupъ strupa c scab, poisonous abcess (NA
+96, SA 43; PR 137; RPT97).
+strъgati: stružjǫ stružjetь b høvle (SA 210;
+PR 137).
+stryjь a (PR 131).
+studenь f. c kulde (PR 138).
+studiti: studjǫ studitь c afkøle (PR 140).
+studъ (stydъ) c kulde (PR 134).
+stukъ (stǫkъ) c (RPT 97).
+stъlbъ: se stъlpъ.
+stъlpъ (stъlbъ) b stolpe (SA 156; PR 134).
+styděti (sę): stydjǫ styditь c skamme sig
+(PR 139).
+stydnǫ stydnetь a blive kold (SA 211; PR
+133).
+stydъ styda b/d (RPT 98, 101f.); d (OSA
+147); se også studъ.
+stygnǫ stygnetь a blive kold (SA 211).
+sučjǫ sučjetь b (SA 210).
+sujь suja suje a (SA 123; PR 133).
+sukati vikle (MP 27).
+sukъno sukъna b (SA 138, 151; PR 135).
+sunǫ sunetь a (SA 205; PR 133).
+surovъ surova surovo c rå (PR 138).
+suša a:b (PR 132).
+sušiti: sušjǫ sušitь c (SA 260).
+suti: sъpǫ sъpetь c hælde (PR 139).
+suxъ suxa suxo c tør (NA 124, 142; SA 25,
+44, 129, 157; PR 138).
+sъ (prep. and prefix) (PR 146).
+sъdorviti a (MP 27).
+sъdorvъ a sund (PR 133; MP 22).
+sъlati: sъljǫ sъljetь b sende (SA 204; PR
+136).
+sъlnьce b (PR) / c (MP) (PR 132; MP 25).
+sъměti: sъmějǫ sъmějetь a turde; måtte
+(SA 204; PR 134; MP 27).
+sъmьrtь sъmьrti b død (PR 136).
+sъmyslъ sъmysla a" (SA 74).
+sъnъ sъna b (PR 134); c (NA 100); d (OSA
+42) sleep.
+-sъpnǫti: -sъpnǫ -sъpnetь b falde i søvn
+(SA 211; PR 137).
+sъsati: sъsǫ sъsetь b suge (PR 137).
+sъto c hundred (NA 107; PR 138).
+sъtъ c (SA 156).
+sъxnǫti: sъxnǫ sъxnetь b tørre ud (SA 211,
+260; PR 137).
+svarъ b strid (PR 134).
+svatъ a (SA 158; PR 131; RPT 99, 101).
+svekry, A. svekrъvь c mother-in-law (NA
+130f., 142; SA 26).
+?sverpъ sverpa sverpo a (PR 133).
+svętъ svęta svęto c holy (SA 109; PR 138).
+světiti: světjǫ světitь b (SA 257; PR 137).
+světъ c lys, verden (PR 137; RPT 98, 101f.).
+světьlъ světьlo světьla c (SA 109, 111).
+světja světjě b (SA 177; PR 135).
+svinę c (SA 143).
+svinьja svinьjě b svin (PR 135).
+svinъ svina svino c af svin (PR 138).
+sviščь b (RPT 102).
+svьtěti (sę): svьtjǫ svьtitь c lyse (PR 139).
+svoboda svobody c (SA 82f.; PR 138).
+?svobodь svoboda svobode c fri (PR 138).
+svojь svoje svoja b (SA 171).
+svorbъ c kløen (PR 137).
+svorka a (RPT 110).
+syčь syča b (RPT 98).
+synъ synu c son (NA 137; SA 25, 28, 158,
+199, 243; PR 137; RPT 98, 102).
+sypati: sypjǫ sypjetь a (SA 209; PR 133; MP
+27).
+syrъ syra a (SA 24; PR 131; RPT 97, 101).
+syrъ syra syro a rå, sur (PR 133).
+sysjǫ sysjetь a (SA 209).
+?sytiti a (MP 26).
+sytъ syta syto a (SA 108, 110; PR 133; MP
+22).
+š
+?šatьrъ b telt (PR 134).
+ščęděti: ščędjǫ ščęditь c skåne (PR 139).
+šętati: šętajǫ šętajetь a vugge (PR 134).
+ščavъ / ščava a (SA 155).
+ščeka ščeky c kind (PR 138).
+ščedrъ ščedra ščedro b (SA 123; PR 136).
+ščenę c (SA 143).
+ščepa ščepy b/c spån (PR 135).
+ščitъ ščita b shield; reed (NA 111, 142; SA
+20, 127; PR 134; RPT 102).
+ščuka a (PR 132; RPT 109).
+šestь f. c seks (NA 129; SA 25; PR 138).
+šest(ъjь) c sjette (PR 138).
+šiba a (SA 155).
+šibti: šibǫ šibetь c kaste, slå (PR 139).
+šidlo a (SA 151).
+šija a (PR 132; RPT 109).
+šipъ šipa b pig, torn (SA 127; PR 134).
+širiti: širjǫ širitь a gøre bredere (PR 133).
+širъ šira širo a bred (PR 133).
+šiti: šijǫ šijetь a (SA 204, 246; MP 23, 27); b?
+PR 133.
+šьstъ šьsta b pole (NA 120; PR 134).
+šujь šuja šuje c venstre (NA 124, 142; SA
+25; PR 138).
+šuma a (SA 155).
+šuměti: šumjǫ šumitь c larme (PR 139).
+šumъ d larm (PR 137; RPT 97, 102).
+šupljь ?šupljo šuplja b (SA 108).
+šurъ a (SA 158).
+t
+tajь taja taje (SA ?36; PR 138).
+tajati: tajǫ tajetь a flyde (SA 205, 247; PR
+133; MP 26).
+tajiti: tajǫ tajitь c gemme (PR 140).
+takъ taka tako c (SA 36, 200; PR 139).
+taščiti: taščjǫ taščitь c trække (PR 140).
+tatь c røver (PR 138).
+tekti: tekǫ tečetь c flyde, løbe (PR 139).
+telę telęte b (SA 143).
+telěga a (PR 132).
+telkti: tьlkǫ tьlčetь c støde, stampe (PR
+139).
+teneto b net (PR 135).
+teplъ tepla teplo b (SA 123; (PR 135); PR
+136).
+tepti: tepǫ tepetь c slå (PR 139).
+?terbiti: terbjǫ terbitь c rense, bruge (PR
+140).
+termъ terma d (OSA 147; PR 137).
+terzvъ terzva terzvo c nøgtern (PR 138).
+tesati: tesjǫ tesjetь b glatte, tilhugge (SA
+210; PR 136).
+tetervь c urhane (PR 138).
+tęglъ tęgla tęglo b trækkende (PR 136).
+tęgъ tęga tęgo c (SA 25, 123f.; PR 138).
+tęg(nǫ)ti: tęgnǫ tęgnetь b (SA 211, 252; PR
+137).
+tęti: tьnǫ tьnetь c slå, skære (SA 203, 235,
+251; PR 139).
+?tęža a:b (PR 132).
+?sъ-tęžati: -tęžjǫ -tęžitь c vinde (PR 139).
+?tęželъ tęželo tęžela b tung (PR 136).
+tęžь b (RPT 102).
+tějǫ tějetь a (SA 205).
+tělo c (SA 150; PR 138; RPT 111).
+těsnъ těsna těsno c tæt (PR 138).
+těsto c (NA 116, 135; SA 152; PR 138).
+těšiti: těšjǫ těšitь trøste, glæde (PR 133).
+tina tiny (SA 75; PR 132; RPT 109).
+tisъ (SA 155).
+tixnǫti: tixnǫ tixnetь a (SA 211, 259; PR
+133).
+tixъ tixa tixo a (SA 108, 110, 144, 211; PR
+133; MP 22).
+tьlěti: tьlějǫ tьlějetь a rådne (PR 134).
+tьlkǫ: se telkti.
+tьlo b bund (PR 135).
+tьma tьmy c b (PR 135); (SA 83, 87) mørke.
+tьm(ьnъ) b/c mørk (PR 139).
+tьn(ъkъ) (tъnъ) c tynd (SA 25; PR 138).
+tьrnъ tьrna b (sek. tьrno) thorn, spine (NA
+109, 141; SA 21).
+tьrpěti: tьrpjǫ tьrpitь c lide (PR 139).
+tьrpnǫti: tьrpnǫ tьrpnetь b (SA 211; PR
+137).
+tьrsъ c (SA 156).
+tьrti: tьr[j]ǫ tьr[j]etь b ? (SA 203, 212f.,
+248f.; PR 136).
+tьržjǫ tьržjetь a (SA 209).
+tьstь c svigerfar (PR 138).
+tьstja b* svigermor (PR 135).
+?Tьxvěrь f. c ? (PR 138).
+tjudjь tjudja tjudje c fremmed (PR 138).
+tlapa a (RPT 110).
+točiti: točjǫ točitь b bandlyse, lade gå (PR
+137).
+tokъ toka c current, running (NA 97f.).
+toliti: toljǫ tolitь b mildne, stille (tørst) (PR
+137).
+tolka tolky c neighborly help (NA 87f., 141;
+SA 24).
+tolkъno b havregrød (PR 135).
+tomiti: tomjǫ tomitь b pine (PR 137).
+tonja b* fiskested, sump (PR 135).
+
+-- 11 of 14 --
+
+topiti: topjǫ topitь c smelte; drukne (SA
+260; PR 140).
+topnǫti: topnǫ topnetь b drukne (SA 211,
+260; PR 137).
+toporъ b økse (PR 134).
+torkъ torku c strap, ribbon (NA 127f.; SA
+25).
+tǫča a (PR 132).
+tǫga tǫgy b sorg (PR 135).
+tǫgъ tǫga tǫgo c stærk, fast (PR 138).
+tǫpъ tǫpa tǫpo c (SA 109; PR 138).
+tǫžiti: tǫžjǫ tǫžitь b sørge (PR 137).
+trajati: trajǫ trajetь c (SA 205, 234, 236).
+trava travy b (SA 156; PR 135).
+traviti: travjǫ travitь b ødelægge, jage (PR
+137).
+trepetati: trepetjǫ trepetjetь b skælve (PR
+136).
+trepetъ c sitre (PR 137).
+tretь f. c tredjedel (PR 138).
+tret- c tredje (PR 136, 150).
+tręsti: tręsǫ tręsetь c ryste (PR 139).
+trěska trěsky b (SA 157).
+trěskъ c (RPT 98).
+tri c tre (PR 139).
+trъstь, L.sg. trъsti c (SA 94, 156, 199).
+?troskotъ c græs (PR 137).
+trovati: trujǫ trujetь c (SA 204, 236).
+trǫba trǫby b rør, trompet (PR 135).
+trǫsъ c jordskælv (PR 137).
+truditi: trudjǫ truditь c/b arbejde (PR 140).
+trudъ b (PR 134); b/d (RPT 97, 102) besvær,
+arbejde.
+trupъ c lig (PR 137; RPT 102).
+truti: trovǫ trovetь c (SA 204, 238).
+trъstь f. c rør (PR 138).
+tudjь: se tjudjь.
+tukъ tuka c fat (NA 134, 139, 143; SA 26,
+42, 94).
+tune b forgæves (PR 136).
+turъ tura c wild bull (NA 98; PR 137).
+tušiti: tušjǫ tušitь b (SA 259); c (PR 140)
+slukke.
+tuxnǫ tuxnetь b (SA 259).
+tъ to ta he, she, it: cf. table X (SA 34ff., 199;
+PR 139).
+tъkati: tъčjǫ tъčjetь b væve (PR 136f.).
+tъknǫti: tъknǫ tъknetь b væve (PR 137).
+tъlěnъ tъlěna a (SA 74).
+tъlstъ tъlsta tъlsto c fed (PR 138).
+tъlšča b/a:b (PR 132).
+tъnъ: se tьn(ъkъ).
+tъpъtati: tъpъtjǫ tъpъtjetь b stampe (PR
+136).
+tъrgati a rive (MP 27).
+-tъrgnǫti: -tъrgnǫ -tъrgnetь a ? (PR 133).
+tъrgъ b (PR 134); c (NA 126) torv, marked.
+tъščati: tъščjǫ tъščitь c skubbe (PR 139).
+tъšč[j]ь tъšč[j]a tъšč[j]e b emaciated;
+empty (NA 125; SA 123; PR 136).
+tvarь b (RPT 99); f. a (PR 132).
+tvьrdъ tvьrda tvьrdo c (SA 109, 111; PR
+138).
+tvoriti: tvorjǫ tvoritь b skabe (PR 140).
+ty you: cf. table X.
+tyčjǫ tyčjetь a (SA 209; PR 133).
+tyky a græskar (PR 133).
+tyjǫ tyjetь c (SA 204).
+tylъ tyla a (sek. tylo) (NA 115, 133, 143; SA
+23); c (RPT 98) back of the head.
+typъ typa a/d (RPT 98).
+tysǫtja/tysętja a (PR 132).
+u
+1u (prep. and prefix) (PR 146).
+2u allerede (PR 133).
+učiti: učjǫ učitь c (SA 259; PR 140).
+uda a (SA 172).
+udъ uda (sek. udo) a (PR 131); b (NA 113).
+ugoda ugody a" (SA 74).
+uměti: umějǫ umějetь a kunne (PR 134).
+umъ b forstand (PR 134; RPT 102).
+usta (pl. tant.) b (SA 80; PR 135; MP 25).
+-uti: -ujǫ -ujetь a (SA 204, 246; PR 133; MP
+23, 27).
+utro a (RPT 111).
+uxo ušese c (SA 37f., 151, 243f.; PR 138); d
+(RPT 85, 111).
+uzda uzdy b tøjle (PR 135).
+v
+vaditi: vadjǫ vaditь a anklage (PR 133).
+GL. vaju, DI. vama you two (SA 35f.; MP
+25).
+valiti: valjǫ valitь c vælte (PR 139).
+valъ valu c (NA 127, 137; PR 137); d (RPT
+99, 103).
+vapъ c? farve (PR 137).	
+1
+variti: varjǫ varitь c koge (PR 139).	
+2
+variti: varjǫ varitь c gå imøde (PR 139).
+varъ c (RPT 99, 102).
+večerъ večera a (PR 137); c (NA 99); d (OSA
+42, 147; RPT 84) evening.
+vedro a[?] serenum (PR 132).
+vektь f. c ting (PR 138).
+velěti: veljǫ velitь c befale (PR 139).
+velikъ a (SA 171).
+veprь b vildsvin (PR 134).
+valiti: valjǫ valitь c vælte (PR 139).
+verditi: verdjǫ verditь c skade (PR 139).
+verdъ verda d (OSA 147; PR 137).
+vergti: vьrgǫ vьržetь a kaste (SA 208; PR
+133).
+vesna vesny c forår (PR 138).
+vermę vermene c (SA 199; PR 138; MP 20,
+25).
+versъ versa c (SA 156); d (OSA 147f.).
+verteno b (SA 150; PR 135).
+veselъ c munter (SA 157; PR 138).
+veslo b ror (SA 150; PR 135; MP 25).
+vesti: vedǫ vedetь c føre (PR 139).
+vetъxъ vetъxa vetъxo c gammel (PR 138).
+vezti: vezǫ vezetь c køre, føre (PR 139).
+vędnǫti: vędnǫ vędnetь a visne (SA 259;
+PR 133; MP 22).
+vęzati: vęzjǫ vęzjetь b binde (SA 210f.; PR
+136).
+vęznǫti: vęznǫ vęznetь b (SA 211; PR 137).
+vęzti: vęzǫ vęzetь c (SA 211, 252; PR 139).
+vęzъ d (RPT 103).
+vědati: vědajǫ vědajetь a vide, kende (PR
+133).
+věděti: věmь c vide (PR 139).
+vědro b spand (SA 151; PR 135).
+vějati: vějǫ vějetь a (SA 204, 207, 247; PR
+133; MP 23, 27).
+věko, pl. věka a (NA 137; SA 23; PR 132).
+věkъ věka/věku c (SA 82; PR 137); c/d
+(RPT 98, 102); d (OSA 148).
+věno c (NA 116, 135).
+věra věry a (SA 72, 199; PR 132; RPT 110).
+věriti: věrjǫ věritь a (PR 133).
+věsiti: věsjǫ věsitь a (SA 211, 259; PR 133;
+MP 26).
+věstь f. c nyhed (PR 138).
+věsъ c (PR)] / [a/c/d (RPT)] ?vægt (PR 137;
+RPT 98).
+věti: vějǫ vějetь a (SA 204, 207; PR 133; MP
+23).
+větje c (NA 117).
+větrъ a (PR 131; MP 23).
+větvь a (PR 132).
+?věverica a egern (MP 21).
+viděti: vidjǫ viditь a se (PR 133; MP 26).
+vidъ vidu c (NA 137; PR 137; RPT 102).
+vina viny c skyld (PR 135).
+vino vina b vin (SA 79; PR 135; MP 24).
+-vinǫti: -vinǫ -vinetь c underkaste sig (SA
+205; PR 139).
+(po-)vinǫ (po-)vinetь c (SA 205).
+virъ b (RPT 97).
+visěti visjǫ visitь a hænge (SA 211; PR 133;
+MP 26).
+visnǫti: visnǫ visnetь a (SA 211, 259; PR
+133).
+vitati: vitajǫ vitajetь a (PR 134).
+viti: vijǫ vijetь c (SA 204, 212f., 231, 233,
+237; PR 139).
+vьčera b i går (PR 136).
+vьdova vьdovy b widow (NA 89, 141; SA
+20, 171f.; PR 135).
+vьlkъ vьlka c wolf (NA 99f.; SA 147, 167;
+PR 137).	
+1
+vьlna vьlny a wool (NA 132, 143; SA 23,
+137, 188; PR 132).	
+2
+vьlna b/c bølge (PR 138).
+vьrati: vьrǫ vьretь c lyve, sludre (PR 139).
+vьrba vьrby b (SA 156).
+vьrgti a throw (MP 27).
+?vьrnǫti: vьrnǫ vьrnetь b ? (PR 137).
+vьrsta vьrsty c række, alder (PR 138).
+?vьršiti: vьršjǫ vьršitь c styre (PR 139).
+?vьrtati a vende (MP 27).
+vьrtěti: vьrtjǫ vьrtitь c dreje, vende (PR
+139).
+vьrtьnъ a (PR 131).
+vьrtъ a (SA 157).
+vьrvь f. c (SA 156; PR 138).
+vьrxъ vьrxu b (NA 128; SA 21, 30, 33; PR
+134); d (OSA 148f.) top.
+-vьrzti: -vьrzǫ vьrzetь c binde (PR 139).
+vьsь vьsi f. b/c landsby (PR 136, 138).
+vьsь vьsě vьse b (SA 36; PR 136).
+vьsěkъ vьsěko (SA 36).
+voda vody c vand (SA 84, 94, 139, 172; PR
+138; MP 19f.).
+voditi: vodjǫ voditь b lede, føre (PR 137).
+vodjь b leder (PR 134).
+vojь c (SA 171).
+vojь b kriger (PR 134).
+volčiti: volčjǫ volčitь b slæbe, trække (PR
+137, 140).
+volga a (PR 132).
+volja voljě b* (SA 78; PR 135; MP 19).
+volka volky b place where something is
+drawn, pulled (NA 92, 141; SA 20).
+
+-- 12 of 14 --
+
+volkti: volkǫ volketь c slæbe, trække (PR
+139).
+volkъ volka c vod (NA 95f., 43; PR 137).
+volkъno b (SA 151; PR 135).
+volsti: voldǫ voldetь c herske (PR 139).
+volstь f. c magt (PR 138).
+volsъ volsa d hair (NA 99; SA 22, 140, 157,
+188; OSA 41, 148; PR 137; MP 20; RPT
+105).
+voltь c panicle (NA 129).
+voltъ voltu c panicle (NA 129; SA 156).
+volъ b (NA 127; SA 177, 199; PR 134).
+volxъ volxa a (SA 69; PR 131).
+vonja b* lugt (PR 135).
+vorbьjь b spurv (PR 134).
+vorčь se vračь.
+vorgъ vorga c b (PR 134); (SA 70, 167; PR
+137); d (RPT 105).
+vorna vorny a (SA 22, 166, 212; PR 132; MP
+19; RPT 107, 109).
+vornъ vorna c raven (NA 98; SA 212, 243;
+PR 137; RPT 105).
+vornъ vorna vorno c ravnesort (PR 138; MP
+20).
+vorta (pl. tant.) b (NA 106f., 142; MP 25); c
+(SA; PR 138) gates.[sidetal SA?]
+vortiti: vortjǫ vortitь b vende tilbage (PR
+137, 140; MP 27).
+vortjati: vortjajǫ vortjajetь a vende (PR 123,
+133).
+vortъ vorta c (SA 156; PR 137); d (OSA 148)
+hals.
+vorxъ vorxa c bunke (PR 137).
+vorъ c ?tyv/indhegning (PR 137).
+voskъ voska b (NA 112, 142; SA 20); c (PR
+137); d (OSA 42) wax.
+voziti: vozjǫ vozitь b køre, føre (PR 137).
+vozъ voza c (NA 99; PR 137); d (OSA 42,
+148) vehicle, cart. [ap. if. MP 19f.?].
+vǫsъ b overskæg (PR 134).
+vǫza a (SA 210).
+vǫzlъ a (SA 210; PR 131).
+vračь / vorčь b læge; troldmand (PR 134).
+(vrěmę vrěmene) c (time) (NA 131; (SA
+81)).[tjek i NA og SA]
+vъz (prep. and prefix) (PR 146).
+?vъdьlě b ? (PR 136).
+vъlxvъ b troldmand (PR 134).
+vъně b udenfor (PR 136).
+vъnučę a (SA 142).
+vъnukъ a (PR 131; RPT 97).
+vъnъ vъna b something external (NA 110,
+141; SA 21; RPT 83).
+vъpiti: vъpjǫ vъpitь b råbe, klage (PR 137).
+vъplь b klageråb (PR 134).
+vъrčati: vъrčjǫ vъrčitь c brumme, knurre
+(PR 139).
+vъšь f. c lus (PR 138).
+vъtorъ a (PR 133).
+vъ (prep. and prefix) (PR 146).
+vъzьlě (vъzlě?) b ved siden af (PR 136).
+vy you (pl.): see table X (SA 34ff., 199, 244).
+vy- (prefix) (PR 146).
+vydra vydry a (SA 22; RPT 109f.).
+vyknǫti: vyknǫ vyknetь a (SA 211, 259; PR
+133).
+vys- a høj (PR 133).
+vysiti: vysjǫ vysitь a hæve (PR 133).
+vyti: vyjǫ vyjetь c hyle (SA 204).
+x
+xajati: xajǫ xajetь c (SA 205, 236).
+xapati: xapjǫ xapjetь b gribe (SA 210; PR
+137).
+xědъ xěda xědo c gråhåret (SA 109; PR
+138).
+xěrъ xěra xěro a? grå (PR 133).
+xlębь f. c? afgrund (PR 138).
+xlěbъ a bread (SA 146f.; PR 131; RPT 98,
+101).
+xlěvъ b stald (PR 134; RPT 98, 102).
+xmara a (RPT 109).
+xlǫdъ xlǫda b (SA 156); c (NA 123) stick.
+xoditi: xodjǫ xoditь b gå (PR 137; MP 19).
+xodъ xoda c run (NA 97; PR 137).
+xoldъ c kulde (PR 137; RPT 105).
+xolpъ xolpa a (SA 69, 158; PR 131).
+xolstъ xolsta xolsto c ledig, uberørt (PR
+138).
+xomutъ b kumte, ring (PR 134).
+xorbrъ xorbra xorbro a (SA 108; PR 133).
+xormъ a/b/c (PR 131, 137).
+xorniti: xornjǫ xornitь b (PR 137); c (PR
+140) bevare, beskytte.
+xorǫgy a fane (PR 133).
+?xoršь xorša xorše b god (PR 136).
+xotěti: xotjǫ xotjetь b (prs., ipv.) / c (andre
+former) ville (PR 137, 139).
+xramati: xramjǫ xramjetь b halte (SA 210;
+PR 137).
+xręščь xręšča b (SA 127; RPT 99).
+xrěnъ a (RPT 98, 101).
+xribъ b (SA 156, 177).
+xripěti: xripjǫ xripitь c være hæs (PR 139).
+xromъ xroma xromo b lam (PR 136).
+xrǫščь b (RPT 102).
+xrьbьtъ b ryg, rygrad (PR 134).
+xrъmnǫ xrъmnetь b (SA 211).
+xudъ xuda xudo c dårlig, mager (SA 114;
+PR 138).
+xula xuly b/c (SA 78, 187 / PR 132).
+xъlmъ b (SA 156); c (PR 137).
+xъlstъ xъlsta (sek. xъlsto) b (bridle; canvas)
+(NA 114).
+xvala xvaly b ros (PR 135).
+xvaliti: xvaljǫ xvalitь b lovprise (PR 137).
+xvastati: xvastajǫ xvastajetь a prale (PR
+133).
+xvatiti: xvatjǫ xvatitь b (PR) / a (MP) gribe
+(PR 137; MP 26).
+xvorstъ b (SA 156f.; MP 19); d (RPT 105).
+xvostъ b hale (PR 134).
+xytiti: xytjǫ xytitь a ryste, røve (PR 133; MP
+26).
+xytrъ xytra xytro a (SA 108, 111; PR 133).
+xyža a (PR 132).
+z
+za (prep. and prefix) (PR 146).
+zadъ / zadь [a (SA)] / [b? (PR)] / [c (RPT)]
+(SA 155; PR 134; RPT 99, 102).
+zajęcь a (PR 132).
+zelenъ / zelenь c (SA 157, 188).
+zelenъ zelena zeleno b grøn (PR 136).
+zemь f. c jord (PR 138).
+zemja zemjě c (NA 93, 142; SA 71, 84, 140,
+188, 199); b/c (PR 138) land, earth.
+zębnǫti: zębnǫ zębnetь b (SA 211; PR 137).
+zętь a (PR 132; RPT 99).
+zělo b meget (PR 136).
+zьjati: zějǫ zějetь a (SA 204, 246).
+zьdati: zidjǫ zidjetь b bygge (SA 210; PR
+136).
+zima zimy c winter (NA 87, 141; SA 24, 44;
+PR 138).
+zinǫ zinetь a (SA 205; PR 133; MP 22).	
+1
+zьrěti: zьrějǫ zьrějetь a blive moden (SA
+204; PR 134).	
+2
+zьrěti: zьrjǫ zьritь c se, få øje på (PR 139).
+zьrkalo a (PR 132).
+zьrno a (SA 149, 155; PR 132).
+zmьja zmьjě b snake (PR 135).
+zmьjь b dragon, snake (PR 134).
+znati: znajǫ znajetь c (SA 205, 207).
+znakъ d sign (PR 137; RPT 99, 101f.).
+znamę znamene a banner (NA 133, 143;
+SA 24, 155, 199).
+znati: znajǫ znajetь a (SA 204, 207, 246; PR
+133).
+znojь b/c hede (PR 137).
+zobati: zobjǫ zobjetь b hakke, pirke, græsse
+(SA 210; PR 136).
+zola zoly c ashes (NA 85, 141; SA 24; PR
+138).
+zolto c gold (NA 116, 135; SA 152; PR 138).
+zoltъ zolta zolto c gylden (PR 138).
+zordъ zorda a (SA 24).
+zǫbъ zǫba d tooth (NA 99; SA 22, 146f.;
+OSA 41, 149; PR 137; RPT 83, 102).
+zudъ c (RPT 97).
+zъlъ zъla zъlo b (SA 108; (PR 135); PR
+136).
+zъly, G. zъlъve b i N.: a svigerinde (PR
+134).
+zъvati: zovǫ zovetь c (SA 204, 212f., 236;
+PR 139).
+zveno b lem; hjulfælg (PR 135).
+zvěrę c (SA 143).
+zvěrь zvěri c (SA 25, 28ff., 33, 71, 156, 243;
+PR 138; RPT 98).
+zvьněti: znьnjǫ zvьnitь c ringe, klinge (PR
+139).
+zvonъ zvona (sek. zvono) b (NA 114, 120);
+d (OSA 149) bell.[skal tjekkes]
+zvonъ zvona c peal, ringing (NA 120).
+zvǫkъ c (RPT 102).
+zybati: zybjǫ zybjetь a vugge (PR 133).
+ž
+žaba žaby a (SA 166; PR 132; RPT 107,
+109).
+žaliti: žaljǫ žalitь a klage (PR 133).
+žalь a (RPT 99).
+žalovati: žalujǫ žalujetь a belønne (PR
+133).
+žarъ d hede, glød (PR 137; RPT 99, 101,
+103).
+(u-)žasiti: -žasjǫ -žasitь c forskrække (PR
+140).
+žasnǫti: žasnǫ žasnetь b overraskes (PR
+137).
+-že (encl.; cf. jь-že) (rel. marker) (PR 139,
+145).
+žegti: žegǫ (žьgǫ) žežetь c brænde (PR
+139).
+želati: želajǫ želajetь a ønske (PR 134).
+želbъ d rende (PR 137; RPT 105).
+
+-- 13 of 14 --
+
+želěti: želějǫ želějetь a ønske (PR 134).
+želězo, G. želěza a (SA 73, 155; PR 132).
+žely, A. želъvь, G. želъve b i N.: a tortoise
+(NA 130, 142; SA 21; PR 134).
+žena ženy b (SA 69, 199; PR 135; MP 15).
+žerbę c (SA 143).
+žerbьjь c lille stykke (PR 137).
+žerdlo b munding (PR 135).	
+1
+žerti (žьrti): žьrǫ (žerǫ) žьretь c æde (SA
+203, 235, 251; PR 139).	
+2
+žerti: se 1
+žьrti.
+žest(okъ) c hård (PR 138).
+žezlъ žezla (sek. žezlo) b (NA 114); b/c (PR
+134, 137) rod.
+žędja b/a:b (PR 132).
+žędlo a (SA 149).
+žędati: žędjǫ žędjetь b begære, tørste (SA
+210; PR 136).
+žęti: žьn[j]ǫ žьn[j]etь b høste (SA 203,
+212f., 248, 250; PR 136).
+žęti: žьmǫ žьmetь b trykke (SA 203, 248,
+251; PR 136).
+židъ a (PR 131); b (RPT 97).
+žid(ъkъ) c flydende, tynd (PR 138).
+žila žily a (NA 138; SA 22, 155; PR 132;
+RPT 110).
+žimę a (SA 155).
+žirъ žiru c (NA 127, 137; RPT 97, 102).	
+1
+žiti: žijǫ žijetь c leve (SA 204, 237).	
+2
+žiti: živǫ živetь c leve (SA 204; PR 139).
+žito a (PR 132; RPT 111).
+životъ života b (SA 80; PR 134).
+živъ živa živo c levende (SA 25, 41; PR 138).
+žiznь a (PR 132).
+žьdati: žьdǫ (židǫ) žьdetь c vente (PR 139).
+žьgǫ: se žegti.
+žьlna žьlny b type of woodpecker (NA 114).
+žьltъ žьlta žьlto b guld (PR 136).
+žьrati: žerǫ (žьrǫ) žeretь c æde (SA 204,
+236; PR 139).	
+1
+žьrti (žerti): žьr[j]ǫ žьr[j]etь b ofre (SA
+203, 248f.; PR 136).	
+2
+žьrti: se 1
+žerti.
+žьrny žьrnъve a (SA 75; PR 133).
+žьvati: žujǫ žujetь c tygge (SA 204, 207,
+236, 238; PR 139).
+žukъ a (PR 131).
+žuna žuny a (SA 22).
+žuti: ? [žьvǫ žьvetь] / [žijǫ žijetь] c (SA
+204, 207, 238; PR 139).
+
+-- 14 of 14 --
+
