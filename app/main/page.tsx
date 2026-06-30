@@ -1,6 +1,7 @@
 import { prismaData as db } from "@/lib/prisma" // Ваша SQLite база данных лексикона
 import { TRANSLATION_LANGUAGES } from "@/config/features" // Массив наших 16 языков
 import MainClient from "./main-client"
+import DevStatusToast from "@/components/DevStatusToast";
 
 export default async function MainPage() {
     // Параллельно собираем живую статистику из базы данных для инфографики
@@ -20,6 +21,7 @@ export default async function MainPage() {
     return (
         <div className="min-h-screen bg-transparent py-12">
             <MainClient stats={stats} />
+            <DevStatusToast />
         </div>
     )
 }
