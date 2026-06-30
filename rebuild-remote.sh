@@ -3,4 +3,6 @@ git checkout master
 git pull
 npm i
 npm run build
-sudo systemctl restart typikon-web.service
+sudo mv interslavic-lexicon.service /etc/systemd/system/interslavic-lexicon.service
+sudo systemctl daemon-reload
+sudo systemctl restart interslavic-lexicon.servic

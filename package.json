@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "release": "bash release.sh",
     "drop:db": "npx tsx scripts/db/drop-db.ts",
     "init:db": "npx tsx scripts/db/init-db.ts",
     "fill:db": "npx tsx scripts/db/fill-db.ts",
