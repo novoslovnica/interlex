@@ -41,6 +41,14 @@ model Word {
   @@map("words")
 }
 
+model Word_text {
+  id      Int    @id
+  value   String
+  rootId  String
+
+  @@ignore
+}
+
 model Meaning {
   id       Int       @id @default(autoincrement())
   wordId   Int
@@ -95,6 +103,14 @@ model Root {
   roots_words RootWord[]
 
   @@map("roots")
+}
+
+model Root_text {
+  id      Int    @id
+  value   String
+  rootId  String
+
+  @@ignore
 }
 
 model RootWord {

@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interlex 🌐
 
-## Getting Started
+Платформа для изучения языков и управления лексиконом. Разработана на стекe Next.js (App Router), Prisma ORM (SQLite) и NextAuth.js.
 
-First, run the development server:
+Проект спроектирован с учетом поддержки ИИ-ассистентов (Cursor, GitHub Copilot) — основные архитектурные правила описаны в файле `agents.md`.
 
+---
+
+## 🛠 Технологический стек
+
+* **Frontend:** Next.js (React), Tailwind CSS, TypeScript
+* **State & Data:** Prisma Client, `next-safe-action` (для безопасных серверных действий)
+* **Auth:** NextAuth.js
+* **Database:** SQLite (с поддержкой виртуальных таблиц FTS5 для быстрого полнотекстового поиска)
+
+---
+
+## 🚀 Быстрый старт
+
+### 1. Установка зависимостей
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Настройка окружения
+Создайте файл `.env` в корневом каталоге и добавьте необходимые переменные (базовый шаблон):
+```env
+DATABASE_URL="file:./dev.db"
+NEXTAUTH_SECRET="your-secret-key"
+# Дополнительные ключи для OAuth-провайдеров
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Подготовка базы данных (Prisma)
+Проект использует локальную базу данных SQLite. Запустите генерацию клиента и примените миграции:
+```bash
+# Генерация Prisma Client
+npm run prisma:generate
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Применение миграций / пуш схемы в БД
+npx prisma db push
+```
 
-## Learn More
+### 4. Запуск в режиме разработки
+```bash
+npm run dev
+```
+Приложение будет доступно по адресу `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Доступные скрипты (`package.json`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* `npm run dev` — Запуск локального сервера разработки.
+* `npm run build` — Сборка оптимизированного Production-билда.
+* `npm run start` — Запуск собранного Production-сервера.
+* `npm run lint` — Проверка кода линтером Next.js.
+* `npm run prisma:generate` — Пересборка типов Prisma Client после изменения `schema.prisma`.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📂 Структура и важные архитектурные правила
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Перед началом разработки обязательно ознакомьтесь с полным текстом `agents.md`. Ключевые моменты:
+
+1. **Компоненты (Архитектура Next.js):**
+    * Все страницы и базовые компоненты по умолчанию являются **Server Components**.
+    * Директива `"use client"` используется строго в интерактивных элементах (кнопки, формы, хуки).
+2. **База данных (Prisma + SQLite FTS5):**
+    * Для поиска по тексту используются виртуальные таблицы SQLite FTS5. Они создаются через сырые SQL-миграции и помечаются в схеме директивой `@@ignore`.
+    * Изменение данных в них происходит через триггеры БД, а выборка — через `$queryRaw` с оператором `MATCH`.
+3. **Безопасность Mutation (Server Actions):**
+    * Любые изменения данных (POST/PUT/DELETE) должны проходить через библиотеки валидации (например, `next-safe-action`) с обязательной проверкой сессии пользователя.
+
+---
+
+## 🤝 Вклад в разработку (Contribution)
+
+1. Убедитесь, что ваш код проходит проверку линтером: `npm run lint`.
+2. Если вы меняете структуру БД, обязательно обновляйте файлы миграций и не забывайте прописывать `@@ignore` для теневых и виртуальных таблиц FTS5.
