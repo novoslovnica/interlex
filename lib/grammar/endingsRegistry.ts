@@ -1,5 +1,5 @@
 
-export type Case = 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative';
+export type Case = 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative' | 'vocative';
 // ИСПРАВЛЕНО: Теперь чисел строго три
 export type NumberType = 'singular' | 'plural' | 'dual';
 
@@ -34,7 +34,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'a',       // vьlka
             dative: 'u',         // vьlku
             instrumental: 'omъ', // vьlkomъ
-            locative: 'ě'        // vьlcě (первая палатализация k -> c)
+            locative: 'ě',        // vьlcě (первая палатализация k -> c)
+            vocative: 'e'        // vьlke (звательная форма)
         },
         plural: {
             nominative: 'i',     // vьlci
@@ -42,7 +43,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ъ',       // vьlkъ
             dative: 'omъ',       // vьlkomъ
             instrumental: 'y',   // vьlky
-            locative: 'ěxъ'      // vьlcěxъ
+            locative: 'ěxъ',      // vьlcěxъ
+            vocative: 'i'        // vьlci (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'a',     // vьlka (два волка)
@@ -50,7 +52,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // vьlku
             dative: 'oma',       // vьlkoma
             instrumental: 'oma', // vьlkoma
-            locative: 'u'        // vьlku
+            locative: 'u',        // vьlku
+            vocative: 'a'        // vьlka (звательная форма в двойственном числе)
         }
     },
 
@@ -64,7 +67,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'a',       // końa
             dative: 'ju',        // końu / końaju
             instrumental: 'emъ', // końemъ (переход o -> e после мягкого)
-            locative: 'i'        // końi
+            locative: 'i',        // końi
+            vocative: 'ju'       // końju (звательная форма)
         },
         plural: {
             nominative: 'i',     // końi
@@ -72,7 +76,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ь',       // końь
             dative: 'emъ',       // końemъ
             instrumental: 'i',   // końi
-            locative: 'ixъ'      // końixъ
+            locative: 'ixъ',      // końixъ
+            vocative: 'i'        // końi (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'a',     // końa
@@ -80,7 +85,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // końu
             dative: 'ema',       // końema
             instrumental: 'ema', // końema
-            locative: 'u'        // końu
+            locative: 'u',        // końu
+            vocative: 'a'        // końa (звательная форма в двойственном числе)
         }
     },
 
@@ -95,7 +101,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'a',       // těla
             dative: 'u',         // tělu
             instrumental: 'omъ', // tělomъ
-            locative: 'ě'        // tělě
+            locative: 'ě',        // tělě
+            vocative: 'o'        // tělo (звательная форма совпадает с номинативом)
         },
         plural: {
             nominative: 'a',     // těla (окна, тела)
@@ -103,7 +110,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ъ',       // tělъ
             dative: 'omъ',       // tělomъ
             instrumental: 'y',   // těly
-            locative: 'ěxъ'      // tělěxъ
+            locative: 'ěxъ',      // tělěxъ
+            vocative: 'a'        // těla (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'ě',     // tělě (два тела)
@@ -111,7 +119,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // tělu
             dative: 'oma',       // těloma
             instrumental: 'oma', // těloma
-            locative: 'u'        // tělu
+            locative: 'u',        // tělu
+            vocative: 'ě'        // tělě (звательная форма в двойственном числе)
         }
     },
 
@@ -125,7 +134,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'a',       // polja
             dative: 'ju',        // polju
             instrumental: 'emъ', // poljemъ
-            locative: 'i'        // polji
+            locative: 'i',        // polji
+            vocative: 'e'        // polje (звательная форма совпадает с номинативом)
         },
         plural: {
             nominative: 'a',     // polja
@@ -133,7 +143,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ь',       // poljь
             dative: 'emъ',       // poljemъ
             instrumental: 'i',   // polji
-            locative: 'ixъ'      // poljixъ
+            locative: 'ixъ',      // poljixъ
+            vocative: 'a'        // polja (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'i',     // polji
@@ -141,7 +152,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // polju
             dative: 'ema',       // poljema
             instrumental: 'ema', // poljema
-            locative: 'u'        // polju
+            locative: 'u',        // polju
+            vocative: 'i'        // polji (звательная форма в двойственном числе)
         }
     },
 
@@ -155,7 +167,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // synu (историческое окончание u-основы)
             dative: 'ovi',       // synovi
             instrumental: 'ъmъ', // synъmъ
-            locative: 'u'        // synu
+            locative: 'u',        // synu
+            vocative: 'u'        // synu (звательная форма)
         },
         plural: {
             nominative: 'ove',    // synove
@@ -163,7 +176,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ovъ',     // synovъ
             dative: 'ъmъ',       // synъmъ
             instrumental: 'ъmi', // synъmi
-            locative: 'ъxъ'      // synъxъ
+            locative: 'ъxъ',      // synъxъ
+            vocative: 'ove'      // synove (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'y',     // syny
@@ -171,7 +185,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ovu',     // synovju
             dative: 'ъma',       // synъma
             instrumental: 'ъma', // synъma
-            locative: 'ovu'      // synovju
+            locative: 'ovu',      // synovju
+            vocative: 'y'        // syny (звательная форма в двойственном числе)
         }
     },
 
@@ -185,7 +200,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'i',       // kosti
             dative: 'i',         // kosti
             instrumental: 'ьjǫ', // kostьjǫ (для ж.р.) или ьmъ (для м.р. gostьmъ)
-            locative: 'i'        // kosti
+            locative: 'i',        // kosti
+            vocative: 'i'        // kosti (звательная форма)
         },
         plural: {
             nominative: 'i',     // kosti
@@ -193,7 +209,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ьjъ',     // kostьjъ
             dative: 'ьmъ',       // kostьmъ
             instrumental: 'ьmi', // kostьmi
-            locative: 'ьxъ'      // kostьxъ
+            locative: 'ьxъ',      // kostьxъ
+            vocative: 'i'        // kosti (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'i',     // kosti
@@ -201,7 +218,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ьju',     // kostьju
             dative: 'ьma',       // kostьma
             instrumental: 'ьma', // kostьma
-            locative: 'ьju'      // kostьju
+            locative: 'ьju',      // kostьju
+            vocative: 'i'        // kosti (звательная форма в двойственном числе)
         }
     },
 
@@ -216,7 +234,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'e',       // imene
             dative: 'i',         // imeni
             instrumental: 'ьmъ', // imenьmъ
-            locative: 'i'        // imeni
+            locative: 'i',        // imeni
+            vocative: ''         // imę (звательная форма совпадает с номинативом)
         },
         plural: {
             nominative: 'a',     // imena
@@ -224,7 +243,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ъ',       // imenъ
             dative: 'ьmъ',       // imenьmъ
             instrumental: 'y',   // imeny
-            locative: 'ьxъ'      // imenьxъ
+            locative: 'ьxъ',      // imenьxъ
+            vocative: 'a'        // imena (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'i',     // imeni
@@ -232,7 +252,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // imenu
             dative: 'ьma',       // imenьma
             instrumental: 'ьma', // imenьma
-            locative: 'u'        // imenu
+            locative: 'u',        // imenu
+            vocative: 'i'        // imeni (звательная форма в двойственном числе)
         }
     },
 
@@ -246,7 +267,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'e',       // nebese
             dative: 'i',         // nebesi
             instrumental: 'ьmъ', // nebesьmъ
-            locative: 'i'        // nebesi
+            locative: 'i',        // nebesi
+            vocative: 'o'        // nebo (звательная форма совпадает с номинативом)
         },
         plural: {
             nominative: 'a',     // nebesa
@@ -254,7 +276,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'ъ',       // nebesъ
             dative: 'ьmъ',       // nebesьmъ
             instrumental: 'y',   // nebesy
-            locative: 'ьxъ'      // nebesьxъ
+            locative: 'ьxъ',      // nebesьxъ
+            vocative: 'a'        // nebesa (звательная форма во множественном числе)
         },
         dual: {
             nominative: 'ě',     // nebesě
@@ -262,7 +285,8 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             genitive: 'u',       // nebesu
             dative: 'ьma',       // nebesьma
             instrumental: 'ьma', // nebesьma
-            locative: 'u'        // nebesu
+            locative: 'u',        // nebesu
+            vocative: 'ě'        // nebesě (звательная форма в двойственном числе)
         }
     },
 };

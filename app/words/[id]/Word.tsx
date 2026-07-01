@@ -78,7 +78,13 @@ const Word = ({ item, currentScript }: any) => {
                     try {
                         // Вызываем ваш тоновый движок для каждой ячейки таблицы
                         paradigmData[num.key][c.key] = declineWordAutomatically({
-                            dbItem: item.value,
+                            dbItem: {
+                                interslavic: item.value,
+                                protoSlavic: item.value,
+                                gender: "masculine",
+                                protoStemClass: "u",
+                                paradigm: "A",
+                            },
                             targetCase: c.key,
                             targetNumber: num.key,
                         });
