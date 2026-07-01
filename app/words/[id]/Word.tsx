@@ -3,7 +3,7 @@ import {isvToCyr, isvToTranscription, standardToSimple, standardToSimpleCyr} fro
 import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {extractProtoStems} from "@/lib/grammar/morphonology";
-import {conjugateFullVerb} from "@/lib/grammar/verb/conjugator";
+import {conjugateFullVerb} from "@/lib/grammar/verb/conjugator2";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
 import {NounDeclensionTables} from "@/app/words/[id]/NounDeclensionTables";
 import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
