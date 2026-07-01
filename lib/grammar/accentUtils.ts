@@ -16,7 +16,7 @@ export function applyAccent(word: string, syllableIndex: number): string {
     return word.substring(0, targetIndex) + accentedChar + word.substring(targetIndex + 1);
 }
 
-export type AccentType = 'acute' | 'circumflex';
+export type AccentType = 'acute' | 'circumflex' | 'neoacute' | 'short';
 
 /**
  * Проставляет знак ударения (аккуратный аккут или циркумфлекс) на нужный слог
@@ -35,9 +35,25 @@ export function applySpecificAccent(word: string, syllableIndex: number, type: A
     const char = word[targetIndex];
 
     // ВЫБОР ЗНАКА UNICODE:
-    // \u0301 - это аккут (́)
-    // \u0302 - это классический комбинируемый славянский циркумфлекс (̂)
-    const accentMark = type === 'acute' ? '\u0301' : '\u0302';
+    // \u0301 - Акут (́) — используется для старого и нового акута (длинные тона)
+    // \u0302 - Циркумфлекс (̂) — классический праславянский нисходящий долгий тон
+    // \u0300 - Гравис (̀) — используется для короткого ударения (краткие тона)
+    let accentMark = '';
+    switch (type) {
+        case 'acute':
+        case 'neoacute':
+            accentMark = '\u0301';
+            break;
+        case 'circumflex':
+            accentMark = '\u0302';
+            break;
+        case 'short':
+            accentMark = '\u0300';
+            break;
+        default:
+            accentMark = '\u0301';
+    }
+
     const accentedChar = char + accentMark;
 
     return word.substring(0, targetIndex) + accentedChar + word.substring(targetIndex + 1);

@@ -1,17 +1,28 @@
 import {VerbModel, ConjugationResult, FullParadigm, LParticiple, IndicativeMood} from './types/conjugator';
 import {applyIotation} from "@/lib/grammar/morphonology";
 import {bytiFuture, bytiImperfect, bytiPresent, conditionalParticles} from "@/lib/grammar/verb/auxiliary";
+import {applySpecificAccent} from "@/lib/grammar/accentUtils";
 
 // Вспомогательный хелпер (замените на вашу функцию разметки слогов и тонов)
 // syllableFromEnd: 0 - последний слог, 1 - предпоследний, 'first' - абсолютное начало слова
 function accentSyllable(word: string, position: number | 'first', tone: 'acute' | 'circumflex' | 'neoacute' | 'short'): string {
-    // Здесь будет вызываться логика, аналогичная вашему деклинатору существительных.
-    // На данный момент возвращаем строку. При интеграции сюда встанет ваш посимвольный маппер.
-    return `${word}/*тоновое ударение*/`;
+    if (position === 'first') {
+        // Чтобы зафиксировать ударение на самом первом слоге,
+        // syllableIndex должен быть равен общему количеству слогов минус 1.
+        const vowels = /[aeiouyěęǫọų]/gi;
+        const matches = Array.from(word.matchAll(vowels));
+        if (matches.length === 0) return word;
+
+        const firstSyllableIndex = matches.length - 1;
+        return applySpecificAccent(word, firstSyllableIndex, tone);
+    }
+
+    // Если передан обычный индекс с конца (0, 1), пробрасываем напрямую
+    return applySpecificAccent(word, position, tone);
 }
 
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
-    const { infinitive, infStem, presentStem, aoristStem, verbClass, aspect, paradigm = "A" } = verb;
+    const { infinitive, infStem, presentStem, aoristStem, verbClass, aspect, paradigm = "A" } = verb; // TODO: вытащить из БД парадигму
 
     // --- 1. Презенс (Настоящее / Бесприставочное будущее время) ---
     const hasThematicE = presentStem.endsWith('e');
