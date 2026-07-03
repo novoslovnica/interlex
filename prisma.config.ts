@@ -1,6 +1,15 @@
 // prisma.config.ts
 import "dotenv/config";
+import path from "path";
 import { defineConfig, env } from "@prisma/config";
+
+function resolveFileUrl(rawUrl: string): string {
+    const match = rawUrl.match(/^file:(.+)$/);
+    if (match) {
+        return "file:" + path.resolve(process.cwd(), match[1]);
+    }
+    return rawUrl;
+}
 
 const dbType = process.env.DB_TYPE;
 
@@ -11,13 +20,13 @@ if (dbType === "auth") {
     config = defineConfig({
         schema: "prisma/auth.schema.prisma",
         migrations: { path: "prisma/migrations/auth" },
-        datasource: { url: env("AUTH_DATABASE_URL") ?? "file:./auth.db" },
+        datasource: { url: resolveFileUrl(env("AUTH_DATABASE_URL") ?? "file:./auth.db") },
     });
 } else {
     config = defineConfig({
         schema: "prisma/data.schema.prisma",
         migrations: { path: "prisma/migrations/data" },
-        datasource: { url: env("DATA_DATABASE_URL") ?? "file:./app.db" },
+        datasource: { url: resolveFileUrl(env("DATA_DATABASE_URL") ?? "file:./app.db") },
     });
 }
 

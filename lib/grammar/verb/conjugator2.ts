@@ -22,7 +22,7 @@ function accentSyllable(word: string, position: number | 'first', tone: 'acute' 
 }
 
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
-    const { infinitive, infStem, presentStem, aoristStem, verbClass, aspect, paradigm = "A" } = verb; // TODO: вытащить из БД парадигму
+    const { infinitive, infStem, presentStem, aoristStem, verbClass, aspect, paradigm } = verb; // TODO: вытащить из БД парадигму
 
     // --- 1. Презенс (Настоящее / Бесприставочное будущее время) ---
     const hasThematicE = presentStem.endsWith('e');

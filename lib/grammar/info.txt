@@ -1,0 +1,25 @@
+Упрощённая двухтоновая система (Approach 1):Функции: declineNoun, generateBaseNounForm, applyPrepositionEnclitic, applyAccent, applySpecificAccent.Маркеры: Использует тип AccentType (acute, circumflex, neoacute, short) и проставляет только базовые знаки акута (\u0301) и циркумфлекса (\u0302). Логика распределения падежей в парадигме C здесь сильно упрощена (разделение по родам сделано «грубо для теста»).Продвинутая четырёхтоновая академическая система (Approach 2):Функции: declineWordAutomatically, declineNounWithFourTones, generateBaseNounFormWithFourTones, applyPrepositionEncliticWithFourTones, applyFourTonesMark, getAcuteToneType, getCircumflexToneType.Маркеры: Использует строгий тип FourSlavicTones. Она учитывает исходную долготу/краткость гласных (через isShortVowel) и точно реализует закон праславянского Неокута (парадигма B) и краткие нисходящие тона/циркумфлексы (Юникод \u0311, парадигма C).
+
+# [CONTEXT RESTORE] PROJECT: INTERSLAVIC LEXICON & CORPUS (INTERLEX)
+
+## 1. TECH STACK & SYSTEM ARCHITECTURE
+- Core Stack: Next.js (App Router), Strict TypeScript (no any), Tailwind CSS, SQLite (Main DB).
+- Data Architecture: Decoupled design. Main DB (transactional dictionary) + Analytics DB (linguistic tokens).
+- Connection Bridge: Databases are linked asynchronously via an immutable, indexed string identifier: `wordSlug` (format: `lemma-pos`, e.g., "dom-noun").
+
+## 2. CORPUS SEARCH ENGINE STATUS
+- KWIC (Keyword-in-Context): Implemented high-performance endpoint with dynamic alignment of Left Context, Keyword, and Right Context based on token indexing, preventing fake duplicates and handling punctuation parsing.
+- CQL Parser & Translator: Fully functioning AST tokenizer and parametric Raw SQL compiler based on dynamic Self-Joins (`t0 JOIN t1 ON t1.sentenceId = t0.sentenceId AND t1.tokenIndex = t0.tokenIndex + 1`) with native JSON extraction for grammatical feats (`json_extract`). Integrated directly with the KWIC engine.
+
+## 3. COMPLETED MORPHOLOGY ENGINES (4-TONE PARADIGMS)
+Implemented modular, pure-functional processors in `processors.ts` utilizing Zaliznyak's 4-tone Proto-Slavic accentological system:
+- long_acute (́, U+0301), short_acute (̀, U+0300 - Neoacute)
+- long_circumflex (̂, U+0302), short_circumflex (̑, U+0311)
+
+### Covered Parts of Speech (PoS) Processors:
+1. Noun Processor (`processNoun`): Generates 21 case-number forms (including dual). Correctly differentiates hard/soft o/ā/i/u bases and consonant extensions (n/s). Simulates circumflexes on echlinomena and Neoacute shifts on falling yers.
+2. Verb Processor (`processVerb`): Generates over 35 forms. Implements Leskien's regular stem extraction engine (Classes I-V). Correctly resolves historical mutations (First Palatalization, Iotation, L-epentheticum). Simulates Schachmatov's presentation retraction and prefix stress shifts in Paradigm C.
+3. Adjective Processor (`processAdjective`): Implements smart splitting. Relative adjectives generate 63 positive forms (`pos`). Qualitative adjectives cascade into 189 forms, automatically deriving Comparative (`comp`, `-ějš-` suffix) and Superlative (`sup`, `naj-` prefix) inflected as soft jo-stems with strict suffixal acute accentuation.
+4. Numeral Processor (`processNumeral`): Separated into 3 isolated files: Cardinal (split into 1, 2-4, 5-10 clusters borrowing i-basis/adj-hard rules), Ordinal (proxies to Adjective Engine), and Collective (implements -oje/-ero sub-matrices with proper numeric suffixes).
+5. Pronoun Processor (`processPronoun`): Supports personal enclitic/full splitting (enclitics like *mę, mi, ti* are strictly stripped of diacritics) and complex anaphoric suppletivism for 3rd person pronouns shifting to the `*j-` base.
+6. Determiner, Adverb, Auxiliary & Uninflected Processors: Fully operational. Adverbs handle degrees of comparison (`pos`, `comp`, `sup`). Auxiliaries unpack the full conditional and historical pluperfect structural paradigms of the suppletive verb *byti*.

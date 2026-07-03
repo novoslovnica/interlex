@@ -2091,15 +2091,13 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const WordScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   external_id: 'external_id',
   value: 'value',
   nsl: 'nsl',
   isv: 'isv',
   transcription: 'transcription',
   field: 'field',
-  declension: 'declension',
-  etymology: 'etymology',
-  genesis: 'genesis',
   type: 'type',
   pos: 'pos',
   frequency: 'frequency',
@@ -2109,7 +2107,15 @@ export const WordScalarFieldEnum = {
   proto: 'proto',
   paradigm: 'paradigm',
   protoStemClass: 'protoStemClass',
-  stemExtension: 'stemExtension'
+  stemExtension: 'stemExtension',
+  stem: 'stem',
+  base: 'base',
+  gender: 'gender',
+  declension: 'declension',
+  conjugation: 'conjugation',
+  accentSyllable: 'accentSyllable',
+  alternationType: 'alternationType',
+  fleetingVowelAt: 'fleetingVowelAt'
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]

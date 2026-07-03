@@ -9,26 +9,35 @@ datasource db {
 
 model Word {
   id              Int              @id @default(autoincrement())
+  slug            String           @unique
   external_id     Int?
   value           String?
   nsl             String?
-  isv             String?
+  isv             String?          // Межславянская лексема
   transcription   String?
   field           String?
-  declension      Int?
-  etymology       String?
-  genesis         String?
   type            String?
-  pos             String?
+  pos             String?          // NOUN, VERB, ADJ
   frequency       String?
   intelligibility String?
   addition        String?
   sameInLanguages String?
 
+  // ПРАСЛАВЯНСКИЙ И АКЦЕНТОЛОГИЧЕСКИЙ СЛОЙ (Уже были частично у вас)
   proto           String?          // Праславянская исходная форма: *synъ, *ryba, *světъ
   paradigm        String?          // Акцентная парадигма Зализняка: A, B, C
   protoStemClass  String?          // Класс праславянской основы: ā, jā, o, jo, i, u, consonant
   stemExtension   String?          // Наращение основы: en, es, et, er
+
+  // ДОБАВЛЕННЫЕ ПОЛЯ ДЛЯ АВТОМАТИЧЕСКОЙ ГЕНЕРАЦИИ ПАРАДИГМ
+  stem            String?          // Очищенная межславянская основа слова (н-р: "vod", "otc")
+  base            String?          // Основа для поиска словоформ (н-р: "vod" для "voda", "hval" для "hvaliti")
+  gender          String?          // Род (masc, fem, neut) — критично для праславянских o/ā основ
+  declension      Int?             // Тип склонения в межславянском
+  conjugation     Int?             // Тип спряжения (для глаголов)
+  accentSyllable  Int?             // Индекс ударного слога в основе (для расчета парадигм A/B/C)
+  alternationType String?          // Маркер чередований согласных при формообразовании (k-c-č)
+  fleetingVowelAt Int?             // Позиция беглой гласной (-1 если нет, иначе индекс в строке `isv`)
 
   // Обратные связи Prisma
   meanings        Meaning[]
@@ -39,7 +48,9 @@ model Word {
   antonymsWord    Antonym[]        @relation("AntonymWord")
 
   @@map("words")
+  @@index([slug])
 }
+
 
 model Word_text {
   id      Int    @id

@@ -30,25 +30,29 @@ export type WordAvgAggregateOutputType = {
   id: number | null
   external_id: number | null
   declension: number | null
+  conjugation: number | null
+  accentSyllable: number | null
+  fleetingVowelAt: number | null
 }
 
 export type WordSumAggregateOutputType = {
   id: number | null
   external_id: number | null
   declension: number | null
+  conjugation: number | null
+  accentSyllable: number | null
+  fleetingVowelAt: number | null
 }
 
 export type WordMinAggregateOutputType = {
   id: number | null
+  slug: string | null
   external_id: number | null
   value: string | null
   nsl: string | null
   isv: string | null
   transcription: string | null
   field: string | null
-  declension: number | null
-  etymology: string | null
-  genesis: string | null
   type: string | null
   pos: string | null
   frequency: string | null
@@ -59,19 +63,25 @@ export type WordMinAggregateOutputType = {
   paradigm: string | null
   protoStemClass: string | null
   stemExtension: string | null
+  stem: string | null
+  base: string | null
+  gender: string | null
+  declension: number | null
+  conjugation: number | null
+  accentSyllable: number | null
+  alternationType: string | null
+  fleetingVowelAt: number | null
 }
 
 export type WordMaxAggregateOutputType = {
   id: number | null
+  slug: string | null
   external_id: number | null
   value: string | null
   nsl: string | null
   isv: string | null
   transcription: string | null
   field: string | null
-  declension: number | null
-  etymology: string | null
-  genesis: string | null
   type: string | null
   pos: string | null
   frequency: string | null
@@ -82,19 +92,25 @@ export type WordMaxAggregateOutputType = {
   paradigm: string | null
   protoStemClass: string | null
   stemExtension: string | null
+  stem: string | null
+  base: string | null
+  gender: string | null
+  declension: number | null
+  conjugation: number | null
+  accentSyllable: number | null
+  alternationType: string | null
+  fleetingVowelAt: number | null
 }
 
 export type WordCountAggregateOutputType = {
   id: number
+  slug: number
   external_id: number
   value: number
   nsl: number
   isv: number
   transcription: number
   field: number
-  declension: number
-  etymology: number
-  genesis: number
   type: number
   pos: number
   frequency: number
@@ -105,6 +121,14 @@ export type WordCountAggregateOutputType = {
   paradigm: number
   protoStemClass: number
   stemExtension: number
+  stem: number
+  base: number
+  gender: number
+  declension: number
+  conjugation: number
+  accentSyllable: number
+  alternationType: number
+  fleetingVowelAt: number
   _all: number
 }
 
@@ -113,25 +137,29 @@ export type WordAvgAggregateInputType = {
   id?: true
   external_id?: true
   declension?: true
+  conjugation?: true
+  accentSyllable?: true
+  fleetingVowelAt?: true
 }
 
 export type WordSumAggregateInputType = {
   id?: true
   external_id?: true
   declension?: true
+  conjugation?: true
+  accentSyllable?: true
+  fleetingVowelAt?: true
 }
 
 export type WordMinAggregateInputType = {
   id?: true
+  slug?: true
   external_id?: true
   value?: true
   nsl?: true
   isv?: true
   transcription?: true
   field?: true
-  declension?: true
-  etymology?: true
-  genesis?: true
   type?: true
   pos?: true
   frequency?: true
@@ -142,19 +170,25 @@ export type WordMinAggregateInputType = {
   paradigm?: true
   protoStemClass?: true
   stemExtension?: true
+  stem?: true
+  base?: true
+  gender?: true
+  declension?: true
+  conjugation?: true
+  accentSyllable?: true
+  alternationType?: true
+  fleetingVowelAt?: true
 }
 
 export type WordMaxAggregateInputType = {
   id?: true
+  slug?: true
   external_id?: true
   value?: true
   nsl?: true
   isv?: true
   transcription?: true
   field?: true
-  declension?: true
-  etymology?: true
-  genesis?: true
   type?: true
   pos?: true
   frequency?: true
@@ -165,19 +199,25 @@ export type WordMaxAggregateInputType = {
   paradigm?: true
   protoStemClass?: true
   stemExtension?: true
+  stem?: true
+  base?: true
+  gender?: true
+  declension?: true
+  conjugation?: true
+  accentSyllable?: true
+  alternationType?: true
+  fleetingVowelAt?: true
 }
 
 export type WordCountAggregateInputType = {
   id?: true
+  slug?: true
   external_id?: true
   value?: true
   nsl?: true
   isv?: true
   transcription?: true
   field?: true
-  declension?: true
-  etymology?: true
-  genesis?: true
   type?: true
   pos?: true
   frequency?: true
@@ -188,6 +228,14 @@ export type WordCountAggregateInputType = {
   paradigm?: true
   protoStemClass?: true
   stemExtension?: true
+  stem?: true
+  base?: true
+  gender?: true
+  declension?: true
+  conjugation?: true
+  accentSyllable?: true
+  alternationType?: true
+  fleetingVowelAt?: true
   _all?: true
 }
 
@@ -279,15 +327,13 @@ export type WordGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type WordGroupByOutputType = {
   id: number
+  slug: string
   external_id: number | null
   value: string | null
   nsl: string | null
   isv: string | null
   transcription: string | null
   field: string | null
-  declension: number | null
-  etymology: string | null
-  genesis: string | null
   type: string | null
   pos: string | null
   frequency: string | null
@@ -298,6 +344,14 @@ export type WordGroupByOutputType = {
   paradigm: string | null
   protoStemClass: string | null
   stemExtension: string | null
+  stem: string | null
+  base: string | null
+  gender: string | null
+  declension: number | null
+  conjugation: number | null
+  accentSyllable: number | null
+  alternationType: string | null
+  fleetingVowelAt: number | null
   _count: WordCountAggregateOutputType | null
   _avg: WordAvgAggregateOutputType | null
   _sum: WordSumAggregateOutputType | null
@@ -325,15 +379,13 @@ export type WordWhereInput = {
   OR?: Prisma.WordWhereInput[]
   NOT?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
   id?: Prisma.IntFilter<"Word"> | number
+  slug?: Prisma.StringFilter<"Word"> | string
   external_id?: Prisma.IntNullableFilter<"Word"> | number | null
   value?: Prisma.StringNullableFilter<"Word"> | string | null
   nsl?: Prisma.StringNullableFilter<"Word"> | string | null
   isv?: Prisma.StringNullableFilter<"Word"> | string | null
   transcription?: Prisma.StringNullableFilter<"Word"> | string | null
   field?: Prisma.StringNullableFilter<"Word"> | string | null
-  declension?: Prisma.IntNullableFilter<"Word"> | number | null
-  etymology?: Prisma.StringNullableFilter<"Word"> | string | null
-  genesis?: Prisma.StringNullableFilter<"Word"> | string | null
   type?: Prisma.StringNullableFilter<"Word"> | string | null
   pos?: Prisma.StringNullableFilter<"Word"> | string | null
   frequency?: Prisma.StringNullableFilter<"Word"> | string | null
@@ -344,6 +396,14 @@ export type WordWhereInput = {
   paradigm?: Prisma.StringNullableFilter<"Word"> | string | null
   protoStemClass?: Prisma.StringNullableFilter<"Word"> | string | null
   stemExtension?: Prisma.StringNullableFilter<"Word"> | string | null
+  stem?: Prisma.StringNullableFilter<"Word"> | string | null
+  base?: Prisma.StringNullableFilter<"Word"> | string | null
+  gender?: Prisma.StringNullableFilter<"Word"> | string | null
+  declension?: Prisma.IntNullableFilter<"Word"> | number | null
+  conjugation?: Prisma.IntNullableFilter<"Word"> | number | null
+  accentSyllable?: Prisma.IntNullableFilter<"Word"> | number | null
+  alternationType?: Prisma.StringNullableFilter<"Word"> | string | null
+  fleetingVowelAt?: Prisma.IntNullableFilter<"Word"> | number | null
   meanings?: Prisma.MeaningListRelationFilter
   roots_words?: Prisma.RootWordListRelationFilter
   synonymsRoot?: Prisma.SynonymListRelationFilter
@@ -354,15 +414,13 @@ export type WordWhereInput = {
 
 export type WordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   external_id?: Prisma.SortOrderInput | Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
   field?: Prisma.SortOrderInput | Prisma.SortOrder
-  declension?: Prisma.SortOrderInput | Prisma.SortOrder
-  etymology?: Prisma.SortOrderInput | Prisma.SortOrder
-  genesis?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +431,14 @@ export type WordOrderByWithRelationInput = {
   paradigm?: Prisma.SortOrderInput | Prisma.SortOrder
   protoStemClass?: Prisma.SortOrderInput | Prisma.SortOrder
   stemExtension?: Prisma.SortOrderInput | Prisma.SortOrder
+  stem?: Prisma.SortOrderInput | Prisma.SortOrder
+  base?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  declension?: Prisma.SortOrderInput | Prisma.SortOrder
+  conjugation?: Prisma.SortOrderInput | Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrderInput | Prisma.SortOrder
+  alternationType?: Prisma.SortOrderInput | Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrderInput | Prisma.SortOrder
   meanings?: Prisma.MeaningOrderByRelationAggregateInput
   roots_words?: Prisma.RootWordOrderByRelationAggregateInput
   synonymsRoot?: Prisma.SynonymOrderByRelationAggregateInput
@@ -383,6 +449,7 @@ export type WordOrderByWithRelationInput = {
 
 export type WordWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  slug?: string
   AND?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
   OR?: Prisma.WordWhereInput[]
   NOT?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
@@ -392,9 +459,6 @@ export type WordWhereUniqueInput = Prisma.AtLeast<{
   isv?: Prisma.StringNullableFilter<"Word"> | string | null
   transcription?: Prisma.StringNullableFilter<"Word"> | string | null
   field?: Prisma.StringNullableFilter<"Word"> | string | null
-  declension?: Prisma.IntNullableFilter<"Word"> | number | null
-  etymology?: Prisma.StringNullableFilter<"Word"> | string | null
-  genesis?: Prisma.StringNullableFilter<"Word"> | string | null
   type?: Prisma.StringNullableFilter<"Word"> | string | null
   pos?: Prisma.StringNullableFilter<"Word"> | string | null
   frequency?: Prisma.StringNullableFilter<"Word"> | string | null
@@ -405,25 +469,31 @@ export type WordWhereUniqueInput = Prisma.AtLeast<{
   paradigm?: Prisma.StringNullableFilter<"Word"> | string | null
   protoStemClass?: Prisma.StringNullableFilter<"Word"> | string | null
   stemExtension?: Prisma.StringNullableFilter<"Word"> | string | null
+  stem?: Prisma.StringNullableFilter<"Word"> | string | null
+  base?: Prisma.StringNullableFilter<"Word"> | string | null
+  gender?: Prisma.StringNullableFilter<"Word"> | string | null
+  declension?: Prisma.IntNullableFilter<"Word"> | number | null
+  conjugation?: Prisma.IntNullableFilter<"Word"> | number | null
+  accentSyllable?: Prisma.IntNullableFilter<"Word"> | number | null
+  alternationType?: Prisma.StringNullableFilter<"Word"> | string | null
+  fleetingVowelAt?: Prisma.IntNullableFilter<"Word"> | number | null
   meanings?: Prisma.MeaningListRelationFilter
   roots_words?: Prisma.RootWordListRelationFilter
   synonymsRoot?: Prisma.SynonymListRelationFilter
   synonymsWord?: Prisma.SynonymListRelationFilter
   antonymsRoot?: Prisma.AntonymListRelationFilter
   antonymsWord?: Prisma.AntonymListRelationFilter
-}, "id">
+}, "id" | "slug">
 
 export type WordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   external_id?: Prisma.SortOrderInput | Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
   field?: Prisma.SortOrderInput | Prisma.SortOrder
-  declension?: Prisma.SortOrderInput | Prisma.SortOrder
-  etymology?: Prisma.SortOrderInput | Prisma.SortOrder
-  genesis?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -434,6 +504,14 @@ export type WordOrderByWithAggregationInput = {
   paradigm?: Prisma.SortOrderInput | Prisma.SortOrder
   protoStemClass?: Prisma.SortOrderInput | Prisma.SortOrder
   stemExtension?: Prisma.SortOrderInput | Prisma.SortOrder
+  stem?: Prisma.SortOrderInput | Prisma.SortOrder
+  base?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  declension?: Prisma.SortOrderInput | Prisma.SortOrder
+  conjugation?: Prisma.SortOrderInput | Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrderInput | Prisma.SortOrder
+  alternationType?: Prisma.SortOrderInput | Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.WordCountOrderByAggregateInput
   _avg?: Prisma.WordAvgOrderByAggregateInput
   _max?: Prisma.WordMaxOrderByAggregateInput
@@ -446,15 +524,13 @@ export type WordScalarWhereWithAggregatesInput = {
   OR?: Prisma.WordScalarWhereWithAggregatesInput[]
   NOT?: Prisma.WordScalarWhereWithAggregatesInput | Prisma.WordScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Word"> | number
+  slug?: Prisma.StringWithAggregatesFilter<"Word"> | string
   external_id?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
   value?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   nsl?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   isv?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   transcription?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   field?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
-  declension?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
-  etymology?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
-  genesis?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   type?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   pos?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   frequency?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
@@ -465,18 +541,24 @@ export type WordScalarWhereWithAggregatesInput = {
   paradigm?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   protoStemClass?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   stemExtension?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
+  stem?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
+  base?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
+  declension?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
+  conjugation?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
+  accentSyllable?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
+  alternationType?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
+  fleetingVowelAt?: Prisma.IntNullableWithAggregatesFilter<"Word"> | number | null
 }
 
 export type WordCreateInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -487,6 +569,14 @@ export type WordCreateInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
@@ -497,15 +587,13 @@ export type WordCreateInput = {
 
 export type WordUncheckedCreateInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -516,6 +604,14 @@ export type WordUncheckedCreateInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
@@ -525,15 +621,13 @@ export type WordUncheckedCreateInput = {
 }
 
 export type WordUpdateInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -544,6 +638,14 @@ export type WordUpdateInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
@@ -554,15 +656,13 @@ export type WordUpdateInput = {
 
 export type WordUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -573,6 +673,14 @@ export type WordUncheckedUpdateInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
@@ -583,15 +691,13 @@ export type WordUncheckedUpdateInput = {
 
 export type WordCreateManyInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -602,18 +708,24 @@ export type WordCreateManyInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
 }
 
 export type WordUpdateManyMutationInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -624,19 +736,25 @@ export type WordUpdateManyMutationInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type WordUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -647,19 +765,25 @@ export type WordUncheckedUpdateManyInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type WordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   external_id?: Prisma.SortOrder
   value?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
   field?: Prisma.SortOrder
-  declension?: Prisma.SortOrder
-  etymology?: Prisma.SortOrder
-  genesis?: Prisma.SortOrder
   type?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
@@ -670,25 +794,34 @@ export type WordCountOrderByAggregateInput = {
   paradigm?: Prisma.SortOrder
   protoStemClass?: Prisma.SortOrder
   stemExtension?: Prisma.SortOrder
+  stem?: Prisma.SortOrder
+  base?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  declension?: Prisma.SortOrder
+  conjugation?: Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrder
+  alternationType?: Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrder
 }
 
 export type WordAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   external_id?: Prisma.SortOrder
   declension?: Prisma.SortOrder
+  conjugation?: Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrder
 }
 
 export type WordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   external_id?: Prisma.SortOrder
   value?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
   field?: Prisma.SortOrder
-  declension?: Prisma.SortOrder
-  etymology?: Prisma.SortOrder
-  genesis?: Prisma.SortOrder
   type?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
@@ -699,19 +832,25 @@ export type WordMaxOrderByAggregateInput = {
   paradigm?: Prisma.SortOrder
   protoStemClass?: Prisma.SortOrder
   stemExtension?: Prisma.SortOrder
+  stem?: Prisma.SortOrder
+  base?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  declension?: Prisma.SortOrder
+  conjugation?: Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrder
+  alternationType?: Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrder
 }
 
 export type WordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   external_id?: Prisma.SortOrder
   value?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
   field?: Prisma.SortOrder
-  declension?: Prisma.SortOrder
-  etymology?: Prisma.SortOrder
-  genesis?: Prisma.SortOrder
   type?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   frequency?: Prisma.SortOrder
@@ -722,12 +861,23 @@ export type WordMinOrderByAggregateInput = {
   paradigm?: Prisma.SortOrder
   protoStemClass?: Prisma.SortOrder
   stemExtension?: Prisma.SortOrder
+  stem?: Prisma.SortOrder
+  base?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  declension?: Prisma.SortOrder
+  conjugation?: Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrder
+  alternationType?: Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrder
 }
 
 export type WordSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   external_id?: Prisma.SortOrder
   declension?: Prisma.SortOrder
+  conjugation?: Prisma.SortOrder
+  accentSyllable?: Prisma.SortOrder
+  fleetingVowelAt?: Prisma.SortOrder
 }
 
 export type WordScalarRelationFilter = {
@@ -738,6 +888,10 @@ export type WordScalarRelationFilter = {
 export type WordNullableScalarRelationFilter = {
   is?: Prisma.WordWhereInput | null
   isNot?: Prisma.WordWhereInput | null
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -855,15 +1009,13 @@ export type WordUpdateOneWithoutAntonymsWordNestedInput = {
 }
 
 export type WordCreateWithoutMeaningsInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -874,6 +1026,14 @@ export type WordCreateWithoutMeaningsInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
   synonymsWord?: Prisma.SynonymCreateNestedManyWithoutWordInput
@@ -883,15 +1043,13 @@ export type WordCreateWithoutMeaningsInput = {
 
 export type WordUncheckedCreateWithoutMeaningsInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -902,6 +1060,14 @@ export type WordUncheckedCreateWithoutMeaningsInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
   synonymsWord?: Prisma.SynonymUncheckedCreateNestedManyWithoutWordInput
@@ -926,15 +1092,13 @@ export type WordUpdateToOneWithWhereWithoutMeaningsInput = {
 }
 
 export type WordUpdateWithoutMeaningsInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -945,6 +1109,14 @@ export type WordUpdateWithoutMeaningsInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
   synonymsWord?: Prisma.SynonymUpdateManyWithoutWordNestedInput
@@ -954,15 +1126,13 @@ export type WordUpdateWithoutMeaningsInput = {
 
 export type WordUncheckedUpdateWithoutMeaningsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -973,6 +1143,14 @@ export type WordUncheckedUpdateWithoutMeaningsInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
   synonymsWord?: Prisma.SynonymUncheckedUpdateManyWithoutWordNestedInput
@@ -981,15 +1159,13 @@ export type WordUncheckedUpdateWithoutMeaningsInput = {
 }
 
 export type WordCreateWithoutRoots_wordsInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1000,6 +1176,14 @@ export type WordCreateWithoutRoots_wordsInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
   synonymsWord?: Prisma.SynonymCreateNestedManyWithoutWordInput
@@ -1009,15 +1193,13 @@ export type WordCreateWithoutRoots_wordsInput = {
 
 export type WordUncheckedCreateWithoutRoots_wordsInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1028,6 +1210,14 @@ export type WordUncheckedCreateWithoutRoots_wordsInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
   synonymsWord?: Prisma.SynonymUncheckedCreateNestedManyWithoutWordInput
@@ -1052,15 +1242,13 @@ export type WordUpdateToOneWithWhereWithoutRoots_wordsInput = {
 }
 
 export type WordUpdateWithoutRoots_wordsInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1071,6 +1259,14 @@ export type WordUpdateWithoutRoots_wordsInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
   synonymsWord?: Prisma.SynonymUpdateManyWithoutWordNestedInput
@@ -1080,15 +1276,13 @@ export type WordUpdateWithoutRoots_wordsInput = {
 
 export type WordUncheckedUpdateWithoutRoots_wordsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1099,6 +1293,14 @@ export type WordUncheckedUpdateWithoutRoots_wordsInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
   synonymsWord?: Prisma.SynonymUncheckedUpdateManyWithoutWordNestedInput
@@ -1107,15 +1309,13 @@ export type WordUncheckedUpdateWithoutRoots_wordsInput = {
 }
 
 export type WordCreateWithoutSynonymsRootInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1126,6 +1326,14 @@ export type WordCreateWithoutSynonymsRootInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsWord?: Prisma.SynonymCreateNestedManyWithoutWordInput
@@ -1135,15 +1343,13 @@ export type WordCreateWithoutSynonymsRootInput = {
 
 export type WordUncheckedCreateWithoutSynonymsRootInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1154,6 +1360,14 @@ export type WordUncheckedCreateWithoutSynonymsRootInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsWord?: Prisma.SynonymUncheckedCreateNestedManyWithoutWordInput
@@ -1167,15 +1381,13 @@ export type WordCreateOrConnectWithoutSynonymsRootInput = {
 }
 
 export type WordCreateWithoutSynonymsWordInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1186,6 +1398,14 @@ export type WordCreateWithoutSynonymsWordInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
@@ -1195,15 +1415,13 @@ export type WordCreateWithoutSynonymsWordInput = {
 
 export type WordUncheckedCreateWithoutSynonymsWordInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1214,6 +1432,14 @@ export type WordUncheckedCreateWithoutSynonymsWordInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
@@ -1238,15 +1464,13 @@ export type WordUpdateToOneWithWhereWithoutSynonymsRootInput = {
 }
 
 export type WordUpdateWithoutSynonymsRootInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1257,6 +1481,14 @@ export type WordUpdateWithoutSynonymsRootInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsWord?: Prisma.SynonymUpdateManyWithoutWordNestedInput
@@ -1266,15 +1498,13 @@ export type WordUpdateWithoutSynonymsRootInput = {
 
 export type WordUncheckedUpdateWithoutSynonymsRootInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1285,6 +1515,14 @@ export type WordUncheckedUpdateWithoutSynonymsRootInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsWord?: Prisma.SynonymUncheckedUpdateManyWithoutWordNestedInput
@@ -1304,15 +1542,13 @@ export type WordUpdateToOneWithWhereWithoutSynonymsWordInput = {
 }
 
 export type WordUpdateWithoutSynonymsWordInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1323,6 +1559,14 @@ export type WordUpdateWithoutSynonymsWordInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
@@ -1332,15 +1576,13 @@ export type WordUpdateWithoutSynonymsWordInput = {
 
 export type WordUncheckedUpdateWithoutSynonymsWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1351,6 +1593,14 @@ export type WordUncheckedUpdateWithoutSynonymsWordInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
@@ -1359,15 +1609,13 @@ export type WordUncheckedUpdateWithoutSynonymsWordInput = {
 }
 
 export type WordCreateWithoutAntonymsRootInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1378,6 +1626,14 @@ export type WordCreateWithoutAntonymsRootInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
@@ -1387,15 +1643,13 @@ export type WordCreateWithoutAntonymsRootInput = {
 
 export type WordUncheckedCreateWithoutAntonymsRootInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1406,6 +1660,14 @@ export type WordUncheckedCreateWithoutAntonymsRootInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
@@ -1419,15 +1681,13 @@ export type WordCreateOrConnectWithoutAntonymsRootInput = {
 }
 
 export type WordCreateWithoutAntonymsWordInput = {
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1438,6 +1698,14 @@ export type WordCreateWithoutAntonymsWordInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymCreateNestedManyWithoutRootInput
@@ -1447,15 +1715,13 @@ export type WordCreateWithoutAntonymsWordInput = {
 
 export type WordUncheckedCreateWithoutAntonymsWordInput = {
   id?: number
+  slug: string
   external_id?: number | null
   value?: string | null
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
   field?: string | null
-  declension?: number | null
-  etymology?: string | null
-  genesis?: string | null
   type?: string | null
   pos?: string | null
   frequency?: string | null
@@ -1466,6 +1732,14 @@ export type WordUncheckedCreateWithoutAntonymsWordInput = {
   paradigm?: string | null
   protoStemClass?: string | null
   stemExtension?: string | null
+  stem?: string | null
+  base?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  accentSyllable?: number | null
+  alternationType?: string | null
+  fleetingVowelAt?: number | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutWordInput
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutWordInput
   synonymsRoot?: Prisma.SynonymUncheckedCreateNestedManyWithoutRootInput
@@ -1490,15 +1764,13 @@ export type WordUpdateToOneWithWhereWithoutAntonymsRootInput = {
 }
 
 export type WordUpdateWithoutAntonymsRootInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1509,6 +1781,14 @@ export type WordUpdateWithoutAntonymsRootInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
@@ -1518,15 +1798,13 @@ export type WordUpdateWithoutAntonymsRootInput = {
 
 export type WordUncheckedUpdateWithoutAntonymsRootInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1537,6 +1815,14 @@ export type WordUncheckedUpdateWithoutAntonymsRootInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
@@ -1556,15 +1842,13 @@ export type WordUpdateToOneWithWhereWithoutAntonymsWordInput = {
 }
 
 export type WordUpdateWithoutAntonymsWordInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1575,6 +1859,14 @@ export type WordUpdateWithoutAntonymsWordInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUpdateManyWithoutRootNestedInput
@@ -1584,15 +1876,13 @@ export type WordUpdateWithoutAntonymsWordInput = {
 
 export type WordUncheckedUpdateWithoutAntonymsWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1603,6 +1893,14 @@ export type WordUncheckedUpdateWithoutAntonymsWordInput = {
   paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  base?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  accentSyllable?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alternationType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fleetingVowelAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutWordNestedInput
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutWordNestedInput
   synonymsRoot?: Prisma.SynonymUncheckedUpdateManyWithoutRootNestedInput
@@ -1688,15 +1986,13 @@ export type WordCountOutputTypeCountAntonymsWordArgs<ExtArgs extends runtime.Typ
 
 export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   external_id?: boolean
   value?: boolean
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
   field?: boolean
-  declension?: boolean
-  etymology?: boolean
-  genesis?: boolean
   type?: boolean
   pos?: boolean
   frequency?: boolean
@@ -1707,6 +2003,14 @@ export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   paradigm?: boolean
   protoStemClass?: boolean
   stemExtension?: boolean
+  stem?: boolean
+  base?: boolean
+  gender?: boolean
+  declension?: boolean
+  conjugation?: boolean
+  accentSyllable?: boolean
+  alternationType?: boolean
+  fleetingVowelAt?: boolean
   meanings?: boolean | Prisma.Word$meaningsArgs<ExtArgs>
   roots_words?: boolean | Prisma.Word$roots_wordsArgs<ExtArgs>
   synonymsRoot?: boolean | Prisma.Word$synonymsRootArgs<ExtArgs>
@@ -1718,15 +2022,13 @@ export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   external_id?: boolean
   value?: boolean
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
   field?: boolean
-  declension?: boolean
-  etymology?: boolean
-  genesis?: boolean
   type?: boolean
   pos?: boolean
   frequency?: boolean
@@ -1737,19 +2039,25 @@ export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   paradigm?: boolean
   protoStemClass?: boolean
   stemExtension?: boolean
+  stem?: boolean
+  base?: boolean
+  gender?: boolean
+  declension?: boolean
+  conjugation?: boolean
+  accentSyllable?: boolean
+  alternationType?: boolean
+  fleetingVowelAt?: boolean
 }, ExtArgs["result"]["word"]>
 
 export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  slug?: boolean
   external_id?: boolean
   value?: boolean
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
   field?: boolean
-  declension?: boolean
-  etymology?: boolean
-  genesis?: boolean
   type?: boolean
   pos?: boolean
   frequency?: boolean
@@ -1760,19 +2068,25 @@ export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   paradigm?: boolean
   protoStemClass?: boolean
   stemExtension?: boolean
+  stem?: boolean
+  base?: boolean
+  gender?: boolean
+  declension?: boolean
+  conjugation?: boolean
+  accentSyllable?: boolean
+  alternationType?: boolean
+  fleetingVowelAt?: boolean
 }, ExtArgs["result"]["word"]>
 
 export type WordSelectScalar = {
   id?: boolean
+  slug?: boolean
   external_id?: boolean
   value?: boolean
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
   field?: boolean
-  declension?: boolean
-  etymology?: boolean
-  genesis?: boolean
   type?: boolean
   pos?: boolean
   frequency?: boolean
@@ -1783,9 +2097,17 @@ export type WordSelectScalar = {
   paradigm?: boolean
   protoStemClass?: boolean
   stemExtension?: boolean
+  stem?: boolean
+  base?: boolean
+  gender?: boolean
+  declension?: boolean
+  conjugation?: boolean
+  accentSyllable?: boolean
+  alternationType?: boolean
+  fleetingVowelAt?: boolean
 }
 
-export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "external_id" | "value" | "nsl" | "isv" | "transcription" | "field" | "declension" | "etymology" | "genesis" | "type" | "pos" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "proto" | "paradigm" | "protoStemClass" | "stemExtension", ExtArgs["result"]["word"]>
+export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "external_id" | "value" | "nsl" | "isv" | "transcription" | "field" | "type" | "pos" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "stem" | "base" | "gender" | "declension" | "conjugation" | "accentSyllable" | "alternationType" | "fleetingVowelAt", ExtArgs["result"]["word"]>
 export type WordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meanings?: boolean | Prisma.Word$meaningsArgs<ExtArgs>
   roots_words?: boolean | Prisma.Word$roots_wordsArgs<ExtArgs>
@@ -1810,15 +2132,13 @@ export type $WordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    slug: string
     external_id: number | null
     value: string | null
     nsl: string | null
     isv: string | null
     transcription: string | null
     field: string | null
-    declension: number | null
-    etymology: string | null
-    genesis: string | null
     type: string | null
     pos: string | null
     frequency: string | null
@@ -1829,6 +2149,14 @@ export type $WordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     paradigm: string | null
     protoStemClass: string | null
     stemExtension: string | null
+    stem: string | null
+    base: string | null
+    gender: string | null
+    declension: number | null
+    conjugation: number | null
+    accentSyllable: number | null
+    alternationType: string | null
+    fleetingVowelAt: number | null
   }, ExtArgs["result"]["word"]>
   composites: {}
 }
@@ -2259,15 +2587,13 @@ export interface Prisma__WordClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface WordFieldRefs {
   readonly id: Prisma.FieldRef<"Word", 'Int'>
+  readonly slug: Prisma.FieldRef<"Word", 'String'>
   readonly external_id: Prisma.FieldRef<"Word", 'Int'>
   readonly value: Prisma.FieldRef<"Word", 'String'>
   readonly nsl: Prisma.FieldRef<"Word", 'String'>
   readonly isv: Prisma.FieldRef<"Word", 'String'>
   readonly transcription: Prisma.FieldRef<"Word", 'String'>
   readonly field: Prisma.FieldRef<"Word", 'String'>
-  readonly declension: Prisma.FieldRef<"Word", 'Int'>
-  readonly etymology: Prisma.FieldRef<"Word", 'String'>
-  readonly genesis: Prisma.FieldRef<"Word", 'String'>
   readonly type: Prisma.FieldRef<"Word", 'String'>
   readonly pos: Prisma.FieldRef<"Word", 'String'>
   readonly frequency: Prisma.FieldRef<"Word", 'String'>
@@ -2278,6 +2604,14 @@ export interface WordFieldRefs {
   readonly paradigm: Prisma.FieldRef<"Word", 'String'>
   readonly protoStemClass: Prisma.FieldRef<"Word", 'String'>
   readonly stemExtension: Prisma.FieldRef<"Word", 'String'>
+  readonly stem: Prisma.FieldRef<"Word", 'String'>
+  readonly base: Prisma.FieldRef<"Word", 'String'>
+  readonly gender: Prisma.FieldRef<"Word", 'String'>
+  readonly declension: Prisma.FieldRef<"Word", 'Int'>
+  readonly conjugation: Prisma.FieldRef<"Word", 'Int'>
+  readonly accentSyllable: Prisma.FieldRef<"Word", 'Int'>
+  readonly alternationType: Prisma.FieldRef<"Word", 'String'>
+  readonly fleetingVowelAt: Prisma.FieldRef<"Word", 'Int'>
 }
     
 
@@ -2501,7 +2835,7 @@ export type WordCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   /**
    * The data needed to create a Word.
    */
-  data?: Prisma.XOR<Prisma.WordCreateInput, Prisma.WordUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.WordCreateInput, Prisma.WordUncheckedCreateInput>
 }
 
 /**

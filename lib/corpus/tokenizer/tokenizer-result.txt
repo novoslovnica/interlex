@@ -1,0 +1,174 @@
+
+=== РАЗБИВКА НА ПРЕДЛОЖЕНИЯ (10) ===
+
+[1] «Vy jeste krasive, ale jeste prazdne», prodolžil on.
+
+[2] «Ne možno jest umreti dlja vas.
+
+[3] Očevidno, obyčny prohodnik by pomyslil, že moja roza jest podobna vam.
+
+[4] Ale ona jedna jest dlja mene važnějša od vas vsih.
+
+[5] Tomu že ja ju podlival jesm.
+
+[6] Tomu že ja ju nakryval jesm steklěnym kolpakom.
+
+[7] Tomu že ja ju zaslanjal jesm paravanom.
+
+[8] Tomu že ja dlja njej poubival jesm gusenice (kromě dvoh, da by byli motyli).
+
+[9] Tomu že ja ju slušal jesm, kogda ona žalila se, ili kogda ona hvalila se, ili daže kogda ona molčala.
+
+[10] Tomu že ona jest moja roza.»
+
+=== ТОКЕНИЗАЦИЯ ПОТОКОВАЯ ===
+
+--- Предложение 1 (12 токенов) ---
+  PUNCT | "«                        " | lemma: «            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "Vy                       " | lemma: vy           | pos: PRON   | slug: vy-pron            | feats: {"person":"2","number":"pl"}
+  WORD  | "jeste                    " | lemma: jeste        | pos: ADV    | slug: jeste-adv          | feats: {"degree":"pos"}
+  WORD  | "krasive                  " | lemma: krasive      | pos: ADV    | slug: krasive-adv        | feats: {"degree":"pos"}
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "ale                      " | lemma: ale          | pos: CCONJ  | slug: ale-cconj          | feats: —
+  WORD  | "jeste                    " | lemma: jeste        | pos: ADV    | slug: jeste-adv          | feats: {"degree":"pos"}
+  WORD  | "prazdne                  " | lemma: prazdne      | pos: ADV    | slug: prazdne-adv        | feats: {"degree":"pos"}
+  PUNCT | "»,                       " | lemma: »,           | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "prodolžil                " | lemma: prodolžil    | pos: X      | slug: prodolžil-x        | feats: —
+  WORD  | "on                       " | lemma: on           | pos: PRON   | slug: on-pron            | feats: {"person":"3","number":"sg","gender":"MASC"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 2 (8 токенов) ---
+  PUNCT | "«                        " | lemma: «            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "Ne                       " | lemma: ne           | pos: PART   | slug: ne-part            | feats: —
+  WORD  | "možno                    " | lemma: možno        | pos: ADV    | slug: možno-adv          | feats: {"degree":"pos"}
+  WORD  | "jest                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"3","number":"sg","tense":"pres"}
+  WORD  | "umreti                   " | lemma: umreti       | pos: ADJ    | slug: umreti-adj         | feats: {"gender":"MASC","number":"sg"}
+  WORD  | "dlja                     " | lemma: dlja         | pos: ADP    | slug: dlja-adp           | feats: —
+  WORD  | "vas                      " | lemma: vy           | pos: PRON   | slug: vy-pron            | feats: {"person":"2","number":"pl","case":"gen"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 3 (14 токенов) ---
+  WORD  | "Očevidno                 " | lemma: očevidno     | pos: ADV    | slug: očevidno-adv       | feats: {"degree":"pos"}
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "obyčny                   " | lemma: obyčny       | pos: ADJ    | slug: obyčny-adj         | feats: {"gender":"MASC","number":"sg"}
+  WORD  | "prohodnik                " | lemma: prohodnik    | pos: X      | slug: prohodnik-x        | feats: —
+  WORD  | "by                       " | lemma: by           | pos: AUX    | slug: by-aux             | feats: {"mood":"sub"}
+  WORD  | "pomyslil                 " | lemma: pomyslil     | pos: X      | slug: pomyslil-x         | feats: —
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "moja                     " | lemma: moj          | pos: PRON   | slug: moj-pron           | feats: {"person":"1","number":"sg","gender":"FEM"}
+  WORD  | "roza                     " | lemma: roz          | pos: NOUN   | slug: roz-noun           | feats: {"gender":"FEM","number":"sg"}
+  WORD  | "jest                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"3","number":"sg","tense":"pres"}
+  WORD  | "podobna                  " | lemma: podobn       | pos: NOUN   | slug: podobn-noun        | feats: {"gender":"FEM","number":"sg"}
+  WORD  | "vam                      " | lemma: vy           | pos: PRON   | slug: vy-pron            | feats: {"person":"2","number":"pl","case":"dat"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 4 (11 токенов) ---
+  WORD  | "Ale                      " | lemma: ale          | pos: CCONJ  | slug: ale-cconj          | feats: —
+  WORD  | "ona                      " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM"}
+  WORD  | "jedna                    " | lemma: jedna        | pos: NUM    | slug: jedna-num          | feats: {"gender":"FEM","number":"sg"}
+  WORD  | "jest                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"3","number":"sg","tense":"pres"}
+  WORD  | "dlja                     " | lemma: dlja         | pos: ADP    | slug: dlja-adp           | feats: —
+  WORD  | "mene                     " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg","case":"gen"}
+  WORD  | "važnějša                 " | lemma: važnějš      | pos: NOUN   | slug: važnějš-noun       | feats: {"gender":"FEM","number":"sg"}
+  WORD  | "od                       " | lemma: od           | pos: ADP    | slug: od-adp             | feats: —
+  WORD  | "vas                      " | lemma: vy           | pos: PRON   | slug: vy-pron            | feats: {"person":"2","number":"pl","case":"gen"}
+  WORD  | "vsih                     " | lemma: vsě          | pos: PRON   | slug: vsě-pron           | feats: {"number":"pl","case":"gen"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 5 (7 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ja                       " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg"}
+  WORD  | "ju                       " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM","case":"acc"}
+  WORD  | "podlival                 " | lemma: podlival     | pos: X      | slug: podlival-x         | feats: —
+  WORD  | "jesm                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"1","number":"sg","tense":"pres"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 6 (9 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ja                       " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg"}
+  WORD  | "ju                       " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM","case":"acc"}
+  WORD  | "nakryval                 " | lemma: nakryval     | pos: X      | slug: nakryval-x         | feats: —
+  WORD  | "jesm                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"1","number":"sg","tense":"pres"}
+  WORD  | "steklěnym                " | lemma: steklěny     | pos: VERB   | slug: steklěny-verb      | feats: {"person":"1","number":"sg","tense":"pres","verbForm":"fin"}
+  WORD  | "kolpakom                 " | lemma: kolpak       | pos: NOUN   | slug: kolpak-noun        | feats: {"case":"ins","number":"sg"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 7 (8 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ja                       " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg"}
+  WORD  | "ju                       " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM","case":"acc"}
+  WORD  | "zaslanjal                " | lemma: zaslanjal    | pos: X      | slug: zaslanjal-x        | feats: —
+  WORD  | "jesm                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"1","number":"sg","tense":"pres"}
+  WORD  | "paravanom                " | lemma: paravan      | pos: NOUN   | slug: paravan-noun       | feats: {"case":"ins","number":"sg"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 8 (17 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ja                       " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg"}
+  WORD  | "dlja                     " | lemma: dlja         | pos: ADP    | slug: dlja-adp           | feats: —
+  WORD  | "njej                     " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM","case":"dat"}
+  WORD  | "poubival                 " | lemma: poubival     | pos: X      | slug: poubival-x         | feats: —
+  WORD  | "jesm                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"1","number":"sg","tense":"pres"}
+  WORD  | "gusenice                 " | lemma: gusenice     | pos: ADV    | slug: gusenice-adv       | feats: {"degree":"pos"}
+  PUNCT | "(                        " | lemma: (            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "kromě                    " | lemma: kromě        | pos: ADP    | slug: kromě-adp          | feats: —
+  WORD  | "dvoh                     " | lemma: dvoh         | pos: X      | slug: dvoh-x             | feats: —
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "da                       " | lemma: da           | pos: SCONJ  | slug: da-sconj           | feats: —
+  WORD  | "by                       " | lemma: by           | pos: AUX    | slug: by-aux             | feats: {"mood":"sub"}
+  WORD  | "byli                     " | lemma: byli         | pos: ADJ    | slug: byli-adj           | feats: {"gender":"MASC","number":"sg"}
+  WORD  | "motyli                   " | lemma: motyli       | pos: ADJ    | slug: motyli-adj         | feats: {"gender":"MASC","number":"sg"}
+  PUNCT | ").                       " | lemma: ).           | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 9 (24 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ja                       " | lemma: ja           | pos: PRON   | slug: ja-pron            | feats: {"person":"1","number":"sg"}
+  WORD  | "ju                       " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM","case":"acc"}
+  WORD  | "slušal                   " | lemma: slušal       | pos: X      | slug: slušal-x           | feats: —
+  WORD  | "jesm                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"1","number":"sg","tense":"pres"}
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "kogda                    " | lemma: kogda        | pos: ADV    | slug: kogda-adv          | feats: {"degree":"pos"}
+  WORD  | "ona                      " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM"}
+  WORD  | "žalila                   " | lemma: žalil        | pos: VERB   | slug: žalil-verb         | feats: {"tense":"past","gender":"FEM","number":"sg","verbForm":"part"}
+  WORD  | "se                       " | lemma: se           | pos: PRON   | slug: se-pron            | feats: {"case":"acc"}
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "ili                      " | lemma: ili          | pos: CCONJ  | slug: ili-cconj          | feats: —
+  WORD  | "kogda                    " | lemma: kogda        | pos: ADV    | slug: kogda-adv          | feats: {"degree":"pos"}
+  WORD  | "ona                      " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM"}
+  WORD  | "hvalila                  " | lemma: hvalil       | pos: VERB   | slug: hvalil-verb        | feats: {"tense":"past","gender":"FEM","number":"sg","verbForm":"part"}
+  WORD  | "se                       " | lemma: se           | pos: PRON   | slug: se-pron            | feats: {"case":"acc"}
+  PUNCT | ",                        " | lemma: ,            | pos: PUNCT  | slug: —                  | feats: —
+  WORD  | "ili                      " | lemma: ili          | pos: CCONJ  | slug: ili-cconj          | feats: —
+  WORD  | "daže                     " | lemma: daže         | pos: ADV    | slug: daže-adv           | feats: {"degree":"pos"}
+  WORD  | "kogda                    " | lemma: kogda        | pos: ADV    | slug: kogda-adv          | feats: {"degree":"pos"}
+  WORD  | "ona                      " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM"}
+  WORD  | "molčala                  " | lemma: molčal       | pos: VERB   | slug: molčal-verb        | feats: {"tense":"past","gender":"FEM","number":"sg","verbForm":"part"}
+  PUNCT | ".                        " | lemma: .            | pos: PUNCT  | slug: —                  | feats: —
+
+--- Предложение 10 (7 токенов) ---
+  WORD  | "Tomu                     " | lemma: to           | pos: PRON   | slug: to-pron            | feats: {"case":"dat","number":"sg"}
+  WORD  | "že                       " | lemma: že           | pos: PART   | slug: že-part            | feats: —
+  WORD  | "ona                      " | lemma: ona          | pos: PRON   | slug: ona-pron           | feats: {"person":"3","number":"sg","gender":"FEM"}
+  WORD  | "jest                     " | lemma: byti         | pos: AUX    | slug: byti-aux           | feats: {"person":"3","number":"sg","tense":"pres"}
+  WORD  | "moja                     " | lemma: moj          | pos: PRON   | slug: moj-pron           | feats: {"person":"1","number":"sg","gender":"FEM"}
+  WORD  | "roza                     " | lemma: roz          | pos: NOUN   | slug: roz-noun           | feats: {"gender":"FEM","number":"sg"}
+  PUNCT | ".»                       " | lemma: .»           | pos: PUNCT  | slug: —                  | feats: —
+
+=== ИТОГО ===
+Предложений: 10
+Токенов всего: 117
+Слов: 96
+Пунктуации: 21
+
+=== ПРОВЕРКА tokenizeDocument ===
+Предложений: 10
+Токенов: 117
+Слов: 96, Пунктуации: 21
+WARNING: все sentenceId одинаковы — возможна проблема с генерацией ID
+Токенов со slug: 96 / 96

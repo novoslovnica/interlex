@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/corpus"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model CorpusDocument {
+  id            String         @id @default(uuid())
+  slug          String         @unique // Immutable slug для связи между базами
+  title         String
+  author        String?
+  rawText       String         // Полный текст для быстрого чтения/отображения
+  language      String         @default("is") // Межславянский диалект/версия
+  createdAt     DateTime       @default(now())
+
+  // Связи
+  tokens        CorpusToken[]
+  sentences     CorpusSentence[]
+}
+
+model CorpusSentence {
+  id            String         @id @default(uuid())
+  documentSlug  String
+  position      Int            // Порядковый номер предложения в документе
+  rawText       String         // Текст конкретного предложения для KWIC
+
+  document      CorpusDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  tokens        CorpusToken[]
+
+  @@index([documentSlug, position])
+}
+
+model CorpusToken {
+  id            BigInt         @id @default(autoincrement()) // BigInt, так как токенов будут миллионы
+  documentSlug  String
+  sentenceId    String
+
+  // Позиционирование
+  tokenIndex    Int            // Индекс токена в пределах всего документа
+  wordIndex     Int            // Индекс только слов (игнорируя знаки препинания) для N-грамм
+
+  // Лингвистические метрики
+  surfaceForm   String         // Слово в тексте как оно есть (н-р: "дому")
+  lemma         String         // Базовая форма из морфологического движка ("дом")
+  pos           String         // Part of Speech tag ("NOUN")
+  feats         Json?          // Грамматические признаки: { gender: "masc", case: "dat" }
+
+  // Связи
+  document      CorpusDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  sentence      CorpusSentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+
+  wordSlug      String?
+
+  // Индексы для мгновенного поиска (B-Tree)
+  @@index([lemma])
+  @@index([pos])
+  @@index([documentSlug, tokenIndex])
+
+  @@index([wordSlug])
+}
+
+// prisma/analytics.schema
+
+model WordFormPriority {
+  id          String   @id @default(uuid())
+
+  /// Исходная словоформа в нижнем регистре (напр. "domu", "domom").
+  /// Служит точкой входа для O(1) поиска в рантайме.
+  surfaceForm String   @unique @db.VarChar(255)
+
+  /// Компактный денормализованный JSON-массив вариантов омонимии.
+  /// Строгая валидированная структура элементов внутри массива:
+  /// [{ "slug": "dom-noun-m", "pos": "NOUN", "case": "loc", "freq": 1520 }]
+  distributions Json
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  /// Индекс для форсирования мгновенной выборки текстовых ключей
+  @@index([surfaceForm])
+}
