@@ -426,7 +426,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
     // В продакшене это поле "numeralType" должно извлекаться напрямую из метаданных Word в Main DB.
     let numeralType: 'cardinal' | 'ordinal' | 'collective' = 'cardinal';
 
-    if (word.isv.endsWith('y') || word.isv.endsWith('i') && word.stem?.endsWith('j')) {
+    if (word.isv.endsWith('y') || word.isv.endsWith('i') && word.base?.endsWith('j')) {
         // Порядковые на -y/-i (pěrvy, tretji)
         numeralType = 'ordinal';
     } else if (word.isv.endsWith('oje') || word.isv.endsWith('ero')) {

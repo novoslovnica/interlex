@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import Papa from "papaparse";
 import {init} from "@/lib/sqlite";
+import {csvGrammarMapper} from "@/lib/grammar/common";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
 
@@ -53,7 +54,6 @@ const insertRow = (db, {
      value,
      trans,
      rootId,
-     pos,
      decl,
      field,
      meaning,
@@ -63,7 +63,15 @@ const insertRow = (db, {
     frequency,
     intelligibility,
      sameInLanguages,
- }: {
+    pos,
+    aspect,
+    transitivity,
+    animacy,
+    degree,
+    pronType,
+    numType,
+    gender,
+}: {
     externalId: number;
     addition: string;
     cyr: string;
@@ -71,7 +79,6 @@ const insertRow = (db, {
     value: string;
     trans: string;
     rootId: string;
-    pos: string;
     decl: string;
     field: string;
     meaning: string;
@@ -81,6 +88,14 @@ const insertRow = (db, {
     frequency: string;
     intelligibility: string;
     sameInLanguages: string;
+    pos?: string;
+    aspect?: string;
+    transitivity?: string;
+    animacy?: string;
+    degree?: string;
+    pronType?: string;
+    numType?: string;
+    gender?: string;
 }): [bigint, bigint] => {
     const insert = db.prepare(`INSERT INTO words (
         external_id,
@@ -90,14 +105,22 @@ const insertRow = (db, {
         transcription,
         field,
         declension,
+        conjunction,
         etymology,
-        pos,
         genesis,
         frequency,
-       intelligibility,
+        intelligibility,
         addition,
-        sameInLanguages
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+        sameInLanguages,
+        pos,         
+        aspect,        
+        transitivity, 
+        animacy,  
+        degree,       
+        pronType,       
+        numType,        
+                   gender
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
     const r = insert.run(
         externalId,
@@ -107,13 +130,21 @@ const insertRow = (db, {
         trans,
         field,
         decl,
+        decl,
         etymology,
-        pos,
         genesis,
         frequency,
         intelligibility,
         addition,
         sameInLanguages,
+        pos,
+        aspect || null,
+        transitivity || null,
+        animacy || null,
+        degree || null,
+        pronType || null,
+        numType || null,
+        gender || null,
     );
     const wId = r.lastInsertRowid;
 
@@ -186,6 +217,8 @@ const fillDb = async () => {
             using_example
         ] = row;
 
+        const grammar = csvGrammarMapper(partOfSpeech);
+
         const [wId, mId] = insertRow(db, {
             externalId: parseInt(id, 10),
             addition,
@@ -194,7 +227,6 @@ const fillDb = async () => {
             value: isv,
             trans: "",
             rootId: "",
-            pos: partOfSpeech,
             decl: type,
             field: "",
             meaning: "",
@@ -204,6 +236,14 @@ const fillDb = async () => {
             intelligibility,
             examples: using_example,
             sameInLanguages,
+            pos: grammar.pos,
+            animacy: grammar.animacy,
+            aspect: grammar.aspect,
+            transitivity: grammar.transitivity,
+            degree: grammar.degree,
+            pronType: grammar.pronType,
+            numType: grammar.numType,
+            gender: grammar.gender,
         });
 
         insertLang(db, "ru", wId, mId, ru);

@@ -18,11 +18,10 @@ const analyzer = new DbAnalyzer(
                 protoStemClass: true,
                 stemExtension: true,
                 paradigm: true,
-                stem: true,
+                base: true,
                 gender: true,
                 alternationType: true,
                 fleetingVowelAt: true,
-                base: true,
             },
         })
 );

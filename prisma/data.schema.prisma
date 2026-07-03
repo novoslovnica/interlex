@@ -17,20 +17,25 @@ model Word {
   transcription   String?
   field           String?
   type            String?
-  pos             String?          // NOUN, VERB, ADJ
+  pos             String?          // NOUN, VERB, ADJ, ADV, PRON, NUM...
+  aspect          String?          // Глагольный вид: IPF (несов.), PF (сов.), BI (двувидовой)
+  transitivity    String?          // Переходность: TR (транзитив), INTR (интранзитив), REFL (возвратный)
+  animacy         String?          // Одушевлённость: ANIM (одуш.), INAN (неодуш.)
+  degree          String?          // Степень сравнения: POS (положит.), CMP (сравнит.), SUP (превосх.)
+  pronType        String?          // Тип местоимения: pers, poss, dem, indef, int, rel, refl, rec
+  numType         String?          // Тип числительного: card, ord, subst, fract, coll, diff, mult
   frequency       String?
   intelligibility String?
   addition        String?
   sameInLanguages String?
 
-  // ПРАСЛАВЯНСКИЙ И АКЦЕНТОЛОГИЧЕСКИЙ СЛОЙ (Уже были частично у вас)
+  // ПРАСЛАВЯНСКИЙ И АКЦЕНТОЛОГИЧЕСКИЙ СЛОЙ
   proto           String?          // Праславянская исходная форма: *synъ, *ryba, *světъ
   paradigm        String?          // Акцентная парадигма Зализняка: A, B, C
   protoStemClass  String?          // Класс праславянской основы: ā, jā, o, jo, i, u, consonant
   stemExtension   String?          // Наращение основы: en, es, et, er
 
-  // ДОБАВЛЕННЫЕ ПОЛЯ ДЛЯ АВТОМАТИЧЕСКОЙ ГЕНЕРАЦИИ ПАРАДИГМ
-  stem            String?          // Очищенная межславянская основа слова (н-р: "vod", "otc")
+  // ПОЛЯ ДЛЯ АВТОМАТИЧЕСКОЙ ГЕНЕРАЦИИ ПАРАДИГМ
   base            String?          // Основа для поиска словоформ (н-р: "vod" для "voda", "hval" для "hvaliti")
   gender          String?          // Род (masc, fem, neut) — критично для праславянских o/ā основ
   declension      Int?             // Тип склонения в межславянском

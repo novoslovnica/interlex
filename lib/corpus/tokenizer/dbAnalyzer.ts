@@ -12,11 +12,10 @@ interface WordBaseRecord {
     protoStemClass: string | null;
     stemExtension: string | null;
     paradigm: string | null;
-    stem: string | null;
+    base: string | null;
     gender: string | null;
     alternationType: string | null;
     fleetingVowelAt: number | null;
-    base: string | null;
 }
 
 type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;

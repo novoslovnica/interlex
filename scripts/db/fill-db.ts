@@ -4,6 +4,7 @@ import fs from "fs";
 import dotenv from "dotenv";
 import {init} from "@/lib/sqlite";
 import {mapNslToEtymologized, mapNslToStandard} from "@/lib/nsl";
+import {csvGrammarMapper} from "@/lib/grammar/common";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
 
@@ -25,24 +26,36 @@ const insertRow = (db, roots, {
     value,
     trans,
     rootId,
-    pos,
     decl,
     synonym,
     field,
     meaning,
     etymology,
+    pos,
+    aspect,
+    transitivity,
+    animacy,
+    degree,
+    pronType,
+    numType,
 }: {
     cyr: string;
     lat: string;
     value: string;
     trans: string;
     rootId: string;
-    pos: string;
     decl: string;
     synonym: string;
     field: string;
     meaning: string;
     etymology: string;
+    pos?: string;
+    aspect?: string;
+    transitivity?: string;
+    animacy?: string;
+    degree?: string;
+    pronType?: string;
+    numType?: string;
 }): Promise<[bigint, bigint]> => {
     const insert = db.prepare(`INSERT INTO words (
         value,
@@ -52,8 +65,18 @@ const insertRow = (db, roots, {
         field,
         declension,
         etymology,
-        pos
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+        pos,
+       aspect,
+       transitivity,
+       animacy,
+       degree,
+       pronType,
+       numType,
+       gender,
+       conjunction
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+
+    const grammar = csvGrammarMapper(pos);
 
     const r = insert.run(
         value,
@@ -63,7 +86,15 @@ const insertRow = (db, roots, {
         field,
         decl,
         etymology,
-        pos
+        grammar.pos,
+        grammar.aspect,
+        grammar.transitivity,
+        grammar.animacy,
+        grammar.degree,
+        grammar.pronType,
+        grammar.numType,
+        grammar.gender,
+        decl
     );
     const wId = r.lastInsertRowid;
 

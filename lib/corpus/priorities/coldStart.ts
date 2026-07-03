@@ -36,7 +36,7 @@ export async function runColdStart(): Promise<{ created: number; updated: number
             protoStemClass: true,
             stemExtension: true,
             paradigm: true,
-            stem: true,
+            base: true,
             gender: true,
             alternationType: true,
             fleetingVowelAt: true,
