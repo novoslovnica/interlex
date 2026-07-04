@@ -30,7 +30,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
             {/* Меню навигации */}
             <ul className={`header-nav ${isOpen ? 'open' : ''}`}>
 
-                {["ADMIN", "MODERATOR"].includes(user.role || "") && (
+                {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
                     <li><Link href="/admin" className="nav-link">Админка</Link></li>
                 )}
                 <li><Link href="/lexicon" className="nav-link">Лексикон</Link></li>
