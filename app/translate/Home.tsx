@@ -1,7 +1,7 @@
 'use client';
-import React, {useCallback} from "react";
+import React, {useCallback, useMemo} from "react";
 import {useRouter} from "next/navigation";
-import {standardToSimple} from "@/lib/isv";
+import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 
 import "./main-page.css";
@@ -21,6 +21,30 @@ const options = [
     <option key="sk" value="sk">Словацкий</option>,
     <option key="de" value="de">Deutsch</option>,
 ];
+
+const WordCard = ({ item, onClickCard, currentScript, toValue}: any) => {
+    const cyrillicVariant = isvToCyr(item.value);
+    const latinVariant = item.value.toLowerCase();
+    const title = useMemo(() => {
+        if (currentScript === "CYRILLIC") {
+            return `${cyrillicVariant} (${latinVariant})`
+        }
+        return `${latinVariant} (${cyrillicVariant})`;
+    }, [currentScript, cyrillicVariant]);
+
+    return (
+        <li
+            className="card"
+            onClick={onClickCard(item)}
+        >
+            <div className="card-title">{title}</div>
+            <div className="card-meta">{toValue === "is"
+                ? `${item.pos} (${item.field})`
+                : `${item.target?.pos} (${item.target?.field})`}</div>
+            <div className="card-desc">{item.target?.value}</div>
+        </li>
+    );
+}
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
     const [fromValue, setFromValue] = React.useState("ru");
@@ -161,17 +185,13 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                 {items.length > 0 && (
                     <ul id="cardGrid" className="card-grid">
                         {items.map((item) => (
-                            <li
+                            <WordCard
                                 key={item.id}
-                                className="card"
-                                onClick={onClickCard(item)}
-                            >
-                                <div className="card-title">{item.nsl} / {item.value}</div>
-                                <div className="card-meta">{toValue === "is"
-                                    ? `${item.pos} (${item.field})`
-                                    : `${item.target?.pos} (${item.target?.field})`}</div>
-                                <div className="card-desc">{item.target?.value}</div>
-                            </li>
+                                item={item}
+                                onClickCard={onClickCard}
+                                currentScript={currentScript}
+                                toValue={toValue}
+                            />
                         ))}
                     </ul>
                 )}

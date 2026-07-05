@@ -12,6 +12,9 @@ import {PronounDeclensionTables} from "@/app/words/[id]/PronounDeclensionTables"
 import {AdverbComparisonTables} from "@/app/words/[id]/AdverbComparisonTables";
 import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
 import {PosType} from "@/lib/grammar/common";
+import ReactMarkdown from "react-markdown";
+import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
+import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
 
 const Word = ({ item, currentScript }: any) => {
     const [cognateWords, setCognateWords] = useState<any[]>([]);
@@ -212,6 +215,14 @@ const Word = ({ item, currentScript }: any) => {
                 </div>
             </div>
 
+            {/* 2.5. Морфемный разбор */}
+            <MorphemeAnalysis
+                word={item.value}
+                roots={item.roots}
+                base={item.base}
+                currentScript={currentScript}
+            />
+
             {/* 3. Краткая мета-информация */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border border-slate-200 rounded-lg mb-6 text-sm">
                 <div>
@@ -384,18 +395,23 @@ const Word = ({ item, currentScript }: any) => {
                                     </span>
                                 )}
 
-                                <p className="text-base md:text-lg text-slate-700 leading-relaxed">
-                                    {m.meaning || "Здесь будет толкование"}
-                                </p>
+                                <div className="text-base md:text-lg text-slate-700 leading-relaxed">
+                                   <ReactMarkdown>
+                                       {m.meaning || "Здесь будет толкование"}
+                                   </ReactMarkdown>
+                                </div>
 
                                 {m.examples && (
                                     <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 pl-4">
                                         <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase block mb-1">
                                             Пример
                                         </span>
-                                        <p className="italic text-slate-600 text-sm leading-relaxed">
-                                            «{m.examples}»
-                                        </p>
+                                        <div className="italic text-slate-600 text-sm leading-relaxed">
+                                            <ReactMarkdown>
+                                                {`«${m.examples}»`}
+                                            </ReactMarkdown>
+
+                                        </div>
                                     </div>
                                 )}
 
@@ -418,7 +434,10 @@ const Word = ({ item, currentScript }: any) => {
                 })}
             </section>
 
-            {/* 6. Этимологические ссылки */}
+            {/* 6. Диаграмма когнатов */}
+            <CognateRadarChart item={item} />
+
+            {/* 7. Этимологические ссылки */}
             {etymologyLinks.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Этимология и внешние ссылки</h2>

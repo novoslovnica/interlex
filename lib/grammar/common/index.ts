@@ -9,6 +9,8 @@ export type { MorphoGrammarFeats } from './feats';
 export { csvGrammarMapper } from './import-mapper';
 export type { CsvGrammarFields } from './import-mapper';
 export { heuristicStem } from './heuristicStem';
+export { MorphemeType } from './morpheme';
+export type { MorphemePart } from './morpheme';
 
 export function isEnumMatch<T extends Record<string, string>>(
     value: string | null | undefined,

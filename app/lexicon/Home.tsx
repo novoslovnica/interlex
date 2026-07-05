@@ -1,10 +1,32 @@
 'use client';
-import React, {useCallback} from "react";
+import React, {useCallback, useMemo} from "react";
 import {useRouter} from "next/navigation";
-import {standardToSimple} from "@/lib/isv";
+import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 
 import "./main-page.css";
+
+const WordCard = ({ onClickCard, item, currentScript }: any) => {
+    const cyrillicVariant = isvToCyr(item.value);
+    const latinVariant = item.value.toLowerCase();
+    const title = useMemo(() => {
+        if (currentScript === "CYRILLIC") {
+            return `${cyrillicVariant} (${latinVariant})`
+        }
+        return `${latinVariant} (${cyrillicVariant})`;
+    }, [currentScript, cyrillicVariant]);
+
+    return (
+        <li
+            className="card"
+            onClick={onClickCard(item)}
+        >
+            <div className="card-title">{title}</div>
+            <div className="card-meta">{`${item.pos}`}</div>
+            <div className="card-desc">{item.target?.value}</div>
+        </li>
+    )
+}
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
     const [searchValue, setSearchValue] = React.useState("");
@@ -76,15 +98,12 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                 {items.length > 0 && (
                     <ul id="cardGrid" className="card-grid">
                         {items.map((item) => (
-                            <li
+                            <WordCard
                                 key={item.id}
-                                className="card"
-                                onClick={onClickCard(item)}
-                            >
-                                <div className="card-title">{item.nsl} / {item.value}</div>
-                                <div className="card-meta">{`${item.pos} (${item.field})`}</div>
-                                <div className="card-desc">{item.target?.value}</div>
-                            </li>
+                                onClickCard={onClickCard}
+                                item={item}
+                                currentScript={currentScript}
+                            />
                         ))}
                     </ul>
                 )}
