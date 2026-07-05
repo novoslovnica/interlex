@@ -3,7 +3,7 @@ import {init} from "@/lib/sqlite";
 const getLang = async (lang: string, wordId: string) => {
   const db = await init();
 
-  const data = db.prepare(`select * from ${lang} where wordId = ?`).get(wordId);
+  const data = db.prepare(`select * from ${lang} where wordId = ?`).all(wordId);
 
   return data;
 }
@@ -17,7 +17,7 @@ export const getItem = async (id: string) => {
     select * from roots where id IN (select rootId from roots_words where wordId = ?)
   `).all(id);
 
-  const meanings = db.prepare('select * from meanings where wordId = ?').get(id);
+  const meanings = db.prepare('select * from meanings where wordId = ?').all(id);
 
   const ru = await getLang("ru", id);
   const en = await getLang("en", id);

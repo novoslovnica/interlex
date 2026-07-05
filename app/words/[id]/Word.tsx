@@ -117,37 +117,45 @@ const Word = ({ item, currentScript }: any) => {
         }
     }
 
-    const definition = item.meanings?.meaning || "Здесь будет толкование";
-    const examples = [
-        {
-            phrase: item.meanings?.examples,
-            translation: item.meanings?.examples,
-        },
-    ];
+    const meaningsArray = Array.isArray(item.meanings) ? item.meanings : (item.meanings ? [item.meanings] : []);
+
+    const LANG_CONFIG: Record<string, { label: string; data: any[] | null | undefined }> = {
+        en: { label: "Английский", data: item.en },
+        ru: { label: "Русский", data: item.ru },
+        uk: { label: "Украинский", data: item.uk },
+        be: { label: "Белорусский", data: item.be },
+        cu: { label: "Церковнославянский", data: item.cu },
+        bg: { label: "Болгарский", data: item.bg },
+        mk: { label: "Македонский", data: item.mk },
+        sr: { label: "Сербский", data: item.sr },
+        hr: { label: "Хорватский", data: item.hr },
+        sl: { label: "Словенский", data: item.sl },
+        pl: { label: "Польский", data: item.pl },
+        sk: { label: "Словацкий", data: item.sk },
+        cs: { label: "Чешский", data: item.cs },
+        de: { label: "Немецкий", data: item.de },
+        nl: { label: "Нидерландский", data: item.nl },
+        eo: { label: "Эсперанто", data: item.eo },
+    };
+
+    const getTranslationsForMeaning = (meaningId: number) => {
+        const result: Record<string, string> = {};
+        for (const [code, cfg] of Object.entries(LANG_CONFIG)) {
+            if (!Array.isArray(cfg.data)) continue;
+            const match = cfg.data.find((t: any) => t.meaningId === meaningId);
+            if (match?.value) {
+                result[cfg.label] = match.value;
+            }
+        }
+        return result;
+    };
+
     const etymologyLinks = [
         {
             label: "Этимология",
             url: item.etymology,
         }
     ];
-    const translations = {
-        "Английский": item.en?.value,
-        "Русский": item.ru?.value,
-        "Украинский": item.uk?.value,
-        "Белорусский": item.be?.value,
-        "Церковнославянский": item.cu?.value,
-        "Болгарский": item.bg?.value,
-        "Македонский": item.mk?.value,
-        "Сербский": item.sr?.value,
-        "Хорватский": item.hr?.value,
-        "Словенский": item.sl?.value,
-        "Польский": item.pl?.value,
-        "Словацкий": item.sk?.value,
-        "Чешский": item.cs?.value,
-        "Немецкий": item.de?.value,
-        "Нидерландский": item.nl?.value,
-        "Эсперанто": item.eo?.value,
-    };
 
     const title = useMemo(() => {
         if (currentScript === "CYRILLIC") {
@@ -328,13 +336,7 @@ const Word = ({ item, currentScript }: any) => {
                 </div>
             )}
 
-            {/* 4. Значение слова */}
-            <section className="mb-6">
-                <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-2">Значение</h2>
-                <p className="text-base md:text-lg text-slate-700 leading-relaxed">{definition}</p>
-            </section>
-
-            {/* Однокоренные слова */}
+            {/* 4. Однокоренные слова */}
             {cognateWords?.length > 0 && (
                 <section className="mb-6">
                     <h2 className="text-base font-bold text-slate-400 uppercase tracking-wider mb-2.5">Однокоренные слова</h2>
@@ -355,40 +357,68 @@ const Word = ({ item, currentScript }: any) => {
                 </section>
             )}
 
-            {/* 5. Примеры использования */}
-            {examples.length > 0 && (
-                <section className="mb-6">
-                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Примеры использования</h2>
-                    <ul className="space-y-3 pl-4 list-disc text-slate-700">
-                        {examples.map((item, idx) => (
-                            <li key={idx} className="italic">
-                                {item.phrase}
-                                <span className="block not-italic text-sm text-slate-500 mt-1">
-                  «{item.translation}»
-                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {/* 6. Переводы на другие языки */}
+            {/* 5. Значения */}
             <section className="mb-6">
-                <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Переводы</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {Object.entries(translations).map(([lang, val]) => val ? (
-                        <div
-                            key={lang}
-                            className="flex flex-col justify-center p-3 bg-slate-50 border border-slate-100 rounded-lg shadow-sm hover:bg-slate-100 transition-colors"
-                        >
-                            <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{lang}</span>
-                            <span className="text-base font-medium text-slate-800">{val}</span>
+                <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Значения</h2>
+
+                {meaningsArray.length === 0 && (
+                    <p className="text-base md:text-lg text-slate-500 italic leading-relaxed">
+                        Здесь будет толкование
+                    </p>
+                )}
+
+                {meaningsArray.map((m: any, idx: number) => {
+                    const meaningTranslations = m.id ? getTranslationsForMeaning(m.id) : {};
+                    const hasTranslations = Object.keys(meaningTranslations).length > 0;
+
+                    return (
+                        <div key={m.id || idx}>
+                            {idx > 0 && (
+                                <hr className="my-5 border-t-2 border-slate-200" />
+                            )}
+
+                            <div className="space-y-3">
+                                {meaningsArray.length > 1 && (
+                                    <span className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                        Значение {idx + 1}
+                                    </span>
+                                )}
+
+                                <p className="text-base md:text-lg text-slate-700 leading-relaxed">
+                                    {m.meaning || "Здесь будет толкование"}
+                                </p>
+
+                                {m.examples && (
+                                    <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 pl-4">
+                                        <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase block mb-1">
+                                            Пример
+                                        </span>
+                                        <p className="italic text-slate-600 text-sm leading-relaxed">
+                                            «{m.examples}»
+                                        </p>
+                                    </div>
+                                )}
+
+                                {hasTranslations && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                        {Object.entries(meaningTranslations).map(([lang, val]) => (
+                                            <div
+                                                key={lang}
+                                                className="flex flex-col justify-center p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
+                                            >
+                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{lang}</span>
+                                                <span className="text-base font-medium text-slate-800">{val}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    ) : null)}
-                </div>
+                    );
+                })}
             </section>
 
-            {/* 7. Этимологические ссылки */}
+            {/* 6. Этимологические ссылки */}
             {etymologyLinks.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Этимология и внешние ссылки</h2>

@@ -8,6 +8,7 @@ export { GrammaticalNumber, isValidNumber, ALL_NUMBER_VALUES } from './number';
 export type { MorphoGrammarFeats } from './feats';
 export { csvGrammarMapper } from './import-mapper';
 export type { CsvGrammarFields } from './import-mapper';
+export { heuristicStem } from './heuristicStem';
 
 export function isEnumMatch<T extends Record<string, string>>(
     value: string | null | undefined,
