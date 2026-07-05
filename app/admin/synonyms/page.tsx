@@ -6,6 +6,7 @@ import { type Prisma } from "../../../prisma/generated/data/client"
 import { SynonymsClient } from "./synonyms-client"
 import AdminNav from "@/components/AdminNav";
 import type { Metadata } from "next";
+import { buildEntry, append } from "@/lib/action-history"
 
 export const metadata: Metadata = {
   title: "Синонимы",
@@ -54,6 +55,8 @@ export default async function AdminSynonymsPage() {
     async function updateSynonyms(rootWordId: number, synonymIds: number[]) {
         "use server"
 
+        const author = session?.user?.email || "unknown"
+
         await db.synonym.deleteMany({
             where: { rootId: rootWordId }
         })
@@ -67,6 +70,12 @@ export default async function AdminSynonymsPage() {
                 }))
             })
         }
+
+        const word = await db.word.findUnique({ where: { id: rootWordId } }) as { actionHistory?: string | null } | null
+        await db.word.update({
+            where: { id: rootWordId },
+            data: { actionHistory: append(word?.actionHistory, buildEntry(author, { synonymIds: { old: null, new: synonymIds } })) }
+        })
     }
 
     return (

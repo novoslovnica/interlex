@@ -42,26 +42,35 @@ export type SkSumAggregateOutputType = {
 
 export type SkMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type SkMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type SkCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   veryfied: number
   wordId: number
   meaningId: number
+  actionHistory: number
   _all: number
 }
 
@@ -82,26 +91,35 @@ export type SkSumAggregateInputType = {
 
 export type SkMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type SkMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type SkCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -193,10 +211,13 @@ export type SkGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type SkGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
   _count: SkCountAggregateOutputType | null
   _avg: SkAvgAggregateOutputType | null
   _sum: SkSumAggregateOutputType | null
@@ -224,20 +245,26 @@ export type SkWhereInput = {
   OR?: Prisma.SkWhereInput[]
   NOT?: Prisma.SkWhereInput | Prisma.SkWhereInput[]
   id?: Prisma.IntFilter<"Sk"> | number
+  createdAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
   value?: Prisma.StringNullableFilter<"Sk"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Sk"> | number | null
   wordId?: Prisma.IntNullableFilter<"Sk"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Sk"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Sk"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type SkOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   word?: Prisma.MeaningOrderByWithRelationInput
   meaning?: Prisma.MeaningOrderByWithRelationInput
 }
@@ -247,20 +274,26 @@ export type SkWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SkWhereInput | Prisma.SkWhereInput[]
   OR?: Prisma.SkWhereInput[]
   NOT?: Prisma.SkWhereInput | Prisma.SkWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
   value?: Prisma.StringNullableFilter<"Sk"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Sk"> | number | null
   wordId?: Prisma.IntNullableFilter<"Sk"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Sk"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Sk"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type SkOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SkCountOrderByAggregateInput
   _avg?: Prisma.SkAvgOrderByAggregateInput
   _max?: Prisma.SkMaxOrderByAggregateInput
@@ -273,61 +306,85 @@ export type SkScalarWhereWithAggregatesInput = {
   OR?: Prisma.SkScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SkScalarWhereWithAggregatesInput | Prisma.SkScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Sk"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Sk"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Sk"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Sk"> | string | null
   veryfied?: Prisma.IntNullableWithAggregatesFilter<"Sk"> | number | null
   wordId?: Prisma.IntNullableWithAggregatesFilter<"Sk"> | number | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Sk"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Sk"> | string | null
 }
 
 export type SkCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutSk_wordInput
   meaning?: Prisma.MeaningCreateNestedOneWithoutSk_meanInput
 }
 
 export type SkUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutSk_wordNestedInput
   meaning?: Prisma.MeaningUpdateOneWithoutSk_meanNestedInput
 }
 
 export type SkUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkListRelationFilter = {
@@ -342,10 +399,13 @@ export type SkOrderByRelationAggregateInput = {
 
 export type SkCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type SkAvgOrderByAggregateInput = {
@@ -357,18 +417,24 @@ export type SkAvgOrderByAggregateInput = {
 
 export type SkMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type SkMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type SkSumOrderByAggregateInput = {
@@ -463,16 +529,22 @@ export type SkUncheckedUpdateManyWithoutMeaningNestedInput = {
 }
 
 export type SkCreateWithoutWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutSk_meanInput
 }
 
 export type SkUncheckedCreateWithoutWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkCreateOrConnectWithoutWordInput = {
@@ -485,16 +557,22 @@ export type SkCreateManyWordInputEnvelope = {
 }
 
 export type SkCreateWithoutMeaningInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutSk_wordInput
 }
 
 export type SkUncheckedCreateWithoutMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkCreateOrConnectWithoutMeaningInput = {
@@ -527,10 +605,13 @@ export type SkScalarWhereInput = {
   OR?: Prisma.SkScalarWhereInput[]
   NOT?: Prisma.SkScalarWhereInput | Prisma.SkScalarWhereInput[]
   id?: Prisma.IntFilter<"Sk"> | number
+  createdAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Sk"> | Date | string
   value?: Prisma.StringNullableFilter<"Sk"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Sk"> | number | null
   wordId?: Prisma.IntNullableFilter<"Sk"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Sk"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Sk"> | string | null
 }
 
 export type SkUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -551,99 +632,135 @@ export type SkUpdateManyWithWhereWithoutMeaningInput = {
 
 export type SkCreateManyWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkCreateManyMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type SkUpdateWithoutWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutSk_meanNestedInput
 }
 
 export type SkUncheckedUpdateWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkUncheckedUpdateManyWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkUpdateWithoutMeaningInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutSk_wordNestedInput
 }
 
 export type SkUncheckedUpdateWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SkUncheckedUpdateManyWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type SkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Sk$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Sk$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["sk"]>
 
 export type SkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Sk$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Sk$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["sk"]>
 
 export type SkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Sk$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Sk$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["sk"]>
 
 export type SkSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
 }
 
-export type SkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "veryfied" | "wordId" | "meaningId", ExtArgs["result"]["sk"]>
+export type SkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "veryfied" | "wordId" | "meaningId" | "actionHistory", ExtArgs["result"]["sk"]>
 export type SkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   word?: boolean | Prisma.Sk$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Sk$meaningArgs<ExtArgs>
@@ -665,10 +782,13 @@ export type $SkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     veryfied: number | null
     wordId: number | null
     meaningId: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["sk"]>
   composites: {}
 }
@@ -1095,10 +1215,13 @@ export interface Prisma__SkClient<T, Null = never, ExtArgs extends runtime.Types
  */
 export interface SkFieldRefs {
   readonly id: Prisma.FieldRef<"Sk", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Sk", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Sk", 'DateTime'>
   readonly value: Prisma.FieldRef<"Sk", 'String'>
   readonly veryfied: Prisma.FieldRef<"Sk", 'Int'>
   readonly wordId: Prisma.FieldRef<"Sk", 'Int'>
   readonly meaningId: Prisma.FieldRef<"Sk", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"Sk", 'String'>
 }
     
 
@@ -1322,7 +1445,7 @@ export type SkCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   /**
    * The data needed to create a Sk.
    */
-  data?: Prisma.XOR<Prisma.SkCreateInput, Prisma.SkUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.SkCreateInput, Prisma.SkUncheckedCreateInput>
 }
 
 /**

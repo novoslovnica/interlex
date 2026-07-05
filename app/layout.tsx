@@ -22,10 +22,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Межславянский лексикон | Interslavic Lexicon",
-    template: "%s | Межславянский лексикон",
+    default: "Междуславянский лексикон | Interslavic Lexicon",
+    template: "%s | Междуславянский лексикон",
   },
-  description: "Поиск по словарю межславянского языка с переводом, морфологией, этимологией и корпусами текстов. Interslavic lexical dictionary with translations, grammar, and etymology.",
+  description: "Поиск по словарю междуславянского языка с переводом, морфологией, этимологией и корпусами текстов. Interslavic lexical dictionary with translations, grammar, and etymology.",
 };
 
 export default async function RootLayout({
@@ -48,7 +48,7 @@ export default async function RootLayout({
               <body className="min-h-full flex flex-col">
                   <header className="site-header">
                       <div className="header-content">
-                          <h1><Link href="/">Межславянский лексикон</Link></h1>
+                          <h1><Link href="/">Междуславянский лексикон</Link></h1>
                           <nav>
                               {/* Передаем полученную сессию в изолированный список навигации */}
                               <HeaderNav session={session} />

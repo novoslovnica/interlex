@@ -42,26 +42,35 @@ export type EoSumAggregateOutputType = {
 
 export type EoMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type EoMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type EoCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   veryfied: number
   wordId: number
   meaningId: number
+  actionHistory: number
   _all: number
 }
 
@@ -82,26 +91,35 @@ export type EoSumAggregateInputType = {
 
 export type EoMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type EoMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type EoCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -193,10 +211,13 @@ export type EoGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type EoGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
   _count: EoCountAggregateOutputType | null
   _avg: EoAvgAggregateOutputType | null
   _sum: EoSumAggregateOutputType | null
@@ -224,20 +245,26 @@ export type EoWhereInput = {
   OR?: Prisma.EoWhereInput[]
   NOT?: Prisma.EoWhereInput | Prisma.EoWhereInput[]
   id?: Prisma.IntFilter<"Eo"> | number
+  createdAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
   value?: Prisma.StringNullableFilter<"Eo"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Eo"> | number | null
   wordId?: Prisma.IntNullableFilter<"Eo"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Eo"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Eo"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type EoOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   word?: Prisma.MeaningOrderByWithRelationInput
   meaning?: Prisma.MeaningOrderByWithRelationInput
 }
@@ -247,20 +274,26 @@ export type EoWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EoWhereInput | Prisma.EoWhereInput[]
   OR?: Prisma.EoWhereInput[]
   NOT?: Prisma.EoWhereInput | Prisma.EoWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
   value?: Prisma.StringNullableFilter<"Eo"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Eo"> | number | null
   wordId?: Prisma.IntNullableFilter<"Eo"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Eo"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Eo"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type EoOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EoCountOrderByAggregateInput
   _avg?: Prisma.EoAvgOrderByAggregateInput
   _max?: Prisma.EoMaxOrderByAggregateInput
@@ -273,61 +306,85 @@ export type EoScalarWhereWithAggregatesInput = {
   OR?: Prisma.EoScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EoScalarWhereWithAggregatesInput | Prisma.EoScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Eo"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Eo"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Eo"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Eo"> | string | null
   veryfied?: Prisma.IntNullableWithAggregatesFilter<"Eo"> | number | null
   wordId?: Prisma.IntNullableWithAggregatesFilter<"Eo"> | number | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Eo"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Eo"> | string | null
 }
 
 export type EoCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutEo_wordInput
   meaning?: Prisma.MeaningCreateNestedOneWithoutEo_meanInput
 }
 
 export type EoUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutEo_wordNestedInput
   meaning?: Prisma.MeaningUpdateOneWithoutEo_meanNestedInput
 }
 
 export type EoUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoListRelationFilter = {
@@ -342,10 +399,13 @@ export type EoOrderByRelationAggregateInput = {
 
 export type EoCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type EoAvgOrderByAggregateInput = {
@@ -357,18 +417,24 @@ export type EoAvgOrderByAggregateInput = {
 
 export type EoMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type EoMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type EoSumOrderByAggregateInput = {
@@ -463,16 +529,22 @@ export type EoUncheckedUpdateManyWithoutMeaningNestedInput = {
 }
 
 export type EoCreateWithoutWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutEo_meanInput
 }
 
 export type EoUncheckedCreateWithoutWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoCreateOrConnectWithoutWordInput = {
@@ -485,16 +557,22 @@ export type EoCreateManyWordInputEnvelope = {
 }
 
 export type EoCreateWithoutMeaningInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutEo_wordInput
 }
 
 export type EoUncheckedCreateWithoutMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoCreateOrConnectWithoutMeaningInput = {
@@ -527,10 +605,13 @@ export type EoScalarWhereInput = {
   OR?: Prisma.EoScalarWhereInput[]
   NOT?: Prisma.EoScalarWhereInput | Prisma.EoScalarWhereInput[]
   id?: Prisma.IntFilter<"Eo"> | number
+  createdAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Eo"> | Date | string
   value?: Prisma.StringNullableFilter<"Eo"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Eo"> | number | null
   wordId?: Prisma.IntNullableFilter<"Eo"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Eo"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Eo"> | string | null
 }
 
 export type EoUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -551,99 +632,135 @@ export type EoUpdateManyWithWhereWithoutMeaningInput = {
 
 export type EoCreateManyWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoCreateManyMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type EoUpdateWithoutWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutEo_meanNestedInput
 }
 
 export type EoUncheckedUpdateWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoUncheckedUpdateManyWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoUpdateWithoutMeaningInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutEo_wordNestedInput
 }
 
 export type EoUncheckedUpdateWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EoUncheckedUpdateManyWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type EoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Eo$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Eo$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["eo"]>
 
 export type EoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Eo$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Eo$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["eo"]>
 
 export type EoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Eo$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Eo$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["eo"]>
 
 export type EoSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
 }
 
-export type EoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "veryfied" | "wordId" | "meaningId", ExtArgs["result"]["eo"]>
+export type EoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "veryfied" | "wordId" | "meaningId" | "actionHistory", ExtArgs["result"]["eo"]>
 export type EoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   word?: boolean | Prisma.Eo$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Eo$meaningArgs<ExtArgs>
@@ -665,10 +782,13 @@ export type $EoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     veryfied: number | null
     wordId: number | null
     meaningId: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["eo"]>
   composites: {}
 }
@@ -1095,10 +1215,13 @@ export interface Prisma__EoClient<T, Null = never, ExtArgs extends runtime.Types
  */
 export interface EoFieldRefs {
   readonly id: Prisma.FieldRef<"Eo", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Eo", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Eo", 'DateTime'>
   readonly value: Prisma.FieldRef<"Eo", 'String'>
   readonly veryfied: Prisma.FieldRef<"Eo", 'Int'>
   readonly wordId: Prisma.FieldRef<"Eo", 'Int'>
   readonly meaningId: Prisma.FieldRef<"Eo", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"Eo", 'String'>
 }
     
 
@@ -1322,7 +1445,7 @@ export type EoCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   /**
    * The data needed to create a Eo.
    */
-  data?: Prisma.XOR<Prisma.EoCreateInput, Prisma.EoUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.EoCreateInput, Prisma.EoUncheckedCreateInput>
 }
 
 /**

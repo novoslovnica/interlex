@@ -42,26 +42,35 @@ export type BeSumAggregateOutputType = {
 
 export type BeMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type BeMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type BeCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   veryfied: number
   wordId: number
   meaningId: number
+  actionHistory: number
   _all: number
 }
 
@@ -82,26 +91,35 @@ export type BeSumAggregateInputType = {
 
 export type BeMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type BeMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type BeCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -193,10 +211,13 @@ export type BeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type BeGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
   _count: BeCountAggregateOutputType | null
   _avg: BeAvgAggregateOutputType | null
   _sum: BeSumAggregateOutputType | null
@@ -224,20 +245,26 @@ export type BeWhereInput = {
   OR?: Prisma.BeWhereInput[]
   NOT?: Prisma.BeWhereInput | Prisma.BeWhereInput[]
   id?: Prisma.IntFilter<"Be"> | number
+  createdAt?: Prisma.DateTimeFilter<"Be"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Be"> | Date | string
   value?: Prisma.StringNullableFilter<"Be"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Be"> | number | null
   wordId?: Prisma.IntNullableFilter<"Be"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Be"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Be"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type BeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   word?: Prisma.MeaningOrderByWithRelationInput
   meaning?: Prisma.MeaningOrderByWithRelationInput
 }
@@ -247,20 +274,26 @@ export type BeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BeWhereInput | Prisma.BeWhereInput[]
   OR?: Prisma.BeWhereInput[]
   NOT?: Prisma.BeWhereInput | Prisma.BeWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Be"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Be"> | Date | string
   value?: Prisma.StringNullableFilter<"Be"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Be"> | number | null
   wordId?: Prisma.IntNullableFilter<"Be"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Be"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Be"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type BeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.BeCountOrderByAggregateInput
   _avg?: Prisma.BeAvgOrderByAggregateInput
   _max?: Prisma.BeMaxOrderByAggregateInput
@@ -273,61 +306,85 @@ export type BeScalarWhereWithAggregatesInput = {
   OR?: Prisma.BeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BeScalarWhereWithAggregatesInput | Prisma.BeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Be"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Be"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Be"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Be"> | string | null
   veryfied?: Prisma.IntNullableWithAggregatesFilter<"Be"> | number | null
   wordId?: Prisma.IntNullableWithAggregatesFilter<"Be"> | number | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Be"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Be"> | string | null
 }
 
 export type BeCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutBe_wordInput
   meaning?: Prisma.MeaningCreateNestedOneWithoutBe_meanInput
 }
 
 export type BeUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutBe_wordNestedInput
   meaning?: Prisma.MeaningUpdateOneWithoutBe_meanNestedInput
 }
 
 export type BeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeListRelationFilter = {
@@ -342,10 +399,13 @@ export type BeOrderByRelationAggregateInput = {
 
 export type BeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type BeAvgOrderByAggregateInput = {
@@ -357,18 +417,24 @@ export type BeAvgOrderByAggregateInput = {
 
 export type BeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type BeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type BeSumOrderByAggregateInput = {
@@ -463,16 +529,22 @@ export type BeUncheckedUpdateManyWithoutMeaningNestedInput = {
 }
 
 export type BeCreateWithoutWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutBe_meanInput
 }
 
 export type BeUncheckedCreateWithoutWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeCreateOrConnectWithoutWordInput = {
@@ -485,16 +557,22 @@ export type BeCreateManyWordInputEnvelope = {
 }
 
 export type BeCreateWithoutMeaningInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutBe_wordInput
 }
 
 export type BeUncheckedCreateWithoutMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeCreateOrConnectWithoutMeaningInput = {
@@ -527,10 +605,13 @@ export type BeScalarWhereInput = {
   OR?: Prisma.BeScalarWhereInput[]
   NOT?: Prisma.BeScalarWhereInput | Prisma.BeScalarWhereInput[]
   id?: Prisma.IntFilter<"Be"> | number
+  createdAt?: Prisma.DateTimeFilter<"Be"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Be"> | Date | string
   value?: Prisma.StringNullableFilter<"Be"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Be"> | number | null
   wordId?: Prisma.IntNullableFilter<"Be"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Be"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Be"> | string | null
 }
 
 export type BeUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -551,99 +632,135 @@ export type BeUpdateManyWithWhereWithoutMeaningInput = {
 
 export type BeCreateManyWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeCreateManyMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type BeUpdateWithoutWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutBe_meanNestedInput
 }
 
 export type BeUncheckedUpdateWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeUncheckedUpdateManyWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeUpdateWithoutMeaningInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutBe_wordNestedInput
 }
 
 export type BeUncheckedUpdateWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type BeUncheckedUpdateManyWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type BeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Be$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Be$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["be"]>
 
 export type BeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Be$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Be$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["be"]>
 
 export type BeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Be$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Be$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["be"]>
 
 export type BeSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
 }
 
-export type BeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "veryfied" | "wordId" | "meaningId", ExtArgs["result"]["be"]>
+export type BeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "veryfied" | "wordId" | "meaningId" | "actionHistory", ExtArgs["result"]["be"]>
 export type BeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   word?: boolean | Prisma.Be$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Be$meaningArgs<ExtArgs>
@@ -665,10 +782,13 @@ export type $BePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     veryfied: number | null
     wordId: number | null
     meaningId: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["be"]>
   composites: {}
 }
@@ -1095,10 +1215,13 @@ export interface Prisma__BeClient<T, Null = never, ExtArgs extends runtime.Types
  */
 export interface BeFieldRefs {
   readonly id: Prisma.FieldRef<"Be", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Be", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Be", 'DateTime'>
   readonly value: Prisma.FieldRef<"Be", 'String'>
   readonly veryfied: Prisma.FieldRef<"Be", 'Int'>
   readonly wordId: Prisma.FieldRef<"Be", 'Int'>
   readonly meaningId: Prisma.FieldRef<"Be", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"Be", 'String'>
 }
     
 
@@ -1322,7 +1445,7 @@ export type BeCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   /**
    * The data needed to create a Be.
    */
-  data?: Prisma.XOR<Prisma.BeCreateInput, Prisma.BeUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.BeCreateInput, Prisma.BeUncheckedCreateInput>
 }
 
 /**

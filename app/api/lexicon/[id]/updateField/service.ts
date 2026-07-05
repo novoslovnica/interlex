@@ -1,4 +1,6 @@
 import {prismaData as prisma} from "@/lib/prisma";
+import { auth } from "@/auth"
+import { buildEntry, append } from "@/lib/action-history"
 
 const ALLOWED_LANG_FIELDS = ["value", "veryfied", "wordId", "meaningId"] as const;
 
@@ -27,7 +29,6 @@ export const modelsMap: Record<LanguageCode | string, any> = {
 };
 
 async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: string | null) {
-    // Remove wordId from old base
     if (oldBase) {
         const oldEntry = await prisma.baseHomonym.findUnique({ where: { base: oldBase } })
         if (oldEntry) {
@@ -42,7 +43,6 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
             }
         }
     }
-    // Add wordId to new base
     if (newBase) {
         const existing = await prisma.baseHomonym.findUnique({ where: { base: newBase } })
         if (existing) {
@@ -64,25 +64,42 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
 
 export const updateField = async (wordId: string, field: string, newValue: string) => {
     console.log(wordId, field, newValue);
+    const session = await auth()
+    const author = session?.user?.email || "unknown"
 
     if (["base", "nsl", "isv", "value"].includes(field)) {
         const parsedId = parseInt(wordId)
 
         if (field === "base") {
             const current = await prisma.word.findUnique({ where: { id: parsedId } })
+            const currentWithHistory = current as { base?: string | null; actionHistory?: string | null } | null
             const oldBase = current?.base?.trim() || null
             const newBase = newValue.trim() || null
 
             await prisma.word.update({
                 where: { id: parsedId },
-                data: { base: newBase },
+                data: {
+                    base: newBase,
+                    actionHistory: append(currentWithHistory?.actionHistory, buildEntry(author, {
+                        base: { old: oldBase, new: newBase },
+                    })),
+                },
             })
 
             await syncBaseHomonym(parsedId, newBase, oldBase)
         } else {
+            const current = await prisma.word.findUnique({ where: { id: parsedId } })
+            const currentWithHistory = current as { [key: string]: unknown } | null
+            const oldValue = currentWithHistory?.[field] ?? null
+
             await prisma.word.update({
                 where: { id: parsedId },
-                data: { [field]: newValue },
+                data: {
+                    [field]: newValue,
+                    actionHistory: append(currentWithHistory?.actionHistory as string | null | undefined, buildEntry(author, {
+                        [field]: { old: oldValue, new: newValue },
+                    })),
+                },
             })
         }
 
@@ -96,12 +113,17 @@ export const updateField = async (wordId: string, field: string, newValue: strin
         })
         console.log(entityOne);
 
+        const oldValue = entityOne?.value ?? null
+
         const updatedUser = await modelsMap[field].update({
             where: {
                 id: entityOne.id,
             },
             data: {
                 value: newValue,
+                actionHistory: append(entityOne?.actionHistory, buildEntry(author, {
+                    value: { old: oldValue, new: newValue },
+                })),
             },
         });
         return updatedUser;

@@ -38,20 +38,29 @@ export type RootSumAggregateOutputType = {
 
 export type RootMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   type: number | null
+  actionHistory: string | null
 }
 
 export type RootMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   type: number | null
+  actionHistory: string | null
 }
 
 export type RootCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   type: number
+  actionHistory: number
   _all: number
 }
 
@@ -68,20 +77,29 @@ export type RootSumAggregateInputType = {
 
 export type RootMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   type?: true
+  actionHistory?: true
 }
 
 export type RootMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   type?: true
+  actionHistory?: true
 }
 
 export type RootCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   type?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -173,8 +191,11 @@ export type RootGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type RootGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   type: number | null
+  actionHistory: string | null
   _count: RootCountAggregateOutputType | null
   _avg: RootAvgAggregateOutputType | null
   _sum: RootSumAggregateOutputType | null
@@ -202,15 +223,21 @@ export type RootWhereInput = {
   OR?: Prisma.RootWhereInput[]
   NOT?: Prisma.RootWhereInput | Prisma.RootWhereInput[]
   id?: Prisma.IntFilter<"Root"> | number
+  createdAt?: Prisma.DateTimeFilter<"Root"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Root"> | Date | string
   value?: Prisma.StringNullableFilter<"Root"> | string | null
   type?: Prisma.IntNullableFilter<"Root"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Root"> | string | null
   roots_words?: Prisma.RootWordListRelationFilter
 }
 
 export type RootOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   roots_words?: Prisma.RootWordOrderByRelationAggregateInput
 }
 
@@ -219,15 +246,21 @@ export type RootWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RootWhereInput | Prisma.RootWhereInput[]
   OR?: Prisma.RootWhereInput[]
   NOT?: Prisma.RootWhereInput | Prisma.RootWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Root"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Root"> | Date | string
   value?: Prisma.StringNullableFilter<"Root"> | string | null
   type?: Prisma.IntNullableFilter<"Root"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Root"> | string | null
   roots_words?: Prisma.RootWordListRelationFilter
 }, "id">
 
 export type RootOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RootCountOrderByAggregateInput
   _avg?: Prisma.RootAvgOrderByAggregateInput
   _max?: Prisma.RootMaxOrderByAggregateInput
@@ -240,57 +273,84 @@ export type RootScalarWhereWithAggregatesInput = {
   OR?: Prisma.RootScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RootScalarWhereWithAggregatesInput | Prisma.RootScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Root"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Root"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Root"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Root"> | string | null
   type?: Prisma.IntNullableWithAggregatesFilter<"Root"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Root"> | string | null
 }
 
 export type RootCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   type?: number | null
+  actionHistory?: string | null
   roots_words?: Prisma.RootWordCreateNestedManyWithoutRootInput
 }
 
 export type RootUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   type?: number | null
+  actionHistory?: string | null
   roots_words?: Prisma.RootWordUncheckedCreateNestedManyWithoutRootInput
 }
 
 export type RootUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roots_words?: Prisma.RootWordUpdateManyWithoutRootNestedInput
 }
 
 export type RootUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roots_words?: Prisma.RootWordUncheckedUpdateManyWithoutRootNestedInput
 }
 
 export type RootCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   type?: number | null
+  actionHistory?: string | null
 }
 
 export type RootUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RootUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RootCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type RootAvgOrderByAggregateInput = {
@@ -300,14 +360,20 @@ export type RootAvgOrderByAggregateInput = {
 
 export type RootMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type RootMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type RootSumOrderByAggregateInput = {
@@ -337,14 +403,20 @@ export type RootUpdateOneWithoutRoots_wordsNestedInput = {
 }
 
 export type RootCreateWithoutRoots_wordsInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   type?: number | null
+  actionHistory?: string | null
 }
 
 export type RootUncheckedCreateWithoutRoots_wordsInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   type?: number | null
+  actionHistory?: string | null
 }
 
 export type RootCreateOrConnectWithoutRoots_wordsInput = {
@@ -364,14 +436,20 @@ export type RootUpdateToOneWithWhereWithoutRoots_wordsInput = {
 }
 
 export type RootUpdateWithoutRoots_wordsInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RootUncheckedUpdateWithoutRoots_wordsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -407,31 +485,43 @@ export type RootCountOutputTypeCountRoots_wordsArgs<ExtArgs extends runtime.Type
 
 export type RootSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   type?: boolean
+  actionHistory?: boolean
   roots_words?: boolean | Prisma.Root$roots_wordsArgs<ExtArgs>
   _count?: boolean | Prisma.RootCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["root"]>
 
 export type RootSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   type?: boolean
+  actionHistory?: boolean
 }, ExtArgs["result"]["root"]>
 
 export type RootSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   type?: boolean
+  actionHistory?: boolean
 }, ExtArgs["result"]["root"]>
 
 export type RootSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   type?: boolean
+  actionHistory?: boolean
 }
 
-export type RootOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "type", ExtArgs["result"]["root"]>
+export type RootOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "type" | "actionHistory", ExtArgs["result"]["root"]>
 export type RootInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   roots_words?: boolean | Prisma.Root$roots_wordsArgs<ExtArgs>
   _count?: boolean | Prisma.RootCountOutputTypeDefaultArgs<ExtArgs>
@@ -446,8 +536,11 @@ export type $RootPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     type: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["root"]>
   composites: {}
 }
@@ -873,8 +966,11 @@ export interface Prisma__RootClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface RootFieldRefs {
   readonly id: Prisma.FieldRef<"Root", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Root", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Root", 'DateTime'>
   readonly value: Prisma.FieldRef<"Root", 'String'>
   readonly type: Prisma.FieldRef<"Root", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"Root", 'String'>
 }
     
 
@@ -1098,7 +1194,7 @@ export type RootCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   /**
    * The data needed to create a Root.
    */
-  data?: Prisma.XOR<Prisma.RootCreateInput, Prisma.RootUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.RootCreateInput, Prisma.RootUncheckedCreateInput>
 }
 
 /**

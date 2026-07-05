@@ -42,26 +42,35 @@ export type HrSumAggregateOutputType = {
 
 export type HrMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type HrMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type HrCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   veryfied: number
   wordId: number
   meaningId: number
+  actionHistory: number
   _all: number
 }
 
@@ -82,26 +91,35 @@ export type HrSumAggregateInputType = {
 
 export type HrMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type HrMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type HrCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -193,10 +211,13 @@ export type HrGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type HrGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
   _count: HrCountAggregateOutputType | null
   _avg: HrAvgAggregateOutputType | null
   _sum: HrSumAggregateOutputType | null
@@ -224,20 +245,26 @@ export type HrWhereInput = {
   OR?: Prisma.HrWhereInput[]
   NOT?: Prisma.HrWhereInput | Prisma.HrWhereInput[]
   id?: Prisma.IntFilter<"Hr"> | number
+  createdAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
   value?: Prisma.StringNullableFilter<"Hr"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Hr"> | number | null
   wordId?: Prisma.IntNullableFilter<"Hr"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Hr"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Hr"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type HrOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   word?: Prisma.MeaningOrderByWithRelationInput
   meaning?: Prisma.MeaningOrderByWithRelationInput
 }
@@ -247,20 +274,26 @@ export type HrWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.HrWhereInput | Prisma.HrWhereInput[]
   OR?: Prisma.HrWhereInput[]
   NOT?: Prisma.HrWhereInput | Prisma.HrWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
   value?: Prisma.StringNullableFilter<"Hr"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Hr"> | number | null
   wordId?: Prisma.IntNullableFilter<"Hr"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Hr"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Hr"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type HrOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.HrCountOrderByAggregateInput
   _avg?: Prisma.HrAvgOrderByAggregateInput
   _max?: Prisma.HrMaxOrderByAggregateInput
@@ -273,61 +306,85 @@ export type HrScalarWhereWithAggregatesInput = {
   OR?: Prisma.HrScalarWhereWithAggregatesInput[]
   NOT?: Prisma.HrScalarWhereWithAggregatesInput | Prisma.HrScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Hr"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Hr"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Hr"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Hr"> | string | null
   veryfied?: Prisma.IntNullableWithAggregatesFilter<"Hr"> | number | null
   wordId?: Prisma.IntNullableWithAggregatesFilter<"Hr"> | number | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Hr"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Hr"> | string | null
 }
 
 export type HrCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutHr_wordInput
   meaning?: Prisma.MeaningCreateNestedOneWithoutHr_meanInput
 }
 
 export type HrUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutHr_wordNestedInput
   meaning?: Prisma.MeaningUpdateOneWithoutHr_meanNestedInput
 }
 
 export type HrUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrListRelationFilter = {
@@ -342,10 +399,13 @@ export type HrOrderByRelationAggregateInput = {
 
 export type HrCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type HrAvgOrderByAggregateInput = {
@@ -357,18 +417,24 @@ export type HrAvgOrderByAggregateInput = {
 
 export type HrMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type HrMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type HrSumOrderByAggregateInput = {
@@ -463,16 +529,22 @@ export type HrUncheckedUpdateManyWithoutMeaningNestedInput = {
 }
 
 export type HrCreateWithoutWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutHr_meanInput
 }
 
 export type HrUncheckedCreateWithoutWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrCreateOrConnectWithoutWordInput = {
@@ -485,16 +557,22 @@ export type HrCreateManyWordInputEnvelope = {
 }
 
 export type HrCreateWithoutMeaningInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutHr_wordInput
 }
 
 export type HrUncheckedCreateWithoutMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrCreateOrConnectWithoutMeaningInput = {
@@ -527,10 +605,13 @@ export type HrScalarWhereInput = {
   OR?: Prisma.HrScalarWhereInput[]
   NOT?: Prisma.HrScalarWhereInput | Prisma.HrScalarWhereInput[]
   id?: Prisma.IntFilter<"Hr"> | number
+  createdAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Hr"> | Date | string
   value?: Prisma.StringNullableFilter<"Hr"> | string | null
   veryfied?: Prisma.IntNullableFilter<"Hr"> | number | null
   wordId?: Prisma.IntNullableFilter<"Hr"> | number | null
   meaningId?: Prisma.IntNullableFilter<"Hr"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"Hr"> | string | null
 }
 
 export type HrUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -551,99 +632,135 @@ export type HrUpdateManyWithWhereWithoutMeaningInput = {
 
 export type HrCreateManyWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrCreateManyMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type HrUpdateWithoutWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutHr_meanNestedInput
 }
 
 export type HrUncheckedUpdateWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrUncheckedUpdateManyWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrUpdateWithoutMeaningInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutHr_wordNestedInput
 }
 
 export type HrUncheckedUpdateWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HrUncheckedUpdateManyWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type HrSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Hr$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Hr$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["hr"]>
 
 export type HrSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Hr$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Hr$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["hr"]>
 
 export type HrSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.Hr$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Hr$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["hr"]>
 
 export type HrSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
 }
 
-export type HrOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "veryfied" | "wordId" | "meaningId", ExtArgs["result"]["hr"]>
+export type HrOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "veryfied" | "wordId" | "meaningId" | "actionHistory", ExtArgs["result"]["hr"]>
 export type HrInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   word?: boolean | Prisma.Hr$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.Hr$meaningArgs<ExtArgs>
@@ -665,10 +782,13 @@ export type $HrPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     veryfied: number | null
     wordId: number | null
     meaningId: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["hr"]>
   composites: {}
 }
@@ -1095,10 +1215,13 @@ export interface Prisma__HrClient<T, Null = never, ExtArgs extends runtime.Types
  */
 export interface HrFieldRefs {
   readonly id: Prisma.FieldRef<"Hr", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"Hr", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Hr", 'DateTime'>
   readonly value: Prisma.FieldRef<"Hr", 'String'>
   readonly veryfied: Prisma.FieldRef<"Hr", 'Int'>
   readonly wordId: Prisma.FieldRef<"Hr", 'Int'>
   readonly meaningId: Prisma.FieldRef<"Hr", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"Hr", 'String'>
 }
     
 
@@ -1322,7 +1445,7 @@ export type HrCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   /**
    * The data needed to create a Hr.
    */
-  data?: Prisma.XOR<Prisma.HrCreateInput, Prisma.HrUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.HrCreateInput, Prisma.HrUncheckedCreateInput>
 }
 
 /**

@@ -9,6 +9,8 @@ datasource db {
 
 model Word {
   id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   slug            String           @unique
   external_id     Int?
   value           String?
@@ -56,6 +58,7 @@ model Word {
   antonymsRoot    Antonym[]        @relation("AntonymRoot")
   antonymsWord    Antonym[]        @relation("AntonymWord")
   anomalies       InflectionAnomaly[]
+  actionHistory   String?
 
   @@map("words")
   @@index([slug])
@@ -118,10 +121,13 @@ model Meaning {
 
 model Root {
   id    Int     @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value String?
   type  Int?    @default(0)
 
   roots_words RootWord[]
+  actionHistory String?
 
   @@map("roots")
 }
@@ -172,6 +178,8 @@ model Antonym {
 // Динамические таблицы языков, преобразованные в схемы Prisma
 model En {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
@@ -180,11 +188,15 @@ model En {
   word      Meaning? @relation("EnWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("EnMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
+  actionHistory String?
+
   @@map("en")
 }
 
 model Ru {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
@@ -193,187 +205,231 @@ model Ru {
   word      Meaning? @relation("RuWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("RuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
+  actionHistory String?
+
   @@map("ru")
 }
 
 model Mk {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("MkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("MkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("mk")
 }
 
 model Sr {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("SrWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("sr")
 }
 
 model Uk {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("UkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("UkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("uk")
 }
 
 model Bg {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("BgWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("BgMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("bg")
 }
 
 model Pl {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("PlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("PlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("pl")
 }
 
 model Be {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("BeWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("BeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("be")
 }
 
 model Cs {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("CsWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("CsMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("cs")
 }
 
 model Sk {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("SkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("sk")
 }
 
 model Sl {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("SlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("sl")
 }
 
 model Hr {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("HrWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("HrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("hr")
 }
 
 model Cu {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("CuWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("CuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("cu")
 }
 
 model De {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("DeWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("DeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("de")
 }
 
 model Nl {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("NlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("NlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("nl")
 }
 
 model Eo {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   value     String?
   veryfied  Int?
   wordId    Int?
   meaningId Int?
-
   word      Meaning? @relation("EoWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("EoMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
 
   @@map("eo")
 }

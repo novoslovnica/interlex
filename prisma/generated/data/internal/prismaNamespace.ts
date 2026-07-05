@@ -2241,6 +2241,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const WordScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   slug: 'slug',
   external_id: 'external_id',
   value: 'value',
@@ -2260,10 +2262,12 @@ export const WordScalarFieldEnum = {
   intelligibility: 'intelligibility',
   addition: 'addition',
   sameInLanguages: 'sameInLanguages',
+  etymology: 'etymology',
   proto: 'proto',
   paradigm: 'paradigm',
   protoStemClass: 'protoStemClass',
   stemExtension: 'stemExtension',
+  genesis: 'genesis',
   base: 'base',
   gender: 'gender',
   declension: 'declension',
@@ -2271,7 +2275,8 @@ export const WordScalarFieldEnum = {
   accentSyllable: 'accentSyllable',
   alternationType: 'alternationType',
   fleetingVowelAt: 'fleetingVowelAt',
-  hasAnomalies: 'hasAnomalies'
+  hasAnomalies: 'hasAnomalies',
+  actionHistory: 'actionHistory'
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
@@ -2289,8 +2294,11 @@ export type MeaningScalarFieldEnum = (typeof MeaningScalarFieldEnum)[keyof typeo
 
 export const RootScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
-  type: 'type'
+  type: 'type',
+  actionHistory: 'actionHistory'
 } as const
 
 export type RootScalarFieldEnum = (typeof RootScalarFieldEnum)[keyof typeof RootScalarFieldEnum]
@@ -2327,10 +2335,13 @@ export type AntonymScalarFieldEnum = (typeof AntonymScalarFieldEnum)[keyof typeo
 
 export const EnScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type EnScalarFieldEnum = (typeof EnScalarFieldEnum)[keyof typeof EnScalarFieldEnum]
@@ -2338,10 +2349,13 @@ export type EnScalarFieldEnum = (typeof EnScalarFieldEnum)[keyof typeof EnScalar
 
 export const RuScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type RuScalarFieldEnum = (typeof RuScalarFieldEnum)[keyof typeof RuScalarFieldEnum]
@@ -2349,10 +2363,13 @@ export type RuScalarFieldEnum = (typeof RuScalarFieldEnum)[keyof typeof RuScalar
 
 export const MkScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type MkScalarFieldEnum = (typeof MkScalarFieldEnum)[keyof typeof MkScalarFieldEnum]
@@ -2360,10 +2377,13 @@ export type MkScalarFieldEnum = (typeof MkScalarFieldEnum)[keyof typeof MkScalar
 
 export const SrScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type SrScalarFieldEnum = (typeof SrScalarFieldEnum)[keyof typeof SrScalarFieldEnum]
@@ -2371,10 +2391,13 @@ export type SrScalarFieldEnum = (typeof SrScalarFieldEnum)[keyof typeof SrScalar
 
 export const UkScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type UkScalarFieldEnum = (typeof UkScalarFieldEnum)[keyof typeof UkScalarFieldEnum]
@@ -2382,10 +2405,13 @@ export type UkScalarFieldEnum = (typeof UkScalarFieldEnum)[keyof typeof UkScalar
 
 export const BgScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type BgScalarFieldEnum = (typeof BgScalarFieldEnum)[keyof typeof BgScalarFieldEnum]
@@ -2393,10 +2419,13 @@ export type BgScalarFieldEnum = (typeof BgScalarFieldEnum)[keyof typeof BgScalar
 
 export const PlScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type PlScalarFieldEnum = (typeof PlScalarFieldEnum)[keyof typeof PlScalarFieldEnum]
@@ -2404,10 +2433,13 @@ export type PlScalarFieldEnum = (typeof PlScalarFieldEnum)[keyof typeof PlScalar
 
 export const BeScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type BeScalarFieldEnum = (typeof BeScalarFieldEnum)[keyof typeof BeScalarFieldEnum]
@@ -2415,10 +2447,13 @@ export type BeScalarFieldEnum = (typeof BeScalarFieldEnum)[keyof typeof BeScalar
 
 export const CsScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type CsScalarFieldEnum = (typeof CsScalarFieldEnum)[keyof typeof CsScalarFieldEnum]
@@ -2426,10 +2461,13 @@ export type CsScalarFieldEnum = (typeof CsScalarFieldEnum)[keyof typeof CsScalar
 
 export const SkScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type SkScalarFieldEnum = (typeof SkScalarFieldEnum)[keyof typeof SkScalarFieldEnum]
@@ -2437,10 +2475,13 @@ export type SkScalarFieldEnum = (typeof SkScalarFieldEnum)[keyof typeof SkScalar
 
 export const SlScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type SlScalarFieldEnum = (typeof SlScalarFieldEnum)[keyof typeof SlScalarFieldEnum]
@@ -2448,10 +2489,13 @@ export type SlScalarFieldEnum = (typeof SlScalarFieldEnum)[keyof typeof SlScalar
 
 export const HrScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type HrScalarFieldEnum = (typeof HrScalarFieldEnum)[keyof typeof HrScalarFieldEnum]
@@ -2459,10 +2503,13 @@ export type HrScalarFieldEnum = (typeof HrScalarFieldEnum)[keyof typeof HrScalar
 
 export const CuScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type CuScalarFieldEnum = (typeof CuScalarFieldEnum)[keyof typeof CuScalarFieldEnum]
@@ -2470,10 +2517,13 @@ export type CuScalarFieldEnum = (typeof CuScalarFieldEnum)[keyof typeof CuScalar
 
 export const DeScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type DeScalarFieldEnum = (typeof DeScalarFieldEnum)[keyof typeof DeScalarFieldEnum]
@@ -2481,10 +2531,13 @@ export type DeScalarFieldEnum = (typeof DeScalarFieldEnum)[keyof typeof DeScalar
 
 export const NlScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type NlScalarFieldEnum = (typeof NlScalarFieldEnum)[keyof typeof NlScalarFieldEnum]
@@ -2492,10 +2545,13 @@ export type NlScalarFieldEnum = (typeof NlScalarFieldEnum)[keyof typeof NlScalar
 
 export const EoScalarFieldEnum = {
   id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   value: 'value',
   veryfied: 'veryfied',
   wordId: 'wordId',
-  meaningId: 'meaningId'
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
 } as const
 
 export type EoScalarFieldEnum = (typeof EoScalarFieldEnum)[keyof typeof EoScalarFieldEnum]
@@ -2546,6 +2602,13 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
     
 
 

@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation"
 import { type Prisma } from "@/prisma/generated/data/client"
 import ArticleForm from "@/components/ArticleForm"
 import type { Metadata } from "next";
+import { auth } from "@/auth"
+import { buildEntry, append } from "@/lib/action-history"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -94,11 +96,26 @@ export default async function EditArticlePage({ params }: EditPageProps) {
     // 3. Функция обновления статьи (Server Action)
     async function updateArticle(formData: any) {
         "use server"
+        const session = await auth()
+        const author = session?.user?.email || "unknown"
 
         const baseValue = formData.base?.trim() || null
 
         // Получаем текущее слово, чтобы сравнить старую и новую основу
         const currentWord = await db.word.findUnique({ where: { id: wordId } })
+        const currentWordWithHistory = currentWord as { actionHistory?: string | null } & typeof currentWord
+
+        // Собираем изменения для аудита
+        const wordChanges: Record<string, { old: unknown; new: unknown }> = {}
+        if (currentWord?.value !== formData.word) {
+            wordChanges.value = { old: currentWord?.value ?? null, new: formData.word }
+        }
+        if ((currentWord?.base ?? null) !== baseValue) {
+            wordChanges.base = { old: currentWord?.base ?? null, new: baseValue }
+        }
+        if (currentWord?.hasAnomalies !== (formData.hasAnomalies === true)) {
+            wordChanges.hasAnomalies = { old: currentWord?.hasAnomalies, new: formData.hasAnomalies === true }
+        }
 
         // Обновляем базовое слово
         await db.word.update({
@@ -107,6 +124,9 @@ export default async function EditArticlePage({ params }: EditPageProps) {
                 value: formData.word,
                 base: baseValue,
                 hasAnomalies: formData.hasAnomalies === true,
+                ...(Object.keys(wordChanges).length > 0 ? {
+                    actionHistory: append(currentWordWithHistory?.actionHistory, buildEntry(author, wordChanges)),
+                } : {}),
             },
         })
 
@@ -205,7 +225,11 @@ export default async function EditArticlePage({ params }: EditPageProps) {
                 const newRoot = await db.root.create({
                     data: {
                         value: val,
-                        type: 0 // В будущем здесь можно передавать тип морфемы (0-корень, 1-приставка)
+                        type: 0,
+                        actionHistory: append(null, buildEntry(author, {
+                            value: { old: null, new: val },
+                            type: { old: null, new: 0 },
+                        })),
                     },
                 })
                 createdRootIds.push(newRoot.id)

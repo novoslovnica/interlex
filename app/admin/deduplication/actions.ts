@@ -2,6 +2,8 @@
 
 import { prismaData as prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
+import { buildEntry, append } from '@/lib/action-history';
 
 // Список поддерживаемых языковых таблиц для автоматизации переноса
 const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'cu', 'de', 'nl', 'eo'] as const;
@@ -72,13 +74,33 @@ export async function searchDuplicateWords(query: string) {
  * Продакшен-функция атомарного мержа по вашей реляционной схеме
  */
 export async function mergeWordsAction(
-    targetId: Int,
-    sourceId: Int,
+    targetId: number,
+    sourceId: number,
     updatedFields: { value: string; isv: string; nsl: string; type: string; addition: string }
 ) {
     try {
+        const session = await auth()
+        const author = session?.user?.email || "unknown"
+
         await prisma.$transaction(async (tx) => {
-            // 1. Обновляем метаданные главного слова
+            // 1. Получаем текущее состояние целевого слова для аудита
+            const targetWord = await tx.word.findUnique({ where: { id: targetId } }) as { actionHistory?: string | null } | null
+
+            // 2. Обновляем метаданные главного слова
+            const changes: Record<string, { old: unknown; new: unknown }> = {}
+            if (targetWord) {
+                for (const key of ['value', 'isv', 'nsl', 'type', 'addition'] as const) {
+                    if (String((targetWord as any)[key]) !== String(updatedFields[key])) {
+                        changes[key] = { old: (targetWord as any)[key] ?? null, new: updatedFields[key] }
+                    }
+                }
+            } else {
+                for (const key of ['value', 'isv', 'nsl', 'type', 'addition'] as const) {
+                    changes[key] = { old: null, new: updatedFields[key] }
+                }
+            }
+            changes.mergedFrom = { old: null, new: sourceId }
+
             await tx.word.update({
                 where: { id: targetId },
                 data: {
@@ -87,6 +109,7 @@ export async function mergeWordsAction(
                     nsl: updatedFields.nsl,
                     type: updatedFields.type,
                     addition: updatedFields.addition,
+                    actionHistory: append(targetWord?.actionHistory, buildEntry(author, changes)),
                 },
             });
 

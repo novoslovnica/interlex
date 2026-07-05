@@ -6,17 +6,17 @@ import {LanguageSwitcher} from "@/components/LanguageSwitcher";
 import {useState} from "react";
 
 interface HeaderNavProps {
-    session: any // Передаем сессию с сервера
+    session: any
 }
 
 export default function HeaderNav({ session }: HeaderNavProps) {
     const [isOpen, setIsOpen] = useState(false)
+    const [toolsOpen, setToolsOpen] = useState(false)
 
     const user = session?.user
 
     return (
         <nav className="header-nav-container">
-            {/* Кнопка Гамбургер (видима только на мобильных) */}
             <button
                 className={`hamburger ${isOpen ? 'active' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
@@ -27,7 +27,6 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 <span></span>
             </button>
 
-            {/* Меню навигации */}
             <ul className={`header-nav ${isOpen ? 'open' : ''}`}>
 
                 {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
@@ -38,13 +37,31 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>Перевод</Link></li>
                 <li><Link href="/library" className="nav-link" onClick={() => setIsOpen(false)}>Библиотека</Link></li>
                 <li><Link href="/textbook/ru" className="nav-link" onClick={() => setIsOpen(false)}>Учебник</Link></li>
+                <li className="nav-item-submenu">
+                    <button
+                        className={`nav-link submenu-toggle ${toolsOpen ? 'active' : ''}`}
+                        style={{
+                            fontSize: '15px',
+                            color: 'rgb(203, 213, 225)',
+                        }}
+                        onClick={() => setToolsOpen(!toolsOpen)}
+                    >
+                        Утилиты
+                        <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
+                    </button>
+                    <ul className={`submenu ${toolsOpen ? 'open' : ''}`}>
+                        <li>
+                            <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setToolsOpen(false) }}>
+                                Транслитератор
+                            </Link>
+                        </li>
+                    </ul>
+                </li>
                 <li><Link href="/about" className="nav-link" onClick={() => setIsOpen(false)}>О программе</Link></li>
 
                 <LanguageSwitcher />
-                {/* Динамическая часть: инфо о юзере и кнопки */}
                 {user ? (
                     <>
-                        {/* Сделали блок пользователя кликабельной ссылкой в настройки */}
                         <li>
                             <Link
                                 href="/settings"

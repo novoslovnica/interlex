@@ -42,26 +42,35 @@ export type DeSumAggregateOutputType = {
 
 export type DeMinAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type DeMaxAggregateOutputType = {
   id: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
 }
 
 export type DeCountAggregateOutputType = {
   id: number
+  createdAt: number
+  updatedAt: number
   value: number
   veryfied: number
   wordId: number
   meaningId: number
+  actionHistory: number
   _all: number
 }
 
@@ -82,26 +91,35 @@ export type DeSumAggregateInputType = {
 
 export type DeMinAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type DeMaxAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
 }
 
 export type DeCountAggregateInputType = {
   id?: true
+  createdAt?: true
+  updatedAt?: true
   value?: true
   veryfied?: true
   wordId?: true
   meaningId?: true
+  actionHistory?: true
   _all?: true
 }
 
@@ -193,10 +211,13 @@ export type DeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 
 export type DeGroupByOutputType = {
   id: number
+  createdAt: Date
+  updatedAt: Date
   value: string | null
   veryfied: number | null
   wordId: number | null
   meaningId: number | null
+  actionHistory: string | null
   _count: DeCountAggregateOutputType | null
   _avg: DeAvgAggregateOutputType | null
   _sum: DeSumAggregateOutputType | null
@@ -224,20 +245,26 @@ export type DeWhereInput = {
   OR?: Prisma.DeWhereInput[]
   NOT?: Prisma.DeWhereInput | Prisma.DeWhereInput[]
   id?: Prisma.IntFilter<"De"> | number
+  createdAt?: Prisma.DateTimeFilter<"De"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"De"> | Date | string
   value?: Prisma.StringNullableFilter<"De"> | string | null
   veryfied?: Prisma.IntNullableFilter<"De"> | number | null
   wordId?: Prisma.IntNullableFilter<"De"> | number | null
   meaningId?: Prisma.IntNullableFilter<"De"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"De"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type DeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   word?: Prisma.MeaningOrderByWithRelationInput
   meaning?: Prisma.MeaningOrderByWithRelationInput
 }
@@ -247,20 +274,26 @@ export type DeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.DeWhereInput | Prisma.DeWhereInput[]
   OR?: Prisma.DeWhereInput[]
   NOT?: Prisma.DeWhereInput | Prisma.DeWhereInput[]
+  createdAt?: Prisma.DateTimeFilter<"De"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"De"> | Date | string
   value?: Prisma.StringNullableFilter<"De"> | string | null
   veryfied?: Prisma.IntNullableFilter<"De"> | number | null
   wordId?: Prisma.IntNullableFilter<"De"> | number | null
   meaningId?: Prisma.IntNullableFilter<"De"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"De"> | string | null
   word?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type DeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
   wordId?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
+  actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DeCountOrderByAggregateInput
   _avg?: Prisma.DeAvgOrderByAggregateInput
   _max?: Prisma.DeMaxOrderByAggregateInput
@@ -273,61 +306,85 @@ export type DeScalarWhereWithAggregatesInput = {
   OR?: Prisma.DeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DeScalarWhereWithAggregatesInput | Prisma.DeScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"De"> | number
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"De"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"De"> | Date | string
   value?: Prisma.StringNullableWithAggregatesFilter<"De"> | string | null
   veryfied?: Prisma.IntNullableWithAggregatesFilter<"De"> | number | null
   wordId?: Prisma.IntNullableWithAggregatesFilter<"De"> | number | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"De"> | number | null
+  actionHistory?: Prisma.StringNullableWithAggregatesFilter<"De"> | string | null
 }
 
 export type DeCreateInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutDe_wordInput
   meaning?: Prisma.MeaningCreateNestedOneWithoutDe_meanInput
 }
 
 export type DeUncheckedCreateInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeUpdateInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutDe_wordNestedInput
   meaning?: Prisma.MeaningUpdateOneWithoutDe_meanNestedInput
 }
 
 export type DeUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeCreateManyInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeUpdateManyMutationInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeListRelationFilter = {
@@ -342,10 +399,13 @@ export type DeOrderByRelationAggregateInput = {
 
 export type DeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type DeAvgOrderByAggregateInput = {
@@ -357,18 +417,24 @@ export type DeAvgOrderByAggregateInput = {
 
 export type DeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type DeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   value?: Prisma.SortOrder
   veryfied?: Prisma.SortOrder
   wordId?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
+  actionHistory?: Prisma.SortOrder
 }
 
 export type DeSumOrderByAggregateInput = {
@@ -463,16 +529,22 @@ export type DeUncheckedUpdateManyWithoutMeaningNestedInput = {
 }
 
 export type DeCreateWithoutWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutDe_meanInput
 }
 
 export type DeUncheckedCreateWithoutWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeCreateOrConnectWithoutWordInput = {
@@ -485,16 +557,22 @@ export type DeCreateManyWordInputEnvelope = {
 }
 
 export type DeCreateWithoutMeaningInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
+  actionHistory?: string | null
   word?: Prisma.MeaningCreateNestedOneWithoutDe_wordInput
 }
 
 export type DeUncheckedCreateWithoutMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeCreateOrConnectWithoutMeaningInput = {
@@ -527,10 +605,13 @@ export type DeScalarWhereInput = {
   OR?: Prisma.DeScalarWhereInput[]
   NOT?: Prisma.DeScalarWhereInput | Prisma.DeScalarWhereInput[]
   id?: Prisma.IntFilter<"De"> | number
+  createdAt?: Prisma.DateTimeFilter<"De"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"De"> | Date | string
   value?: Prisma.StringNullableFilter<"De"> | string | null
   veryfied?: Prisma.IntNullableFilter<"De"> | number | null
   wordId?: Prisma.IntNullableFilter<"De"> | number | null
   meaningId?: Prisma.IntNullableFilter<"De"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"De"> | string | null
 }
 
 export type DeUpsertWithWhereUniqueWithoutMeaningInput = {
@@ -551,99 +632,135 @@ export type DeUpdateManyWithWhereWithoutMeaningInput = {
 
 export type DeCreateManyWordInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   meaningId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeCreateManyMeaningInput = {
   id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
   value?: string | null
   veryfied?: number | null
   wordId?: number | null
+  actionHistory?: string | null
 }
 
 export type DeUpdateWithoutWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutDe_meanNestedInput
 }
 
 export type DeUncheckedUpdateWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeUncheckedUpdateManyWithoutWordInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeUpdateWithoutMeaningInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   word?: Prisma.MeaningUpdateOneWithoutDe_wordNestedInput
 }
 
 export type DeUncheckedUpdateWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DeUncheckedUpdateManyWithoutMeaningInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type DeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.De$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.De$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["de"]>
 
 export type DeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.De$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.De$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["de"]>
 
 export type DeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
   word?: boolean | Prisma.De$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.De$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["de"]>
 
 export type DeSelectScalar = {
   id?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   value?: boolean
   veryfied?: boolean
   wordId?: boolean
   meaningId?: boolean
+  actionHistory?: boolean
 }
 
-export type DeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "value" | "veryfied" | "wordId" | "meaningId", ExtArgs["result"]["de"]>
+export type DeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "veryfied" | "wordId" | "meaningId" | "actionHistory", ExtArgs["result"]["de"]>
 export type DeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   word?: boolean | Prisma.De$wordArgs<ExtArgs>
   meaning?: boolean | Prisma.De$meaningArgs<ExtArgs>
@@ -665,10 +782,13 @@ export type $DePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
+    createdAt: Date
+    updatedAt: Date
     value: string | null
     veryfied: number | null
     wordId: number | null
     meaningId: number | null
+    actionHistory: string | null
   }, ExtArgs["result"]["de"]>
   composites: {}
 }
@@ -1095,10 +1215,13 @@ export interface Prisma__DeClient<T, Null = never, ExtArgs extends runtime.Types
  */
 export interface DeFieldRefs {
   readonly id: Prisma.FieldRef<"De", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"De", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"De", 'DateTime'>
   readonly value: Prisma.FieldRef<"De", 'String'>
   readonly veryfied: Prisma.FieldRef<"De", 'Int'>
   readonly wordId: Prisma.FieldRef<"De", 'Int'>
   readonly meaningId: Prisma.FieldRef<"De", 'Int'>
+  readonly actionHistory: Prisma.FieldRef<"De", 'String'>
 }
     
 
@@ -1322,7 +1445,7 @@ export type DeCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   /**
    * The data needed to create a De.
    */
-  data?: Prisma.XOR<Prisma.DeCreateInput, Prisma.DeUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.DeCreateInput, Prisma.DeUncheckedCreateInput>
 }
 
 /**

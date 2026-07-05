@@ -3,6 +3,8 @@ import ArticleForm from "@/components/ArticleForm"
 import {type Prisma} from "@/prisma/generated/data/client";
 import {redirect} from "next/navigation";
 import type { Metadata } from "next";
+import { auth } from "@/auth"
+import { buildEntry, append } from "@/lib/action-history"
 
 export const metadata: Metadata = {
   title: "Создание статьи",
@@ -39,18 +41,23 @@ export default async function CreateArticlePage() {
 
     async function createArticle(formData: any) {
         "use server"
+        const session = await auth()
+        const author = session?.user?.email || "unknown"
         const baseValue = formData.base?.trim() || null
 
-        // Шаг А: Создаем базовое слово с основой и маркером аномалий
         const newWord = await db.word.create({
             data: {
                 value: formData.word,
                 base: baseValue,
                 hasAnomalies: formData.hasAnomalies === true,
+                actionHistory: append(null, buildEntry(author, {
+                    value: { old: null, new: formData.word },
+                    base: { old: null, new: baseValue },
+                    hasAnomalies: { old: null, new: formData.hasAnomalies === true },
+                })),
             },
         })
 
-        // Шаг Б: Если указана основа — обновляем/создаём запись в base_homonyms
         if (baseValue) {
             const existing = await db.baseHomonym.findUnique({
                 where: { base: baseValue },
@@ -74,7 +81,6 @@ export default async function CreateArticlePage() {
             }
         }
 
-        // Шаг В: Если есть аномалии флексий — создаём записи
         const anomalies = formData.inflectionAnomalies || []
         if (anomalies.length > 0) {
             await db.inflectionAnomaly.createMany({
@@ -86,7 +92,6 @@ export default async function CreateArticlePage() {
             })
         }
 
-        // Шаг Г: Создаем для слова контейнер смысловых значений в meanings
         const newMeaning = await db.meaning.create({
             data: {
                 wordId: newWord.id,
@@ -94,25 +99,30 @@ export default async function CreateArticlePage() {
             },
         })
 
-        // Шаг Д: Записываем английский перевод
         await db.en.create({
             data: {
                 meaningId: newMeaning.id,
                 value: formData.translationEn,
                 veryfied: formData.isEnVerified ? 1 : 0,
+                actionHistory: append(null, buildEntry(author, {
+                    value: { old: null, new: formData.translationEn },
+                    veryfied: { old: null, new: formData.isEnVerified ? 1 : 0 },
+                })),
             },
         })
 
-        // Шаг Е: Записываем русский перевод
         await db.ru.create({
             data: {
                 meaningId: newMeaning.id,
                 value: formData.translationRu,
                 veryfied: formData.isRuVerified ? 1 : 0,
+                actionHistory: append(null, buildEntry(author, {
+                    value: { old: null, new: formData.translationRu },
+                    veryfied: { old: null, new: formData.isRuVerified ? 1 : 0 },
+                })),
             },
         })
 
-        // Шаг Ж: Обработка новых виртуальных корней
         const createdRootIds: number[] = []
         if (formData.newRootValues && formData.newRootValues.length > 0) {
             for (const val of formData.newRootValues) {
@@ -120,6 +130,10 @@ export default async function CreateArticlePage() {
                     data: {
                         value: val,
                         type: 0,
+                        actionHistory: append(null, buildEntry(author, {
+                            value: { old: null, new: val },
+                            type: { old: null, new: 0 },
+                        })),
                     },
                 })
                 createdRootIds.push(newRoot.id)
@@ -151,4 +165,3 @@ export default async function CreateArticlePage() {
         </div>
     )
 }
-

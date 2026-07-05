@@ -6,6 +6,7 @@ import { type Prisma } from "../../../prisma/generated/data/client"
 import { AntonymsClient } from "./antonyms-client"
 import AdminNav from "@/components/AdminNav";
 import type { Metadata } from "next";
+import { buildEntry, append } from "@/lib/action-history"
 
 export const metadata: Metadata = {
   title: "Антонимы",
@@ -57,21 +58,27 @@ export default async function AdminAntonymsPage() {
     async function updateAntonyms(rootWordId: number, antonymIds: number[]) {
         "use server"
 
-        // Удаляем старые связи
+        const author = session?.user?.email || "unknown"
+
         await db.antonym.deleteMany({
             where: { rootId: rootWordId }
         })
 
-        // Записываем новые связи
         if (antonymIds.length > 0) {
             await db.antonym.createMany({
                 data: antonymIds.map((aId) => ({
                     rootId: rootWordId,
                     wordId: aId,
-                    proximity: 1.0, // Базовый вес противоположности значения
+                    proximity: 1.0,
                 }))
             })
         }
+
+        const word = await db.word.findUnique({ where: { id: rootWordId } }) as { actionHistory?: string | null } | null
+        await db.word.update({
+            where: { id: rootWordId },
+            data: { actionHistory: append(word?.actionHistory, buildEntry(author, { antonymIds: { old: null, new: antonymIds } })) }
+        })
     }
 
     return (

@@ -12,6 +12,40 @@ interface TechnicalAboutProps {
     }
 }
 
+interface VersionHistory {
+    version: string;
+    year: string;
+    title: string;
+    description?: string;
+}
+
+const versions: VersionHistory[] = [
+    {
+        version: "v 1.0",
+        year: "2015",
+        title: "Словник Новословницы",
+        description: "Первая база слов Новословницы и начальная фиксация лексических норм."
+    },
+    {
+        version: "v 2.0+",
+        year: "2016",
+        title: "Мрежны словник Новословницы",
+        description: "Переход в онлайн-формат, запуск веб-версии и расширение базы данных."
+    },
+    {
+        version: "v 3.0",
+        year: "2019",
+        title: "Common Web Interslavic Dictionary",
+        description: "Интеграция со стандартами межславянского языка."
+    },
+    {
+        version: "v 4.0",
+        year: "2026",
+        title: "Interslavic Lexicon",
+        description: "Текущая версия. Полное обновление архитектуры, современный интерфейс и инструменты экосистемы. Формирование текстового корпуса междуславянского."
+    }
+];
+
 export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
     return (
         // Добавили h-full, overflow-y-auto для скролла контента и pb-12 для отступа снизу
@@ -120,17 +154,17 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
 
                     {/* Проект 3: Межславянские новости */}
                     <div className="p-4 border rounded-xl bg-background space-y-1 hover:border-blue-500/30 transition-colors">
-                        <span className="font-bold text-xs block text-foreground">Slovjani.info</span>
+                        <span className="font-bold text-xs block text-foreground">Interslavic Community (Facebook)</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-              Научно-культурный вестник и периодическое издание, полностью публикуемое на межславянском языке.
-            </span>
+                          Крупнейшее официальное международное сообщество для общения, практики и координации развития межславянского языка.
+                        </span>
                         <a
-                            href="http://slovjani.info"
+                            href="https://www.facebook.com/groups/interslavic/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 dark:text-blue-400 hover:underline inline-block pt-1 font-medium"
                         >
-                            slovjani.info →
+                            facebook.com/groups/interslavic →
                         </a>
                     </div>
 
@@ -138,8 +172,8 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                     <div className="p-4 border rounded-xl bg-background space-y-1 hover:border-blue-500/30 transition-colors">
                         <span className="font-bold text-xs block text-foreground">Interslavic Wiki</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-              Открытая база знаний и вики-энциклопедия статей, написанная и модерируемая участниками комьюнити.
-            </span>
+                          Открытая база знаний и вики-энциклопедия статей, написанная и модерируемая участниками комьюнити.
+                        </span>
                         <a
                             href="https://wikipedia.org" // Или актуальная ссылка на вики-сообщество проекта
                             target="_blank"
@@ -211,6 +245,41 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                 </a>
             </div>
 
+            <section className="mt-12">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-black border-b border-black pb-2 mb-4">
+                    5. История версий
+                </h2>
+
+                <p className="text-xs text-neutral-600 mb-6 leading-relaxed">
+                    Эволюция развития веб-версии проекта:
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {versions.map((item, index) => (
+                        <div
+                            key={index}
+                            className="border border-neutral-300 rounded-lg p-5 bg-white flex flex-col justify-between hover:border-neutral-400 transition-colors"
+                        >
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="text-xs font-semibold bg-neutral-100 text-neutral-700 px-2 py-0.5 rounded">
+                                    {item.version}
+                                  </span>
+                                  <span className="text-xs font-medium text-neutral-400">
+                                    {item.year}
+                                  </span>
+                                </div>
+                                <h3 className="text-sm font-bold text-black mb-1">
+                                    {item.title}
+                                </h3>
+                                <p className="text-xs text-neutral-500 leading-relaxed">
+                                    {item.description}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
-    )
+    );
 }
