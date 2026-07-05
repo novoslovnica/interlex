@@ -1,10 +1,15 @@
-import { prismaData as db } from "@/lib/prisma" // Ваша SQLite база данных лексикона
-import { TRANSLATION_LANGUAGES } from "@/config/features" // Массив наших 16 языков
+import { prismaData as db } from "@/lib/prisma"
+import { TRANSLATION_LANGUAGES } from "@/config/features"
 import MainClient from "./main-client"
 import DevStatusToast from "@/components/DevStatusToast";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Главная",
+  description: "Interslavic Lexicon — межславянский лексикон. Поиск, грамматика, перевод и учебные материалы.",
+};
 
 export default async function MainPage() {
-    // Параллельно собираем живую статистику из базы данных для инфографики
     const [totalWords, totalMeanings, totalRoots] = await Promise.all([
         db.word.count(),
         db.meaning.count(),

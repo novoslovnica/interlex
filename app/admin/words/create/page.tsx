@@ -2,6 +2,12 @@ import { prismaData as db } from "@/lib/prisma"
 import ArticleForm from "@/components/ArticleForm"
 import {type Prisma} from "@/prisma/generated/data/client";
 import {redirect} from "next/navigation";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Создание статьи",
+  description: "Создание новой словарной статьи в базе межславянского лексикона с указанием основы, корней и переводов.",
+};
 
 const rootInclude = {
     roots_words: {

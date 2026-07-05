@@ -5,6 +5,12 @@ import { Feature } from "@/config/features"
 import { type Prisma } from "../../../prisma/generated/data/client"
 import { SynonymsClient } from "./synonyms-client"
 import AdminNav from "@/components/AdminNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Синонимы",
+  description: "Управление синонимами в словаре межславянского языка. Поиск и привязка близких по смыслу слов.",
+};
 
 const synonymQuery = {
     select: {

@@ -1,7 +1,17 @@
 import {getProtoItem} from "@/app/proto/[id]/api";
 import {Suspense} from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import './proto-word.css';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const item = await getProtoItem(id) as { lemma: string } | null;
+  return {
+    title: `*${item?.lemma ?? id}`,
+    description: `Праславянская реконструкция *${item?.lemma ?? id} — словарная статья из ESSJa (Этимологический словарь славянских языков).`,
+  };
+}
 
 const ProtoWordPage = async ({params}: { params: Promise<{ id: string }> }) => {
     const {id} = await params;

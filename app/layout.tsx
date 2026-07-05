@@ -21,8 +21,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Interslavic Lexicon",
-  description: "Interslavic Lexical Dictionary",
+  title: {
+    default: "Межславянский лексикон | Interslavic Lexicon",
+    template: "%s | Межславянский лексикон",
+  },
+  description: "Поиск по словарю межславянского языка с переводом, морфологией, этимологией и корпусами текстов. Interslavic lexical dictionary with translations, grammar, and etymology.",
 };
 
 export default async function RootLayout({

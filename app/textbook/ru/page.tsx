@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+// Note: metadata is not supported in 'use client' components.
+// The title/description are provided by the layout template.
+
 // Массив разделов учебника, сформированный на основе официального содержания
 const chapters = [
     { id: 'intro', title: 'Предисловие и введение', category: 'Основы' },

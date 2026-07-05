@@ -3,6 +3,12 @@ import { redirect } from "next/navigation"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import {ScriptPreference} from "@/prisma/generated/auth/enums";
 import { SettingsClient } from "./settings-client"
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Настройки",
+  description: "Настройки аккаунта и персонализация отображения межславянского лексикона — выбор кириллицы или латиницы.",
+};
 
 export default async function UserSettingsPage() {
     const session = await auth()

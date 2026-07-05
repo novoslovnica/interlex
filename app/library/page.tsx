@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+// Note: metadata is not supported in 'use client' components.
+// The title/description are provided by the layout template.
+
 // Категории и материалы, сформированные на основе реального контента Vikisbornik
 const textCategories = [
     { id: 'all', title: 'Vse teksty / Все тексты', icon: '📚' },

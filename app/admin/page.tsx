@@ -2,6 +2,12 @@ import Table from "@/app/admin/Table";
 import {auth} from "@/auth";
 import {redirect} from "next/navigation";
 import AdminNav from "@/components/AdminNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Админ-панель",
+  description: "Панель управления словарём межславянского языка. Редактирование статей, управление синонимами, антонимами и корнями.",
+};
 
 const AdminPage = async () => {
     const session = await auth()

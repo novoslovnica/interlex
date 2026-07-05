@@ -5,6 +5,12 @@ import { Feature } from "@/config/features"
 import { type Prisma } from "../../../prisma/generated/data/client"
 import { AntonymsClient } from "./antonyms-client"
 import AdminNav from "@/components/AdminNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Антонимы",
+  description: "Управление антонимами в словаре межславянского языка. Поиск и привязка противоположных по смыслу слов.",
+};
 
 const antonymQuery = {
     select: {

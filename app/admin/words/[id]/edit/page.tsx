@@ -2,6 +2,16 @@ import { prismaData as db } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import { type Prisma } from "@/prisma/generated/data/client"
 import ArticleForm from "@/components/ArticleForm"
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const word = await db.word.findUnique({ where: { id: parseInt(id, 10) }, select: { value: true } });
+  return {
+    title: `Редактирование: ${word?.value ?? id}`,
+    description: `Редактирование словарной статьи «${word?.value ?? id}» в базе межславянского лексикона.`,
+  };
+}
 
 const rootSelectStructure = {
     id: true,

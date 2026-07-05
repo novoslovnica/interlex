@@ -1,6 +1,12 @@
 import { prismaData as db } from "@/lib/prisma"
 import { TRANSLATION_LANGUAGES } from "@/config/features"
 import { TechnicalAboutClient } from "./about-client"
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "О проекте",
+  description: "Техническая информация о проекте Interslavic Lexicon — количество слов, значений, корней, поддерживаемые языки перевода и сведения об окружении.",
+};
 
 export default async function AboutPage() {
     // Вычисляем размер базы данных или каунтеры ключевых индексов

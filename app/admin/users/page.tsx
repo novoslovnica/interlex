@@ -5,6 +5,12 @@ import { type Prisma, Role } from "../../../prisma/generated/auth/client";
 import { Feature, FEATURE_CATEGORIES } from "@/config/features"
 import { UsersManagementClient } from "./users-client"
 import AdminNav from "@/components/AdminNav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Пользователи",
+  description: "Управление пользователями и правами доступа в панели администратора межславянского лексикона.",
+};
 
 const userWithPermissionsQuery = {
     include: {
