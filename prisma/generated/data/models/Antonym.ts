@@ -28,36 +28,36 @@ export type AggregateAntonym = {
 
 export type AntonymAvgAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type AntonymSumAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type AntonymMinAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type AntonymMaxAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type AntonymCountAggregateOutputType = {
   id: number
-  rootId: number
-  wordId: number
+  sourceId: number
+  targetId: number
   proximity: number
   _all: number
 }
@@ -65,36 +65,36 @@ export type AntonymCountAggregateOutputType = {
 
 export type AntonymAvgAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type AntonymSumAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type AntonymMinAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type AntonymMaxAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type AntonymCountAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
   _all?: true
 }
@@ -187,8 +187,8 @@ export type AntonymGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type AntonymGroupByOutputType = {
   id: number
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
   _count: AntonymCountAggregateOutputType | null
   _avg: AntonymAvgAggregateOutputType | null
@@ -217,20 +217,20 @@ export type AntonymWhereInput = {
   OR?: Prisma.AntonymWhereInput[]
   NOT?: Prisma.AntonymWhereInput | Prisma.AntonymWhereInput[]
   id?: Prisma.IntFilter<"Antonym"> | number
-  rootId?: Prisma.IntNullableFilter<"Antonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Antonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Antonym"> | number | null
-  root?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
-  word?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
+  source?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  target?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type AntonymOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrderInput | Prisma.SortOrder
-  wordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetId?: Prisma.SortOrderInput | Prisma.SortOrder
   proximity?: Prisma.SortOrderInput | Prisma.SortOrder
-  root?: Prisma.WordOrderByWithRelationInput
-  word?: Prisma.WordOrderByWithRelationInput
+  source?: Prisma.MeaningOrderByWithRelationInput
+  target?: Prisma.MeaningOrderByWithRelationInput
 }
 
 export type AntonymWhereUniqueInput = Prisma.AtLeast<{
@@ -238,17 +238,17 @@ export type AntonymWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AntonymWhereInput | Prisma.AntonymWhereInput[]
   OR?: Prisma.AntonymWhereInput[]
   NOT?: Prisma.AntonymWhereInput | Prisma.AntonymWhereInput[]
-  rootId?: Prisma.IntNullableFilter<"Antonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Antonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Antonym"> | number | null
-  root?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
-  word?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
+  source?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  target?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type AntonymOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrderInput | Prisma.SortOrder
-  wordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetId?: Prisma.SortOrderInput | Prisma.SortOrder
   proximity?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AntonymCountOrderByAggregateInput
   _avg?: Prisma.AntonymAvgOrderByAggregateInput
@@ -262,41 +262,41 @@ export type AntonymScalarWhereWithAggregatesInput = {
   OR?: Prisma.AntonymScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AntonymScalarWhereWithAggregatesInput | Prisma.AntonymScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Antonym"> | number
-  rootId?: Prisma.IntNullableWithAggregatesFilter<"Antonym"> | number | null
-  wordId?: Prisma.IntNullableWithAggregatesFilter<"Antonym"> | number | null
+  sourceId?: Prisma.IntNullableWithAggregatesFilter<"Antonym"> | number | null
+  targetId?: Prisma.IntNullableWithAggregatesFilter<"Antonym"> | number | null
   proximity?: Prisma.FloatNullableWithAggregatesFilter<"Antonym"> | number | null
 }
 
 export type AntonymCreateInput = {
   proximity?: number | null
-  root?: Prisma.WordCreateNestedOneWithoutAntonymsRootInput
-  word?: Prisma.WordCreateNestedOneWithoutAntonymsWordInput
+  source?: Prisma.MeaningCreateNestedOneWithoutAntonymsSourceInput
+  target?: Prisma.MeaningCreateNestedOneWithoutAntonymsTargetInput
 }
 
 export type AntonymUncheckedCreateInput = {
   id?: number
-  rootId?: number | null
-  wordId?: number | null
+  sourceId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
 export type AntonymUpdateInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  root?: Prisma.WordUpdateOneWithoutAntonymsRootNestedInput
-  word?: Prisma.WordUpdateOneWithoutAntonymsWordNestedInput
+  source?: Prisma.MeaningUpdateOneWithoutAntonymsSourceNestedInput
+  target?: Prisma.MeaningUpdateOneWithoutAntonymsTargetNestedInput
 }
 
 export type AntonymUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type AntonymCreateManyInput = {
   id?: number
-  rootId?: number | null
-  wordId?: number | null
+  sourceId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
@@ -306,8 +306,8 @@ export type AntonymUpdateManyMutationInput = {
 
 export type AntonymUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
@@ -323,177 +323,177 @@ export type AntonymOrderByRelationAggregateInput = {
 
 export type AntonymCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type AntonymAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type AntonymMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type AntonymMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type AntonymSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
-export type AntonymCreateNestedManyWithoutRootInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput> | Prisma.AntonymCreateWithoutRootInput[] | Prisma.AntonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutRootInput | Prisma.AntonymCreateOrConnectWithoutRootInput[]
-  createMany?: Prisma.AntonymCreateManyRootInputEnvelope
+export type AntonymCreateNestedManyWithoutSourceInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput> | Prisma.AntonymCreateWithoutSourceInput[] | Prisma.AntonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutSourceInput | Prisma.AntonymCreateOrConnectWithoutSourceInput[]
+  createMany?: Prisma.AntonymCreateManySourceInputEnvelope
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
 }
 
-export type AntonymCreateNestedManyWithoutWordInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput> | Prisma.AntonymCreateWithoutWordInput[] | Prisma.AntonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutWordInput | Prisma.AntonymCreateOrConnectWithoutWordInput[]
-  createMany?: Prisma.AntonymCreateManyWordInputEnvelope
+export type AntonymCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput> | Prisma.AntonymCreateWithoutTargetInput[] | Prisma.AntonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutTargetInput | Prisma.AntonymCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.AntonymCreateManyTargetInputEnvelope
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
 }
 
-export type AntonymUncheckedCreateNestedManyWithoutRootInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput> | Prisma.AntonymCreateWithoutRootInput[] | Prisma.AntonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutRootInput | Prisma.AntonymCreateOrConnectWithoutRootInput[]
-  createMany?: Prisma.AntonymCreateManyRootInputEnvelope
+export type AntonymUncheckedCreateNestedManyWithoutSourceInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput> | Prisma.AntonymCreateWithoutSourceInput[] | Prisma.AntonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutSourceInput | Prisma.AntonymCreateOrConnectWithoutSourceInput[]
+  createMany?: Prisma.AntonymCreateManySourceInputEnvelope
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
 }
 
-export type AntonymUncheckedCreateNestedManyWithoutWordInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput> | Prisma.AntonymCreateWithoutWordInput[] | Prisma.AntonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutWordInput | Prisma.AntonymCreateOrConnectWithoutWordInput[]
-  createMany?: Prisma.AntonymCreateManyWordInputEnvelope
+export type AntonymUncheckedCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput> | Prisma.AntonymCreateWithoutTargetInput[] | Prisma.AntonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutTargetInput | Prisma.AntonymCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.AntonymCreateManyTargetInputEnvelope
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
 }
 
-export type AntonymUpdateManyWithoutRootNestedInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput> | Prisma.AntonymCreateWithoutRootInput[] | Prisma.AntonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutRootInput | Prisma.AntonymCreateOrConnectWithoutRootInput[]
-  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutRootInput | Prisma.AntonymUpsertWithWhereUniqueWithoutRootInput[]
-  createMany?: Prisma.AntonymCreateManyRootInputEnvelope
+export type AntonymUpdateManyWithoutSourceNestedInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput> | Prisma.AntonymCreateWithoutSourceInput[] | Prisma.AntonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutSourceInput | Prisma.AntonymCreateOrConnectWithoutSourceInput[]
+  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutSourceInput | Prisma.AntonymUpsertWithWhereUniqueWithoutSourceInput[]
+  createMany?: Prisma.AntonymCreateManySourceInputEnvelope
   set?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   disconnect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   delete?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
-  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutRootInput | Prisma.AntonymUpdateWithWhereUniqueWithoutRootInput[]
-  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutRootInput | Prisma.AntonymUpdateManyWithWhereWithoutRootInput[]
+  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutSourceInput | Prisma.AntonymUpdateWithWhereUniqueWithoutSourceInput[]
+  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutSourceInput | Prisma.AntonymUpdateManyWithWhereWithoutSourceInput[]
   deleteMany?: Prisma.AntonymScalarWhereInput | Prisma.AntonymScalarWhereInput[]
 }
 
-export type AntonymUpdateManyWithoutWordNestedInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput> | Prisma.AntonymCreateWithoutWordInput[] | Prisma.AntonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutWordInput | Prisma.AntonymCreateOrConnectWithoutWordInput[]
-  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutWordInput | Prisma.AntonymUpsertWithWhereUniqueWithoutWordInput[]
-  createMany?: Prisma.AntonymCreateManyWordInputEnvelope
+export type AntonymUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput> | Prisma.AntonymCreateWithoutTargetInput[] | Prisma.AntonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutTargetInput | Prisma.AntonymCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutTargetInput | Prisma.AntonymUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.AntonymCreateManyTargetInputEnvelope
   set?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   disconnect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   delete?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
-  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutWordInput | Prisma.AntonymUpdateWithWhereUniqueWithoutWordInput[]
-  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutWordInput | Prisma.AntonymUpdateManyWithWhereWithoutWordInput[]
+  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutTargetInput | Prisma.AntonymUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutTargetInput | Prisma.AntonymUpdateManyWithWhereWithoutTargetInput[]
   deleteMany?: Prisma.AntonymScalarWhereInput | Prisma.AntonymScalarWhereInput[]
 }
 
-export type AntonymUncheckedUpdateManyWithoutRootNestedInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput> | Prisma.AntonymCreateWithoutRootInput[] | Prisma.AntonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutRootInput | Prisma.AntonymCreateOrConnectWithoutRootInput[]
-  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutRootInput | Prisma.AntonymUpsertWithWhereUniqueWithoutRootInput[]
-  createMany?: Prisma.AntonymCreateManyRootInputEnvelope
+export type AntonymUncheckedUpdateManyWithoutSourceNestedInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput> | Prisma.AntonymCreateWithoutSourceInput[] | Prisma.AntonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutSourceInput | Prisma.AntonymCreateOrConnectWithoutSourceInput[]
+  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutSourceInput | Prisma.AntonymUpsertWithWhereUniqueWithoutSourceInput[]
+  createMany?: Prisma.AntonymCreateManySourceInputEnvelope
   set?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   disconnect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   delete?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
-  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutRootInput | Prisma.AntonymUpdateWithWhereUniqueWithoutRootInput[]
-  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutRootInput | Prisma.AntonymUpdateManyWithWhereWithoutRootInput[]
+  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutSourceInput | Prisma.AntonymUpdateWithWhereUniqueWithoutSourceInput[]
+  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutSourceInput | Prisma.AntonymUpdateManyWithWhereWithoutSourceInput[]
   deleteMany?: Prisma.AntonymScalarWhereInput | Prisma.AntonymScalarWhereInput[]
 }
 
-export type AntonymUncheckedUpdateManyWithoutWordNestedInput = {
-  create?: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput> | Prisma.AntonymCreateWithoutWordInput[] | Prisma.AntonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutWordInput | Prisma.AntonymCreateOrConnectWithoutWordInput[]
-  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutWordInput | Prisma.AntonymUpsertWithWhereUniqueWithoutWordInput[]
-  createMany?: Prisma.AntonymCreateManyWordInputEnvelope
+export type AntonymUncheckedUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput> | Prisma.AntonymCreateWithoutTargetInput[] | Prisma.AntonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.AntonymCreateOrConnectWithoutTargetInput | Prisma.AntonymCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.AntonymUpsertWithWhereUniqueWithoutTargetInput | Prisma.AntonymUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.AntonymCreateManyTargetInputEnvelope
   set?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   disconnect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   delete?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
   connect?: Prisma.AntonymWhereUniqueInput | Prisma.AntonymWhereUniqueInput[]
-  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutWordInput | Prisma.AntonymUpdateWithWhereUniqueWithoutWordInput[]
-  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutWordInput | Prisma.AntonymUpdateManyWithWhereWithoutWordInput[]
+  update?: Prisma.AntonymUpdateWithWhereUniqueWithoutTargetInput | Prisma.AntonymUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.AntonymUpdateManyWithWhereWithoutTargetInput | Prisma.AntonymUpdateManyWithWhereWithoutTargetInput[]
   deleteMany?: Prisma.AntonymScalarWhereInput | Prisma.AntonymScalarWhereInput[]
 }
 
-export type AntonymCreateWithoutRootInput = {
+export type AntonymCreateWithoutSourceInput = {
   proximity?: number | null
-  word?: Prisma.WordCreateNestedOneWithoutAntonymsWordInput
+  target?: Prisma.MeaningCreateNestedOneWithoutAntonymsTargetInput
 }
 
-export type AntonymUncheckedCreateWithoutRootInput = {
+export type AntonymUncheckedCreateWithoutSourceInput = {
   id?: number
-  wordId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
-export type AntonymCreateOrConnectWithoutRootInput = {
+export type AntonymCreateOrConnectWithoutSourceInput = {
   where: Prisma.AntonymWhereUniqueInput
-  create: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput>
+  create: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput>
 }
 
-export type AntonymCreateManyRootInputEnvelope = {
-  data: Prisma.AntonymCreateManyRootInput | Prisma.AntonymCreateManyRootInput[]
+export type AntonymCreateManySourceInputEnvelope = {
+  data: Prisma.AntonymCreateManySourceInput | Prisma.AntonymCreateManySourceInput[]
 }
 
-export type AntonymCreateWithoutWordInput = {
+export type AntonymCreateWithoutTargetInput = {
   proximity?: number | null
-  root?: Prisma.WordCreateNestedOneWithoutAntonymsRootInput
+  source?: Prisma.MeaningCreateNestedOneWithoutAntonymsSourceInput
 }
 
-export type AntonymUncheckedCreateWithoutWordInput = {
+export type AntonymUncheckedCreateWithoutTargetInput = {
   id?: number
-  rootId?: number | null
+  sourceId?: number | null
   proximity?: number | null
 }
 
-export type AntonymCreateOrConnectWithoutWordInput = {
+export type AntonymCreateOrConnectWithoutTargetInput = {
   where: Prisma.AntonymWhereUniqueInput
-  create: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput>
+  create: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput>
 }
 
-export type AntonymCreateManyWordInputEnvelope = {
-  data: Prisma.AntonymCreateManyWordInput | Prisma.AntonymCreateManyWordInput[]
+export type AntonymCreateManyTargetInputEnvelope = {
+  data: Prisma.AntonymCreateManyTargetInput | Prisma.AntonymCreateManyTargetInput[]
 }
 
-export type AntonymUpsertWithWhereUniqueWithoutRootInput = {
+export type AntonymUpsertWithWhereUniqueWithoutSourceInput = {
   where: Prisma.AntonymWhereUniqueInput
-  update: Prisma.XOR<Prisma.AntonymUpdateWithoutRootInput, Prisma.AntonymUncheckedUpdateWithoutRootInput>
-  create: Prisma.XOR<Prisma.AntonymCreateWithoutRootInput, Prisma.AntonymUncheckedCreateWithoutRootInput>
+  update: Prisma.XOR<Prisma.AntonymUpdateWithoutSourceInput, Prisma.AntonymUncheckedUpdateWithoutSourceInput>
+  create: Prisma.XOR<Prisma.AntonymCreateWithoutSourceInput, Prisma.AntonymUncheckedCreateWithoutSourceInput>
 }
 
-export type AntonymUpdateWithWhereUniqueWithoutRootInput = {
+export type AntonymUpdateWithWhereUniqueWithoutSourceInput = {
   where: Prisma.AntonymWhereUniqueInput
-  data: Prisma.XOR<Prisma.AntonymUpdateWithoutRootInput, Prisma.AntonymUncheckedUpdateWithoutRootInput>
+  data: Prisma.XOR<Prisma.AntonymUpdateWithoutSourceInput, Prisma.AntonymUncheckedUpdateWithoutSourceInput>
 }
 
-export type AntonymUpdateManyWithWhereWithoutRootInput = {
+export type AntonymUpdateManyWithWhereWithoutSourceInput = {
   where: Prisma.AntonymScalarWhereInput
-  data: Prisma.XOR<Prisma.AntonymUpdateManyMutationInput, Prisma.AntonymUncheckedUpdateManyWithoutRootInput>
+  data: Prisma.XOR<Prisma.AntonymUpdateManyMutationInput, Prisma.AntonymUncheckedUpdateManyWithoutSourceInput>
 }
 
 export type AntonymScalarWhereInput = {
@@ -501,70 +501,70 @@ export type AntonymScalarWhereInput = {
   OR?: Prisma.AntonymScalarWhereInput[]
   NOT?: Prisma.AntonymScalarWhereInput | Prisma.AntonymScalarWhereInput[]
   id?: Prisma.IntFilter<"Antonym"> | number
-  rootId?: Prisma.IntNullableFilter<"Antonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Antonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Antonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Antonym"> | number | null
 }
 
-export type AntonymUpsertWithWhereUniqueWithoutWordInput = {
+export type AntonymUpsertWithWhereUniqueWithoutTargetInput = {
   where: Prisma.AntonymWhereUniqueInput
-  update: Prisma.XOR<Prisma.AntonymUpdateWithoutWordInput, Prisma.AntonymUncheckedUpdateWithoutWordInput>
-  create: Prisma.XOR<Prisma.AntonymCreateWithoutWordInput, Prisma.AntonymUncheckedCreateWithoutWordInput>
+  update: Prisma.XOR<Prisma.AntonymUpdateWithoutTargetInput, Prisma.AntonymUncheckedUpdateWithoutTargetInput>
+  create: Prisma.XOR<Prisma.AntonymCreateWithoutTargetInput, Prisma.AntonymUncheckedCreateWithoutTargetInput>
 }
 
-export type AntonymUpdateWithWhereUniqueWithoutWordInput = {
+export type AntonymUpdateWithWhereUniqueWithoutTargetInput = {
   where: Prisma.AntonymWhereUniqueInput
-  data: Prisma.XOR<Prisma.AntonymUpdateWithoutWordInput, Prisma.AntonymUncheckedUpdateWithoutWordInput>
+  data: Prisma.XOR<Prisma.AntonymUpdateWithoutTargetInput, Prisma.AntonymUncheckedUpdateWithoutTargetInput>
 }
 
-export type AntonymUpdateManyWithWhereWithoutWordInput = {
+export type AntonymUpdateManyWithWhereWithoutTargetInput = {
   where: Prisma.AntonymScalarWhereInput
-  data: Prisma.XOR<Prisma.AntonymUpdateManyMutationInput, Prisma.AntonymUncheckedUpdateManyWithoutWordInput>
+  data: Prisma.XOR<Prisma.AntonymUpdateManyMutationInput, Prisma.AntonymUncheckedUpdateManyWithoutTargetInput>
 }
 
-export type AntonymCreateManyRootInput = {
+export type AntonymCreateManySourceInput = {
   id?: number
-  wordId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
-export type AntonymCreateManyWordInput = {
+export type AntonymCreateManyTargetInput = {
   id?: number
-  rootId?: number | null
+  sourceId?: number | null
   proximity?: number | null
 }
 
-export type AntonymUpdateWithoutRootInput = {
+export type AntonymUpdateWithoutSourceInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  word?: Prisma.WordUpdateOneWithoutAntonymsWordNestedInput
+  target?: Prisma.MeaningUpdateOneWithoutAntonymsTargetNestedInput
 }
 
-export type AntonymUncheckedUpdateWithoutRootInput = {
+export type AntonymUncheckedUpdateWithoutSourceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type AntonymUncheckedUpdateManyWithoutRootInput = {
+export type AntonymUncheckedUpdateManyWithoutSourceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type AntonymUpdateWithoutWordInput = {
+export type AntonymUpdateWithoutTargetInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  root?: Prisma.WordUpdateOneWithoutAntonymsRootNestedInput
+  source?: Prisma.MeaningUpdateOneWithoutAntonymsSourceNestedInput
 }
 
-export type AntonymUncheckedUpdateWithoutWordInput = {
+export type AntonymUncheckedUpdateWithoutTargetInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type AntonymUncheckedUpdateManyWithoutWordInput = {
+export type AntonymUncheckedUpdateManyWithoutTargetInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
@@ -572,62 +572,62 @@ export type AntonymUncheckedUpdateManyWithoutWordInput = {
 
 export type AntonymSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["antonym"]>
 
 export type AntonymSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["antonym"]>
 
 export type AntonymSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["antonym"]>
 
 export type AntonymSelectScalar = {
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
 }
 
-export type AntonymOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "rootId" | "wordId" | "proximity", ExtArgs["result"]["antonym"]>
+export type AntonymOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sourceId" | "targetId" | "proximity", ExtArgs["result"]["antonym"]>
 export type AntonymInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }
 export type AntonymIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }
 export type AntonymIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Antonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Antonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Antonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Antonym$targetArgs<ExtArgs>
 }
 
 export type $AntonymPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Antonym"
   objects: {
-    root: Prisma.$WordPayload<ExtArgs> | null
-    word: Prisma.$WordPayload<ExtArgs> | null
+    source: Prisma.$MeaningPayload<ExtArgs> | null
+    target: Prisma.$MeaningPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    rootId: number | null
-    wordId: number | null
+    sourceId: number | null
+    targetId: number | null
     proximity: number | null
   }, ExtArgs["result"]["antonym"]>
   composites: {}
@@ -1023,8 +1023,8 @@ readonly fields: AntonymFieldRefs;
  */
 export interface Prisma__AntonymClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  root<T extends Prisma.Antonym$rootArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Antonym$rootArgs<ExtArgs>>): Prisma.Prisma__WordClient<runtime.Types.Result.GetResult<Prisma.$WordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  word<T extends Prisma.Antonym$wordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Antonym$wordArgs<ExtArgs>>): Prisma.Prisma__WordClient<runtime.Types.Result.GetResult<Prisma.$WordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  source<T extends Prisma.Antonym$sourceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Antonym$sourceArgs<ExtArgs>>): Prisma.Prisma__MeaningClient<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  target<T extends Prisma.Antonym$targetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Antonym$targetArgs<ExtArgs>>): Prisma.Prisma__MeaningClient<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1055,8 +1055,8 @@ export interface Prisma__AntonymClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface AntonymFieldRefs {
   readonly id: Prisma.FieldRef<"Antonym", 'Int'>
-  readonly rootId: Prisma.FieldRef<"Antonym", 'Int'>
-  readonly wordId: Prisma.FieldRef<"Antonym", 'Int'>
+  readonly sourceId: Prisma.FieldRef<"Antonym", 'Int'>
+  readonly targetId: Prisma.FieldRef<"Antonym", 'Int'>
   readonly proximity: Prisma.FieldRef<"Antonym", 'Float'>
 }
     
@@ -1457,41 +1457,41 @@ export type AntonymDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Antonym.root
+ * Antonym.source
  */
-export type Antonym$rootArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Antonym$sourceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Word
+   * Select specific fields to fetch from the Meaning
    */
-  select?: Prisma.WordSelect<ExtArgs> | null
+  select?: Prisma.MeaningSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Word
+   * Omit specific fields from the Meaning
    */
-  omit?: Prisma.WordOmit<ExtArgs> | null
+  omit?: Prisma.MeaningOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WordInclude<ExtArgs> | null
-  where?: Prisma.WordWhereInput
+  include?: Prisma.MeaningInclude<ExtArgs> | null
+  where?: Prisma.MeaningWhereInput
 }
 
 /**
- * Antonym.word
+ * Antonym.target
  */
-export type Antonym$wordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Antonym$targetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Word
+   * Select specific fields to fetch from the Meaning
    */
-  select?: Prisma.WordSelect<ExtArgs> | null
+  select?: Prisma.MeaningSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Word
+   * Omit specific fields from the Meaning
    */
-  omit?: Prisma.WordOmit<ExtArgs> | null
+  omit?: Prisma.MeaningOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WordInclude<ExtArgs> | null
-  where?: Prisma.WordWhereInput
+  include?: Prisma.MeaningInclude<ExtArgs> | null
+  where?: Prisma.MeaningWhereInput
 }
 
 /**

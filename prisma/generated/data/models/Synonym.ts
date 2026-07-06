@@ -28,36 +28,36 @@ export type AggregateSynonym = {
 
 export type SynonymAvgAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type SynonymSumAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type SynonymMinAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type SynonymMaxAggregateOutputType = {
   id: number | null
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
 }
 
 export type SynonymCountAggregateOutputType = {
   id: number
-  rootId: number
-  wordId: number
+  sourceId: number
+  targetId: number
   proximity: number
   _all: number
 }
@@ -65,36 +65,36 @@ export type SynonymCountAggregateOutputType = {
 
 export type SynonymAvgAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type SynonymSumAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type SynonymMinAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type SynonymMaxAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
 }
 
 export type SynonymCountAggregateInputType = {
   id?: true
-  rootId?: true
-  wordId?: true
+  sourceId?: true
+  targetId?: true
   proximity?: true
   _all?: true
 }
@@ -187,8 +187,8 @@ export type SynonymGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type SynonymGroupByOutputType = {
   id: number
-  rootId: number | null
-  wordId: number | null
+  sourceId: number | null
+  targetId: number | null
   proximity: number | null
   _count: SynonymCountAggregateOutputType | null
   _avg: SynonymAvgAggregateOutputType | null
@@ -217,20 +217,20 @@ export type SynonymWhereInput = {
   OR?: Prisma.SynonymWhereInput[]
   NOT?: Prisma.SynonymWhereInput | Prisma.SynonymWhereInput[]
   id?: Prisma.IntFilter<"Synonym"> | number
-  rootId?: Prisma.IntNullableFilter<"Synonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Synonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Synonym"> | number | null
-  root?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
-  word?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
+  source?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  target?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }
 
 export type SynonymOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrderInput | Prisma.SortOrder
-  wordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetId?: Prisma.SortOrderInput | Prisma.SortOrder
   proximity?: Prisma.SortOrderInput | Prisma.SortOrder
-  root?: Prisma.WordOrderByWithRelationInput
-  word?: Prisma.WordOrderByWithRelationInput
+  source?: Prisma.MeaningOrderByWithRelationInput
+  target?: Prisma.MeaningOrderByWithRelationInput
 }
 
 export type SynonymWhereUniqueInput = Prisma.AtLeast<{
@@ -238,17 +238,17 @@ export type SynonymWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SynonymWhereInput | Prisma.SynonymWhereInput[]
   OR?: Prisma.SynonymWhereInput[]
   NOT?: Prisma.SynonymWhereInput | Prisma.SynonymWhereInput[]
-  rootId?: Prisma.IntNullableFilter<"Synonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Synonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Synonym"> | number | null
-  root?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
-  word?: Prisma.XOR<Prisma.WordNullableScalarRelationFilter, Prisma.WordWhereInput> | null
+  source?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  target?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
 }, "id">
 
 export type SynonymOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrderInput | Prisma.SortOrder
-  wordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetId?: Prisma.SortOrderInput | Prisma.SortOrder
   proximity?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.SynonymCountOrderByAggregateInput
   _avg?: Prisma.SynonymAvgOrderByAggregateInput
@@ -262,41 +262,41 @@ export type SynonymScalarWhereWithAggregatesInput = {
   OR?: Prisma.SynonymScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SynonymScalarWhereWithAggregatesInput | Prisma.SynonymScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Synonym"> | number
-  rootId?: Prisma.IntNullableWithAggregatesFilter<"Synonym"> | number | null
-  wordId?: Prisma.IntNullableWithAggregatesFilter<"Synonym"> | number | null
+  sourceId?: Prisma.IntNullableWithAggregatesFilter<"Synonym"> | number | null
+  targetId?: Prisma.IntNullableWithAggregatesFilter<"Synonym"> | number | null
   proximity?: Prisma.FloatNullableWithAggregatesFilter<"Synonym"> | number | null
 }
 
 export type SynonymCreateInput = {
   proximity?: number | null
-  root?: Prisma.WordCreateNestedOneWithoutSynonymsRootInput
-  word?: Prisma.WordCreateNestedOneWithoutSynonymsWordInput
+  source?: Prisma.MeaningCreateNestedOneWithoutSynonymsSourceInput
+  target?: Prisma.MeaningCreateNestedOneWithoutSynonymsTargetInput
 }
 
 export type SynonymUncheckedCreateInput = {
   id?: number
-  rootId?: number | null
-  wordId?: number | null
+  sourceId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
 export type SynonymUpdateInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  root?: Prisma.WordUpdateOneWithoutSynonymsRootNestedInput
-  word?: Prisma.WordUpdateOneWithoutSynonymsWordNestedInput
+  source?: Prisma.MeaningUpdateOneWithoutSynonymsSourceNestedInput
+  target?: Prisma.MeaningUpdateOneWithoutSynonymsTargetNestedInput
 }
 
 export type SynonymUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type SynonymCreateManyInput = {
   id?: number
-  rootId?: number | null
-  wordId?: number | null
+  sourceId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
@@ -306,8 +306,8 @@ export type SynonymUpdateManyMutationInput = {
 
 export type SynonymUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
@@ -323,120 +323,120 @@ export type SynonymOrderByRelationAggregateInput = {
 
 export type SynonymCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type SynonymAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type SynonymMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type SynonymMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
 export type SynonymSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rootId?: Prisma.SortOrder
-  wordId?: Prisma.SortOrder
+  sourceId?: Prisma.SortOrder
+  targetId?: Prisma.SortOrder
   proximity?: Prisma.SortOrder
 }
 
-export type SynonymCreateNestedManyWithoutRootInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput> | Prisma.SynonymCreateWithoutRootInput[] | Prisma.SynonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutRootInput | Prisma.SynonymCreateOrConnectWithoutRootInput[]
-  createMany?: Prisma.SynonymCreateManyRootInputEnvelope
+export type SynonymCreateNestedManyWithoutSourceInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput> | Prisma.SynonymCreateWithoutSourceInput[] | Prisma.SynonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutSourceInput | Prisma.SynonymCreateOrConnectWithoutSourceInput[]
+  createMany?: Prisma.SynonymCreateManySourceInputEnvelope
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
 }
 
-export type SynonymCreateNestedManyWithoutWordInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput> | Prisma.SynonymCreateWithoutWordInput[] | Prisma.SynonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutWordInput | Prisma.SynonymCreateOrConnectWithoutWordInput[]
-  createMany?: Prisma.SynonymCreateManyWordInputEnvelope
+export type SynonymCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput> | Prisma.SynonymCreateWithoutTargetInput[] | Prisma.SynonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutTargetInput | Prisma.SynonymCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.SynonymCreateManyTargetInputEnvelope
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
 }
 
-export type SynonymUncheckedCreateNestedManyWithoutRootInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput> | Prisma.SynonymCreateWithoutRootInput[] | Prisma.SynonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutRootInput | Prisma.SynonymCreateOrConnectWithoutRootInput[]
-  createMany?: Prisma.SynonymCreateManyRootInputEnvelope
+export type SynonymUncheckedCreateNestedManyWithoutSourceInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput> | Prisma.SynonymCreateWithoutSourceInput[] | Prisma.SynonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutSourceInput | Prisma.SynonymCreateOrConnectWithoutSourceInput[]
+  createMany?: Prisma.SynonymCreateManySourceInputEnvelope
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
 }
 
-export type SynonymUncheckedCreateNestedManyWithoutWordInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput> | Prisma.SynonymCreateWithoutWordInput[] | Prisma.SynonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutWordInput | Prisma.SynonymCreateOrConnectWithoutWordInput[]
-  createMany?: Prisma.SynonymCreateManyWordInputEnvelope
+export type SynonymUncheckedCreateNestedManyWithoutTargetInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput> | Prisma.SynonymCreateWithoutTargetInput[] | Prisma.SynonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutTargetInput | Prisma.SynonymCreateOrConnectWithoutTargetInput[]
+  createMany?: Prisma.SynonymCreateManyTargetInputEnvelope
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
 }
 
-export type SynonymUpdateManyWithoutRootNestedInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput> | Prisma.SynonymCreateWithoutRootInput[] | Prisma.SynonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutRootInput | Prisma.SynonymCreateOrConnectWithoutRootInput[]
-  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutRootInput | Prisma.SynonymUpsertWithWhereUniqueWithoutRootInput[]
-  createMany?: Prisma.SynonymCreateManyRootInputEnvelope
+export type SynonymUpdateManyWithoutSourceNestedInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput> | Prisma.SynonymCreateWithoutSourceInput[] | Prisma.SynonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutSourceInput | Prisma.SynonymCreateOrConnectWithoutSourceInput[]
+  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutSourceInput | Prisma.SynonymUpsertWithWhereUniqueWithoutSourceInput[]
+  createMany?: Prisma.SynonymCreateManySourceInputEnvelope
   set?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   disconnect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   delete?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
-  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutRootInput | Prisma.SynonymUpdateWithWhereUniqueWithoutRootInput[]
-  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutRootInput | Prisma.SynonymUpdateManyWithWhereWithoutRootInput[]
+  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutSourceInput | Prisma.SynonymUpdateWithWhereUniqueWithoutSourceInput[]
+  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutSourceInput | Prisma.SynonymUpdateManyWithWhereWithoutSourceInput[]
   deleteMany?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
 }
 
-export type SynonymUpdateManyWithoutWordNestedInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput> | Prisma.SynonymCreateWithoutWordInput[] | Prisma.SynonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutWordInput | Prisma.SynonymCreateOrConnectWithoutWordInput[]
-  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutWordInput | Prisma.SynonymUpsertWithWhereUniqueWithoutWordInput[]
-  createMany?: Prisma.SynonymCreateManyWordInputEnvelope
+export type SynonymUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput> | Prisma.SynonymCreateWithoutTargetInput[] | Prisma.SynonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutTargetInput | Prisma.SynonymCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutTargetInput | Prisma.SynonymUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.SynonymCreateManyTargetInputEnvelope
   set?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   disconnect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   delete?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
-  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutWordInput | Prisma.SynonymUpdateWithWhereUniqueWithoutWordInput[]
-  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutWordInput | Prisma.SynonymUpdateManyWithWhereWithoutWordInput[]
+  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutTargetInput | Prisma.SynonymUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutTargetInput | Prisma.SynonymUpdateManyWithWhereWithoutTargetInput[]
   deleteMany?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
 }
 
-export type SynonymUncheckedUpdateManyWithoutRootNestedInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput> | Prisma.SynonymCreateWithoutRootInput[] | Prisma.SynonymUncheckedCreateWithoutRootInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutRootInput | Prisma.SynonymCreateOrConnectWithoutRootInput[]
-  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutRootInput | Prisma.SynonymUpsertWithWhereUniqueWithoutRootInput[]
-  createMany?: Prisma.SynonymCreateManyRootInputEnvelope
+export type SynonymUncheckedUpdateManyWithoutSourceNestedInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput> | Prisma.SynonymCreateWithoutSourceInput[] | Prisma.SynonymUncheckedCreateWithoutSourceInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutSourceInput | Prisma.SynonymCreateOrConnectWithoutSourceInput[]
+  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutSourceInput | Prisma.SynonymUpsertWithWhereUniqueWithoutSourceInput[]
+  createMany?: Prisma.SynonymCreateManySourceInputEnvelope
   set?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   disconnect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   delete?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
-  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutRootInput | Prisma.SynonymUpdateWithWhereUniqueWithoutRootInput[]
-  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutRootInput | Prisma.SynonymUpdateManyWithWhereWithoutRootInput[]
+  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutSourceInput | Prisma.SynonymUpdateWithWhereUniqueWithoutSourceInput[]
+  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutSourceInput | Prisma.SynonymUpdateManyWithWhereWithoutSourceInput[]
   deleteMany?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
 }
 
-export type SynonymUncheckedUpdateManyWithoutWordNestedInput = {
-  create?: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput> | Prisma.SynonymCreateWithoutWordInput[] | Prisma.SynonymUncheckedCreateWithoutWordInput[]
-  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutWordInput | Prisma.SynonymCreateOrConnectWithoutWordInput[]
-  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutWordInput | Prisma.SynonymUpsertWithWhereUniqueWithoutWordInput[]
-  createMany?: Prisma.SynonymCreateManyWordInputEnvelope
+export type SynonymUncheckedUpdateManyWithoutTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput> | Prisma.SynonymCreateWithoutTargetInput[] | Prisma.SynonymUncheckedCreateWithoutTargetInput[]
+  connectOrCreate?: Prisma.SynonymCreateOrConnectWithoutTargetInput | Prisma.SynonymCreateOrConnectWithoutTargetInput[]
+  upsert?: Prisma.SynonymUpsertWithWhereUniqueWithoutTargetInput | Prisma.SynonymUpsertWithWhereUniqueWithoutTargetInput[]
+  createMany?: Prisma.SynonymCreateManyTargetInputEnvelope
   set?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   disconnect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   delete?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
   connect?: Prisma.SynonymWhereUniqueInput | Prisma.SynonymWhereUniqueInput[]
-  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutWordInput | Prisma.SynonymUpdateWithWhereUniqueWithoutWordInput[]
-  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutWordInput | Prisma.SynonymUpdateManyWithWhereWithoutWordInput[]
+  update?: Prisma.SynonymUpdateWithWhereUniqueWithoutTargetInput | Prisma.SynonymUpdateWithWhereUniqueWithoutTargetInput[]
+  updateMany?: Prisma.SynonymUpdateManyWithWhereWithoutTargetInput | Prisma.SynonymUpdateManyWithWhereWithoutTargetInput[]
   deleteMany?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
 }
 
@@ -448,60 +448,60 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type SynonymCreateWithoutRootInput = {
+export type SynonymCreateWithoutSourceInput = {
   proximity?: number | null
-  word?: Prisma.WordCreateNestedOneWithoutSynonymsWordInput
+  target?: Prisma.MeaningCreateNestedOneWithoutSynonymsTargetInput
 }
 
-export type SynonymUncheckedCreateWithoutRootInput = {
+export type SynonymUncheckedCreateWithoutSourceInput = {
   id?: number
-  wordId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
-export type SynonymCreateOrConnectWithoutRootInput = {
+export type SynonymCreateOrConnectWithoutSourceInput = {
   where: Prisma.SynonymWhereUniqueInput
-  create: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput>
+  create: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput>
 }
 
-export type SynonymCreateManyRootInputEnvelope = {
-  data: Prisma.SynonymCreateManyRootInput | Prisma.SynonymCreateManyRootInput[]
+export type SynonymCreateManySourceInputEnvelope = {
+  data: Prisma.SynonymCreateManySourceInput | Prisma.SynonymCreateManySourceInput[]
 }
 
-export type SynonymCreateWithoutWordInput = {
+export type SynonymCreateWithoutTargetInput = {
   proximity?: number | null
-  root?: Prisma.WordCreateNestedOneWithoutSynonymsRootInput
+  source?: Prisma.MeaningCreateNestedOneWithoutSynonymsSourceInput
 }
 
-export type SynonymUncheckedCreateWithoutWordInput = {
+export type SynonymUncheckedCreateWithoutTargetInput = {
   id?: number
-  rootId?: number | null
+  sourceId?: number | null
   proximity?: number | null
 }
 
-export type SynonymCreateOrConnectWithoutWordInput = {
+export type SynonymCreateOrConnectWithoutTargetInput = {
   where: Prisma.SynonymWhereUniqueInput
-  create: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput>
+  create: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput>
 }
 
-export type SynonymCreateManyWordInputEnvelope = {
-  data: Prisma.SynonymCreateManyWordInput | Prisma.SynonymCreateManyWordInput[]
+export type SynonymCreateManyTargetInputEnvelope = {
+  data: Prisma.SynonymCreateManyTargetInput | Prisma.SynonymCreateManyTargetInput[]
 }
 
-export type SynonymUpsertWithWhereUniqueWithoutRootInput = {
+export type SynonymUpsertWithWhereUniqueWithoutSourceInput = {
   where: Prisma.SynonymWhereUniqueInput
-  update: Prisma.XOR<Prisma.SynonymUpdateWithoutRootInput, Prisma.SynonymUncheckedUpdateWithoutRootInput>
-  create: Prisma.XOR<Prisma.SynonymCreateWithoutRootInput, Prisma.SynonymUncheckedCreateWithoutRootInput>
+  update: Prisma.XOR<Prisma.SynonymUpdateWithoutSourceInput, Prisma.SynonymUncheckedUpdateWithoutSourceInput>
+  create: Prisma.XOR<Prisma.SynonymCreateWithoutSourceInput, Prisma.SynonymUncheckedCreateWithoutSourceInput>
 }
 
-export type SynonymUpdateWithWhereUniqueWithoutRootInput = {
+export type SynonymUpdateWithWhereUniqueWithoutSourceInput = {
   where: Prisma.SynonymWhereUniqueInput
-  data: Prisma.XOR<Prisma.SynonymUpdateWithoutRootInput, Prisma.SynonymUncheckedUpdateWithoutRootInput>
+  data: Prisma.XOR<Prisma.SynonymUpdateWithoutSourceInput, Prisma.SynonymUncheckedUpdateWithoutSourceInput>
 }
 
-export type SynonymUpdateManyWithWhereWithoutRootInput = {
+export type SynonymUpdateManyWithWhereWithoutSourceInput = {
   where: Prisma.SynonymScalarWhereInput
-  data: Prisma.XOR<Prisma.SynonymUpdateManyMutationInput, Prisma.SynonymUncheckedUpdateManyWithoutRootInput>
+  data: Prisma.XOR<Prisma.SynonymUpdateManyMutationInput, Prisma.SynonymUncheckedUpdateManyWithoutSourceInput>
 }
 
 export type SynonymScalarWhereInput = {
@@ -509,70 +509,70 @@ export type SynonymScalarWhereInput = {
   OR?: Prisma.SynonymScalarWhereInput[]
   NOT?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
   id?: Prisma.IntFilter<"Synonym"> | number
-  rootId?: Prisma.IntNullableFilter<"Synonym"> | number | null
-  wordId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  sourceId?: Prisma.IntNullableFilter<"Synonym"> | number | null
+  targetId?: Prisma.IntNullableFilter<"Synonym"> | number | null
   proximity?: Prisma.FloatNullableFilter<"Synonym"> | number | null
 }
 
-export type SynonymUpsertWithWhereUniqueWithoutWordInput = {
+export type SynonymUpsertWithWhereUniqueWithoutTargetInput = {
   where: Prisma.SynonymWhereUniqueInput
-  update: Prisma.XOR<Prisma.SynonymUpdateWithoutWordInput, Prisma.SynonymUncheckedUpdateWithoutWordInput>
-  create: Prisma.XOR<Prisma.SynonymCreateWithoutWordInput, Prisma.SynonymUncheckedCreateWithoutWordInput>
+  update: Prisma.XOR<Prisma.SynonymUpdateWithoutTargetInput, Prisma.SynonymUncheckedUpdateWithoutTargetInput>
+  create: Prisma.XOR<Prisma.SynonymCreateWithoutTargetInput, Prisma.SynonymUncheckedCreateWithoutTargetInput>
 }
 
-export type SynonymUpdateWithWhereUniqueWithoutWordInput = {
+export type SynonymUpdateWithWhereUniqueWithoutTargetInput = {
   where: Prisma.SynonymWhereUniqueInput
-  data: Prisma.XOR<Prisma.SynonymUpdateWithoutWordInput, Prisma.SynonymUncheckedUpdateWithoutWordInput>
+  data: Prisma.XOR<Prisma.SynonymUpdateWithoutTargetInput, Prisma.SynonymUncheckedUpdateWithoutTargetInput>
 }
 
-export type SynonymUpdateManyWithWhereWithoutWordInput = {
+export type SynonymUpdateManyWithWhereWithoutTargetInput = {
   where: Prisma.SynonymScalarWhereInput
-  data: Prisma.XOR<Prisma.SynonymUpdateManyMutationInput, Prisma.SynonymUncheckedUpdateManyWithoutWordInput>
+  data: Prisma.XOR<Prisma.SynonymUpdateManyMutationInput, Prisma.SynonymUncheckedUpdateManyWithoutTargetInput>
 }
 
-export type SynonymCreateManyRootInput = {
+export type SynonymCreateManySourceInput = {
   id?: number
-  wordId?: number | null
+  targetId?: number | null
   proximity?: number | null
 }
 
-export type SynonymCreateManyWordInput = {
+export type SynonymCreateManyTargetInput = {
   id?: number
-  rootId?: number | null
+  sourceId?: number | null
   proximity?: number | null
 }
 
-export type SynonymUpdateWithoutRootInput = {
+export type SynonymUpdateWithoutSourceInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  word?: Prisma.WordUpdateOneWithoutSynonymsWordNestedInput
+  target?: Prisma.MeaningUpdateOneWithoutSynonymsTargetNestedInput
 }
 
-export type SynonymUncheckedUpdateWithoutRootInput = {
+export type SynonymUncheckedUpdateWithoutSourceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type SynonymUncheckedUpdateManyWithoutRootInput = {
+export type SynonymUncheckedUpdateManyWithoutSourceInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  wordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type SynonymUpdateWithoutWordInput = {
+export type SynonymUpdateWithoutTargetInput = {
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  root?: Prisma.WordUpdateOneWithoutSynonymsRootNestedInput
+  source?: Prisma.MeaningUpdateOneWithoutSynonymsSourceNestedInput
 }
 
-export type SynonymUncheckedUpdateWithoutWordInput = {
+export type SynonymUncheckedUpdateWithoutTargetInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
-export type SynonymUncheckedUpdateManyWithoutWordInput = {
+export type SynonymUncheckedUpdateManyWithoutTargetInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  rootId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sourceId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   proximity?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
@@ -580,62 +580,62 @@ export type SynonymUncheckedUpdateManyWithoutWordInput = {
 
 export type SynonymSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["synonym"]>
 
 export type SynonymSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["synonym"]>
 
 export type SynonymSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }, ExtArgs["result"]["synonym"]>
 
 export type SynonymSelectScalar = {
   id?: boolean
-  rootId?: boolean
-  wordId?: boolean
+  sourceId?: boolean
+  targetId?: boolean
   proximity?: boolean
 }
 
-export type SynonymOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "rootId" | "wordId" | "proximity", ExtArgs["result"]["synonym"]>
+export type SynonymOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sourceId" | "targetId" | "proximity", ExtArgs["result"]["synonym"]>
 export type SynonymInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }
 export type SynonymIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }
 export type SynonymIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  root?: boolean | Prisma.Synonym$rootArgs<ExtArgs>
-  word?: boolean | Prisma.Synonym$wordArgs<ExtArgs>
+  source?: boolean | Prisma.Synonym$sourceArgs<ExtArgs>
+  target?: boolean | Prisma.Synonym$targetArgs<ExtArgs>
 }
 
 export type $SynonymPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Synonym"
   objects: {
-    root: Prisma.$WordPayload<ExtArgs> | null
-    word: Prisma.$WordPayload<ExtArgs> | null
+    source: Prisma.$MeaningPayload<ExtArgs> | null
+    target: Prisma.$MeaningPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    rootId: number | null
-    wordId: number | null
+    sourceId: number | null
+    targetId: number | null
     proximity: number | null
   }, ExtArgs["result"]["synonym"]>
   composites: {}
@@ -1031,8 +1031,8 @@ readonly fields: SynonymFieldRefs;
  */
 export interface Prisma__SynonymClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  root<T extends Prisma.Synonym$rootArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Synonym$rootArgs<ExtArgs>>): Prisma.Prisma__WordClient<runtime.Types.Result.GetResult<Prisma.$WordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  word<T extends Prisma.Synonym$wordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Synonym$wordArgs<ExtArgs>>): Prisma.Prisma__WordClient<runtime.Types.Result.GetResult<Prisma.$WordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  source<T extends Prisma.Synonym$sourceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Synonym$sourceArgs<ExtArgs>>): Prisma.Prisma__MeaningClient<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  target<T extends Prisma.Synonym$targetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Synonym$targetArgs<ExtArgs>>): Prisma.Prisma__MeaningClient<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1063,8 +1063,8 @@ export interface Prisma__SynonymClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface SynonymFieldRefs {
   readonly id: Prisma.FieldRef<"Synonym", 'Int'>
-  readonly rootId: Prisma.FieldRef<"Synonym", 'Int'>
-  readonly wordId: Prisma.FieldRef<"Synonym", 'Int'>
+  readonly sourceId: Prisma.FieldRef<"Synonym", 'Int'>
+  readonly targetId: Prisma.FieldRef<"Synonym", 'Int'>
   readonly proximity: Prisma.FieldRef<"Synonym", 'Float'>
 }
     
@@ -1465,41 +1465,41 @@ export type SynonymDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Synonym.root
+ * Synonym.source
  */
-export type Synonym$rootArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Synonym$sourceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Word
+   * Select specific fields to fetch from the Meaning
    */
-  select?: Prisma.WordSelect<ExtArgs> | null
+  select?: Prisma.MeaningSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Word
+   * Omit specific fields from the Meaning
    */
-  omit?: Prisma.WordOmit<ExtArgs> | null
+  omit?: Prisma.MeaningOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WordInclude<ExtArgs> | null
-  where?: Prisma.WordWhereInput
+  include?: Prisma.MeaningInclude<ExtArgs> | null
+  where?: Prisma.MeaningWhereInput
 }
 
 /**
- * Synonym.word
+ * Synonym.target
  */
-export type Synonym$wordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Synonym$targetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Word
+   * Select specific fields to fetch from the Meaning
    */
-  select?: Prisma.WordSelect<ExtArgs> | null
+  select?: Prisma.MeaningSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Word
+   * Omit specific fields from the Meaning
    */
-  omit?: Prisma.WordOmit<ExtArgs> | null
+  omit?: Prisma.MeaningOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WordInclude<ExtArgs> | null
-  where?: Prisma.WordWhereInput
+  include?: Prisma.MeaningInclude<ExtArgs> | null
+  where?: Prisma.MeaningWhereInput
 }
 
 /**

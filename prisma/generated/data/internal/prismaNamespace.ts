@@ -2433,8 +2433,8 @@ export type RootWordScalarFieldEnum = (typeof RootWordScalarFieldEnum)[keyof typ
 
 export const SynonymScalarFieldEnum = {
   id: 'id',
-  rootId: 'rootId',
-  wordId: 'wordId',
+  sourceId: 'sourceId',
+  targetId: 'targetId',
   proximity: 'proximity'
 } as const
 
@@ -2443,8 +2443,8 @@ export type SynonymScalarFieldEnum = (typeof SynonymScalarFieldEnum)[keyof typeo
 
 export const AntonymScalarFieldEnum = {
   id: 'id',
-  rootId: 'rootId',
-  wordId: 'wordId',
+  sourceId: 'sourceId',
+  targetId: 'targetId',
   proximity: 'proximity'
 } as const
 

@@ -2,9 +2,9 @@
 //     Поиск антонимов и обратных wordId в  ▀
 //      Что делает:                                                                                                                                                           БД
 // 1. Загружает слова из БД (Word → Meaning → En), у которых есть английский перевод
-// 2. Для каждого уникального перевода вызывает https://api.dictionaryapi.dev/api/v2/entries/en/<word>, извлекает антонимы                                               SourceCraft CodeAssistant
-//     3. Для каждого антонима ищет обратные вхождения в таблице en нашей БД и получает wordId                                                                               @eakarpov [ Quota ]
-// 4. Выводит JSON-массив { wordId, isvWord, englishTranslation, englishAntonyms, matchedWordIds }
+// 2. Для каждого уникального перевода вызывает https://api.dictionaryapi.dev/api/v2/entries/en/<word>, извлекает антонимы
+// 3. Для каждого антонима ищет обратные вхождения в таблице en нашей БД и получает meaningId
+// 4. Выводит JSON-массив { meaningId, wordId, isvWord, englishTranslation, englishAntonyms, matchedMeaningIds }
 //
 // Оптимизации:                                                                                                                                                          Context
 // - Кеширование API-запросов (один запрос на уникальное английское слово)                                                                                               Total:            72.7k/128.0k (57%)
@@ -16,15 +16,17 @@
 // Запуск: npx tsx scripts/fetch-antonyms-from-api.ts > results.json 2>progress.log
 
 import * as path from 'path'
+import fs from "fs";
 
 process.env.DATA_DATABASE_URL = `file:${path.resolve(process.cwd(), 'interlex.db')}`
 
 interface AntonymResult {
+    meaningId: number
     wordId: number
     isvWord: string
     englishTranslation: string
     englishAntonyms: string[]
-    matchedWordIds: number[]
+    matchedMeaningIds: number[]
 }
 
 interface DictionaryApiEntry {
@@ -36,7 +38,7 @@ interface DictionaryApiEntry {
 }
 
 // 0 = no limit (all words). Set to e.g. 100 for testing.
-const WORD_LIMIT = 0
+const WORD_LIMIT = 300
 const API_DELAY_MS = 150
 const MAX_CONCURRENT = 3
 const BATCH_SIZE = 500
@@ -91,8 +93,8 @@ async function fetchAntonyms(word: string): Promise<string[]> {
     }
 }
 
-function buildAntonymLookup(db: Awaited<ReturnType<typeof import("@/lib/prisma")>>["prismaData"]) {
-    return async function findWordIds(values: string[]): Promise<Map<string, number[]>> {
+function buildMeaningLookup(db: Awaited<ReturnType<typeof import("@/lib/prisma")>>["prismaData"]) {
+    return async function findMeaningIds(values: string[]): Promise<Map<string, number[]>> {
         const uncached: string[] = []
         const result = new Map<string, number[]>()
 
@@ -111,18 +113,15 @@ function buildAntonymLookup(db: Awaited<ReturnType<typeof import("@/lib/prisma")
             where: {value: {in: uncached}},
             select: {
                 value: true,
-                word: {
-                    select: {wordId: true},
-                },
+                meaningId: true,
             },
         })
 
         const grouped = new Map<string, Set<number>>()
         for (const r of records) {
-            const wid = r.word?.wordId
-            if (wid == null || !r.value) continue
+            if (r.meaningId == null || !r.value) continue
             if (!grouped.has(r.value)) grouped.set(r.value, new Set())
-            grouped.get(r.value)!.add(wid)
+            grouped.get(r.value)!.add(r.meaningId)
         }
 
         for (const v of uncached) {
@@ -137,13 +136,13 @@ function buildAntonymLookup(db: Awaited<ReturnType<typeof import("@/lib/prisma")
 
 async function main() {
     const {prismaData: db} = await import("@/lib/prisma")
-    const findWordIds = buildAntonymLookup(db)
+    const findMeaningIds = buildMeaningLookup(db)
 
     console.error('Loading words with English translations...')
 
     let offset = 0
     let totalProcessed = 0
-    const allTranslations: { wordId: number; isvWord: string; translation: string }[] = []
+    const allTranslations: { meaningId: number; wordId: number; isvWord: string; translation: string }[] = []
 
     while (true) {
         const remaining = WORD_LIMIT ? WORD_LIMIT - totalProcessed : BATCH_SIZE
@@ -153,7 +152,7 @@ async function main() {
         const batch = await db.word.findMany({
             where: {
                 meanings: {
-                    some: {en_word: {some: {}}},
+                    some: {en_mean: {some: {}}},
                 },
             },
             select: {
@@ -162,7 +161,8 @@ async function main() {
                 isv: true,
                 meanings: {
                     select: {
-                        en_word: {
+                        id: true,
+                        en_mean: {
                             select: {value: true},
                         },
                     },
@@ -175,20 +175,17 @@ async function main() {
         if (batch.length === 0) break
 
         for (const word of batch) {
-            const uniqueTranslations = [
-                ...new Set(
-                    word.meanings
-                        .flatMap(m => m.en_word)
-                        .map(e => e.value?.trim())
-                        .filter((v): v is string => !!v),
-                ),
-            ]
-            for (const t of uniqueTranslations) {
-                allTranslations.push({
-                    wordId: word.id,
-                    isvWord: word.value || word.isv || '',
-                    translation: t,
-                })
+            for (const meaning of word.meanings) {
+                for (const en of meaning.en_mean) {
+                    const val = en.value?.trim()
+                    if (!val) continue
+                    allTranslations.push({
+                        meaningId: meaning.id,
+                        wordId: word.id,
+                        isvWord: word.value || word.isv || '',
+                        translation: val,
+                    })
+                }
             }
         }
 
@@ -214,9 +211,9 @@ async function main() {
         const batch = allTranslations.slice(i, i + MAX_CONCURRENT)
 
         const apiResults = await Promise.all(
-            batch.map(async ({wordId, isvWord, translation}) => {
+            batch.map(async ({meaningId, wordId, isvWord, translation}) => {
                 const antonyms = await fetchAntonyms(translation)
-                return {wordId, isvWord, translation, antonyms}
+                return {meaningId, wordId, isvWord, translation, antonyms}
             }),
         )
 
@@ -224,9 +221,9 @@ async function main() {
 
         if (apiBatch.length > 0) {
             const allAntonyms = [...new Set(apiBatch.flatMap(r => r.antonyms))]
-            const lookupMap = await findWordIds(allAntonyms)
+            const lookupMap = await findMeaningIds(allAntonyms)
 
-            for (const {wordId, isvWord, translation, antonyms} of apiBatch) {
+            for (const {meaningId, wordId, isvWord, translation, antonyms} of apiBatch) {
                 const matchedIds = new Set<number>()
                 for (const a of antonyms) {
                     const ids = lookupMap.get(a) ?? []
@@ -235,11 +232,12 @@ async function main() {
 
                 if (matchedIds.size > 0) {
                     results.push({
+                        meaningId,
                         wordId,
                         isvWord,
                         englishTranslation: translation,
                         englishAntonyms: antonyms,
-                        matchedWordIds: Array.from(matchedIds),
+                        matchedMeaningIds: Array.from(matchedIds),
                     })
                 }
             }
@@ -256,7 +254,8 @@ async function main() {
     }
 
     console.error(`Done. Results: ${results.length}`)
-    console.log(JSON.stringify(results, null, 2))
+    // console.log(JSON.stringify(results, null, 2))
+    fs.writeFileSync('./antonyms.json', JSON.stringify(results, null, 2), 'utf-8');
 
     await db.$disconnect()
 }

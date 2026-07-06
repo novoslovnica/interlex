@@ -53,10 +53,6 @@ model Word {
   // Обратные связи Prisma
   meanings        Meaning[]
   roots_words     RootWord[]
-  synonymsRoot    Synonym[]        @relation("SynonymRoot")
-  synonymsWord    Synonym[]        @relation("SynonymWord")
-  antonymsRoot    Antonym[]        @relation("AntonymRoot")
-  antonymsWord    Antonym[]        @relation("AntonymWord")
   anomalies       InflectionAnomaly[]
   actionHistory   String?
 
@@ -160,6 +156,12 @@ model Meaning {
   eo_word  Eo[]      @relation("EoWord")
   eo_mean  Eo[]      @relation("EoMeaning")
 
+  // Связи синонимов и антонимов (на уровне значений, а не слов)
+  synonymsSource  Synonym[]  @relation("SynonymSource")
+  synonymsTarget  Synonym[]  @relation("SynonymTarget")
+  antonymsSource  Antonym[]  @relation("AntonymSource")
+  antonymsTarget  Antonym[]  @relation("AntonymTarget")
+
   @@map("meanings")
 }
 
@@ -196,25 +198,25 @@ model RootWord {
 }
 
 model Synonym {
-  id        Int    @id @default(autoincrement())
-  rootId    Int?
-  wordId    Int?
+  id        Int      @id @default(autoincrement())
+  sourceId  Int?     @map("rootId")
+  targetId  Int?     @map("wordId")
   proximity Float?
 
-  root      Word?  @relation("SynonymRoot", fields: [rootId], references: [id], onDelete: Cascade)
-  word      Word?  @relation("SynonymWord", fields: [wordId], references: [id], onDelete: Cascade)
+  source    Meaning? @relation("SynonymSource", fields: [sourceId], references: [id], onDelete: Cascade)
+  target    Meaning? @relation("SynonymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("synonims")
 }
 
 model Antonym {
-  id        Int    @id @default(autoincrement())
-  rootId    Int?
-  wordId    Int?
+  id        Int      @id @default(autoincrement())
+  sourceId  Int?     @map("rootId")
+  targetId  Int?     @map("wordId")
   proximity Float?
 
-  root      Word?  @relation("AntonymRoot", fields: [rootId], references: [id], onDelete: Cascade)
-  word      Word?  @relation("AntonymWord", fields: [wordId], references: [id], onDelete: Cascade)
+  source    Meaning? @relation("AntonymSource", fields: [sourceId], references: [id], onDelete: Cascade)
+  target    Meaning? @relation("AntonymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("antonims")
 }

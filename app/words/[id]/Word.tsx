@@ -428,6 +428,46 @@ const Word = ({ item, currentScript }: any) => {
                                         ))}
                                     </div>
                                 )}
+
+                                {m.synonyms?.length > 0 && (
+                                    <div className="mt-2">
+                                        <span className="text-xs font-semibold tracking-wider text-green-600 uppercase">Синонимы</span>
+                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                            {m.synonyms.map((syn: any) => (
+                                                <Link
+                                                    key={syn.targetMeaningId}
+                                                    href={`/words/${syn.targetWordId}`}
+                                                    className="inline-flex items-center gap-1 bg-green-50 hover:bg-green-100 border border-green-200 px-2 py-1 rounded-lg text-sm text-green-800 hover:text-green-900 transition-colors"
+                                                >
+                                                    <span>{currentScript === "CYRILLIC" ? isvToCyr(syn.targetWord) : syn.targetWord}</span>
+                                                    {syn.targetMeaning && (
+                                                        <span className="text-[11px] text-green-500">— {syn.targetMeaning}</span>
+                                                    )}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {m.antonyms?.length > 0 && (
+                                    <div className="mt-2">
+                                        <span className="text-xs font-semibold tracking-wider text-red-600 uppercase">Антонимы</span>
+                                        <div className="flex flex-wrap gap-1.5 mt-1">
+                                            {m.antonyms.map((ant: any) => (
+                                                <Link
+                                                    key={ant.targetMeaningId}
+                                                    href={`/words/${ant.targetWordId}`}
+                                                    className="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1 rounded-lg text-sm text-red-800 hover:text-red-900 transition-colors"
+                                                >
+                                                    <span>{currentScript === "CYRILLIC" ? isvToCyr(ant.targetWord) : ant.targetWord}</span>
+                                                    {ant.targetMeaning && (
+                                                        <span className="text-[11px] text-red-500">— {ant.targetMeaning}</span>
+                                                    )}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     );

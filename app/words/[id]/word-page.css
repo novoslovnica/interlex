@@ -14,6 +14,7 @@
     box-sizing: border-box;
     flex: 1; /* Занимает всё доступное пространство по вертикали */
     display: flex;
+    min-height: 0;
     flex-direction: column;
     overflow: hidden; /* Важно: удерживает внутренний скролл */
     color: var(--text-color);
