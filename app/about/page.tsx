@@ -27,7 +27,7 @@ export default async function AboutPage() {
     }
 
     return (
-        <div className="min-h-screen py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
+        <div className="h-full flex flex-col py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
             <TechnicalAboutClient data={technicalData} />
         </div>
     )

@@ -237,7 +237,7 @@ function CandidatesClientInner() {
   }, [selectedIds, refetch])
 
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground min-h-[calc(100vh-120px)] overflow-y-auto">
+    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground flex-1 overflow-y-auto min-h-0">
       <div className="border-b pb-4">
         <h1 className="text-2xl font-bold tracking-tight">Кандидаты в лексикон</h1>
         <p className="text-xs text-muted-foreground">

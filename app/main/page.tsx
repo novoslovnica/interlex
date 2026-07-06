@@ -24,7 +24,7 @@ export default async function MainPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
+        <div className="h-full flex flex-col bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
             <MainClient stats={stats} />
             <DevStatusToast />
         </div>

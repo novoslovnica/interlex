@@ -34,7 +34,9 @@ export default function TextbookPage() {
     const [activeChapter, setActiveChapter] = useState('pronunciation');
 
     return (
-        <div className="flex h-screen bg-background text-foreground overflow-hidden text-sm">
+        <div
+            className="flex h-full bg-background text-foreground overflow-hidden text-sm"
+        >
 
             {/* САЙДБАР: НЕЗАВИСИМО СКРОЛЛИРУЕМОЕ МЕНЮ СЛЕВА */}
             <aside className="w-80 border-r bg-muted/20 flex flex-col h-full shrink-0 hidden md:flex">

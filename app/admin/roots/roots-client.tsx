@@ -135,7 +135,7 @@ function RootsClientInner() {
     t !== null ? MORPHEME_LABELS[t] ?? String(t) : "—"
 
   return (
-    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground min-h-[calc(100vh-120px)] overflow-y-auto">
+    <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground flex-1 overflow-y-auto min-h-0">
       <div className="border-b pb-4 flex justify-between items-end shrink-0">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Корни (морфемы)</h1>

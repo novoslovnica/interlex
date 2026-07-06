@@ -19,7 +19,7 @@ export default function TransliterationClient() {
   }, [fromScript, toScript, resultText])
 
   return (
-    <div className="min-h-screen py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
+    <div className="min-h-full py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
       <div className="max-w-5xl mx-auto px-4 md:px-6 space-y-6">
         <h1 className="text-2xl font-bold tracking-tight">Транслитератор</h1>
         <p className="text-sm text-muted-foreground">

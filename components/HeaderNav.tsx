@@ -12,6 +12,7 @@ interface HeaderNavProps {
 export default function HeaderNav({ session }: HeaderNavProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [toolsOpen, setToolsOpen] = useState(false)
+    const [userMenuOpen, setUserMenuOpen] = useState(false)
 
     const user = session?.user
 
@@ -29,65 +30,88 @@ export default function HeaderNav({ session }: HeaderNavProps) {
 
             <ul className={`header-nav ${isOpen ? 'open' : ''}`}>
 
-                {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
-                    <li><Link href="/admin" className="nav-link" onClick={() => setIsOpen(false)}>Админка</Link></li>
-                )}
                 <li><Link href="/lexicon" className="nav-link" onClick={() => setIsOpen(false)}>Лексикон</Link></li>
-                <li><Link href="/proto" className="nav-link" onClick={() => setIsOpen(false)}>Праслав.</Link></li>
                 <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>Перевод</Link></li>
-                <li><Link href="/library" className="nav-link" onClick={() => setIsOpen(false)}>Библиотека</Link></li>
-                <li><Link href="/textbook/ru" className="nav-link" onClick={() => setIsOpen(false)}>Учебник</Link></li>
-                <li className="nav-item-submenu">
-                    <button
-                        className={`nav-link submenu-toggle ${toolsOpen ? 'active' : ''}`}
-                        style={{
-                            fontSize: '15px',
-                            color: 'rgb(203, 213, 225)',
-                        }}
-                        onClick={() => setToolsOpen(!toolsOpen)}
-                    >
-                        Утилиты
-                        <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
-                    </button>
-                    <ul className={`submenu ${toolsOpen ? 'open' : ''}`}>
-                        <li>
-                            <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setToolsOpen(false) }}>
-                                Транслитератор
-                            </Link>
-                        </li>
-                    </ul>
-                </li>
-                <li><Link href="/about" className="nav-link" onClick={() => setIsOpen(false)}>О программе</Link></li>
 
                 <LanguageSwitcher />
                 {user ? (
-                    <>
-                        <li>
-                            <Link
-                                href="/settings"
-                                className="nav-link flex items-center gap-2 hover:opacity-80 transition-opacity"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {user.image && (
-                                    <img
-                                        src={user.image}
-                                        alt={user.name || "Аватар"}
-                                        className="w-5 h-5 rounded-full border border-gray-300 inline-block align-middle"
-                                    />
+                    <li className="nav-item-submenu" style={{ position: 'relative' }}>
+                        <button
+                            className="nav-link flex items-center gap-2 hover:opacity-80 transition-opacity submenu-toggle"
+                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                        >
+                            {user.image && (
+                                <img
+                                    src={user.image}
+                                    alt={user.name || "Аватар"}
+                                    className="w-5 h-5 rounded-full border border-gray-300 inline-block align-middle"
+                                />
+                            )}
+                            <span className="text-sm font-medium">{user.name}</span>
+                            <span className="submenu-arrow">{userMenuOpen ? '▲' : '▼'}</span>
+                        </button>
+                        <ul className={`submenu ${userMenuOpen ? 'open' : ''}`}
+                            style={{ right: 0, left: 'auto' }}
+                        >
+                            {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
+                                <li>
+                                    <Link href="/admin" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
+                                        Админка
+                                    </Link>
+                                </li>
+                            )}
+                            <li>
+                                <button
+                                    className="nav-link submenu-toggle"
+                                    style={{
+                                        fontSize: '15px',
+                                        color: 'rgb(203, 213, 225)',
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        border: 'none',
+                                        background: 'none',
+                                        font: 'inherit',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '8px 16px',
+                                        cursor: 'pointer',
+                                    }}
+                                    onClick={() => setToolsOpen(!toolsOpen)}
+                                >
+                                    Утилиты
+                                    <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
+                                </button>
+                                {toolsOpen && (
+                                    <ul className="submenu open" style={{ paddingLeft: 0 }}>
+                                        <li>
+                                            <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false); setToolsOpen(false) }}>
+                                                Транслитератор
+                                            </Link>
+                                        </li>
+                                    </ul>
                                 )}
-                                <span className="text-sm font-medium">{user.name}</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => signOut({ callbackUrl: "/" })}
-                                className="nav-link border-none bg-transparent cursor-pointer"
-                                style={{ font: 'inherit', color: 'inherit' }}
-                            >
-                                Выйти
-                            </button>
-                        </li>
-                    </>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => signOut({ callbackUrl: "/" })}
+                                    className="nav-link"
+                                    style={{
+                                        border: 'none',
+                                        background: 'none',
+                                        font: 'inherit',
+                                        color: 'inherit',
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        padding: '8px 16px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Выйти
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
                 ) : (
                     <li>
                         <button

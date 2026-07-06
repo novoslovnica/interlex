@@ -25,15 +25,17 @@ export default async function AdminDeduplicationPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-            <div className="space-y-4 px-4 md:px-6">
+        <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+            <div className="flex flex-col h-full overflow-hidden">
                 <AdminNav userRole={session.user.role} />
-                <div className="border-b pb-4">
+                <div className="px-4 md:px-6 pb-2 shrink-0">
                     <h1 className="text-2xl font-bold tracking-tight">Дедупликация базы (Реляционная структура)</h1>
                     <p className="text-xs text-muted-foreground">Каскадный перенос смыслов (`Meaning`), синонимов, антонимов и связей корней.</p>
                 </div>
 
-                <DeduplicationClient />
+                <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
+                    <DeduplicationClient />
+                </div>
             </div>
         </div>
     )

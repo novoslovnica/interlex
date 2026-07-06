@@ -139,7 +139,7 @@ export function AntonymsClient({ initialWords, onUpdateAntonyms }: AntonymsClien
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-[calc(100vh-220px)] overflow-hidden pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-full overflow-hidden pb-6">
 
             {/* ЛЕВАЯ КОЛОНКА */}
             <div className="lg:col-span-4 bg-transparent h-full overflow-y-auto space-y-3 pr-2 flex flex-col min-h-0">

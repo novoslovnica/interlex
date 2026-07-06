@@ -112,7 +112,7 @@ export default function DeduplicationPage() {
     };
 
     return (
-        <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground min-h-[calc(100vh-120px)] overflow-y-auto">
+        <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground flex-1 overflow-y-auto min-h-0">
             {/* Поисковая панель */}
             <div className="flex flex-col sm:flex-row items-center gap-4 bg-muted/20 p-4 rounded-xl border shrink-0">
                 <div className="w-full sm:flex-1 relative">

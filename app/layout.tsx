@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { auth } from "@/auth";
 import HeaderNav from "@/components/HeaderNav";
+import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
@@ -44,7 +45,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
           suppressHydrationWarning
       >
-          <body className="min-h-full flex flex-col">
+          <body className="min-h-screen overflow-hidden flex flex-col">
               <ThemeProvider>
                   <NextIntlClientProvider messages={messages}>
                       <header className="site-header">
@@ -55,7 +56,10 @@ export default async function RootLayout({
                               </nav>
                           </div>
                       </header>
-                      {children}
+                      <div className="flex-1 overflow-hidden">
+                          {children}
+                      </div>
+                      <Footer />
                   </NextIntlClientProvider>
               </ThemeProvider>
           </body>

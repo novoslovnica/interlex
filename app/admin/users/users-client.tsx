@@ -51,7 +51,7 @@ export function UsersManagementClient({
 
     return (
         // Добавлен px-4 (или md:px-6) для внешних отступов от краев экрана
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-[calc(100vh-200px)] overflow-hidden px-4 md:px-6 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start h-full overflow-hidden px-4 md:px-6 pb-6">
 
             {/* ЛЕВАЯ КОЛОНКА: Прозрачный список пользователей */}
             <div className="lg:col-span-5 bg-transparent h-full overflow-y-auto pr-2 space-y-1">
