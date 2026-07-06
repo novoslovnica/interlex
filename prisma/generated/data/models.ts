@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Word'
+export type * from './models/Candidate'
 export type * from './models/Meaning'
 export type * from './models/Root'
 export type * from './models/RootWord'

@@ -135,6 +135,8 @@ export const UserSettingsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   script: 'script',
+  theme: 'theme',
+  language: 'language',
   updatedAt: 'updatedAt'
 } as const
 

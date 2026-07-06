@@ -15,6 +15,7 @@ export async function GET(request: Request) {
             select: {
                 id: true,
                 value: true,
+                isv: true,
             },
             take: 20,
         })

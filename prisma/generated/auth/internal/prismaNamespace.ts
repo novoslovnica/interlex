@@ -952,6 +952,8 @@ export const UserSettingsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   script: 'script',
+  theme: 'theme',
+  language: 'language',
   updatedAt: 'updatedAt'
 } as const
 
@@ -1012,6 +1014,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'ScriptPreference'
  */
 export type EnumScriptPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ScriptPreference'>
+    
+
+
+/**
+ * Reference to a field of type 'ThemePreference'
+ */
+export type EnumThemePreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ThemePreference'>
     
 
 

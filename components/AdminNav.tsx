@@ -6,6 +6,8 @@ const navItems = [
     { href: "/admin", label: "Переводы", roles: ["ADMIN", "MODERATOR"] },
     { href: "/admin/synonyms", label: "Синонимы", roles: ["ADMIN", "MODERATOR"] },
     { href: "/admin/antonyms", label: "Антонимы", roles: ["ADMIN", "MODERATOR"] },
+    { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"] },
+    { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"] },
     { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"] },
     { href: "/admin/users", label: "Пользователи", roles: ["ADMIN"] },
 ]

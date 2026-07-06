@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type Word = Prisma.WordModel
 /**
+ * Model Candidate
+ * 
+ */
+export type Candidate = Prisma.CandidateModel
+/**
  * Model Meaning
  * 
  */

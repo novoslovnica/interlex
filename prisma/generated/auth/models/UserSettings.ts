@@ -28,6 +28,8 @@ export type UserSettingsMinAggregateOutputType = {
   id: string | null
   userId: string | null
   script: $Enums.ScriptPreference | null
+  theme: $Enums.ThemePreference | null
+  language: string | null
   updatedAt: Date | null
 }
 
@@ -35,6 +37,8 @@ export type UserSettingsMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   script: $Enums.ScriptPreference | null
+  theme: $Enums.ThemePreference | null
+  language: string | null
   updatedAt: Date | null
 }
 
@@ -42,6 +46,8 @@ export type UserSettingsCountAggregateOutputType = {
   id: number
   userId: number
   script: number
+  theme: number
+  language: number
   updatedAt: number
   _all: number
 }
@@ -51,6 +57,8 @@ export type UserSettingsMinAggregateInputType = {
   id?: true
   userId?: true
   script?: true
+  theme?: true
+  language?: true
   updatedAt?: true
 }
 
@@ -58,6 +66,8 @@ export type UserSettingsMaxAggregateInputType = {
   id?: true
   userId?: true
   script?: true
+  theme?: true
+  language?: true
   updatedAt?: true
 }
 
@@ -65,6 +75,8 @@ export type UserSettingsCountAggregateInputType = {
   id?: true
   userId?: true
   script?: true
+  theme?: true
+  language?: true
   updatedAt?: true
   _all?: true
 }
@@ -145,6 +157,8 @@ export type UserSettingsGroupByOutputType = {
   id: string
   userId: string
   script: $Enums.ScriptPreference
+  theme: $Enums.ThemePreference
+  language: string
   updatedAt: Date
   _count: UserSettingsCountAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
@@ -173,6 +187,8 @@ export type UserSettingsWhereInput = {
   id?: Prisma.StringFilter<"UserSettings"> | string
   userId?: Prisma.StringFilter<"UserSettings"> | string
   script?: Prisma.EnumScriptPreferenceFilter<"UserSettings"> | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFilter<"UserSettings"> | $Enums.ThemePreference
+  language?: Prisma.StringFilter<"UserSettings"> | string
   updatedAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -181,6 +197,8 @@ export type UserSettingsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   script?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -192,6 +210,8 @@ export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserSettingsWhereInput[]
   NOT?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
   script?: Prisma.EnumScriptPreferenceFilter<"UserSettings"> | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFilter<"UserSettings"> | $Enums.ThemePreference
+  language?: Prisma.StringFilter<"UserSettings"> | string
   updatedAt?: Prisma.DateTimeFilter<"UserSettings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
@@ -200,6 +220,8 @@ export type UserSettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   script?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
   _max?: Prisma.UserSettingsMaxOrderByAggregateInput
@@ -213,12 +235,16 @@ export type UserSettingsScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   userId?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   script?: Prisma.EnumScriptPreferenceWithAggregatesFilter<"UserSettings"> | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceWithAggregatesFilter<"UserSettings"> | $Enums.ThemePreference
+  language?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserSettings"> | Date | string
 }
 
 export type UserSettingsCreateInput = {
   id?: string
   script?: $Enums.ScriptPreference
+  theme?: $Enums.ThemePreference
+  language?: string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSettingsInput
 }
@@ -227,12 +253,16 @@ export type UserSettingsUncheckedCreateInput = {
   id?: string
   userId: string
   script?: $Enums.ScriptPreference
+  theme?: $Enums.ThemePreference
+  language?: string
   updatedAt?: Date | string
 }
 
 export type UserSettingsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSettingsNestedInput
 }
@@ -241,6 +271,8 @@ export type UserSettingsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -248,12 +280,16 @@ export type UserSettingsCreateManyInput = {
   id?: string
   userId: string
   script?: $Enums.ScriptPreference
+  theme?: $Enums.ThemePreference
+  language?: string
   updatedAt?: Date | string
 }
 
 export type UserSettingsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -261,6 +297,8 @@ export type UserSettingsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -273,6 +311,8 @@ export type UserSettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   script?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -280,6 +320,8 @@ export type UserSettingsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   script?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -287,6 +329,8 @@ export type UserSettingsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   script?: Prisma.SortOrder
+  theme?: Prisma.SortOrder
+  language?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -326,15 +370,23 @@ export type EnumScriptPreferenceFieldUpdateOperationsInput = {
   set?: $Enums.ScriptPreference
 }
 
+export type EnumThemePreferenceFieldUpdateOperationsInput = {
+  set?: $Enums.ThemePreference
+}
+
 export type UserSettingsCreateWithoutUserInput = {
   id?: string
   script?: $Enums.ScriptPreference
+  theme?: $Enums.ThemePreference
+  language?: string
   updatedAt?: Date | string
 }
 
 export type UserSettingsUncheckedCreateWithoutUserInput = {
   id?: string
   script?: $Enums.ScriptPreference
+  theme?: $Enums.ThemePreference
+  language?: string
   updatedAt?: Date | string
 }
 
@@ -357,12 +409,16 @@ export type UserSettingsUpdateToOneWithWhereWithoutUserInput = {
 export type UserSettingsUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserSettingsUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   script?: Prisma.EnumScriptPreferenceFieldUpdateOperationsInput | $Enums.ScriptPreference
+  theme?: Prisma.EnumThemePreferenceFieldUpdateOperationsInput | $Enums.ThemePreference
+  language?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -372,6 +428,8 @@ export type UserSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   userId?: boolean
   script?: boolean
+  theme?: boolean
+  language?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -380,6 +438,8 @@ export type UserSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   script?: boolean
+  theme?: boolean
+  language?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -388,6 +448,8 @@ export type UserSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   script?: boolean
+  theme?: boolean
+  language?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -396,10 +458,12 @@ export type UserSettingsSelectScalar = {
   id?: boolean
   userId?: boolean
   script?: boolean
+  theme?: boolean
+  language?: boolean
   updatedAt?: boolean
 }
 
-export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "script" | "updatedAt", ExtArgs["result"]["userSettings"]>
+export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "script" | "theme" | "language" | "updatedAt", ExtArgs["result"]["userSettings"]>
 export type UserSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -419,6 +483,8 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     userId: string
     script: $Enums.ScriptPreference
+    theme: $Enums.ThemePreference
+    language: string
     updatedAt: Date
   }, ExtArgs["result"]["userSettings"]>
   composites: {}
@@ -847,6 +913,8 @@ export interface UserSettingsFieldRefs {
   readonly id: Prisma.FieldRef<"UserSettings", 'String'>
   readonly userId: Prisma.FieldRef<"UserSettings", 'String'>
   readonly script: Prisma.FieldRef<"UserSettings", 'ScriptPreference'>
+  readonly theme: Prisma.FieldRef<"UserSettings", 'ThemePreference'>
+  readonly language: Prisma.FieldRef<"UserSettings", 'String'>
   readonly updatedAt: Prisma.FieldRef<"UserSettings", 'DateTime'>
 }
     

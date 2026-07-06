@@ -182,6 +182,13 @@ export type EnumScriptPreferenceFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel> | $Enums.ScriptPreference
 }
 
+export type EnumThemePreferenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ThemePreference | Prisma.EnumThemePreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ThemePreference[]
+  notIn?: $Enums.ThemePreference[]
+  not?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel> | $Enums.ThemePreference
+}
+
 export type EnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
   in?: $Enums.ScriptPreference[]
@@ -190,6 +197,16 @@ export type EnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
+}
+
+export type EnumThemePreferenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ThemePreference | Prisma.EnumThemePreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ThemePreference[]
+  notIn?: $Enums.ThemePreference[]
+  not?: Prisma.NestedEnumThemePreferenceWithAggregatesFilter<$PrismaModel> | $Enums.ThemePreference
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -377,6 +394,13 @@ export type NestedEnumScriptPreferenceFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel> | $Enums.ScriptPreference
 }
 
+export type NestedEnumThemePreferenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.ThemePreference | Prisma.EnumThemePreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ThemePreference[]
+  notIn?: $Enums.ThemePreference[]
+  not?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel> | $Enums.ThemePreference
+}
+
 export type NestedEnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ScriptPreference | Prisma.EnumScriptPreferenceFieldRefInput<$PrismaModel>
   in?: $Enums.ScriptPreference[]
@@ -385,6 +409,16 @@ export type NestedEnumScriptPreferenceWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumScriptPreferenceFilter<$PrismaModel>
+}
+
+export type NestedEnumThemePreferenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ThemePreference | Prisma.EnumThemePreferenceFieldRefInput<$PrismaModel>
+  in?: $Enums.ThemePreference[]
+  notIn?: $Enums.ThemePreference[]
+  not?: Prisma.NestedEnumThemePreferenceWithAggregatesFilter<$PrismaModel> | $Enums.ThemePreference
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumThemePreferenceFilter<$PrismaModel>
 }
 
 

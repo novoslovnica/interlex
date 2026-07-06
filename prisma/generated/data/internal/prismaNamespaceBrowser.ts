@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Word: 'Word',
+  Candidate: 'Candidate',
   Meaning: 'Meaning',
   Root: 'Root',
   RootWord: 'RootWord',
@@ -131,6 +132,49 @@ export const WordScalarFieldEnum = {
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
+
+
+export const CandidateScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  isv: 'isv',
+  nsl: 'nsl',
+  transcription: 'transcription',
+  field: 'field',
+  type: 'type',
+  pos: 'pos',
+  aspect: 'aspect',
+  transitivity: 'transitivity',
+  animacy: 'animacy',
+  degree: 'degree',
+  pronType: 'pronType',
+  numType: 'numType',
+  frequency: 'frequency',
+  intelligibility: 'intelligibility',
+  addition: 'addition',
+  sameInLanguages: 'sameInLanguages',
+  etymology: 'etymology',
+  proto: 'proto',
+  paradigm: 'paradigm',
+  protoStemClass: 'protoStemClass',
+  stemExtension: 'stemExtension',
+  genesis: 'genesis',
+  base: 'base',
+  gender: 'gender',
+  declension: 'declension',
+  conjugation: 'conjugation',
+  accentSyllable: 'accentSyllable',
+  alternationType: 'alternationType',
+  fleetingVowelAt: 'fleetingVowelAt',
+  hasAnomalies: 'hasAnomalies',
+  actionHistory: 'actionHistory',
+  promotedAt: 'promotedAt',
+  promotedToWordId: 'promotedToWordId'
+} as const
+
+export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
 
 
 export const MeaningScalarFieldEnum = {

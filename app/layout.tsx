@@ -4,10 +4,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import React from "react";
-import { auth } from "@/auth"; // Импортируем серверную авторизацию
+import { auth } from "@/auth";
 import HeaderNav from "@/components/HeaderNav";
-import {notFound} from "next/navigation"; // Импортируем новый клиентский компонент
-import {NextIntlClientProvider, useTranslations} from "next-intl";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 
 const geistSans = Geist({
@@ -33,7 +33,6 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-  // Получаем сессию на сервере без задержек для интерфейса
   const session = await auth();
 
     const locale = await getLocale();
@@ -43,21 +42,23 @@ export default async function RootLayout({
       <html
           lang={locale}
           className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+          suppressHydrationWarning
       >
-          <NextIntlClientProvider messages={messages}>
-              <body className="min-h-full flex flex-col">
-                  <header className="site-header">
-                      <div className="header-content">
-                          <h1><Link href="/">Междуславянский лексикон</Link></h1>
-                          <nav>
-                              {/* Передаем полученную сессию в изолированный список навигации */}
-                              <HeaderNav session={session} />
-                          </nav>
-                      </div>
-                  </header>
-                  {children}
-              </body>
-          </NextIntlClientProvider>
+          <body className="min-h-full flex flex-col">
+              <ThemeProvider>
+                  <NextIntlClientProvider messages={messages}>
+                      <header className="site-header">
+                          <div className="header-content">
+                              <h1><Link href="/">Междуславянский лексикон</Link></h1>
+                              <nav>
+                                  <HeaderNav session={session} />
+                              </nav>
+                          </div>
+                      </header>
+                      {children}
+                  </NextIntlClientProvider>
+              </ThemeProvider>
+          </body>
       </html>
   );
 }

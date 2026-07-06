@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Word: 'Word',
+  Candidate: 'Candidate',
   Meaning: 'Meaning',
   Root: 'Root',
   RootWord: 'RootWord',
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "word" | "meaning" | "root" | "rootWord" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly"
+    modelProps: "word" | "candidate" | "meaning" | "root" | "rootWord" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -498,6 +499,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.WordCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.WordCountAggregateOutputType> | number
+        }
+      }
+    }
+    Candidate: {
+      payload: Prisma.$CandidatePayload<ExtArgs>
+      fields: Prisma.CandidateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CandidateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CandidateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        findFirst: {
+          args: Prisma.CandidateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CandidateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        findMany: {
+          args: Prisma.CandidateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        create: {
+          args: Prisma.CandidateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        createMany: {
+          args: Prisma.CandidateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CandidateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        delete: {
+          args: Prisma.CandidateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        update: {
+          args: Prisma.CandidateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CandidateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CandidateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CandidateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CandidateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        aggregate: {
+          args: Prisma.CandidateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCandidate>
+        }
+        groupBy: {
+          args: Prisma.CandidateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CandidateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateCountAggregateOutputType> | number
         }
       }
     }
@@ -2282,6 +2357,49 @@ export const WordScalarFieldEnum = {
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
 
 
+export const CandidateScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  isv: 'isv',
+  nsl: 'nsl',
+  transcription: 'transcription',
+  field: 'field',
+  type: 'type',
+  pos: 'pos',
+  aspect: 'aspect',
+  transitivity: 'transitivity',
+  animacy: 'animacy',
+  degree: 'degree',
+  pronType: 'pronType',
+  numType: 'numType',
+  frequency: 'frequency',
+  intelligibility: 'intelligibility',
+  addition: 'addition',
+  sameInLanguages: 'sameInLanguages',
+  etymology: 'etymology',
+  proto: 'proto',
+  paradigm: 'paradigm',
+  protoStemClass: 'protoStemClass',
+  stemExtension: 'stemExtension',
+  genesis: 'genesis',
+  base: 'base',
+  gender: 'gender',
+  declension: 'declension',
+  conjugation: 'conjugation',
+  accentSyllable: 'accentSyllable',
+  alternationType: 'alternationType',
+  fleetingVowelAt: 'fleetingVowelAt',
+  hasAnomalies: 'hasAnomalies',
+  actionHistory: 'actionHistory',
+  promotedAt: 'promotedAt',
+  promotedToWordId: 'promotedToWordId'
+} as const
+
+export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
+
+
 export const MeaningScalarFieldEnum = {
   id: 'id',
   wordId: 'wordId',
@@ -2743,6 +2861,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   word?: Prisma.WordOmit
+  candidate?: Prisma.CandidateOmit
   meaning?: Prisma.MeaningOmit
   root?: Prisma.RootOmit
   rootWord?: Prisma.RootWordOmit

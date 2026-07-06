@@ -61,9 +61,53 @@ model Word {
   actionHistory   String?
 
   @@map("words")
-  @@index([slug])
+@@index([slug])
 }
 
+model Candidate {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  value           String?
+  isv             String?
+  nsl             String?
+  transcription   String?
+  field           String?
+  type            String?
+  pos             String?
+  aspect          String?
+  transitivity    String?
+  animacy         String?
+  degree          String?
+  pronType        String?
+  numType         String?
+  frequency       String?
+  intelligibility String?
+  addition        String?
+  sameInLanguages String?
+  etymology       String?
+  proto           String?
+  paradigm        String?
+  protoStemClass  String?
+  stemExtension   String?
+  genesis         String?
+  base            String?
+  gender          String?
+  declension      Int?
+  conjugation     Int?
+  accentSyllable  Int?
+  alternationType String?
+  fleetingVowelAt Int?
+  hasAnomalies    Boolean          @default(false)
+  actionHistory   String?
+  promotedAt      DateTime?
+  promotedToWordId Int?
+
+  @@map("candidates")
+  @@index([value])
+  @@index([isv])
+  @@index([pos])
+}
 
 model Word_text {
   id      Int    @id
