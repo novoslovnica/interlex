@@ -19,7 +19,7 @@ const RootsPage = async () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <AdminNav userRole={session.user.role || ""} />
       <RootsClient />
     </div>

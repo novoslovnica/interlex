@@ -22,7 +22,7 @@ const AdminPage = async () => {
     }
 
     return (
-        <div>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <div>
                 <AdminNav userRole={session.user.role || ""} />
                 <Table />

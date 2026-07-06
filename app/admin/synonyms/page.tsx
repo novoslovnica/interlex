@@ -79,19 +79,21 @@ export default async function AdminSynonymsPage() {
     }
 
     return (
-        <div className="space-y-4 px-4 md:px-6">
-            <AdminNav userRole={session.user.role} />
-            <div>
-                <h1 className="text-2xl font-bold">Управление синонимами</h1>
-                <p className="text-muted-foreground text-sm">
-                    Найдите слово через поиск или выберите из списка слева, чтобы привязать к нему синонимы с нуля.
-                </p>
-            </div>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+            <div className="space-y-4 px-4 md:px-6">
+                <AdminNav userRole={session.user.role} />
+                <div>
+                    <h1 className="text-2xl font-bold">Управление синонимами</h1>
+                    <p className="text-muted-foreground text-sm">
+                        Найдите слово через поиск или выберите из списка слева, чтобы привязать к нему синонимы с нуля.
+                    </p>
+                </div>
 
-            <SynonymsClient
-                initialWords={initialWords}
-                onUpdateSynonyms={updateSynonyms}
-            />
+                <SynonymsClient
+                    initialWords={initialWords}
+                    onUpdateSynonyms={updateSynonyms}
+                />
+            </div>
         </div>
     )
 }

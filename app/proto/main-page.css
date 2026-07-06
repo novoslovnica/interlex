@@ -91,3 +91,31 @@
     font-size: 18px;
     margin-top: 40px;
 }
+
+.dark .search-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark .search-box {
+    background-color: #1e293b;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+.dark .card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark .card-title {
+    color: #f1f5f9;
+}
+
+.dark .card-desc {
+    color: #94a3b8;
+}
+
+.dark .no-results {
+    color: #64748b;
+}

@@ -77,21 +77,23 @@ export default async function AdminUsersPage() {
     }
 
     return (
-        <div className="space-y-4">
-            <AdminNav userRole={session.user.role} />
-            <div className="px-4 md:px-6">
-                <h1 className="text-2xl font-bold">Управление правами</h1>
-                <p className="text-muted-foreground text-sm">
-                    Выберите пользователя из списка слева, чтобы настроить его роль и индивидуальные фичи.
-                </p>
-            </div>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+            <div className="space-y-4">
+                <AdminNav userRole={session.user.role} />
+                <div className="px-4 md:px-6">
+                    <h1 className="text-2xl font-bold">Управление правами</h1>
+                    <p className="text-muted-foreground text-sm">
+                        Выберите пользователя из списка слева, чтобы настроить его роль и индивидуальные фичи.
+                    </p>
+                </div>
 
-            <UsersManagementClient
-                initialUsers={users}
-                featureCategories={FEATURE_CATEGORIES}
-                onTogglePermission={toggleFeaturePermission}
-                onUpdateRole={updateUserRole}
-            />
+                <UsersManagementClient
+                    initialUsers={users}
+                    featureCategories={FEATURE_CATEGORIES}
+                    onTogglePermission={toggleFeaturePermission}
+                    onUpdateRole={updateUserRole}
+                />
+            </div>
         </div>
     )
 }

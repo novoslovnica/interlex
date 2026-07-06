@@ -262,10 +262,10 @@ export default function InfiniteEditableTable() {
                         placeholder="Поиск по всем языкам..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 pr-10"
+                        className="w-full border border-border rounded-lg px-4 py-2 text-sm bg-background text-foreground outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 pr-10"
                     />
                     {isFetching && !isFetchingNextPage && (
-                        <div className="absolute right-3 top-2.5 text-xs text-gray-400 animate-pulse">
+                        <div className="absolute right-3 top-2.5 text-xs text-muted-foreground animate-pulse">
                             🔍
                         </div>
                     )}
@@ -291,13 +291,13 @@ export default function InfiniteEditableTable() {
             </div>
 
 
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2">
-                <span className="text-xs font-semibold text-gray-600 block">Отображаемые языки (колонки):</span>
+            <div className="bg-muted/20 p-4 rounded-xl border space-y-2">
+                <span className="text-xs font-semibold text-muted-foreground block">Отображаемые языки (колонки):</span>
 
                 <div className="flex flex-wrap gap-3">
                     <button
                         onClick={() => table.toggleAllColumnsVisible(true)}
-                        className="text-xs bg-white border border-gray-300 rounded px-2 py-1 hover:bg-gray-100"
+                        className="text-xs bg-background border border-border rounded px-2 py-1 hover:bg-muted/50"
                     >
                         Показать все
                     </button>
@@ -308,13 +308,13 @@ export default function InfiniteEditableTable() {
                         return (
                             <label
                                 key={column.id}
-                                className="flex items-center gap-1.5 text-sm bg-white border border-gray-200 rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors"
+                                className="flex items-center gap-1.5 text-sm bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors"
                             >
                                 <input
                                     type="checkbox"
                                     checked={column.getIsVisible()}
                                     onChange={column.getToggleVisibilityHandler()}
-                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                    className="rounded border text-blue-600 focus:ring-blue-500"
                                 />
                                 <span>{column.columnDef.header as string}</span>
                             </label>
@@ -325,11 +325,11 @@ export default function InfiniteEditableTable() {
 
             <div
                 ref={tableContainerRef}
-                className="overflow-auto border border-gray-200 rounded-md max-h-[500px] w-full relative bg-white"
+                className="overflow-auto border border-border rounded-xl max-h-[500px] w-full relative bg-background shadow-sm"
             >
-                <table className="min-w-full border-collapse text-left text-sm text-gray-500 table-fixed">
+                <table className="min-w-full border-collapse text-left text-sm text-muted-foreground table-fixed">
 
-                    <thead className="sticky top-0 bg-gray-100 z-10 font-medium text-gray-700 border-b border-gray-200">
+                    <thead className="sticky top-0 bg-muted z-10 font-medium text-foreground border-b">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id} className="flex w-full">
                             {headerGroup.headers.map((header) => (
@@ -338,7 +338,7 @@ export default function InfiniteEditableTable() {
                                     className="p-3 font-semibold truncate"
                                     style={{
                                         width: header.getSize(),
-                                        flex: `0 0 ${header.getSize()}px` // Запрещает флекс-элементу сжиматься
+                                        flex: `0 0 ${header.getSize()}px`
                                     }}
                                 >
                                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -355,13 +355,13 @@ export default function InfiniteEditableTable() {
                     >
                     {isFetching && !isFetchingNextPage && flatData.length === 0 ? (
                         <tr>
-                            <td colSpan={columns.length} className="p-8 text-center text-gray-500">
+                            <td colSpan={columns.length} className="p-8 text-center text-muted-foreground">
                                 <span className="animate-pulse">Ищем совпадения в базе данных...</span>
                             </td>
                         </tr>
                     ) : flatData.length === 0 ? (
                         <tr>
-                            <td colSpan={columns.length} className="p-4 text-center text-gray-500">
+                            <td colSpan={columns.length} className="p-4 text-center text-muted-foreground">
                                 Ничего не найдено
                             </td>
                         </tr>
@@ -372,7 +372,7 @@ export default function InfiniteEditableTable() {
                         return (
                             <tr
                                 key={row.id}
-                                className="absolute left-0 w-full hover:bg-gray-50 border-b border-gray-100 flex items-center"
+                                className="absolute left-0 w-full hover:bg-muted/10 border-b flex items-center"
                                 style={{
                                     height: `${virtualRow.size}px`,
                                     transform: `translateY(${virtualRow.start}px)`,
@@ -399,7 +399,7 @@ export default function InfiniteEditableTable() {
                 </table>
             </div>
 
-            {isFetching && <div className="text-center text-sm text-gray-500">Загрузка...</div>}
+            {isFetching && <div className="text-center text-sm text-muted-foreground">Загрузка...</div>}
         </div>
     );
 }
