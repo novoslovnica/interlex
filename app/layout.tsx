@@ -45,7 +45,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
           suppressHydrationWarning
       >
-          <body className="min-h-screen overflow-hidden flex flex-col">
+          <body className="h-screen overflow-hidden flex flex-col">
               <ThemeProvider>
                   <NextIntlClientProvider messages={messages}>
                       <header className="site-header">
@@ -56,7 +56,7 @@ export default async function RootLayout({
                               </nav>
                           </div>
                       </header>
-                      <div className="flex-1 overflow-hidden">
+                      <div className="flex-1 min-h-0">
                           {children}
                       </div>
                       <Footer />
