@@ -27,3 +27,5 @@ rm root-candidates.json
 # npx tsx ./scripts/make-json-for-python.ts
 # bash ./scripts/call-python-script.sh
 npx tsx ./scripts/db/upload-synonyms-antonyms.ts
+
+npx tsx ./scripts/db/update-generated-meanings.ts

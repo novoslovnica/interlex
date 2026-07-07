@@ -32,6 +32,38 @@ export default function HeaderNav({ session }: HeaderNavProps) {
 
                 <li><Link href="/lexicon" className="nav-link" onClick={() => setIsOpen(false)}>Лексикон</Link></li>
                 <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>Перевод</Link></li>
+                <li style={{ position: "relative" }}>
+                    <button
+                        className="nav-link submenu-toggle"
+                        style={{
+                            fontSize: '15px',
+                            color: 'rgb(203, 213, 225)',
+                            width: '100%',
+                            textAlign: 'left',
+                            border: 'none',
+                            background: 'none',
+                            font: 'inherit',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '8px 16px',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => setToolsOpen(!toolsOpen)}
+                    >
+                        Утилиты
+                        <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
+                    </button>
+                    {toolsOpen && (
+                        <ul className="submenu open" style={{ paddingLeft: 0 }}>
+                            <li>
+                                <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false); setToolsOpen(false) }}>
+                                    Транслитератор
+                                </Link>
+                            </li>
+                        </ul>
+                    )}
+                </li>
 
                 <LanguageSwitcher />
                 {user ? (
@@ -65,38 +97,6 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                     </Link>
                                 </li>
                             )}
-                            <li>
-                                <button
-                                    className="nav-link submenu-toggle"
-                                    style={{
-                                        fontSize: '15px',
-                                        color: 'rgb(203, 213, 225)',
-                                        width: '100%',
-                                        textAlign: 'left',
-                                        border: 'none',
-                                        background: 'none',
-                                        font: 'inherit',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '8px 16px',
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={() => setToolsOpen(!toolsOpen)}
-                                >
-                                    Утилиты
-                                    <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
-                                </button>
-                                {toolsOpen && (
-                                    <ul className="submenu open" style={{ paddingLeft: 0 }}>
-                                        <li>
-                                            <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false); setToolsOpen(false) }}>
-                                                Транслитератор
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                )}
-                            </li>
                             <li>
                                 <button
                                     onClick={() => signOut({ callbackUrl: "/" })}
