@@ -75,7 +75,8 @@ export const ModelName = {
   Nl: 'Nl',
   Eo: 'Eo',
   BaseHomonym: 'BaseHomonym',
-  InflectionAnomaly: 'InflectionAnomaly'
+  InflectionAnomaly: 'InflectionAnomaly',
+  ProtoSlavicWord: 'ProtoSlavicWord'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -477,6 +478,16 @@ export const InflectionAnomalyScalarFieldEnum = {
 } as const
 
 export type InflectionAnomalyScalarFieldEnum = (typeof InflectionAnomalyScalarFieldEnum)[keyof typeof InflectionAnomalyScalarFieldEnum]
+
+
+export const ProtoSlavicWordScalarFieldEnum = {
+  id: 'id',
+  lemma: 'lemma',
+  body: 'body',
+  sourceUrl: 'sourceUrl'
+} as const
+
+export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
 
 
 export const SortOrder = {

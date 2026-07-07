@@ -515,3 +515,13 @@ model InflectionAnomaly {
   @@index([lexemeId])
   @@index([grammeme])
 }
+
+model ProtoSlavicWord {
+  id        Int    @id @default(autoincrement())
+  lemma     String
+  body      String @default("")
+  sourceUrl String @default("") @map("source_url")
+
+  @@map("proto_slavic_words")
+  @@index([lemma])
+}

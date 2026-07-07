@@ -60,6 +60,10 @@ export default function InfiniteEditableTable() {
         sk: false,
         sl: false,
         de: false,
+        uk: false,
+        be: false,
+        cu: false,
+        nl: false,
         eo: false,
     });
 
@@ -174,9 +178,63 @@ export default function InfiniteEditableTable() {
                 cell: EditableLanguageCell,
             },
             {
-                id: "pl",
-                accessorKey: 'pl',
-                header: 'Польский',
+                id: "cs",
+                accessorKey: 'cs',
+                header: 'Чешский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "sk",
+                accessorKey: 'sk',
+                header: 'Словацкий',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "sl",
+                accessorKey: 'sl',
+                header: 'Словенский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "hr",
+                accessorKey: 'hr',
+                header: 'Хорватский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "de",
+                accessorKey: 'de',
+                header: 'Немецкий',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "uk",
+                accessorKey: 'uk',
+                header: 'Украинский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "be",
+                accessorKey: 'be',
+                header: 'Белорусский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "cu",
+                accessorKey: 'cu',
+                header: 'Церковнославянский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "nl",
+                accessorKey: 'nl',
+                header: 'Нидерландский',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "eo",
+                accessorKey: 'eo',
+                header: 'Эсперанто',
                 cell: EditableLanguageCell,
             },
         ],
@@ -211,8 +269,9 @@ export default function InfiniteEditableTable() {
                     };
                 });
                 if (["nsl", "isv", "value"].includes(columnId)) {
-                    fetch(`/api/lexicon/${rowData?.id}/updateField`, {
+                    fetch(`/api/lexicon/${targetRow.id}/updateField`, {
                         method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             field: columnId,
                             newValue: value,
@@ -220,6 +279,23 @@ export default function InfiniteEditableTable() {
                     })
                 }
                 // Здесь можно вызвать mutation для отправки на сервер (например, useMutation / fetch PATCH)
+            },
+            updateCellData: (rowIndex: number, columnId: string, value: unknown) => {
+                const targetRow = flatData[rowIndex];
+                if (!targetRow) return;
+
+                queryClient.setQueryData(queryKey, (old: any) => {
+                    if (!old) return old;
+                    return {
+                        ...old,
+                        pages: old.pages.map((page: any) => ({
+                            ...page,
+                            data: page.data.map((row: any) =>
+                                row.id === targetRow.id ? { ...row, [columnId]: value } : row
+                            )
+                        }))
+                    };
+                });
             },
         },
     });

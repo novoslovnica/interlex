@@ -408,7 +408,8 @@ export const ModelName = {
   Nl: 'Nl',
   Eo: 'Eo',
   BaseHomonym: 'BaseHomonym',
-  InflectionAnomaly: 'InflectionAnomaly'
+  InflectionAnomaly: 'InflectionAnomaly',
+  ProtoSlavicWord: 'ProtoSlavicWord'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2278,6 +2279,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProtoSlavicWord: {
+      payload: Prisma.$ProtoSlavicWordPayload<ExtArgs>
+      fields: Prisma.ProtoSlavicWordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProtoSlavicWordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProtoSlavicWordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        findFirst: {
+          args: Prisma.ProtoSlavicWordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProtoSlavicWordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        findMany: {
+          args: Prisma.ProtoSlavicWordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>[]
+        }
+        create: {
+          args: Prisma.ProtoSlavicWordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        createMany: {
+          args: Prisma.ProtoSlavicWordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProtoSlavicWordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>[]
+        }
+        delete: {
+          args: Prisma.ProtoSlavicWordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        update: {
+          args: Prisma.ProtoSlavicWordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProtoSlavicWordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProtoSlavicWordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProtoSlavicWordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProtoSlavicWordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProtoSlavicWordPayload>
+        }
+        aggregate: {
+          args: Prisma.ProtoSlavicWordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProtoSlavicWord>
+        }
+        groupBy: {
+          args: Prisma.ProtoSlavicWordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProtoSlavicWordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProtoSlavicWordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProtoSlavicWordCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2702,6 +2777,16 @@ export const InflectionAnomalyScalarFieldEnum = {
 export type InflectionAnomalyScalarFieldEnum = (typeof InflectionAnomalyScalarFieldEnum)[keyof typeof InflectionAnomalyScalarFieldEnum]
 
 
+export const ProtoSlavicWordScalarFieldEnum = {
+  id: 'id',
+  lemma: 'lemma',
+  body: 'body',
+  sourceUrl: 'sourceUrl'
+} as const
+
+export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2893,6 +2978,7 @@ export type GlobalOmitConfig = {
   eo?: Prisma.EoOmit
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
+  protoSlavicWord?: Prisma.ProtoSlavicWordOmit
 }
 
 /* Types for Logging */

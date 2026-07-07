@@ -160,17 +160,20 @@ const Word = ({ item, currentScript }: any) => {
     const etymologyLinks = [
         ...(item.proto ? [
             {
-                label: "Реконструкция",
-                url: `https://en.wiktionary.org/wiki/Reconstruction:Proto-Slavic/${item.proto}`,
+                label: "Этимология",
+                url: `/proto/word/${item.proto}`,
+                target: "",
             },
             {
-                label: "Этимология",
-                url: `/proto/${item.proto}`
-            }
+                label: "Реконструкция (Википедия)",
+                url: `https://en.wiktionary.org/wiki/Reconstruction:Proto-Slavic/${item.proto}`,
+                target: "_blank",
+            },
         ] : [
             {
                 label: "Этимология",
                 url: item.etymology,
+                target: "_blank",
             },
         ])
     ];
@@ -528,7 +531,7 @@ const Word = ({ item, currentScript }: any) => {
                             <li key={idx}>
                                 <a
                                     href={link.url}
-                                    target="_blank"
+                                    target={link.target}
                                     rel="noopener noreferrer"
                                     className="text-blue-600 hover:underline inline-flex items-center gap-1"
                                 >

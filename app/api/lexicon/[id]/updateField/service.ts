@@ -62,8 +62,8 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
     }
 }
 
-export const updateField = async (wordId: string, field: string, newValue: string) => {
-    console.log(wordId, field, newValue);
+export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number) => {
+    console.log(wordId, field, newValue, veryfied);
     const session = await auth()
     const author = session?.user?.email || "unknown"
 
@@ -105,28 +105,34 @@ export const updateField = async (wordId: string, field: string, newValue: strin
 
         return;
     }
-    if (["en", "ru"].includes(field)) {
-        const entityOne = await modelsMap[field].findFirst({
+
+    const langModel = modelsMap[field];
+    if (langModel) {
+        const entityOne = await langModel.findFirst({
             where: {
                 wordId: parseInt(wordId),
             }
         })
+        if (!entityOne) return null;
         console.log(entityOne);
 
-        const oldValue = entityOne?.value ?? null
+        const updateData: Record<string, unknown> = {};
 
-        const updatedUser = await modelsMap[field].update({
-            where: {
-                id: entityOne.id,
-            },
-            data: {
-                value: newValue,
-                actionHistory: append(entityOne?.actionHistory, buildEntry(author, {
-                    value: { old: oldValue, new: newValue },
-                })),
-            },
+        if (veryfied !== undefined) {
+            updateData.veryfied = veryfied;
+        }
+        if (newValue !== undefined) {
+            updateData.value = newValue;
+            updateData.actionHistory = append(entityOne?.actionHistory, buildEntry(author, {
+                value: { old: entityOne?.value ?? null, new: newValue },
+            }));
+        }
+
+        const updated = await langModel.update({
+            where: { id: entityOne.id },
+            data: updateData,
         });
-        return updatedUser;
+        return updated;
     }
     return null;
 };

@@ -142,3 +142,8 @@ export type BaseHomonym = Prisma.BaseHomonymModel
  * 
  */
 export type InflectionAnomaly = Prisma.InflectionAnomalyModel
+/**
+ * Model ProtoSlavicWord
+ * 
+ */
+export type ProtoSlavicWord = Prisma.ProtoSlavicWordModel

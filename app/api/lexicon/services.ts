@@ -44,7 +44,6 @@ export const getDictItems = async (search: string, offset: number, limit: number
 
     const res = data.map(item => ({
         ...item,
-        // en: ens.find(el => el.wordId === item.id),
         en: getLangData(db, "en", foreignKeysArray, item.id),
         ru: getLangData(db, "ru", foreignKeysArray, item.id),
         mk: getLangData(db, "mk", foreignKeysArray, item.id),
@@ -54,6 +53,13 @@ export const getDictItems = async (search: string, offset: number, limit: number
         cs: getLangData(db, "cs", foreignKeysArray, item.id),
         sl: getLangData(db, "sl", foreignKeysArray, item.id),
         de: getLangData(db, "de", foreignKeysArray, item.id),
+        uk: getLangData(db, "uk", foreignKeysArray, item.id),
+        be: getLangData(db, "be", foreignKeysArray, item.id),
+        sk: getLangData(db, "sk", foreignKeysArray, item.id),
+        hr: getLangData(db, "hr", foreignKeysArray, item.id),
+        cu: getLangData(db, "cu", foreignKeysArray, item.id),
+        nl: getLangData(db, "nl", foreignKeysArray, item.id),
+        eo: getLangData(db, "eo", foreignKeysArray, item.id),
     }))
 
     return res;
