@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import {useTranslations} from "next-intl";
+import {WordOfDayWidget} from "@/app/main/ⷰ҇WordsOfTheDay";
+import {Word} from "@/prisma/generated/data/client";
 
 interface StatsProps {
     stats: {
@@ -8,9 +10,10 @@ interface StatsProps {
         roots: number;
         meanings: number;
     };
+    randomWord: Word;
 }
 
-export default function MainClient({ stats }: StatsProps) {
+export default function MainClient({ stats, randomWord }: StatsProps) {
     return (
         // max-w-7xl ограничивает контент на 1280px, что идеально центрирует его на 1920px без чрезмерного растягивания строк текста
         <main className="flex-1 h-full overflow-y-auto max-w-7xl mx-auto px-4 md:px-8 2xl:px-12 pb-24 md:pb-32 space-y-16 md:space-y-24 animate-fade-in text-sm no-scrollbar py-8">
@@ -107,6 +110,10 @@ export default function MainClient({ stats }: StatsProps) {
                     <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">Смысловых значений</span>
                 </div>
             </section>
+
+            <WordOfDayWidget
+                data={randomWord}
+            />
 
             {/* СЕКЦИЯ 4: ПРИЗЫВ К ДЕЙСТВИЮ / ССЫЛКИ С АКЦЕНТОМ НА КНОПКАХ */}
             <section className="border border-dashed border-muted-foreground/30 rounded-3xl p-6 md:p-10 bg-muted/10 flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto">

@@ -15,6 +15,8 @@ import {PosType} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
 import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
+import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
+import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 
 const Word = ({ item, currentScript }: any) => {
     const [cognateWords, setCognateWords] = useState<any[]>([]);
@@ -120,6 +122,8 @@ const Word = ({ item, currentScript }: any) => {
         }
     }
 
+    console.log(item.meanings);
+
     const meaningsArray = Array.isArray(item.meanings) ? item.meanings : (item.meanings ? [item.meanings] : []);
 
     const LANG_CONFIG: Record<string, { label: string; data: any[] | null | undefined }> = {
@@ -147,7 +151,7 @@ const Word = ({ item, currentScript }: any) => {
             if (!Array.isArray(cfg.data)) continue;
             const match = cfg.data.find((t: any) => t.meaningId === meaningId);
             if (match?.value) {
-                result[cfg.label] = match.value;
+                result[code] = match.value;
             }
         }
         return result;
@@ -289,6 +293,7 @@ const Word = ({ item, currentScript }: any) => {
                 </div>
             </div>
 
+            <ComprehensionWidget comprehensionData={item.intelligibility} />
 
             {(hasParadigm) && (
                 <div className="mb-6 border-b border-slate-100 pb-6">
@@ -422,8 +427,18 @@ const Word = ({ item, currentScript }: any) => {
                                                 key={lang}
                                                 className="flex flex-col justify-center p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
                                             >
-                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{lang}</span>
-                                                <span className="text-base font-medium text-slate-800">{val}</span>
+                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{LANG_CONFIG[lang].label}</span>
+                                                <span className="text-base font-medium text-slate-800">
+                                                    {val.split(",").map((word, index) => (
+                                                        <Link
+                                                            key={word}
+                                                            target="_blank"
+                                                            href={getExternalDictionaryUrl(lang, word) || "#"}
+                                                        >
+                                                            {!!index && ', '}{word}
+                                                        </Link>
+                                                    ))}
+                                                </span>
                                             </div>
                                         ))}
                                     </div>

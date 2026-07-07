@@ -56,8 +56,6 @@ export const getItem = async (id: string) => {
     }
   }
 
-  console.log(synonymsByMeaning, antonymsByMeaning);
-
   const meaningsWithRelations = meanings.map(m => ({
     ...m,
     synonyms: synonymsByMeaning[m.id] || [],

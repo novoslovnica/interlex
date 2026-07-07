@@ -57,7 +57,7 @@ model Word {
   actionHistory   String?
 
   @@map("words")
-@@index([slug])
+  @@index([slug])
 }
 
 model Candidate {

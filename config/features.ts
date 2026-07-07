@@ -10,22 +10,22 @@ export enum SystemFeature {
 
 // 2. Список кодов всех языков из вашей схемы Prisma
 export const TRANSLATION_LANGUAGES = [
-    { code: "en", name: "Английский" },
-    { code: "ru", name: "Русский" },
-    { code: "mk", name: "Македонский" },
-    { code: "sr", name: "Сербский" },
-    { code: "uk", name: "Украинский" },
-    { code: "bg", name: "Болгарский" },
-    { code: "pl", name: "Польский" },
-    { code: "be", name: "Белорусский" },
-    { code: "cs", name: "Чешский" },
-    { code: "sk", name: "Словацкий" },
-    { code: "sl", name: "Словенский" },
-    { code: "hr", name: "Хорватский" },
-    { code: "cu", name: "Церковнославянский" },
-    { code: "de", name: "Немецкий" },
-    { code: "nl", name: "Нидерландский" },
-    { code: "eo", name: "Эсперанто" },
+    { code: "en", name: "Английский", flag: '' },
+    { code: "ru", name: "Русский", flag: '🇷🇺' },
+    { code: "mk", name: "Македонский", flag: '🇲🇰' },
+    { code: "sr", name: "Сербский", flag: '🇷🇸' },
+    { code: "uk", name: "Украинский", flag: '🇺🇦' },
+    { code: "bg", name: "Болгарский", flag: '🇧🇬' },
+    { code: "pl", name: "Польский", flag: '🇵🇱' },
+    { code: "be", name: "Белорусский", flag: '🇧🇾' },
+    { code: "cs", name: "Чешский", flag: '🇨🇿' },
+    { code: "sk", name: "Словацкий", flag: '🇸🇰' },
+    { code: "sl", name: "Словенский", flag: '🇸🇮' },
+    { code: "hr", name: "Хорватский", flag: '🇭🇷' },
+    { code: "cu", name: "Церковнославянский", flag: '' },
+    { code: "de", name: "Немецкий", flag: '' },
+    { code: "nl", name: "Нидерландский", flag: '' },
+    { code: "eo", name: "Эсперанто", flag: '' },
 ] as const;
 
 // Генерируем Enum для языковых фич вида: translate_en = "translate_en"
