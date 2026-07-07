@@ -168,22 +168,22 @@ export async function mergeWordsAction(
 
             // 5. Перепривязываем синонимы (обе стороны отношений в вашей схеме)
             await tx.synonym.updateMany({
-                where: { rootId: sourceId },
-                data: { rootId: targetId },
+                where: { sourceId: sourceId },
+                data: { sourceId: targetId },
             });
             await tx.synonym.updateMany({
-                where: { wordId: sourceId },
-                data: { wordId: targetId },
+                where: { targetId: sourceId },
+                data: { targetId: targetId },
             });
 
             // 6. Перепривязываем антонимы (обе стороны отношений)
             await tx.antonym.updateMany({
-                where: { rootId: sourceId },
-                data: { rootId: targetId },
+                where: { sourceId: sourceId },
+                data: { sourceId: targetId },
             });
             await tx.antonym.updateMany({
-                where: { wordId: sourceId },
-                data: { wordId: targetId },
+                where: { targetId: sourceId },
+                data: { targetId: targetId },
             });
 
             // 7. Теперь, когда у sourceId не осталось дочерних зависимостей, удаляем его

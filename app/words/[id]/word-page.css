@@ -10,7 +10,7 @@
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 20px 0 20px;
+    padding: 0;
     box-sizing: border-box;
     flex: 1; /* Занимает всё доступное пространство по вертикали */
     display: flex;
@@ -23,7 +23,6 @@
 .scroll-container {
     flex: 1; /* Занимает всё оставшееся место снизу */
     overflow-y: auto; /* Включает вертикальную прокрутку */
-    padding-bottom: 40px; /* Отступ снизу, чтобы последняя карточка не прижималась к краю */
 
     /* Красивый тонкий скроллбар для современных браузеров (Chrome, Edge, Safari) */
     scrollbar-width: thin;

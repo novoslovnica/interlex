@@ -112,7 +112,7 @@ export default function DeduplicationPage() {
     };
 
     return (
-        <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground flex-1 overflow-y-auto min-h-0">
+        <div className="p-4 md:p-6 max-w-6xl mx-auto space-y-6 text-sm text-foreground flex flex-col flex-1 overflow-y-auto min-h-0">
             {/* Поисковая панель */}
             <div className="flex flex-col sm:flex-row items-center gap-4 bg-muted/20 p-4 rounded-xl border shrink-0">
                 <div className="w-full sm:flex-1 relative">
@@ -139,7 +139,7 @@ export default function DeduplicationPage() {
             </div>
 
             {/* Таблица с независимым горизонтальным скроллом */}
-            <div className="border rounded-xl bg-background shadow-sm overflow-x-auto max-w-full">
+            <div className="border rounded-xl bg-background shadow-sm overflow-auto max-w-full no-scrollbar">
                 <table className="w-full text-left border-collapse table-auto min-w-[700px]">
                     <thead>
                     <tr className="bg-muted text-xs font-semibold uppercase border-b">
