@@ -21,14 +21,13 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
             {/* СЕКЦИЯ 1: ГЛАВНЫЙ БАННЕР */}
             <section className="text-center space-y-6 max-w-4xl mx-auto pt-4 md:pt-12">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 border border-blue-500/20 dark:text-blue-400">
-                    🌍 Электронный лексикон
+                    🌍 Цифровой лексикон
                 </div>
                 <h1 className="text-3xl md:text-5xl 2xl:text-6xl font-black tracking-tight text-foreground leading-tight">
-                    Межславянский электронный словарь
+                    Межславянский лингвистический корпус и лексикон
                 </h1>
                 <p className="text-base md:text-lg 2xl:text-xl text-muted-foreground leading-relaxed">
-                    Профессиональный инструмент для лингвистических исследований, перевода и изучения
-                    междуславянского языка. Платформа объединяет классические славянские корни и современные языковые формы.
+                    Интегрированная научно-исследовательская платформа для автоматизированной обработки естественного языка (NLP) и компаративного анализа славянских языковых систем. Объединяет в себе верифицированный лексикон праславянских корней, многоязычный параллельный корпус и семантический граф отношений
                 </p>
             </section>
 
@@ -42,10 +41,9 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
                             Aa
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Умная орфография (Скрипты)</h3>
+                            <h3 className="font-bold text-base">Многоскриптовая орфографическая конверсия</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Система автоматически подстраивается под локаль вашего браузера или личные настройки,
-                                переключая отображение межславянских слов между кириллицей и латиницей (<code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">isv</code> нотация).
+                                Динамическая транслитерация текстовых массивов между кириллической и латинской (научная <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">isv</code>-нотация) графическими системами. Модуль обеспечивает автоматическую адаптацию визуализации лексем и фонетической транскрипции (IPA) под локальные метаданные пользователя.
                             </p>
                         </div>
                     </div>
@@ -55,10 +53,9 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
                             🔗
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Морфемный и семантический граф</h3>
+                            <h3 className="font-bold text-base">Морфемно-семантическое картирование</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Слова не просто хранятся списком, а связаны в глубокую сеть синонимов, антонимов
-                                и корневых групп, позволяя исследовать этимологию и семантическую близость лексем.
+                                Декомпозиция лексем на деривационные морфемы и интеграция в многоуровневый граф знаний. Система устанавливает веса синонимической, антонимической и корневой близости сущностей, визуализируя кластеры когнатов и праславянских этимологических связей.
                             </p>
                         </div>
                     </div>
@@ -68,10 +65,9 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
                             👥
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Многоуровневая модерация</h3>
+                            <h3 className="font-bold text-base">Кросс-языковое лексическое выравнивание</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Программа поддерживает строгую ролевую модель. Администраторы могут точечно распределять
-                                права по языкам для модераторов, гарантируя качество и верификацию каждого перевода.
+                                Компоративный анализ и семантическое сопоставление междуславянских лексем с параллельными денотатами в 16 живых славянских языках. Архитектура поддерживает строгую реляционную верификацию и валидацию переводных эквивалентов экспертным сообществом.
                             </p>
                         </div>
                     </div>
@@ -81,10 +77,9 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
                             ⚡
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Высокая производительность</h3>
+                            <h3 className="font-bold text-base">Параллельный лингвистический корпус</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Благодаря архитектуре Next.js App Router и оптимизированным индексам SQLite,
-                                поиск по десяткам тысяч слов и связь композитов происходят на клиенте за доли секунды.
+                                Полнотекстовый и лексико-синтаксический поиск по сегментированным текстовым массивам (KWIC). Система поддерживает морфологическую разметку (POS-tagging) и учитывает статистические метрики частотности употребления словоформ для прецизионного ранжирования выдачи.
                             </p>
                         </div>
                     </div>

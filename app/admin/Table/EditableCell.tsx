@@ -12,7 +12,8 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
     const initialValue = cell.getValue() as string;
     const [value, setValue] = useState(initialValue);
 
-    // Синхронизируем внутренний стейт, если внешние данные обновились
+    const disabled = (row.original as any)?._disabledLexemeFields === true;
+
     useEffect(() => {
         setValue(initialValue);
     }, [initialValue]);
@@ -22,9 +23,16 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
     };
 
     const onSave = () => {
-        // Вызываем метод обновления данных из meta-свойств таблицы
         (table.options.meta as any)?.updateData(row.index, column.id, value);
     };
+
+    if (disabled) {
+        return (
+            <span className="block px-2 py-1 text-gray-400 italic truncate">
+                {value || '—'}
+            </span>
+        );
+    }
 
     return (
         <input
@@ -34,7 +42,7 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
             onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                     onSave();
-                    (e.target as HTMLInputElement).blur(); // Убираем фокус при Enter
+                    (e.target as HTMLInputElement).blur();
                 }
             }}
             className="w-full bg-transparent px-2 py-1 border border-transparent hover:border-gray-300 focus:border-blue-500 focus:bg-white outline-none rounded transition"

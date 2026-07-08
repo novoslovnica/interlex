@@ -184,6 +184,80 @@ export const standardToSimple = (text: string) => {
     return result;
 }
 
+export const isvToGlagolitic = (text: string): string => {
+  if (!text) return "";
+
+  const lower = (ch: string) => ch.toLowerCase();
+
+  const glagoliticLower: Record<string, string> = {
+    'a': 'ⰰ', 'b': 'ⰱ', 'v': 'ⰲ', 'g': 'ⰳ', 'd': 'ⰴ',
+    'e': 'ⰵ', 'ž': 'ⰶ', 'z': 'ⰸ', 'i': 'ⰹ', 'j': 'ⰻ',
+    'k': 'ⰽ', 'l': 'ⰾ', 'm': 'ⰿ', 'n': 'ⱀ', 'o': 'ⱁ',
+    'p': 'ⱂ', 'r': 'ⱃ', 's': 'ⱄ', 't': 'ⱅ', 'u': 'ⱆ',
+    'f': 'ⱇ', 'h': 'ⱈ', 'c': 'ⱌ', 'y': 'ⱏⰹ',
+    'ě': 'ⱑ', 'ę': 'ⱗ', 'ǫ': 'ⱘ',
+  };
+
+  const glagoliticUpper: Record<string, string> = {
+    'A': 'Ⰰ', 'B': 'Ⰱ', 'V': 'Ⰲ', 'G': 'Ⰳ', 'D': 'Ⰴ',
+    'E': 'Ⰵ', 'Ž': 'Ⰶ', 'Z': 'Ⰸ', 'I': 'Ⰹ', 'J': 'Ⰻ',
+    'K': 'Ⰽ', 'L': 'Ⰾ', 'M': 'Ⰿ', 'N': 'Ⱀ', 'O': 'Ⱁ',
+    'P': 'Ⱂ', 'R': 'Ⱃ', 'S': 'Ⱄ', 'T': 'Ⱅ', 'U': 'Ⱆ',
+    'F': 'Ⱇ', 'H': 'Ⱈ', 'C': 'Ⱌ', 'Y': 'ⰟⰉ',
+    'Ě': 'Ⱑ', 'Ę': 'Ⱗ', 'Ǫ': 'Ⱘ',
+  };
+
+  let result = "";
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    const next = i + 1 < text.length ? text[i + 1] : "";
+    const pair = ch + next;
+
+    if (pair.toLowerCase() === "dž") {
+      const gl = lower(ch) === ch ? "ⰴⰶ" : "ⰄⰆ";
+      result += gl; i += 2; continue;
+    }
+    if (pair.toLowerCase() === "št") {
+      const gl = lower(ch) === ch ? "ⱋ" : "Ⱋ";
+      result += gl; i += 2; continue;
+    }
+    if (pair.toLowerCase() === "dz") {
+      const gl = lower(ch) === ch ? "ⰷ" : "Ⰷ";
+      result += gl; i += 2; continue;
+    }
+
+    if (pair.toLowerCase() === "ju") {
+      const gl = lower(ch) === ch ? "ⱓ" : "Ⱓ";
+      result += gl; i += 2; continue;
+    }
+    if (pair.toLowerCase() === "jo") {
+      const gl = lower(ch) === ch ? "ⱖ" : "Ⱖ";
+      result += gl; i += 2; continue;
+    }
+    if (pair.toLowerCase() === "je") {
+      const gl = lower(ch) === ch ? "ⱔ" : "Ⱔ";
+      result += gl; i += 2; continue;
+    }
+    if (pair.toLowerCase() === "ja") {
+      const gl = lower(ch) === ch ? "ⰻⰰ" : "ⰉⰀ";
+      result += gl; i += 2; continue;
+    }
+
+    const isUpper = ch === ch.toUpperCase();
+    if (isUpper && glagoliticUpper[ch]) {
+      result += glagoliticUpper[ch];
+    } else if (glagoliticLower[ch]) {
+      result += glagoliticLower[ch];
+    } else {
+      result += ch;
+    }
+    i++;
+  }
+
+  return result;
+};
+
 export const standardToSimpleCyr = (text: string) => {
     if (!text) return "";
 

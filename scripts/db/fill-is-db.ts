@@ -106,7 +106,7 @@ const insertRow = (db, {
 }): [bigint, bigint] => {
     const additionResult = parseAddition(addition, pos);
     const governsCase = additionResult.governsCase;
-    const stem = heuristicStem(lat, pos);
+    const stem = heuristicStem(lat, pos).toLowerCase();
     const secondaryStem = additionResult.secondaryStem;
     const tertiaryStem = additionResult.tertiaryStem;
 

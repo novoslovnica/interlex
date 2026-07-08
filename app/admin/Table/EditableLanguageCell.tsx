@@ -9,36 +9,39 @@ interface LangObject {
     meaningId: number | null;
 }
 
-export function EditableLanguageCell<TData>({ cell, row, column, table, getValue }: CellContext<any, LangObject>) {
-    const langData = getValue();
+export function EditableLanguageCell<TData>({ cell, row, column, table, getValue }: CellContext<any, LangObject[]>) {
+    const langDataArray: LangObject[] = getValue() || [];
+    const primary = langDataArray[0] || null;
+    const hasMultiple = langDataArray.length > 1;
 
-    const [value, setValue] = useState(langData?.value || '');
+    const [value, setValue] = useState(primary?.value || '');
     const [isEditing, setIsEditing] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
-    const [localVeryfied, setLocalVeryfied] = useState(langData?.veryfied ?? 0);
+    const [localVeryfied, setLocalVeryfied] = useState(primary?.veryfied ?? 0);
 
     useEffect(() => {
-        setValue(langData?.value || '');
-        setLocalVeryfied(langData?.veryfied ?? 0);
-    }, [langData?.value, langData?.veryfied]);
+        setValue(primary?.value || '');
+        setLocalVeryfied(primary?.veryfied ?? 0);
+    }, [primary?.value, primary?.veryfied]);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
     };
 
     const onSave = async () => {
-        if (!langData?.id || value === langData.value) {
+        if (!primary?.id || value === (primary.value || '')) {
             setIsEditing(false);
             return;
         }
 
         try {
-            const response = await fetch(`/api/lexicon/${langData.wordId}/updateField`, {
+            const response = await fetch(`/api/lexicon/${primary.wordId ?? primary.meaningId}/updateField`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     field: column.id,
                     newValue: value,
+                    translationId: primary.id,
                 }),
             });
 
@@ -47,10 +50,13 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
             const updatedLangObject = await response.json();
             const tableMeta = table.options.meta as any;
             if (tableMeta?.updateCellData) {
-                tableMeta.updateCellData(row.index, column.id, updatedLangObject);
+                const updatedArray = langDataArray.map((item, idx) =>
+                    idx === 0 ? updatedLangObject : item
+                );
+                tableMeta.updateCellData(row.index, column.id, updatedArray);
             }
         } catch {
-            setValue(langData?.value || '');
+            setValue(primary?.value || '');
             alert('Не удалось сохранить изменения');
         }
 
@@ -58,15 +64,16 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
     };
 
     const updateVerification = async (newVeryfied: number) => {
-        if (!langData?.wordId) return;
+        if (!primary?.wordId && !primary?.meaningId) return;
 
         try {
-            const response = await fetch(`/api/lexicon/${langData.wordId}/updateField`, {
+            const response = await fetch(`/api/lexicon/${primary.wordId ?? primary.meaningId}/updateField`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     field: column.id,
                     veryfied: newVeryfied,
+                    translationId: primary.id,
                 }),
             });
 
@@ -76,10 +83,10 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
 
             const tableMeta = table.options.meta as any;
             if (tableMeta?.updateCellData) {
-                tableMeta.updateCellData(row.index, column.id, {
-                    ...langData,
-                    veryfied: newVeryfied,
-                });
+                const updatedArray = langDataArray.map((item, idx) =>
+                    idx === 0 ? { ...item, veryfied: newVeryfied } : item
+                );
+                tableMeta.updateCellData(row.index, column.id, updatedArray);
             }
         } catch (error) {
             console.error(error);
@@ -105,11 +112,12 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
     }
 
     const isVerified = localVeryfied === 1;
-    const displayText = langData?.value || '';
+    const displayText = primary?.value || '';
+    const borderClass = hasMultiple ? 'border-2 border-red-400' : 'border border-transparent';
 
     return (
         <div
-            className="flex items-center gap-1 px-2 py-1 relative cursor-text"
+            className={`flex items-center gap-1 px-2 py-1 relative cursor-text rounded ${borderClass}`}
             onClick={() => setIsEditing(true)}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -123,7 +131,12 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
             >
                 {displayText || <span className="text-gray-300">—</span>}
             </span>
-            {isHovering && langData?.wordId && (
+            {hasMultiple && (
+                <span className="shrink-0 text-[10px] font-bold text-red-500 bg-red-50 px-1 rounded">
+                    ×{langDataArray.length}
+                </span>
+            )}
+            {isHovering && primary && (
                 <span className="flex gap-0.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                     <button
                         onClick={() => updateVerification(isVerified ? 0 : 1)}

@@ -1,5 +1,5 @@
 'use client';
-import {isvToCyr, isvToTranscription, standardToSimple, standardToSimpleCyr} from "@/lib/isv";
+import {isvToCyr, isvToGlagolitic, isvToTranscription, standardToSimple, standardToSimpleCyr} from "@/lib/isv";
 import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {extractProtoStems} from "@/lib/grammar/morphonology";
@@ -27,6 +27,7 @@ const Word = ({ item, currentScript }: any) => {
     const transcription = isvToTranscription(item.value);
     const cyrillicVariant = isvToCyr(item.value);
     const nslVariant = item.nsl;
+    const glagoliticVariant = isvToGlagolitic(item.value);
     const scientificVariants = [
         standardToSimple(item.value),
         standardToSimpleCyr(item.value),
@@ -221,6 +222,18 @@ const Word = ({ item, currentScript }: any) => {
                         <span className="font-semibold text-slate-600">Кириллица новословницы:</span> {nslVariant}
                     </div>
                 )}
+                <div>
+                    <span className="font-semibold text-slate-600">Кириллица:</span>{' '}
+                    <span style={{ fontFamily: "'Monomakh', 'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
+                        {cyrillicVariant}
+                    </span>
+                </div>
+                <div>
+                    <span className="font-semibold text-slate-600">Глаголица:</span>{' '}
+                    <span style={{ fontFamily: "'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
+                        {glagoliticVariant}
+                    </span>
+                </div>
                 <div>
                     <span className="font-semibold text-slate-600">Простая форма:</span>{' '}
                     <span className="space-x-2">

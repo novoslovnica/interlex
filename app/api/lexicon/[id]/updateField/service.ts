@@ -62,7 +62,7 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
     }
 }
 
-export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number) => {
+export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number) => {
     console.log(wordId, field, newValue, veryfied);
     const session = await auth()
     const author = session?.user?.email || "unknown"
@@ -108,11 +108,17 @@ export const updateField = async (wordId: string, field: string, newValue: strin
 
     const langModel = modelsMap[field];
     if (langModel) {
-        const entityOne = await langModel.findFirst({
-            where: {
-                wordId: parseInt(wordId),
-            }
-        })
+        let entityOne;
+
+        if (translationId) {
+            entityOne = await langModel.findUnique({
+                where: { id: translationId }
+            });
+        } else {
+            entityOne = await langModel.findFirst({
+                where: { wordId: parseInt(wordId) }
+            });
+        }
         if (!entityOne) return null;
         console.log(entityOne);
 

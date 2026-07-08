@@ -12,13 +12,6 @@ import { EditableCell } from './EditableCell';
 import {EditableLanguageCell} from "@/app/admin/Table/EditableLanguageCell";
 import Link from "next/link";
 
-// Интерфейс структуры данных
-interface RowData {
-    id: string;
-    name: string;
-    status: string;
-}
-
 export function useDebounce<T>(value: T, delay: number): T {
     const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -46,6 +39,7 @@ export default function InfiniteEditableTable() {
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         id: true,
+        meaningText: true,
         nsl: true,
         isv: true,
         ru: true,
@@ -69,11 +63,10 @@ export default function InfiniteEditableTable() {
 
     const queryKey = useMemo(() => ['lexicon-infinite', debouncedSearch], [debouncedSearch]);
 
-    // 1. Бесконечная загрузка данных с TanStack Query
     const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
         useInfiniteQuery({
             queryKey,
-            queryFn: async ({ pageParam = 0 }): Promise<{ data: RowData[]; nextOffset: number | null }> => {
+            queryFn: async ({ pageParam = 0 }): Promise<{ data: any[]; nextOffset: number | null }> => {
                 const params = new URLSearchParams();
                 if (pageParam) params.append('offset', String(pageParam));
                 params.append('limit', '30');
@@ -85,11 +78,9 @@ export default function InfiniteEditableTable() {
                 const res = await fetch(`/api/lexicon?${params.toString()}`);
                 const data = await res.json();
 
-                console.log(data);
-
                 return {
                     data,
-                    nextOffset: pageParam + 30 < 30 ? pageParam + 30 : null, // Ограничим 30 элементами для примера
+                    nextOffset: pageParam + 30 < 30 ? pageParam + 30 : null,
                 };
             },
             initialPageParam: 0,
@@ -100,28 +91,19 @@ export default function InfiniteEditableTable() {
             gcTime: 0,
         });
 
-    // Преобразуем paginated данные в плоский массив для таблицы
     const flatData = useMemo(
         () => {
-            const flatData = data?.pages ? data.pages.flatMap(page => page.data || []) : [];
-            return flatData;
+            const pages = data?.pages ? data.pages.flatMap(page => page.data || []) : [];
+            const seenLexemeIds = new Set<number>();
+            return pages.map(row => {
+                const isFirst = !seenLexemeIds.has(row.lexemeId);
+                seenLexemeIds.add(row.lexemeId);
+                return { ...row, _disabledLexemeFields: !isFirst };
+            });
         }, [data]
     );
 
-    // Локальный стейт для измененных данных (на проде изменения обычно шлют на бэкенд через патч-запросы)
-    // const [tableData, setTableData] = useState<RowData[]>([]);
-    //
-    // useEffect(() => {
-    //     if (flatData.length > 0 && tableData.length === 0) {
-    //         setTableData(flatData);
-    //     } else if (flatData.length > tableData.length) {
-    //         // Дописываем новые страницы в локальный стейт при доскролле
-    //         setTableData((prev) => [...prev, ...flatData.slice(prev.length)]);
-    //     }
-    // }, [flatData]);
-
-    // 2. Определение колонок
-    const columns = useMemo<ColumnDef<RowData>[]>(
+    const columns = useMemo<ColumnDef<any>[]>(
         () => [
             { accessorKey: 'id', header: 'ID', size: 50, cell: ({ getValue, row }) => (
                     <Link href={`/admin/words/${row.original.id}/edit`} className="text-blue-600 hover:underline font-mono">
@@ -129,11 +111,29 @@ export default function InfiniteEditableTable() {
                     </Link>
                 ) },
             {
+                id: "meaningText",
+                accessorKey: 'meaningText',
+                header: 'Значение',
+                minSize: 200,
+                cell: ({ getValue, row }) => {
+                    const meaning = getValue<string>();
+                    const examples = (row.original as any).examples as string | null;
+                    const meaningId = (row.original as any).meaningId as number;
+                    return (
+                        <div className="px-2 py-1 truncate" title={meaning || ''}>
+                            <span className="text-xs text-muted-foreground font-mono mr-1">#{meaningId}</span>
+                            <span>{meaning || <span className="text-gray-300 italic">—</span>}</span>
+                            {examples && <span className="text-[10px] text-gray-400 ml-1">📎</span>}
+                        </div>
+                    );
+                },
+            },
+            {
                 id: "nsl",
                 accessorKey: 'nsl',
                 header: 'Новословница (архив)',
                 minSize: 200,
-                cell: EditableCell, // Используем наш кастомный инпут
+                cell: EditableCell,
             },
             {
                 id: "isv",
@@ -241,9 +241,8 @@ export default function InfiniteEditableTable() {
         []
     );
 
-    // 3. Инициализация TanStack Table
     const table = useReactTable({
-        data: flatData, // tableData
+        data: flatData,
         columns,
         state: {
             columnVisibility
@@ -255,7 +254,6 @@ export default function InfiniteEditableTable() {
                 const targetRow = flatData[rowIndex];
                 if (!targetRow) return;
 
-                // Оптимистично обновляем данные в кэше React Query, чтобы инпут не лагал
                 queryClient.setQueryData(queryKey, (old: any) => {
                     if (!old) return old;
                     return {
@@ -263,7 +261,7 @@ export default function InfiniteEditableTable() {
                         pages: old.pages.map((page: any) => ({
                             ...page,
                             data: page.data.map((row: any) =>
-                                row.id === targetRow.id ? { ...row, [columnId]: value } : row
+                                row.meaningId === targetRow.meaningId ? { ...row, [columnId]: value } : row
                             )
                         }))
                     };
@@ -278,7 +276,6 @@ export default function InfiniteEditableTable() {
                         }),
                     })
                 }
-                // Здесь можно вызвать mutation для отправки на сервер (например, useMutation / fetch PATCH)
             },
             updateCellData: (rowIndex: number, columnId: string, value: unknown) => {
                 const targetRow = flatData[rowIndex];
@@ -291,7 +288,7 @@ export default function InfiniteEditableTable() {
                         pages: old.pages.map((page: any) => ({
                             ...page,
                             data: page.data.map((row: any) =>
-                                row.id === targetRow.id ? { ...row, [columnId]: value } : row
+                                row.meaningId === targetRow.meaningId ? { ...row, [columnId]: value } : row
                             )
                         }))
                     };
@@ -302,15 +299,13 @@ export default function InfiniteEditableTable() {
 
     const { rows } = table.getRowModel();
 
-    // 4. Виртуализация строк с @tanstack/react-virtual
     const rowVirtualizer = useVirtualizer({
         count: rows.length,
         getScrollElement: () => tableContainerRef.current,
-        estimateSize: () => 45, // Ожидаемая высота строки в пикселях
-        overscan: 5, // Сколько строк рендерить за пределами видимости
+        estimateSize: () => 45,
+        overscan: 5,
     });
 
-    // 5. Триггер загрузки следующей страницы при бесконечном скролле
     const virtualItems = rowVirtualizer.getVirtualItems();
 
     useEffect(() => {
@@ -318,7 +313,6 @@ export default function InfiniteEditableTable() {
 
         const lastItem = virtualItems[virtualItems.length - 1];
 
-        // Если пользователь приблизился к концу загруженного списка, запрашиваем еще
         if (
             lastItem.index >= rows.length - 5 &&
             hasNextPage &&
@@ -331,7 +325,6 @@ export default function InfiniteEditableTable() {
     return (
         <div className="flex flex-col gap-2 p-4 w-full">
             <div className="flex flex-row gap-2 w-full">
-                {/* Заменили 'max-w-md' на 'flex-1', чтобы блок занимал всю ширину до кнопки */}
                 <div className="relative flex-1">
                     <input
                         type="text"
@@ -347,7 +340,6 @@ export default function InfiniteEditableTable() {
                     )}
                 </div>
 
-                {/* Кнопка сохраняет свои размеры и прижимается к правому краю */}
                 <Link
                     href="/admin/words/create"
                     className="inline-flex items-center justify-center shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -460,7 +452,7 @@ export default function InfiniteEditableTable() {
                                         className="p-2 truncate"
                                         style={{
                                             width: cell.column.getSize(),
-                                            flex: `0 0 ${cell.column.getSize()}px` // Гарантирует сохранение ширины колонки
+                                            flex: `0 0 ${cell.column.getSize()}px`
                                         }}
                                     >
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

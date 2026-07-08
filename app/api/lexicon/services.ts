@@ -1,66 +1,94 @@
 import {init} from "@/lib/sqlite";
 
-export const getLangData = (db, lang, wordIds: string[], wordId) => {
-    const placeholders = wordIds.map(() => '?').join(', ');
+interface LangRecord {
+    id: number;
+    value: string | null;
+    veryfied: number | null;
+    wordId: number | null;
+    meaningId: number | null;
+}
 
-    const ens = db.prepare(`
-            SELECT * FROM ${lang} WHERE wordId IN (${placeholders})
-        `).all(...wordIds);
+export const getLangDataAll = (db, lang: string, meaningIds: number[]): Record<number, LangRecord[]> => {
+    if (meaningIds.length === 0) return {};
+    const placeholders = meaningIds.map(() => '?').join(', ');
+    const rows = db.prepare(`
+        SELECT * FROM ${lang} WHERE meaningId IN (${placeholders})
+    `).all(...meaningIds) as LangRecord[];
 
-    return ens.find(el => el.wordId === wordId);
+    const grouped: Record<number, LangRecord[]> = {};
+    for (const row of rows) {
+        const key = row.meaningId;
+        if (key == null) continue;
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(row);
+    }
+    return grouped;
 };
 
 export const getDictItems = async (search: string, offset: number, limit: number) => {
     const db = await init();
 
-    const from_table = "lexemes";
+    let data: any[] = [];
 
-    let data = [];
     if (search) {
-        data = await db.prepare(`
-        SELECT *
-        FROM ${from_table}
-        WHERE ROWID IN (SELECT ROWID FROM ${from_table}_text WHERE value LIKE '%${search}%' ORDER BY rank)
-        ORDER BY "id" ASC
-        LIMIT ${limit}
-        OFFSET ${offset}
-        `)
-            .all();
+        const lexemeIds = db.prepare(`
+            SELECT id FROM lexemes WHERE ROWID IN (SELECT ROWID FROM lexemes_text WHERE value LIKE '%${search}%' ORDER BY rank)
+        `).all() as { id: number }[];
+
+        const ids = lexemeIds.map(r => r.id);
+        if (ids.length === 0) return [];
+
+        const placeholders = ids.map(() => '?').join(',');
+        data = db.prepare(`
+            SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
+                   l.id, l.nsl, l.isv, l.value, l.slug, l.stem, l.pos, l.gender,
+                   l.declension, l.conjugation, l.transcription,
+                   l.aspect, l.transitivity, l.animacy, l.degree,
+                   l.pronType, l.numType, l.frequency, l.intelligibility,
+                   l.addition, l.sameInLanguages, l.etymology, l.proto,
+                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
+                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.accentSyllable, l.alternationType, l.fleetingVowelAt,
+                   l.hasAnomalies, l.field, l.type
+            FROM meanings m
+            JOIN lexemes l ON m.lexemeId = l.id
+            WHERE m.lexemeId IN (${placeholders})
+            ORDER BY l.id ASC, m.id ASC
+        `).all(...ids);
     } else {
-        data = await db.prepare(`
-            SELECT *
-            FROM ${from_table}
-            ORDER BY "id" ASC
-            LIMIT ${limit}
-            OFFSET ${offset}
+        data = db.prepare(`
+            SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
+                   l.id, l.nsl, l.isv, l.value, l.slug, l.stem, l.pos, l.gender,
+                   l.declension, l.conjugation, l.transcription,
+                   l.aspect, l.transitivity, l.animacy, l.degree,
+                   l.pronType, l.numType, l.frequency, l.intelligibility,
+                   l.addition, l.sameInLanguages, l.etymology, l.proto,
+                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
+                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.accentSyllable, l.alternationType, l.fleetingVowelAt,
+                   l.hasAnomalies, l.field, l.type
+            FROM meanings m
+            JOIN lexemes l ON m.lexemeId = l.id
+            ORDER BY l.id ASC, m.id ASC
+            LIMIT ${limit} OFFSET ${offset}
         `).all();
     }
 
-    const foreignKeysArray = data.map(item => item.id);
+    const meaningIds: number[] = data.map(item => item.meaningId);
+    const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "cu", "nl", "eo"];
 
-    // const ens = db.prepare(`
-    //         SELECT * FROM en WHERE wordId IN (${placeholders})
-    //     `).all(...foreignKeysArray);
+    const allLangData: Record<string, Record<number, LangRecord[]>> = {};
+    for (const lang of langCodes) {
+        allLangData[lang] = getLangDataAll(db, lang, meaningIds);
+    }
 
-    const res = data.map(item => ({
-        ...item,
-        en: getLangData(db, "en", foreignKeysArray, item.id),
-        ru: getLangData(db, "ru", foreignKeysArray, item.id),
-        mk: getLangData(db, "mk", foreignKeysArray, item.id),
-        sr: getLangData(db, "sr", foreignKeysArray, item.id),
-        bg: getLangData(db, "bg", foreignKeysArray, item.id),
-        pl: getLangData(db, "pl", foreignKeysArray, item.id),
-        cs: getLangData(db, "cs", foreignKeysArray, item.id),
-        sl: getLangData(db, "sl", foreignKeysArray, item.id),
-        de: getLangData(db, "de", foreignKeysArray, item.id),
-        uk: getLangData(db, "uk", foreignKeysArray, item.id),
-        be: getLangData(db, "be", foreignKeysArray, item.id),
-        sk: getLangData(db, "sk", foreignKeysArray, item.id),
-        hr: getLangData(db, "hr", foreignKeysArray, item.id),
-        cu: getLangData(db, "cu", foreignKeysArray, item.id),
-        nl: getLangData(db, "nl", foreignKeysArray, item.id),
-        eo: getLangData(db, "eo", foreignKeysArray, item.id),
-    }))
+    const res = data.map(item => {
+        const result: any = { ...item };
+        for (const lang of langCodes) {
+            result[lang] = allLangData[lang][item.meaningId] || [];
+        }
+        return result;
+    });
 
     return res;
-}
+};

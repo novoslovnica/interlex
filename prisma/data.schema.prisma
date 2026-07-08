@@ -42,13 +42,13 @@ model Lexeme {
   stem            String?
   secondaryStem   String?
   tertiaryStem    String?
-  governsCase     Int?               // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC
+  governsCase     Int?               // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC. В будущем отдельная таблица для множественности
   gender          String?
   declension      Int?
   conjugation     Int?
-  accentSyllable  Int?
-  alternationType String?
-  fleetingVowelAt Int?
+  accentSyllable  Int?               // TODO: нужно ли?
+  alternationType String?            // TODO: нужно ли?
+  fleetingVowelAt Int?               // TODO: нужно ли?
 
   // Маркер аномалий флексий
   hasAnomalies    Boolean          @default(false)

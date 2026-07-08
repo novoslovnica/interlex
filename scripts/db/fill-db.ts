@@ -81,7 +81,7 @@ const insertRow = (db, roots, {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
     const check = db.prepare(`SELECT * FROM lexemes WHERE slug = ? `).get(`${lat.toLowerCase()}-${pos}`);
-    const stem = heuristicStem(lat, pos);
+    const stem = heuristicStem(lat, pos).toLowerCase();
 
     let wId;
     if (!check) {

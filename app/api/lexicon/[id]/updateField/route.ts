@@ -10,7 +10,7 @@ export async function POST(request: NextRequest, ctx: RouteParams) {
 
     const body = await request.json();
 
-    const result = await updateField(id, body.field, body.newValue, body.veryfied);
+    const result = await updateField(id, body.field, body.newValue, body.veryfied, body.translationId);
 
     return NextResponse.json(result, {
         status: 200,
