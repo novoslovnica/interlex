@@ -27,7 +27,7 @@ export default function DeduplicationPage() {
     const [mergedValue, setMergedValue] = useState('');
     const [mergedIsv, setMergedIsv] = useState('');
     const [mergedNsl, setMergedNsl] = useState('');
-    const [mergedType, setMergedType] = useState('');
+    const [mergedUsageType, setMergedUsageType] = useState('');
     const [mergedAddition, setMergedAddition] = useState('');
 
     useEffect(() => {
@@ -73,7 +73,7 @@ export default function DeduplicationPage() {
         setMergedValue(target.value);
         setMergedIsv(target.isv);
         setMergedNsl(target.nsl || source.nsl);
-        setMergedType(target.type || source.type);
+        setMergedUsageType(target.usageType || source.usageType);
 
         // Склеиваем источники текстовой строкой, если они разные
         const sourcesCombined = Array.from(new Set([target.addition, source.addition].filter(Boolean)));
@@ -96,7 +96,7 @@ export default function DeduplicationPage() {
             value: mergedValue,
             isv: mergedIsv,
             nsl: mergedNsl,
-            type: mergedType,
+            usageType: mergedUsageType,
             addition: mergedAddition
         });
 
@@ -260,12 +260,12 @@ export default function DeduplicationPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Type (POS)</label>
+                                        <label className="block text-xs font-semibold mb-1">Тип употребления</label>
                                         <input
                                             type="text"
                                             className="w-full px-3 py-1.5 border rounded-md bg-background"
-                                            value={mergedType}
-                                            onChange={e => setMergedType(e.target.value)}
+                                            value={mergedUsageType}
+                                            onChange={e => setMergedUsageType(e.target.value)}
                                         />
                                     </div>
                                 </div>

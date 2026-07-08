@@ -147,3 +147,13 @@ export type InflectionAnomaly = Prisma.InflectionAnomalyModel
  * 
  */
 export type ProtoSlavicWord = Prisma.ProtoSlavicWordModel
+/**
+ * Model Synset
+ * 
+ */
+export type Synset = Prisma.SynsetModel
+/**
+ * Model MeaningSynset
+ * 
+ */
+export type MeaningSynset = Prisma.MeaningSynsetModel

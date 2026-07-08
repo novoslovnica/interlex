@@ -25,7 +25,7 @@ export const getLangDataAll = (db, lang: string, meaningIds: number[]): Record<n
     return grouped;
 };
 
-export const getDictItems = async (search: string, offset: number, limit: number) => {
+export const getDictItems = async (search: string, offset: number, limit: number, mainCategory?: string, usageType?: string) => {
     const db = await init();
 
     let data: any[] = [];
@@ -39,6 +39,18 @@ export const getDictItems = async (search: string, offset: number, limit: number
         if (ids.length === 0) return [];
 
         const placeholders = ids.map(() => '?').join(',');
+
+        let filterClause = '';
+        const filterParams: any[] = [];
+        if (mainCategory) {
+            filterClause += ' AND l.mainCategory = ?';
+            filterParams.push(mainCategory);
+        }
+        if (usageType) {
+            filterClause += ' AND l.usageType = ?';
+            filterParams.push(usageType);
+        }
+
         data = db.prepare(`
             SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
                    l.id, l.nsl, l.isv, l.value, l.slug, l.stem, l.pos, l.gender,
@@ -48,13 +60,24 @@ export const getDictItems = async (search: string, offset: number, limit: number
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
 l.secondaryStem, l.tertiaryStem, l.governsCase,
-                    l.hasAnomalies, l.field, l.type
+                   l.hasAnomalies, l.mainCategory, l.usageType
             FROM meanings m
             JOIN lexemes l ON m.lexemeId = l.id
-            WHERE m.lexemeId IN (${placeholders})
+            WHERE m.lexemeId IN (${placeholders})${filterClause}
             ORDER BY l.id ASC, m.id ASC
-        `).all(...ids);
+        `).all(...ids, ...filterParams);
     } else {
+        let filterClause = '';
+        const filterParams: any[] = [];
+        if (mainCategory) {
+            filterClause += ' WHERE l.mainCategory = ?';
+            filterParams.push(mainCategory);
+        }
+        if (usageType) {
+            filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
+            filterParams.push(usageType);
+        }
+
         data = db.prepare(`
             SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
                    l.id, l.nsl, l.isv, l.value, l.slug, l.stem, l.pos, l.gender,
@@ -64,12 +87,13 @@ l.secondaryStem, l.tertiaryStem, l.governsCase,
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
 l.secondaryStem, l.tertiaryStem, l.governsCase,
-                    l.hasAnomalies, l.field, l.type
+                   l.hasAnomalies, l.mainCategory, l.usageType
             FROM meanings m
             JOIN lexemes l ON m.lexemeId = l.id
+            ${filterClause}
             ORDER BY l.id ASC, m.id ASC
             LIMIT ${limit} OFFSET ${offset}
-        `).all();
+        `).all(...filterParams);
     }
 
     const meaningIds: number[] = data.map(item => item.meaningId);

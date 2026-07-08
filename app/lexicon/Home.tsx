@@ -1,10 +1,39 @@
 'use client';
-import React, {useCallback, useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 
 import "./main-page.css";
+
+const MAIN_CATEGORY_LABELS: Record<string, string> = {
+  '': 'Вси категории',
+  everyday_life: 'Бытова',
+  nature: 'Природа',
+  geography: 'География',
+  history: 'История',
+  religion: 'Религия',
+  science: 'Наука',
+  culture_art: 'Култура/Изкуство',
+  medicine: 'Медицина',
+  law_economy: 'Право/Економия',
+  abstract: 'Абстрактно',
+};
+
+const USAGE_TYPE_LABELS: Record<string, string> = {
+  '': 'Вси типы',
+  general: 'Обще',
+  colloquial: 'Разговорно',
+  technical: 'Техническо',
+  professional: 'Професионално',
+  official: 'Официално',
+  slang: 'Сленг',
+  jargon: 'Жаргон',
+  vulgar: 'Вулгарно',
+  archaic: 'Архаично',
+  historic: 'Историческо',
+  neologism: 'Неологизам',
+};
 
 const WordCard = ({ onClickCard, item, currentScript }: any) => {
     const cyrillicVariant = isvToCyr(item.value);
@@ -29,15 +58,21 @@ const WordCard = ({ onClickCard, item, currentScript }: any) => {
 }
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
-    const [searchValue, setSearchValue] = React.useState("");
-    const [items, setItems] = React.useState<Array<any>>([]);
-    const [hasFetched, setHasFetched] = React.useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [mainCategory, setMainCategory] = useState("");
+    const [usageType, setUsageType] = useState("");
+    const [formScript, setFormScript] = useState(currentScript);
+    const [items, setItems] = useState<Array<any>>([]);
+    const [hasFetched, setHasFetched] = useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const performSearch = useCallback((query: string) => {
-        fetch(`/api/lexicon?search=${query}&limit=${50}&offset=${0}`)
+    const performSearch = useCallback((query: string, mc: string, ut: string) => {
+        const params = new URLSearchParams({ search: query, limit: '50', offset: '0' });
+        if (mc) params.set('mainCategory', mc);
+        if (ut) params.set('usageType', ut);
+        fetch(`/api/lexicon?${params}`)
             .then(res => res.json())
             .then((data) => {
                 setItems(data);
@@ -47,36 +82,73 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
 
     useEffect(() => {
         const q = searchParams.get('q');
+        const mc = searchParams.get('mainCategory') || '';
+        const ut = searchParams.get('usageType') || '';
         if (q) {
             setSearchValue(q);
-            performSearch(q);
+            setMainCategory(mc);
+            setUsageType(ut);
+            performSearch(q, mc, ut);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onKeyDown = useCallback((e) => {
         if (e.key === "Enter") {
-            const sValue = currentScript === "CYRILLIC"
+            const sValue = formScript === "CYRILLIC"
                     ? standardToSimple(mapNslToEtymologized(searchValue))
                     : searchValue;
 
-            performSearch(sValue);
-            router.replace(`/lexicon?q=${encodeURIComponent(sValue)}`);
+            const params = new URLSearchParams({ q: sValue });
+            if (mainCategory) params.set('mainCategory', mainCategory);
+            if (usageType) params.set('usageType', usageType);
+            performSearch(sValue, mainCategory, usageType);
+            router.replace(`/lexicon?${params}`);
         }
-    }, [searchValue, currentScript, performSearch, router]);
+    }, [searchValue, mainCategory, usageType, formScript, performSearch, router]);
 
     const onClickCard = useCallback((item) => () => {
         router.push(`/words/${item.id}`);
     }, [router]);
 
     const onChangeSearch = useCallback((e) => {
-        const newSearch = e.target.value;
-        setSearchValue(newSearch);
+        setSearchValue(e.target.value);
+    }, []);
+
+    const toggleScript = useCallback(() => {
+        setFormScript(prev => prev === "CYRILLIC" ? "LATIN" : "CYRILLIC");
     }, []);
 
     return (
         <>
             <div className="search-container">
+                <div className="filter-row">
+                    <select
+                        className="filter-select"
+                        value={mainCategory}
+                        onChange={e => setMainCategory(e.target.value)}
+                    >
+                        {Object.entries(MAIN_CATEGORY_LABELS).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                    <select
+                        className="filter-select"
+                        value={usageType}
+                        onChange={e => setUsageType(e.target.value)}
+                    >
+                        {Object.entries(USAGE_TYPE_LABELS).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                    <button
+                        className="script-switcher"
+                        onClick={toggleScript}
+                        title={formScript === "CYRILLIC" ? "Преключи на латиницу" : "Преключи на кириллицу"}
+                    >
+                        {formScript === "CYRILLIC" ? "Кир" : "Lat"}
+                    </button>
+                </div>
+
                 <input
                     type="text"
                     id="searchInput"
@@ -87,11 +159,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     onChange={onChangeSearch}
                 />
 
-                {/* Уведомление о локали браузера (показывается только гостям, если isGuest === true) */}
                 {isGuest && (
-                    // Изменили text-blue-600 на text-muted-foreground (или text-gray-400) и добавили mt-2
                     <div className="flex items-center gap-1.5 px-1 mt-2 text-[11px] text-muted-foreground font-normal animate-fade-in">
-                        {/* Маленькая иконка планеты — сделали её более серой через text-gray-400 */}
                         <svg
                             className="h-3.5 w-3.5 shrink-0 text-gray-400 opacity-80"
                             xmlns="http://w3.org"
@@ -110,7 +179,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
             </div>
 
             <div className="scroll-container">
-
                 {items.length > 0 && (
                     <ul id="cardGrid" className="card-grid">
                         {items.map((item) => (
@@ -118,7 +186,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                                 key={item.id}
                                 onClickCard={onClickCard}
                                 item={item}
-                                currentScript={currentScript}
+                                currentScript={formScript}
                             />
                         ))}
                     </ul>
@@ -128,7 +196,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     <div id="noResults" className="no-results">Ничего не найдено</div>
                 )}
             </div>
-
         </>
     );
 }

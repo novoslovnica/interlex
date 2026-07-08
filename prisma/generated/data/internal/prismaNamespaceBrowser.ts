@@ -76,7 +76,9 @@ export const ModelName = {
   Eo: 'Eo',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
-  ProtoSlavicWord: 'ProtoSlavicWord'
+  ProtoSlavicWord: 'ProtoSlavicWord',
+  Synset: 'Synset',
+  MeaningSynset: 'MeaningSynset'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -102,8 +104,8 @@ export const LexemeScalarFieldEnum = {
   nsl: 'nsl',
   isv: 'isv',
   transcription: 'transcription',
-  field: 'field',
-  type: 'type',
+  mainCategory: 'mainCategory',
+  usageType: 'usageType',
   pos: 'pos',
   aspect: 'aspect',
   transitivity: 'transitivity',
@@ -144,8 +146,8 @@ export const CandidateScalarFieldEnum = {
   isv: 'isv',
   nsl: 'nsl',
   transcription: 'transcription',
-  field: 'field',
-  type: 'type',
+  mainCategory: 'mainCategory',
+  usageType: 'usageType',
   pos: 'pos',
   aspect: 'aspect',
   transitivity: 'transitivity',
@@ -484,6 +486,28 @@ export const ProtoSlavicWordScalarFieldEnum = {
 } as const
 
 export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
+
+
+export const SynsetScalarFieldEnum = {
+  synsetId: 'synsetId',
+  synsetExternalId: 'synsetExternalId',
+  definition: 'definition',
+  domains: 'domains',
+  semanticCodes: 'semanticCodes',
+  partOfSpeech: 'partOfSpeech'
+} as const
+
+export type SynsetScalarFieldEnum = (typeof SynsetScalarFieldEnum)[keyof typeof SynsetScalarFieldEnum]
+
+
+export const MeaningSynsetScalarFieldEnum = {
+  meaningId: 'meaningId',
+  synsetId: 'synsetId',
+  source: 'source',
+  confidence: 'confidence'
+} as const
+
+export type MeaningSynsetScalarFieldEnum = (typeof MeaningSynsetScalarFieldEnum)[keyof typeof MeaningSynsetScalarFieldEnum]
 
 
 export const SortOrder = {

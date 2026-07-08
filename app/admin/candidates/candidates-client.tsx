@@ -13,8 +13,8 @@ interface Candidate {
   isv: string | null
   nsl: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -327,7 +327,7 @@ function CandidatesClientInner() {
                     {candidate.nsl || "—"}
                   </td>
                   <td className="p-3">{candidate.pos || "—"}</td>
-                  <td className="p-3">{candidate.type || "—"}</td>
+                  <td className="p-3">{candidate.usageType || "—"}</td>
                   <td className="p-3 text-xs text-muted-foreground max-w-xs truncate">
                     {candidate.addition || "—"}
                   </td>

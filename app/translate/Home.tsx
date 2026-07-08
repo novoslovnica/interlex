@@ -1,5 +1,5 @@
 'use client';
-import React, {useCallback, useEffect, useMemo} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
@@ -22,6 +22,35 @@ const options = [
     <option key="de" value="de">Deutsch</option>,
 ];
 
+const MAIN_CATEGORY_LABELS: Record<string, string> = {
+    '': 'Вси категории',
+    everyday_life: 'Бытова',
+    nature: 'Природа',
+    geography: 'География',
+    history: 'История',
+    religion: 'Религия',
+    science: 'Наука',
+    culture_art: 'Култура/Изкуство',
+    medicine: 'Медицина',
+    law_economy: 'Право/Економия',
+    abstract: 'Абстрактно',
+};
+
+const USAGE_TYPE_LABELS: Record<string, string> = {
+    '': 'Вси типы',
+    general: 'Обще',
+    colloquial: 'Разговорно',
+    technical: 'Техническо',
+    professional: 'Професионално',
+    official: 'Официално',
+    slang: 'Сленг',
+    jargon: 'Жаргон',
+    vulgar: 'Вулгарно',
+    archaic: 'Архаично',
+    historic: 'Историческо',
+    neologism: 'Неологизам',
+};
+
 const WordCard = ({ item, onClickCard, currentScript, toValue}: any) => {
     const cyrillicVariant = isvToCyr(item.value);
     const latinVariant = item.value.toLowerCase();
@@ -39,47 +68,57 @@ const WordCard = ({ item, onClickCard, currentScript, toValue}: any) => {
         >
             <div className="card-title">{title}</div>
             <div className="card-meta">{toValue === "is"
-                ? `${item.pos} (${item.field})`
-                : `${item.target?.pos} (${item.target?.field})`}</div>
+                ? `${item.pos} (${item.mainCategory})`
+                : `${item.target?.pos} (${item.target?.mainCategory})`}</div>
             <div className="card-desc">{item.target?.value}</div>
         </li>
     );
 }
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
-    const [fromValue, setFromValue] = React.useState("ru");
-    const [toValue, setToValue] = React.useState("is");
-    const [searchValue, setSearchValue] = React.useState("");
-    const [items, setItems] = React.useState<Array<any>>([]);
-    const [hasFetched, setHasFetched] = React.useState(false);
+    const [fromValue, setFromValue] = useState("ru");
+    const [toValue, setToValue] = useState("is");
+    const [searchValue, setSearchValue] = useState("");
+    const [mainCategory, setMainCategory] = useState("");
+    const [usageType, setUsageType] = useState("");
+    const [formScript, setFormScript] = useState(currentScript);
+    const [items, setItems] = useState<Array<any>>([]);
+    const [hasFetched, setHasFetched] = useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const performSearch = useCallback((query: string, from: string, to: string) => {
+    const performSearch = useCallback((query: string, from: string, to: string, mc: string, ut: string) => {
         const sValue = from === "is"
-            ? currentScript === "CYRILLIC"
+            ? formScript === "CYRILLIC"
                 ? standardToSimple(mapNslToEtymologized(query))
                 : query
             : query;
 
-        fetch(`/api/dict?search=${sValue}&from=${from}&to=${to}`)
+        const params = new URLSearchParams({ search: sValue, from, to });
+        if (mc) params.set('mainCategory', mc);
+        if (ut) params.set('usageType', ut);
+        fetch(`/api/dict?${params}`)
             .then(res => res.json())
             .then((data) => {
                 setItems(data);
                 setHasFetched(true);
             });
-    }, [currentScript]);
+    }, [formScript]);
 
     useEffect(() => {
         const q = searchParams.get('q');
         const from = searchParams.get('from');
         const to = searchParams.get('to');
+        const mc = searchParams.get('mainCategory') || '';
+        const ut = searchParams.get('usageType') || '';
         if (q) {
             setSearchValue(q);
             if (from) setFromValue(from);
             if (to) setToValue(to);
-            performSearch(q, from || "ru", to || "is");
+            setMainCategory(mc);
+            setUsageType(ut);
+            performSearch(q, from || "ru", to || "is", mc, ut);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -91,10 +130,17 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
 
     const onKeyDown = useCallback((e) => {
         if (e.key === "Enter") {
-            performSearch(searchValue, fromValue, toValue);
-            router.replace(`/translate?q=${encodeURIComponent(searchValue)}&from=${fromValue}&to=${toValue}`);
+            performSearch(searchValue, fromValue, toValue, mainCategory, usageType);
+            const params = new URLSearchParams({
+                q: searchValue,
+                from: fromValue,
+                to: toValue,
+            });
+            if (mainCategory) params.set('mainCategory', mainCategory);
+            if (usageType) params.set('usageType', usageType);
+            router.replace(`/translate?${params}`);
         }
-    }, [searchValue, fromValue, toValue, performSearch, router]);
+    }, [searchValue, fromValue, toValue, mainCategory, usageType, performSearch, router]);
 
     const onClickCard = useCallback((item) => () => {
         router.push(`/words/${item.id}`);
@@ -115,12 +161,14 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
         setToValue(newTo);
     }, []);
 
+    const toggleScript = useCallback(() => {
+        setFormScript(prev => prev === "CYRILLIC" ? "LATIN" : "CYRILLIC");
+    }, []);
+
     return (
         <>
             <div className="search-container">
-                {/* Контейнер элементов выбора языков */}
                 <div className="select-group flex items-center gap-2">
-                    {/* Исходный язык */}
                     <select
                         id="sourceLang"
                         value={fromValue}
@@ -134,7 +182,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         )}
                     </select>
 
-                    {/* Кнопка смены направления с SVG иконкой */}
                     <button
                         id="swapLanguages"
                         className="swap-btn inline-flex items-center justify-center p-2 rounded-lg hover:bg-muted/60 transition-colors cursor-pointer"
@@ -153,7 +200,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         </svg>
                     </button>
 
-                    {/* Целевой язык */}
                     <select
                         id="targetLang"
                         value={toValue}
@@ -168,6 +214,34 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     </select>
                 </div>
 
+                <div className="filter-row">
+                    <select
+                        className="filter-select"
+                        value={mainCategory}
+                        onChange={e => setMainCategory(e.target.value)}
+                    >
+                        {Object.entries(MAIN_CATEGORY_LABELS).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                    <select
+                        className="filter-select"
+                        value={usageType}
+                        onChange={e => setUsageType(e.target.value)}
+                    >
+                        {Object.entries(USAGE_TYPE_LABELS).map(([value, label]) => (
+                            <option key={value} value={value}>{label}</option>
+                        ))}
+                    </select>
+                    <button
+                        className="script-switcher"
+                        onClick={toggleScript}
+                        title={formScript === "CYRILLIC" ? "Преключи на латиницу" : "Преключи на кириллицу"}
+                    >
+                        {formScript === "CYRILLIC" ? "Кир" : "Lat"}
+                    </button>
+                </div>
+
                 <input
                     type="text"
                     id="searchInput"
@@ -178,11 +252,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     onChange={onChangeSearch}
                 />
 
-                {/* Уведомление о локали браузера (показывается только гостям, если isGuest === true) */}
                 {isGuest && (
-                    // Изменили text-blue-600 на text-muted-foreground (или text-gray-400) и добавили mt-2
                     <div className="flex items-center gap-1.5 px-1 mt-2 text-[11px] text-muted-foreground font-normal animate-fade-in">
-                        {/* Маленькая иконка планеты — сделали её более серой через text-gray-400 */}
                         <svg
                             className="h-3.5 w-3.5 shrink-0 text-gray-400 opacity-80"
                             xmlns="http://w3.org"
@@ -201,7 +272,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
             </div>
 
             <div className="scroll-container">
-
                 {items.length > 0 && (
                     <ul id="cardGrid" className="card-grid">
                         {items.map((item) => (
@@ -209,7 +279,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                                 key={item.id}
                                 item={item}
                                 onClickCard={onClickCard}
-                                currentScript={currentScript}
+                                currentScript={formScript}
                                 toValue={toValue}
                             />
                         ))}
@@ -220,7 +290,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     <div id="noResults" className="no-results">Ничего не найдено</div>
                 )}
             </div>
-
         </>
     );
 }

@@ -59,7 +59,7 @@ export async function searchDuplicateWords(query: string) {
                 value: word.value || '',
                 isv: word.isv || '',
                 nsl: word.nsl || '',
-                type: word.type || '',
+                usageType: word.usageType || '',
                 addition: word.addition || 'Источник не указан', // Поле источника
                 translations, // Объект вида { ru: ["город"], pl: ["gród"] }
             };
@@ -76,7 +76,7 @@ export async function searchDuplicateWords(query: string) {
 export async function mergeWordsAction(
     targetId: number,
     sourceId: number,
-    updatedFields: { value: string; isv: string; nsl: string; type: string; addition: string }
+    updatedFields: { value: string; isv: string; nsl: string; usageType: string; addition: string }
 ) {
     try {
         const session = await auth()
@@ -89,13 +89,13 @@ export async function mergeWordsAction(
             // 2. Обновляем метаданные главного слова
             const changes: Record<string, { old: unknown; new: unknown }> = {}
             if (targetWord) {
-                for (const key of ['value', 'isv', 'nsl', 'type', 'addition'] as const) {
+                for (const key of ['value', 'isv', 'nsl', 'usageType', 'addition'] as const) {
                     if (String((targetWord as any)[key]) !== String(updatedFields[key])) {
                         changes[key] = { old: (targetWord as any)[key] ?? null, new: updatedFields[key] }
                     }
                 }
             } else {
-                for (const key of ['value', 'isv', 'nsl', 'type', 'addition'] as const) {
+                for (const key of ['value', 'isv', 'nsl', 'usageType', 'addition'] as const) {
                     changes[key] = { old: null, new: updatedFields[key] }
                 }
             }
@@ -107,7 +107,7 @@ export async function mergeWordsAction(
                     value: updatedFields.value,
                     isv: updatedFields.isv,
                     nsl: updatedFields.nsl,
-                    type: updatedFields.type,
+                    usageType: updatedFields.usageType,
                     addition: updatedFields.addition,
                     actionHistory: append(targetWord?.actionHistory, buildEntry(author, changes)),
                 },

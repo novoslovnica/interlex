@@ -7,8 +7,10 @@ export async function GET(request: NextRequest) {
     const query = params.get('search') || "";
     const offset = params.get('offset') || 0;
     const limit = params.get('limit') || 0;
+    const mainCategory = params.get('mainCategory') || '';
+    const usageType = params.get('usageType') || '';
 
-    const dicts = await getDictItems(query, offset, limit);
+    const dicts = await getDictItems(query, Number(offset), Number(limit), mainCategory, usageType);
 
     return NextResponse.json(dicts, {
         status: 200,

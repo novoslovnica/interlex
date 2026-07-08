@@ -23,9 +23,10 @@ npx tsx ./scripts/extract-root-candidates.ts
 npx tsx ./scripts/db/update-root-values.ts
 rm root-candidates.json
 
-# Create primary synonyms/antonyms links from Russian translations
+# Create synonyms/antonyms/synsets links from Russian translations
 # npx tsx ./scripts/make-json-for-python.ts
 # bash ./scripts/call-python-script.sh
 npx tsx ./scripts/db/upload-synonyms-antonyms.ts
+npx tsx ./scripts/db/upload-synsets.ts
 
 npx tsx ./scripts/db/update-generated-meanings.ts

@@ -17,8 +17,8 @@ model Lexeme {
   nsl             String?
   isv             String?
   transcription   String?
-  field           String?
-  type            String?
+  mainCategory    String?
+  usageType       String?
   pos             String?
   aspect          String?
   transitivity    String?
@@ -71,8 +71,8 @@ model Candidate {
   isv             String?
   nsl             String?
   transcription   String?
-  field           String?
-  type            String?
+  mainCategory    String?
+  usageType       String?
   pos             String?
   aspect          String?
   transitivity    String?
@@ -167,6 +167,9 @@ model Meaning {
   synonymsTarget  Synonym[]  @relation("SynonymTarget")
   antonymsSource  Antonym[]  @relation("AntonymSource")
   antonymsTarget  Antonym[]  @relation("AntonymTarget")
+
+  // Связь с синсетами RuWordNet
+  synsets  MeaningSynset[]
 
   @@map("meanings")
 }
@@ -522,4 +525,32 @@ model ProtoSlavicWord {
 
   @@map("proto_slavic_words")
   @@index([lemma])
+}
+
+// Синсеты RuWordNet — смысловые группы слов
+model Synset {
+  synsetId         String           @id
+  synsetExternalId String?          @map("synset_external_id")
+  definition       String?
+  domains          String?
+  semanticCodes    String?          @map("semantic_codes")
+  partOfSpeech     String?          @map("part_of_speech")
+
+  meanings         MeaningSynset[]
+
+  @@map("synsets")
+}
+
+// Связь значений с синсетами
+model MeaningSynset {
+  meaningId  Int
+  synsetId   String
+  source     String?
+  confidence Float?
+
+  meaning    Meaning  @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+  synset     Synset   @relation(fields: [synsetId], references: [synsetId], onDelete: Cascade)
+
+  @@id([meaningId, synsetId])
+  @@map("meanings_synsets")
 }

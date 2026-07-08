@@ -6,8 +6,19 @@ import {init} from "@/lib/sqlite";
 import {mapNslToEtymologized, mapNslToStandard} from "@/lib/nsl";
 import {csvGrammarMapper, generateStemCandidates, heuristicStem} from "@/lib/grammar/common";
 import {buildIntelligibilityString} from "@/lib/levenshtein";
+import { MainCategory } from "@/lib/enums/MainCategory";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
+
+const FIELD_TO_MAIN_CATEGORY: Record<string, MainCategory> = {
+  "обчя": MainCategory.EVERYDAY_LIFE,
+  "землёјопис": MainCategory.GEOGRAPHY,
+  "книжность": MainCategory.CULTURE_ART,
+  "најука": MainCategory.SCIENCE,
+  "реліґија": MainCategory.RELIGION,
+  "спорт": MainCategory.EVERYDAY_LIFE,
+  "гудба": MainCategory.CULTURE_ART,
+};
 
 const file = path.resolve(process.cwd(), 'slovnik.csv');
 
@@ -30,7 +41,7 @@ const insertRow = (db, roots, {
     rootId,
     decl,
     synonym,
-    field,
+    fieldCsv,
     meaning,
     etymology,
     pos,
@@ -49,7 +60,7 @@ const insertRow = (db, roots, {
     rootId: string;
     decl: string;
     synonym: string;
-    field: string;
+    fieldCsv: string;
     meaning: string;
     etymology: string;
     pos?: string;
@@ -61,12 +72,14 @@ const insertRow = (db, roots, {
     numType?: string;
     intelligibility?: string;
 }): Promise<[bigint, bigint]> => {
+    const mainCategory = FIELD_TO_MAIN_CATEGORY[fieldCsv] || null;
     const insert = db.prepare(`INSERT INTO lexemes (
         value,
         isv,
         nsl,
         transcription,
-        field,
+        mainCategory,
+        usageType,
        declension,
        etymology,
        pos,
@@ -82,7 +95,7 @@ const insertRow = (db, roots, {
        stem,
        intelligibility,
        updatedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
     const check = db.prepare(`SELECT * FROM lexemes WHERE slug = ? `).get(`${lat.toLowerCase()}-${pos}`);
     const stem = heuristicStem(lat, pos).toLowerCase();
@@ -96,7 +109,8 @@ const insertRow = (db, roots, {
             lat,
             cyr,
             trans,
-            field,
+            mainCategory,
+            'general',
             decl,
             etymology,
             grammar.pos,
@@ -202,7 +216,7 @@ const fillDb = async () => {
             pos,
             decl,
             synonym,
-            field,
+            fieldCsv,
             meaning,
             mk,
             sr,
@@ -240,7 +254,7 @@ const fillDb = async () => {
             pos,
             decl,
             synonym,
-            field,
+            fieldCsv,
             meaning,
             etymology: `https://en.wiktionary.org/wiki/${value}`,
             intelligibility,

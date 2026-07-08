@@ -258,7 +258,7 @@ export default async function EditArticlePage({ params }: EditPageProps) {
     const grammarFields: string[] = [
       "pos", "gender", "aspect", "transitivity", "animacy", "degree",
       "pronType", "numType", "governsCase", "declension", "conjugation",
-      "field", "type", "intelligibility", "addition",
+      "mainCategory", "usageType", "intelligibility", "addition",
       "sameInLanguages", "etymology", "proto", "paradigm", "protoStemClass",
       "stemExtension", "genesis", "secondaryStem", "tertiaryStem",
     ]
@@ -422,8 +422,8 @@ export default async function EditArticlePage({ params }: EditPageProps) {
           governsCase: wordData.governsCase,
           declension: wordData.declension,
           conjugation: wordData.conjugation,
-          field: wordData.field,
-          type: wordData.type,
+          mainCategory: wordData.mainCategory,
+          usageType: wordData.usageType,
           frequency: wordData.frequency,
           intelligibility: wordData.intelligibility,
           addition: wordData.addition,

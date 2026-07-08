@@ -409,7 +409,9 @@ export const ModelName = {
   Eo: 'Eo',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
-  ProtoSlavicWord: 'ProtoSlavicWord'
+  ProtoSlavicWord: 'ProtoSlavicWord',
+  Synset: 'Synset',
+  MeaningSynset: 'MeaningSynset'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2353,6 +2355,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Synset: {
+      payload: Prisma.$SynsetPayload<ExtArgs>
+      fields: Prisma.SynsetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SynsetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SynsetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        findFirst: {
+          args: Prisma.SynsetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SynsetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        findMany: {
+          args: Prisma.SynsetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>[]
+        }
+        create: {
+          args: Prisma.SynsetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        createMany: {
+          args: Prisma.SynsetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SynsetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>[]
+        }
+        delete: {
+          args: Prisma.SynsetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        update: {
+          args: Prisma.SynsetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        deleteMany: {
+          args: Prisma.SynsetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SynsetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SynsetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>[]
+        }
+        upsert: {
+          args: Prisma.SynsetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SynsetPayload>
+        }
+        aggregate: {
+          args: Prisma.SynsetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSynset>
+        }
+        groupBy: {
+          args: Prisma.SynsetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SynsetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SynsetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SynsetCountAggregateOutputType> | number
+        }
+      }
+    }
+    MeaningSynset: {
+      payload: Prisma.$MeaningSynsetPayload<ExtArgs>
+      fields: Prisma.MeaningSynsetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MeaningSynsetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MeaningSynsetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        findFirst: {
+          args: Prisma.MeaningSynsetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MeaningSynsetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        findMany: {
+          args: Prisma.MeaningSynsetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>[]
+        }
+        create: {
+          args: Prisma.MeaningSynsetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        createMany: {
+          args: Prisma.MeaningSynsetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MeaningSynsetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>[]
+        }
+        delete: {
+          args: Prisma.MeaningSynsetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        update: {
+          args: Prisma.MeaningSynsetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        deleteMany: {
+          args: Prisma.MeaningSynsetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MeaningSynsetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MeaningSynsetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>[]
+        }
+        upsert: {
+          args: Prisma.MeaningSynsetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeaningSynsetPayload>
+        }
+        aggregate: {
+          args: Prisma.MeaningSynsetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMeaningSynset>
+        }
+        groupBy: {
+          args: Prisma.MeaningSynsetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeaningSynsetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MeaningSynsetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeaningSynsetCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2399,8 +2549,8 @@ export const LexemeScalarFieldEnum = {
   nsl: 'nsl',
   isv: 'isv',
   transcription: 'transcription',
-  field: 'field',
-  type: 'type',
+  mainCategory: 'mainCategory',
+  usageType: 'usageType',
   pos: 'pos',
   aspect: 'aspect',
   transitivity: 'transitivity',
@@ -2441,8 +2591,8 @@ export const CandidateScalarFieldEnum = {
   isv: 'isv',
   nsl: 'nsl',
   transcription: 'transcription',
-  field: 'field',
-  type: 'type',
+  mainCategory: 'mainCategory',
+  usageType: 'usageType',
   pos: 'pos',
   aspect: 'aspect',
   transitivity: 'transitivity',
@@ -2783,6 +2933,28 @@ export const ProtoSlavicWordScalarFieldEnum = {
 export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
 
 
+export const SynsetScalarFieldEnum = {
+  synsetId: 'synsetId',
+  synsetExternalId: 'synsetExternalId',
+  definition: 'definition',
+  domains: 'domains',
+  semanticCodes: 'semanticCodes',
+  partOfSpeech: 'partOfSpeech'
+} as const
+
+export type SynsetScalarFieldEnum = (typeof SynsetScalarFieldEnum)[keyof typeof SynsetScalarFieldEnum]
+
+
+export const MeaningSynsetScalarFieldEnum = {
+  meaningId: 'meaningId',
+  synsetId: 'synsetId',
+  source: 'source',
+  confidence: 'confidence'
+} as const
+
+export type MeaningSynsetScalarFieldEnum = (typeof MeaningSynsetScalarFieldEnum)[keyof typeof MeaningSynsetScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2975,6 +3147,8 @@ export type GlobalOmitConfig = {
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit
+  synset?: Prisma.SynsetOmit
+  meaningSynset?: Prisma.MeaningSynsetOmit
 }
 
 /* Types for Logging */

@@ -61,9 +61,8 @@ const insertRow = (db, {
      value,
      trans,
      rootId,
-     decl,
-     field,
-     meaning,
+decl,
+      meaning,
      examples,
      etymology,
     genesis,
@@ -87,7 +86,6 @@ const insertRow = (db, {
     trans: string;
     rootId: string;
     decl: string;
-    field: string;
     meaning: string;
     examples: string;
     etymology: string;
@@ -116,7 +114,8 @@ const insertRow = (db, {
         isv,
         nsl,
         transcription,
-        field,
+        mainCategory,
+        usageType,
         declension,
         conjugation,
         etymology,
@@ -153,7 +152,8 @@ const insertRow = (db, {
             lat,
             cyr,
             trans,
-            field,
+            null,
+            'general',
             decl,
             decl,
             etymology,
@@ -288,7 +288,6 @@ const fillDb = async () => {
             trans: "",
             rootId: "",
             decl: type,
-            field: "",
             meaning: "",
             genesis,
             etymology: `https://en.wiktionary.org/wiki/${isv}`,

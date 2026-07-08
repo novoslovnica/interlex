@@ -7,13 +7,15 @@ export async function GET(request: NextRequest) {
     const query = params.get('search');
     const from = params.get('from');
     const to = params.get('to');
+    const mainCategory = params.get('mainCategory') || '';
+    const usageType = params.get('usageType') || '';
 
     if (!query) {
         return NextResponse.json(null, {
             status: 400,
         });
     }
-    const dicts = await getDictItems(query, from, to);
+    const dicts = await getDictItems(query, from, to, mainCategory, usageType);
 
     return NextResponse.json(dicts, {
         status: 200,

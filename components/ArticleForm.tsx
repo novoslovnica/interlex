@@ -2,6 +2,8 @@
 
 import { useState, useTransition, useEffect, useCallback } from "react"
 import { parseComprehensionString, SLAVIC_LANGUAGES_MAP } from "@/lib/types/lexicon"
+import { UsageType, ALL_USAGE_TYPES } from "@/lib/enums/UsageType"
+import { MainCategory, ALL_MAIN_CATEGORIES } from "@/lib/enums/MainCategory"
 
 const LANGUAGES: { key: string; label: string }[] = [
   { key: "en", label: "English" },
@@ -117,6 +119,33 @@ const PROPER_NOUN_OPTIONS = [
   { value: "no", label: "Нет" },
 ]
 
+const USAGE_TYPE_OPTIONS = [
+  { value: UsageType.GENERAL, label: "Общеупотребительное" },
+  { value: UsageType.COLLOQUIAL, label: "Разговорное" },
+  { value: UsageType.TECHNICAL, label: "Техническое / Научное" },
+  { value: UsageType.PROFESSIONAL, label: "Профессионализм" },
+  { value: UsageType.OFFICIAL, label: "Официально-деловое" },
+  { value: UsageType.SLANG, label: "Сленг" },
+  { value: UsageType.JARGON, label: "Жаргон" },
+  { value: UsageType.VULGAR, label: "Обсценное" },
+  { value: UsageType.ARCHAIC, label: "Архаизм" },
+  { value: UsageType.HISTORIC, label: "Историзм" },
+  { value: UsageType.NEOLOGISM, label: "Неологизм" },
+]
+
+const MAIN_CATEGORY_OPTIONS = [
+  { value: MainCategory.EVERYDAY_LIFE, label: "Быт" },
+  { value: MainCategory.NATURE, label: "Природа" },
+  { value: MainCategory.GEOGRAPHY, label: "География" },
+  { value: MainCategory.HISTORY, label: "История" },
+  { value: MainCategory.RELIGION, label: "Религия" },
+  { value: MainCategory.SCIENCE, label: "Наука" },
+  { value: MainCategory.CULTURE_ART, label: "Культура / Искусство" },
+  { value: MainCategory.MEDICINE, label: "Медицина" },
+  { value: MainCategory.LAW_ECONOMY, label: "Право / Экономика" },
+  { value: MainCategory.ABSTRACT, label: "Абстрактное" },
+]
+
 interface TranslationData {
   id: number
   value: string
@@ -167,8 +196,8 @@ interface ArticleFormProps {
     governsCase?: number | null
     declension?: number | null
     conjugation?: number | null
-    field?: string | null
-    type?: string | null
+    mainCategory?: string | null
+    usageType?: string | null
     frequency?: string | null
     intelligibility?: string | null
     addition?: string | null
@@ -226,8 +255,8 @@ export default function ArticleForm({
     governsCase: initialData?.governsCase ?? null,
     declension: initialData?.declension ?? null,
     conjugation: initialData?.conjugation ?? null,
-    field: initialData?.field ?? "",
-    type: initialData?.type ?? "",
+    mainCategory: initialData?.mainCategory ?? "",
+    usageType: initialData?.usageType ?? "",
     addition: initialData?.addition ?? "",
     sameInLanguages: initialData?.sameInLanguages ?? "",
     proto: initialData?.proto ?? "",
@@ -679,8 +708,8 @@ export default function ArticleForm({
                     return elements
                   })()}
                   <SelectField label="Имя собственное" value={properNoun ? "yes" : "no"} options={PROPER_NOUN_OPTIONS} onChange={(v) => setProperNoun(v === "yes")} />
-                  <TextField label="Поле / Сфера" value={grammar.field} onChange={(v) => setGram("field", v)} placeholder="быт, техника..." />
-                  <TextField label="Тип" value={grammar.type} onChange={(v) => setGram("type", v)} placeholder="полнозначное..." />
+                  <SelectField label="Тип употребления" value={grammar.usageType} options={USAGE_TYPE_OPTIONS} onChange={(v) => setGram("usageType", v)} />
+                  <SelectField label="Основная категория" value={grammar.mainCategory} options={MAIN_CATEGORY_OPTIONS} onChange={(v) => setGram("mainCategory", v)} />
                 </div>
 
                 {/* Genesis widget */}

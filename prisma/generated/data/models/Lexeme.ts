@@ -52,8 +52,8 @@ export type LexemeMinAggregateOutputType = {
   nsl: string | null
   isv: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -93,8 +93,8 @@ export type LexemeMaxAggregateOutputType = {
   nsl: string | null
   isv: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -134,8 +134,8 @@ export type LexemeCountAggregateOutputType = {
   nsl: number
   isv: number
   transcription: number
-  field: number
-  type: number
+  mainCategory: number
+  usageType: number
   pos: number
   aspect: number
   transitivity: number
@@ -193,8 +193,8 @@ export type LexemeMinAggregateInputType = {
   nsl?: true
   isv?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -234,8 +234,8 @@ export type LexemeMaxAggregateInputType = {
   nsl?: true
   isv?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -275,8 +275,8 @@ export type LexemeCountAggregateInputType = {
   nsl?: true
   isv?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -403,8 +403,8 @@ export type LexemeGroupByOutputType = {
   nsl: string | null
   isv: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -467,8 +467,8 @@ export type LexemeWhereInput = {
   nsl?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   isv?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   transcription?: Prisma.StringNullableFilter<"Lexeme"> | string | null
-  field?: Prisma.StringNullableFilter<"Lexeme"> | string | null
-  type?: Prisma.StringNullableFilter<"Lexeme"> | string | null
+  mainCategory?: Prisma.StringNullableFilter<"Lexeme"> | string | null
+  usageType?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   pos?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   aspect?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   transitivity?: Prisma.StringNullableFilter<"Lexeme"> | string | null
@@ -511,8 +511,8 @@ export type LexemeOrderByWithRelationInput = {
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
-  field?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageType?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   aspect?: Prisma.SortOrderInput | Prisma.SortOrder
   transitivity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -558,8 +558,8 @@ export type LexemeWhereUniqueInput = Prisma.AtLeast<{
   nsl?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   isv?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   transcription?: Prisma.StringNullableFilter<"Lexeme"> | string | null
-  field?: Prisma.StringNullableFilter<"Lexeme"> | string | null
-  type?: Prisma.StringNullableFilter<"Lexeme"> | string | null
+  mainCategory?: Prisma.StringNullableFilter<"Lexeme"> | string | null
+  usageType?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   pos?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   aspect?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   transitivity?: Prisma.StringNullableFilter<"Lexeme"> | string | null
@@ -602,8 +602,8 @@ export type LexemeOrderByWithAggregationInput = {
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
-  field?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageType?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   aspect?: Prisma.SortOrderInput | Prisma.SortOrder
   transitivity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -651,8 +651,8 @@ export type LexemeScalarWhereWithAggregatesInput = {
   nsl?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
   isv?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
   transcription?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
-  field?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
-  type?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
+  mainCategory?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
+  usageType?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
   pos?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
   aspect?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
   transitivity?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
@@ -691,8 +691,8 @@ export type LexemeCreateInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -735,8 +735,8 @@ export type LexemeUncheckedCreateInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -778,8 +778,8 @@ export type LexemeUpdateInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -822,8 +822,8 @@ export type LexemeUncheckedUpdateInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -866,8 +866,8 @@ export type LexemeCreateManyInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -906,8 +906,8 @@ export type LexemeUpdateManyMutationInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -947,8 +947,8 @@ export type LexemeUncheckedUpdateManyInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -988,8 +988,8 @@ export type LexemeCountOrderByAggregateInput = {
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1037,8 +1037,8 @@ export type LexemeMaxOrderByAggregateInput = {
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1078,8 +1078,8 @@ export type LexemeMinOrderByAggregateInput = {
   nsl?: Prisma.SortOrder
   isv?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1212,8 +1212,8 @@ export type LexemeCreateWithoutMeaningsInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1255,8 +1255,8 @@ export type LexemeUncheckedCreateWithoutMeaningsInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1313,8 +1313,8 @@ export type LexemeUpdateWithoutMeaningsInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1356,8 +1356,8 @@ export type LexemeUncheckedUpdateWithoutMeaningsInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1398,8 +1398,8 @@ export type LexemeCreateWithoutLexemes_morphemesInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1441,8 +1441,8 @@ export type LexemeUncheckedCreateWithoutLexemes_morphemesInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1499,8 +1499,8 @@ export type LexemeUpdateWithoutLexemes_morphemesInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1542,8 +1542,8 @@ export type LexemeUncheckedUpdateWithoutLexemes_morphemesInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1584,8 +1584,8 @@ export type LexemeCreateWithoutAnomaliesInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1627,8 +1627,8 @@ export type LexemeUncheckedCreateWithoutAnomaliesInput = {
   nsl?: string | null
   isv?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -1685,8 +1685,8 @@ export type LexemeUpdateWithoutAnomaliesInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1728,8 +1728,8 @@ export type LexemeUncheckedUpdateWithoutAnomaliesInput = {
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1820,8 +1820,8 @@ export type LexemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1865,8 +1865,8 @@ export type LexemeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1906,8 +1906,8 @@ export type LexemeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1947,8 +1947,8 @@ export type LexemeSelectScalar = {
   nsl?: boolean
   isv?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1978,7 +1978,7 @@ export type LexemeSelectScalar = {
   actionHistory?: boolean
 }
 
-export type LexemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "slug" | "external_id" | "value" | "nsl" | "isv" | "transcription" | "field" | "type" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "actionHistory", ExtArgs["result"]["lexeme"]>
+export type LexemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "slug" | "external_id" | "value" | "nsl" | "isv" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "actionHistory", ExtArgs["result"]["lexeme"]>
 export type LexemeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meanings?: boolean | Prisma.Lexeme$meaningsArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>
@@ -2005,8 +2005,8 @@ export type $LexemePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     nsl: string | null
     isv: string | null
     transcription: string | null
-    field: string | null
-    type: string | null
+    mainCategory: string | null
+    usageType: string | null
     pos: string | null
     aspect: string | null
     transitivity: string | null
@@ -2469,8 +2469,8 @@ export interface LexemeFieldRefs {
   readonly nsl: Prisma.FieldRef<"Lexeme", 'String'>
   readonly isv: Prisma.FieldRef<"Lexeme", 'String'>
   readonly transcription: Prisma.FieldRef<"Lexeme", 'String'>
-  readonly field: Prisma.FieldRef<"Lexeme", 'String'>
-  readonly type: Prisma.FieldRef<"Lexeme", 'String'>
+  readonly mainCategory: Prisma.FieldRef<"Lexeme", 'String'>
+  readonly usageType: Prisma.FieldRef<"Lexeme", 'String'>
   readonly pos: Prisma.FieldRef<"Lexeme", 'String'>
   readonly aspect: Prisma.FieldRef<"Lexeme", 'String'>
   readonly transitivity: Prisma.FieldRef<"Lexeme", 'String'>

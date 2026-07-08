@@ -50,8 +50,8 @@ export type CandidateMinAggregateOutputType = {
   isv: string | null
   nsl: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -91,8 +91,8 @@ export type CandidateMaxAggregateOutputType = {
   isv: string | null
   nsl: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -132,8 +132,8 @@ export type CandidateCountAggregateOutputType = {
   isv: number
   nsl: number
   transcription: number
-  field: number
-  type: number
+  mainCategory: number
+  usageType: number
   pos: number
   aspect: number
   transitivity: number
@@ -191,8 +191,8 @@ export type CandidateMinAggregateInputType = {
   isv?: true
   nsl?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -232,8 +232,8 @@ export type CandidateMaxAggregateInputType = {
   isv?: true
   nsl?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -273,8 +273,8 @@ export type CandidateCountAggregateInputType = {
   isv?: true
   nsl?: true
   transcription?: true
-  field?: true
-  type?: true
+  mainCategory?: true
+  usageType?: true
   pos?: true
   aspect?: true
   transitivity?: true
@@ -401,8 +401,8 @@ export type CandidateGroupByOutputType = {
   isv: string | null
   nsl: string | null
   transcription: string | null
-  field: string | null
-  type: string | null
+  mainCategory: string | null
+  usageType: string | null
   pos: string | null
   aspect: string | null
   transitivity: string | null
@@ -465,8 +465,8 @@ export type CandidateWhereInput = {
   isv?: Prisma.StringNullableFilter<"Candidate"> | string | null
   nsl?: Prisma.StringNullableFilter<"Candidate"> | string | null
   transcription?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  field?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  type?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  mainCategory?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  usageType?: Prisma.StringNullableFilter<"Candidate"> | string | null
   pos?: Prisma.StringNullableFilter<"Candidate"> | string | null
   aspect?: Prisma.StringNullableFilter<"Candidate"> | string | null
   transitivity?: Prisma.StringNullableFilter<"Candidate"> | string | null
@@ -506,8 +506,8 @@ export type CandidateOrderByWithRelationInput = {
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
-  field?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageType?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   aspect?: Prisma.SortOrderInput | Prisma.SortOrder
   transitivity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -550,8 +550,8 @@ export type CandidateWhereUniqueInput = Prisma.AtLeast<{
   isv?: Prisma.StringNullableFilter<"Candidate"> | string | null
   nsl?: Prisma.StringNullableFilter<"Candidate"> | string | null
   transcription?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  field?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  type?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  mainCategory?: Prisma.StringNullableFilter<"Candidate"> | string | null
+  usageType?: Prisma.StringNullableFilter<"Candidate"> | string | null
   pos?: Prisma.StringNullableFilter<"Candidate"> | string | null
   aspect?: Prisma.StringNullableFilter<"Candidate"> | string | null
   transitivity?: Prisma.StringNullableFilter<"Candidate"> | string | null
@@ -591,8 +591,8 @@ export type CandidateOrderByWithAggregationInput = {
   isv?: Prisma.SortOrderInput | Prisma.SortOrder
   nsl?: Prisma.SortOrderInput | Prisma.SortOrder
   transcription?: Prisma.SortOrderInput | Prisma.SortOrder
-  field?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrderInput | Prisma.SortOrder
+  mainCategory?: Prisma.SortOrderInput | Prisma.SortOrder
+  usageType?: Prisma.SortOrderInput | Prisma.SortOrder
   pos?: Prisma.SortOrderInput | Prisma.SortOrder
   aspect?: Prisma.SortOrderInput | Prisma.SortOrder
   transitivity?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -640,8 +640,8 @@ export type CandidateScalarWhereWithAggregatesInput = {
   isv?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   nsl?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   transcription?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
-  field?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
-  type?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  mainCategory?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
+  usageType?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   pos?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   aspect?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   transitivity?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
@@ -680,8 +680,8 @@ export type CandidateCreateInput = {
   isv?: string | null
   nsl?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -721,8 +721,8 @@ export type CandidateUncheckedCreateInput = {
   isv?: string | null
   nsl?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -761,8 +761,8 @@ export type CandidateUpdateInput = {
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -802,8 +802,8 @@ export type CandidateUncheckedUpdateInput = {
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -843,8 +843,8 @@ export type CandidateCreateManyInput = {
   isv?: string | null
   nsl?: string | null
   transcription?: string | null
-  field?: string | null
-  type?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
   pos?: string | null
   aspect?: string | null
   transitivity?: string | null
@@ -883,8 +883,8 @@ export type CandidateUpdateManyMutationInput = {
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -924,8 +924,8 @@ export type CandidateUncheckedUpdateManyInput = {
   isv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nsl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  field?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -965,8 +965,8 @@ export type CandidateCountOrderByAggregateInput = {
   isv?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1014,8 +1014,8 @@ export type CandidateMaxOrderByAggregateInput = {
   isv?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1055,8 +1055,8 @@ export type CandidateMinOrderByAggregateInput = {
   isv?: Prisma.SortOrder
   nsl?: Prisma.SortOrder
   transcription?: Prisma.SortOrder
-  field?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  mainCategory?: Prisma.SortOrder
+  usageType?: Prisma.SortOrder
   pos?: Prisma.SortOrder
   aspect?: Prisma.SortOrder
   transitivity?: Prisma.SortOrder
@@ -1110,8 +1110,8 @@ export type CandidateSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   isv?: boolean
   nsl?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1151,8 +1151,8 @@ export type CandidateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   isv?: boolean
   nsl?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1192,8 +1192,8 @@ export type CandidateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   isv?: boolean
   nsl?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1233,8 +1233,8 @@ export type CandidateSelectScalar = {
   isv?: boolean
   nsl?: boolean
   transcription?: boolean
-  field?: boolean
-  type?: boolean
+  mainCategory?: boolean
+  usageType?: boolean
   pos?: boolean
   aspect?: boolean
   transitivity?: boolean
@@ -1266,7 +1266,7 @@ export type CandidateSelectScalar = {
   promotedToLexemeId?: boolean
 }
 
-export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "isv" | "nsl" | "transcription" | "field" | "type" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "actionHistory" | "promotedAt" | "promotedToLexemeId", ExtArgs["result"]["candidate"]>
+export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "isv" | "nsl" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "actionHistory" | "promotedAt" | "promotedToLexemeId", ExtArgs["result"]["candidate"]>
 
 export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Candidate"
@@ -1279,8 +1279,8 @@ export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     isv: string | null
     nsl: string | null
     transcription: string | null
-    field: string | null
-    type: string | null
+    mainCategory: string | null
+    usageType: string | null
     pos: string | null
     aspect: string | null
     transitivity: string | null
@@ -1740,8 +1740,8 @@ export interface CandidateFieldRefs {
   readonly isv: Prisma.FieldRef<"Candidate", 'String'>
   readonly nsl: Prisma.FieldRef<"Candidate", 'String'>
   readonly transcription: Prisma.FieldRef<"Candidate", 'String'>
-  readonly field: Prisma.FieldRef<"Candidate", 'String'>
-  readonly type: Prisma.FieldRef<"Candidate", 'String'>
+  readonly mainCategory: Prisma.FieldRef<"Candidate", 'String'>
+  readonly usageType: Prisma.FieldRef<"Candidate", 'String'>
   readonly pos: Prisma.FieldRef<"Candidate", 'String'>
   readonly aspect: Prisma.FieldRef<"Candidate", 'String'>
   readonly transitivity: Prisma.FieldRef<"Candidate", 'String'>

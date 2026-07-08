@@ -168,8 +168,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                             >
                                 <div className="card-title">{item.nsl} / {item.value}</div>
                                 <div className="card-meta">{toValue === "is"
-                                    ? `${item.pos} (${item.field})`
-                                    : `${item.target?.pos} (${item.target?.field})`}</div>
+                                    ? `${item.pos} (${item.mainCategory})`
+                                    : `${item.target?.pos} (${item.target?.mainCategory})`}</div>
                                 <div className="card-desc">{item.target?.value}</div>
                             </li>
                         ))}
