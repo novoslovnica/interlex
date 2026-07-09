@@ -20,7 +20,7 @@ interface CognateRadarChartProps {
 const GROUP_LANG_MAP: Record<string, string[]> = {
   southSlavic: ['bg', 'mk', 'sr', 'hr', 'sl'],
   eastSlavic: ['ru', 'uk', 'be'],
-  westSlavic: ['pl', 'cs', 'sk'],
+  westSlavic: ['pl', 'cs', 'sk', 'hsb', 'dsb'],
   romance: ['eo'],
   germanic: ['de', 'nl'],
   greek: [],

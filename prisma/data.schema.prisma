@@ -161,6 +161,10 @@ model Meaning {
   nl_mean  Nl[]      @relation("NlMeaning")
   eo_word  Eo[]      @relation("EoWord")
   eo_mean  Eo[]      @relation("EoMeaning")
+  hsb_word Hsb[]     @relation("HsbWord")
+  hsb_mean Hsb[]     @relation("HsbMeaning")
+  dsb_word Dsb[]     @relation("DsbWord")
+  dsb_mean Dsb[]     @relation("DsbMeaning")
 
   // Связи синонимов и антонимов (на уровне значений, а не слов)
   synonymsSource  Synonym[]  @relation("SynonymSource")
@@ -487,6 +491,38 @@ model Eo {
   actionHistory String?
 
   @@map("eo")
+}
+
+model Hsb {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  value     String?
+  veryfied  Int?
+  wordId    Int?
+  meaningId Int?
+  word      Meaning? @relation("HsbWord", fields: [wordId], references: [id], onDelete: Cascade)
+  meaning   Meaning? @relation("HsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
+
+  @@map("hsb")
+}
+
+model Dsb {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  value     String?
+  veryfied  Int?
+  wordId    Int?
+  meaningId Int?
+  word      Meaning? @relation("DsbWord", fields: [wordId], references: [id], onDelete: Cascade)
+  meaning   Meaning? @relation("DsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  actionHistory String?
+
+  @@map("dsb")
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)

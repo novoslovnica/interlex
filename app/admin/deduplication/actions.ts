@@ -6,12 +6,79 @@ import { auth } from '@/auth';
 import { buildEntry, append } from '@/lib/action-history';
 
 // Список поддерживаемых языковых таблиц для автоматизации переноса
-const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'cu', 'de', 'nl', 'eo'] as const;
+const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
+
+function transformLexemeResults(results: any[]) {
+    return results.map((word: any) => {
+        const translations: Record<string, string[]> = {};
+
+        word.meanings.forEach((m: any) => {
+            LANGUAGE_KEYS.forEach((lang) => {
+                const relationField = `${lang}_word`;
+                if (m[relationField] && Array.isArray(m[relationField])) {
+                    m[relationField].forEach((t: any) => {
+                        if (t.value) {
+                            if (!translations[lang]) translations[lang] = [];
+                            if (!translations[lang].includes(t.value)) translations[lang].push(t.value);
+                        }
+                    });
+                }
+            });
+        });
+
+        return {
+            id: word.id,
+            value: word.value || '',
+            isv: word.isv || '',
+            nsl: word.nsl || '',
+            usageType: word.usageType || '',
+            addition: word.addition || 'Источник не указан',
+            translations,
+        };
+    });
+}
 
 /**
  * Реальный поиск слов по вашей схеме
  */
-export async function searchDuplicateWords(query: string) {
+export async function searchDuplicateWords(query: string, showDuplicates?: boolean) {
+    if (showDuplicates) {
+        try {
+            // Находим isv-значения, которые встречаются более 1 раза
+            const duplicateRows = await prisma.$queryRaw<{ isv: string; cnt: bigint }[]>`
+                SELECT isv, COUNT(*) as cnt FROM lexemes WHERE isv IS NOT NULL AND isv != '' GROUP BY isv HAVING cnt > 1 LIMIT 100
+            `;
+
+            const duplicateIsvValues = duplicateRows.map(r => r.isv);
+
+            if (duplicateIsvValues.length === 0) return [];
+
+            const results = await prisma.lexeme.findMany({
+                where: {
+                    isv: { in: duplicateIsvValues },
+                },
+                include: {
+                    meanings: {
+                        include: {
+                            ru_word: true, en_word: true, pl_word: true, uk_word: true,
+                            be_word: true, cs_word: true, sk_word: true, bg_word: true,
+                            mk_word: true, sr_word: true, sl_word: true, hr_word: true,
+                            hsb_word: true, dsb_word: true,
+                            cu_word: true, de_word: true, nl_word: true, eo_word: true
+                        }
+                    }
+                },
+                orderBy: { isv: 'asc' },
+                take: 100,
+            });
+
+            return transformLexemeResults(results);
+        } catch (error) {
+            console.error('Ошибка при поиске дубликатов в БД:', error);
+            return [];
+        }
+    }
+
     if (!query || query.trim().length < 2) return [];
 
     try {
@@ -29,6 +96,7 @@ export async function searchDuplicateWords(query: string) {
                         ru_word: true, en_word: true, pl_word: true, uk_word: true,
                         be_word: true, cs_word: true, sk_word: true, bg_word: true,
                         mk_word: true, sr_word: true, sl_word: true, hr_word: true,
+                        hsb_word: true, dsb_word: true,
                         cu_word: true, de_word: true, nl_word: true, eo_word: true
                     }
                 }
@@ -37,33 +105,7 @@ export async function searchDuplicateWords(query: string) {
         });
 
         // Трансформируем реляционную структуру в плоский вид для удобства фронтенда
-        return results.map((word) => {
-            const translations: Record<string, string[]> = {};
-
-            word.meanings.forEach((m: any) => {
-                LANGUAGE_KEYS.forEach((lang) => {
-                    const relationField = `${lang}_word`;
-                    if (m[relationField] && Array.isArray(m[relationField])) {
-                        m[relationField].forEach((t: any) => {
-                            if (t.value) {
-                                if (!translations[lang]) translations[lang] = [];
-                                if (!translations[lang].includes(t.value)) translations[lang].push(t.value);
-                            }
-                        });
-                    }
-                });
-            });
-
-            return {
-                id: word.id,
-                value: word.value || '',
-                isv: word.isv || '',
-                nsl: word.nsl || '',
-                usageType: word.usageType || '',
-                addition: word.addition || 'Источник не указан', // Поле источника
-                translations, // Объект вида { ru: ["город"], pl: ["gród"] }
-            };
-        });
+        return transformLexemeResults(results);
     } catch (error) {
         console.error('Ошибка при поиске в БД:', error);
         return [];
@@ -140,7 +182,7 @@ export async function mergeWordsAction(
 
             if (sourceMeaningIds.length > 0) {
                 // Перепривязываем все языковые записи от source к target
-                const languageModels = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'cu', 'de', 'nl', 'eo'] as const;
+                const languageModels = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
                 for (const lang of languageModels) {
                     await (tx as any)[lang].updateMany({
                         where: { meaningId: { in: sourceMeaningIds } },

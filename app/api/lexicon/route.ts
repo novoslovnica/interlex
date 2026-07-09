@@ -9,8 +9,10 @@ export async function GET(request: NextRequest) {
     const limit = params.get('limit') || 0;
     const mainCategory = params.get('mainCategory') || '';
     const usageType = params.get('usageType') || '';
+    const filterLang = params.get('filterLang') || '';
+    const unverified = params.get('unverified') || '';
 
-    const dicts = await getDictItems(query, Number(offset), Number(limit), mainCategory, usageType);
+    const dicts = await getDictItems(query, Number(offset), Number(limit), mainCategory, usageType, filterLang, unverified === '1');
 
     return NextResponse.json(dicts, {
         status: 200,

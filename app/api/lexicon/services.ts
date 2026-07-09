@@ -25,7 +25,7 @@ export const getLangDataAll = (db, lang: string, meaningIds: number[]): Record<n
     return grouped;
 };
 
-export const getDictItems = async (search: string, offset: number, limit: number, mainCategory?: string, usageType?: string) => {
+export const getDictItems = async (search: string, offset: number, limit: number, mainCategory?: string, usageType?: string, filterLang?: string, unverified?: boolean) => {
     const db = await init();
 
     let data: any[] = [];
@@ -97,20 +97,27 @@ l.secondaryStem, l.tertiaryStem, l.governsCase,
     }
 
     const meaningIds: number[] = data.map(item => item.meaningId);
-    const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "cu", "nl", "eo"];
+    const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "hsb", "dsb", "cu", "nl", "eo"];
 
     const allLangData: Record<string, Record<number, LangRecord[]>> = {};
     for (const lang of langCodes) {
         allLangData[lang] = getLangDataAll(db, lang, meaningIds);
     }
 
-    const res = data.map(item => {
+    let res = data.map(item => {
         const result: any = { ...item };
         for (const lang of langCodes) {
             result[lang] = allLangData[lang][item.meaningId] || [];
         }
         return result;
     });
+
+    if (filterLang && unverified && langCodes.includes(filterLang)) {
+        res = res.filter(item => {
+            const langEntries = item[filterLang] as LangRecord[];
+            return langEntries.length > 0 && langEntries.some(entry => entry.veryfied !== 1);
+        });
+    }
 
     return res;
 };

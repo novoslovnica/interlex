@@ -7,7 +7,7 @@ const ALLOWED_LANG_FIELDS = ["value", "veryfied", "wordId", "meaningId"] as cons
 export type LanguageCode =
 
     | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be"
-    | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo";
+    | "cs" | "sk" | "sl" | "hr" | "hsb" | "dsb" | "cu" | "de" | "nl" | "eo";
 
 export const modelsMap: Record<LanguageCode | string, any> = {
     en: prisma.en, En: prisma.en,
@@ -22,6 +22,8 @@ export const modelsMap: Record<LanguageCode | string, any> = {
     sk: prisma.sk, Sk: prisma.sk,
     sl: prisma.sl, Sl: prisma.sl,
     hr: prisma.hr, Hr: prisma.hr,
+    hsb: prisma.hsb, Hsb: prisma.hsb,
+    dsb: prisma.dsb, Dsb: prisma.dsb,
     cu: prisma.cu, Cu: prisma.cu,
     de: prisma.de, De: prisma.de,
     nl: prisma.nl, Nl: prisma.nl,

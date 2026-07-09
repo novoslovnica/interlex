@@ -3,17 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import {mergeWordsAction, searchDuplicateWords} from './actions';
 
-// Моковые типы на основе вашей конфигурации БД (адаптируйте под схему Prisma)
+// Типы на основе данных из searchDuplicateWords
 interface WordItem {
-    id: string;
-    isv_lemma: string;
-    isv_cyr?: string;
-    translations: Record<string, string>; // например: { ru: 'мир', en: 'peace', pl: 'pokój' }
-    sources: string[];
+    id: number;
+    value: string;
+    isv: string;
+    nsl: string;
+    usageType: string;
+    addition: string;
+    translations: Record<string, string[]>;
 }
 
 export default function DeduplicationPage() {
     const [searchQuery, setSearchQuery] = useState('');
+    const [showDuplicates, setShowDuplicates] = useState(false);
     const [words, setWords] = useState<WordItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -31,19 +34,19 @@ export default function DeduplicationPage() {
     const [mergedAddition, setMergedAddition] = useState('');
 
     useEffect(() => {
-        if (searchQuery.trim().length < 2) {
+        if (!showDuplicates && searchQuery.trim().length < 2) {
             setWords([]);
             return;
         }
         setIsLoading(true);
         const delayDebounce = setTimeout(async () => {
-            const res = await searchDuplicateWords(searchQuery);
+            const res = await searchDuplicateWords(searchQuery, showDuplicates);
             setWords(res as WordItem[]);
             setIsLoading(false);
         }, 400);
 
         return () => clearTimeout(delayDebounce);
-    }, [searchQuery]);
+    }, [searchQuery, showDuplicates]);
 
     const handleCheckboxChange = (id: number) => {
         setSelectedIds(prev => {
@@ -129,6 +132,18 @@ export default function DeduplicationPage() {
             </span>
                     )}
                 </div>
+                <label className="flex items-center gap-1.5 text-xs bg-background border border-border rounded px-3 py-2 cursor-pointer select-none hover:border-blue-500 transition-colors shrink-0">
+                    <input
+                        type="checkbox"
+                        checked={showDuplicates}
+                        onChange={(e) => {
+                            setShowDuplicates(e.target.checked);
+                            if (e.target.checked) setSearchQuery('');
+                        }}
+                        className="rounded border text-blue-600 focus:ring-blue-500"
+                    />
+                    <span>Выводить дублирующие слова</span>
+                </label>
                 <button
                     onClick={openMergeModal}
                     disabled={selectedIds.length !== 2 || isLoading}

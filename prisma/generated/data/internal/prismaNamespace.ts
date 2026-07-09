@@ -407,6 +407,8 @@ export const ModelName = {
   De: 'De',
   Nl: 'Nl',
   Eo: 'Eo',
+  Hsb: 'Hsb',
+  Dsb: 'Dsb',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
@@ -427,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2133,6 +2135,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Hsb: {
+      payload: Prisma.$HsbPayload<ExtArgs>
+      fields: Prisma.HsbFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HsbFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HsbFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        findFirst: {
+          args: Prisma.HsbFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HsbFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        findMany: {
+          args: Prisma.HsbFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>[]
+        }
+        create: {
+          args: Prisma.HsbCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        createMany: {
+          args: Prisma.HsbCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HsbCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>[]
+        }
+        delete: {
+          args: Prisma.HsbDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        update: {
+          args: Prisma.HsbUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        deleteMany: {
+          args: Prisma.HsbDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HsbUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HsbUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>[]
+        }
+        upsert: {
+          args: Prisma.HsbUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HsbPayload>
+        }
+        aggregate: {
+          args: Prisma.HsbAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHsb>
+        }
+        groupBy: {
+          args: Prisma.HsbGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HsbGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HsbCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HsbCountAggregateOutputType> | number
+        }
+      }
+    }
+    Dsb: {
+      payload: Prisma.$DsbPayload<ExtArgs>
+      fields: Prisma.DsbFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DsbFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DsbFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        findFirst: {
+          args: Prisma.DsbFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DsbFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        findMany: {
+          args: Prisma.DsbFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>[]
+        }
+        create: {
+          args: Prisma.DsbCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        createMany: {
+          args: Prisma.DsbCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DsbCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>[]
+        }
+        delete: {
+          args: Prisma.DsbDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        update: {
+          args: Prisma.DsbUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        deleteMany: {
+          args: Prisma.DsbDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DsbUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DsbUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>[]
+        }
+        upsert: {
+          args: Prisma.DsbUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DsbPayload>
+        }
+        aggregate: {
+          args: Prisma.DsbAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDsb>
+        }
+        groupBy: {
+          args: Prisma.DsbGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DsbGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DsbCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DsbCountAggregateOutputType> | number
+        }
+      }
+    }
     BaseHomonym: {
       payload: Prisma.$BaseHomonymPayload<ExtArgs>
       fields: Prisma.BaseHomonymFieldRefs
@@ -2904,6 +3054,34 @@ export const EoScalarFieldEnum = {
 export type EoScalarFieldEnum = (typeof EoScalarFieldEnum)[keyof typeof EoScalarFieldEnum]
 
 
+export const HsbScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  veryfied: 'veryfied',
+  wordId: 'wordId',
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
+} as const
+
+export type HsbScalarFieldEnum = (typeof HsbScalarFieldEnum)[keyof typeof HsbScalarFieldEnum]
+
+
+export const DsbScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  veryfied: 'veryfied',
+  wordId: 'wordId',
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
+} as const
+
+export type DsbScalarFieldEnum = (typeof DsbScalarFieldEnum)[keyof typeof DsbScalarFieldEnum]
+
+
 export const BaseHomonymScalarFieldEnum = {
   id: 'id',
   base: 'base',
@@ -3144,6 +3322,8 @@ export type GlobalOmitConfig = {
   de?: Prisma.DeOmit
   nl?: Prisma.NlOmit
   eo?: Prisma.EoOmit
+  hsb?: Prisma.HsbOmit
+  dsb?: Prisma.DsbOmit
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit

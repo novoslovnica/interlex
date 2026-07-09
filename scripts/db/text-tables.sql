@@ -122,3 +122,59 @@ CREATE TRIGGER IF NOT EXISTS sl_text_insert AFTER INSERT ON sl BEGIN INSERT INTO
 CREATE TRIGGER IF NOT EXISTS sl_text_delete AFTER DELETE ON sl BEGIN INSERT INTO sl_text (sl_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
 
 CREATE TRIGGER IF NOT EXISTS sl_text_update AFTER UPDATE ON sl BEGIN INSERT INTO sl_text (sl_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO sl_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "hr_text" USING FTS5(value, content=hr);
+
+CREATE TRIGGER IF NOT EXISTS hr_text_insert AFTER INSERT ON hr BEGIN INSERT INTO hr_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS hr_text_delete AFTER DELETE ON hr BEGIN INSERT INTO hr_text (hr_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS hr_text_update AFTER UPDATE ON hr BEGIN INSERT INTO hr_text (hr_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO hr_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "hsb_text" USING FTS5(value, content=hsb);
+
+CREATE TRIGGER IF NOT EXISTS hsb_text_insert AFTER INSERT ON hsb BEGIN INSERT INTO hsb_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS hsb_text_delete AFTER DELETE ON hsb BEGIN INSERT INTO hsb_text (hsb_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS hsb_text_update AFTER UPDATE ON hsb BEGIN INSERT INTO hsb_text (hsb_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO hsb_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "dsb_text" USING FTS5(value, content=dsb);
+
+CREATE TRIGGER IF NOT EXISTS dsb_text_insert AFTER INSERT ON dsb BEGIN INSERT INTO dsb_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS dsb_text_delete AFTER DELETE ON dsb BEGIN INSERT INTO dsb_text (dsb_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS dsb_text_update AFTER UPDATE ON dsb BEGIN INSERT INTO dsb_text (dsb_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO dsb_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+
+CREATE TRIGGER IF NOT EXISTS cu_text_insert AFTER INSERT ON cu BEGIN INSERT INTO cu_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS cu_text_delete AFTER DELETE ON cu BEGIN INSERT INTO cu_text (cu_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS cu_text_update AFTER UPDATE ON cu BEGIN INSERT INTO cu_text (cu_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO cu_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "de_text" USING FTS5(value, content=de);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+
+CREATE TRIGGER IF NOT EXISTS de_text_insert AFTER INSERT ON de BEGIN INSERT INTO de_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS de_text_delete AFTER DELETE ON de BEGIN INSERT INTO de_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS de_text_update AFTER UPDATE ON de BEGIN INSERT INTO de_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO de_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "nl_text" USING FTS5(value, content=nl);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+
+CREATE TRIGGER IF NOT EXISTS nl_text_insert AFTER INSERT ON nl BEGIN INSERT INTO nl_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS nl_text_delete AFTER DELETE ON nl BEGIN INSERT INTO nl_text (nl_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS nl_text_update AFTER UPDATE ON nl BEGIN INSERT INTO nl_text (nl_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO nl_text (rowid, value) VALUES (new.rowid, new.value); END;
+                                                                                                                                                                                                                        
+CREATE VIRTUAL TABLE IF NOT EXISTS "eo_text" USING FTS5(value, content=eo);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+
+CREATE TRIGGER IF NOT EXISTS eo_text_insert AFTER INSERT ON eo BEGIN INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;
+
+CREATE TRIGGER IF NOT EXISTS eo_text_delete AFTER DELETE ON eo BEGIN INSERT INTO eo_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+
+CREATE TRIGGER IF NOT EXISTS eo_text_update AFTER UPDATE ON eo BEGIN INSERT INTO eo_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;

@@ -22,6 +22,8 @@ export const TRANSLATION_LANGUAGES = [
     { code: "sk", name: "Словацкий", flag: '🇸🇰' },
     { code: "sl", name: "Словенский", flag: '🇸🇮' },
     { code: "hr", name: "Хорватский", flag: '🇭🇷' },
+    { code: "hsb", name: "Верхнелужицкий", flag: '' },
+    { code: "dsb", name: "Нижнелужицкий", flag: '' },
     { code: "cu", name: "Церковнославянский", flag: '' },
     { code: "de", name: "Немецкий", flag: '' },
     { code: "nl", name: "Нидерландский", flag: '' },

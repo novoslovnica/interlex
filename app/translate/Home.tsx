@@ -20,6 +20,8 @@ const options = [
     <option key="cs" value="cs">Чешский</option>,
     <option key="sk" value="sk">Словацкий</option>,
     <option key="de" value="de">Deutsch</option>,
+    <option key="hsb" value="hsb">Hornjoserbsce</option>,
+    <option key="dsb" value="dsb">Dolnoserbski</option>,
 ];
 
 const MAIN_CATEGORY_LABELS: Record<string, string> = {

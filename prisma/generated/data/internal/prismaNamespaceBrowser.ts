@@ -74,6 +74,8 @@ export const ModelName = {
   De: 'De',
   Nl: 'Nl',
   Eo: 'Eo',
+  Hsb: 'Hsb',
+  Dsb: 'Dsb',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
@@ -457,6 +459,34 @@ export const EoScalarFieldEnum = {
 } as const
 
 export type EoScalarFieldEnum = (typeof EoScalarFieldEnum)[keyof typeof EoScalarFieldEnum]
+
+
+export const HsbScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  veryfied: 'veryfied',
+  wordId: 'wordId',
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
+} as const
+
+export type HsbScalarFieldEnum = (typeof HsbScalarFieldEnum)[keyof typeof HsbScalarFieldEnum]
+
+
+export const DsbScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  veryfied: 'veryfied',
+  wordId: 'wordId',
+  meaningId: 'meaningId',
+  actionHistory: 'actionHistory'
+} as const
+
+export type DsbScalarFieldEnum = (typeof DsbScalarFieldEnum)[keyof typeof DsbScalarFieldEnum]
 
 
 export const BaseHomonymScalarFieldEnum = {

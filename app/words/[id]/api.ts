@@ -78,6 +78,8 @@ export const getItem = async (id: string) => {
   const nl = await getLang("nl", id);
   const eo = await getLang("eo", id);
   const cu = await getLang("cu", id);
+  const hsb = await getLang("hsb", id);
+  const dsb = await getLang("dsb", id);
 
   return {
     ...data,
@@ -98,6 +100,8 @@ export const getItem = async (id: string) => {
     nl,
     eo,
     cu,
+    hsb,
+    dsb,
     roots,
   };
 };

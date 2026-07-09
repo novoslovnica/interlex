@@ -54,6 +54,8 @@ const meaningLanguageInclude = {
   be_word: true,
   sk_word: true,
   hr_word: true,
+  hsb_word: true,
+  dsb_word: true,
   cu_word: true,
   nl_word: true,
   eo_word: true,
@@ -63,7 +65,8 @@ function getLangModel(lang: string) {
   const models: Record<string, unknown> = {
     en: db.en, ru: db.ru, mk: db.mk, sr: db.sr, bg: db.bg,
     pl: db.pl, cs: db.cs, sl: db.sl, de: db.de, uk: db.uk,
-    be: db.be, sk: db.sk, hr: db.hr, cu: db.cu, nl: db.nl, eo: db.eo,
+    be: db.be, sk: db.sk, hr: db.hr, hsb: db.hsb, dsb: db.dsb,
+    cu: db.cu, nl: db.nl, eo: db.eo,
   }
   return models[lang]
 }
@@ -82,6 +85,8 @@ function extractTranslations(meaning: {
   be_word: { id: number; value: string | null; veryfied: number | null }[]
   sk_word: { id: number; value: string | null; veryfied: number | null }[]
   hr_word: { id: number; value: string | null; veryfied: number | null }[]
+  hsb_word: { id: number; value: string | null; veryfied: number | null }[]
+  dsb_word: { id: number; value: string | null; veryfied: number | null }[]
   cu_word: { id: number; value: string | null; veryfied: number | null }[]
   nl_word: { id: number; value: string | null; veryfied: number | null }[]
   eo_word: { id: number; value: string | null; veryfied: number | null }[]
@@ -101,6 +106,8 @@ function extractTranslations(meaning: {
     { key: "be", field: "be_word" },
     { key: "sk", field: "sk_word" },
     { key: "hr", field: "hr_word" },
+    { key: "hsb", field: "hsb_word" },
+    { key: "dsb", field: "dsb_word" },
     { key: "cu", field: "cu_word" },
     { key: "nl", field: "nl_word" },
     { key: "eo", field: "eo_word" },

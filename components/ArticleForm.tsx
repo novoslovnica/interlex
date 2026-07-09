@@ -19,6 +19,8 @@ const LANGUAGES: { key: string; label: string }[] = [
   { key: "be", label: "Беларуская" },
   { key: "sk", label: "Slovenčina" },
   { key: "hr", label: "Hrvatski" },
+  { key: "hsb", label: "Hornjoserbsce" },
+  { key: "dsb", label: "Dolnoserbski" },
   { key: "cu", label: "Словѣньскъ" },
   { key: "nl", label: "Nederlands" },
   { key: "eo", label: "Esperanto" },

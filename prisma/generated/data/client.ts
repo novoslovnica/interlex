@@ -157,6 +157,16 @@ export type Nl = Prisma.NlModel
  */
 export type Eo = Prisma.EoModel
 /**
+ * Model Hsb
+ * 
+ */
+export type Hsb = Prisma.HsbModel
+/**
+ * Model Dsb
+ * 
+ */
+export type Dsb = Prisma.DsbModel
+/**
  * Model BaseHomonym
  * 
  */

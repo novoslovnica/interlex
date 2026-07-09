@@ -34,8 +34,31 @@ export default function InfiniteEditableTable() {
     const queryClient = useQueryClient();
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterLang, setFilterLang] = useState('');
+    const [unverifiedOnly, setUnverifiedOnly] = useState(false);
 
     const debouncedSearch = useDebounce(searchQuery, 400);
+
+    const LANG_OPTIONS = [
+        { code: 'ru', label: 'Русский' },
+        { code: 'en', label: 'Английский' },
+        { code: 'mk', label: 'Македонский' },
+        { code: 'bg', label: 'Болгарский' },
+        { code: 'sr', label: 'Сербский' },
+        { code: 'hr', label: 'Хорватский' },
+        { code: 'pl', label: 'Польский' },
+        { code: 'cs', label: 'Чешский' },
+        { code: 'sk', label: 'Словацкий' },
+        { code: 'sl', label: 'Словенский' },
+        { code: 'de', label: 'Немецкий' },
+        { code: 'uk', label: 'Украинский' },
+        { code: 'be', label: 'Белорусский' },
+        { code: 'hsb', label: 'Верхнелужицкий' },
+        { code: 'dsb', label: 'Нижнелужицкий' },
+        { code: 'cu', label: 'Церковнославянский' },
+        { code: 'nl', label: 'Нидерландский' },
+        { code: 'eo', label: 'Эсперанто' },
+    ];
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         id: true,
@@ -56,12 +79,14 @@ export default function InfiniteEditableTable() {
         de: false,
         uk: false,
         be: false,
+        hsb: false,
+        dsb: false,
         cu: false,
         nl: false,
         eo: false,
     });
 
-    const queryKey = useMemo(() => ['lexicon-infinite', debouncedSearch], [debouncedSearch]);
+    const queryKey = useMemo(() => ['lexicon-infinite', debouncedSearch, filterLang, unverifiedOnly], [debouncedSearch, filterLang, unverifiedOnly]);
 
     const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
         useInfiniteQuery({
@@ -73,6 +98,13 @@ export default function InfiniteEditableTable() {
 
                 if (debouncedSearch) {
                     params.append('search', debouncedSearch);
+                }
+
+                if (filterLang) {
+                    params.append('filterLang', filterLang);
+                    if (unverifiedOnly) {
+                        params.append('unverified', '1');
+                    }
                 }
 
                 const res = await fetch(`/api/lexicon?${params.toString()}`);
@@ -220,6 +252,18 @@ export default function InfiniteEditableTable() {
                 cell: EditableLanguageCell,
             },
             {
+                id: "hsb",
+                accessorKey: 'hsb',
+                header: 'Верхнелужицкий',
+                cell: EditableLanguageCell,
+            },
+            {
+                id: "dsb",
+                accessorKey: 'dsb',
+                header: 'Нижнелужицкий',
+                cell: EditableLanguageCell,
+            },
+            {
                 id: "cu",
                 accessorKey: 'cu',
                 header: 'Церковнославянский',
@@ -360,6 +404,33 @@ export default function InfiniteEditableTable() {
 
 
             <div className="bg-muted/20 p-4 rounded-xl border space-y-2">
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs font-semibold text-muted-foreground">Язык фильтра:</label>
+                        <select
+                            value={filterLang}
+                            onChange={(e) => setFilterLang(e.target.value)}
+                            className="border border-border rounded px-2 py-1 text-xs bg-background text-foreground outline-none focus:border-blue-500"
+                        >
+                            <option value="">— не выбран —</option>
+                            {LANG_OPTIONS.map(lang => (
+                                <option key={lang.code} value={lang.code}>{lang.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {filterLang && (
+                        <label className="flex items-center gap-1.5 text-xs bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors">
+                            <input
+                                type="checkbox"
+                                checked={unverifiedOnly}
+                                onChange={(e) => setUnverifiedOnly(e.target.checked)}
+                                className="rounded border text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Только непроверенные ({LANG_OPTIONS.find(l => l.code === filterLang)?.label})</span>
+                        </label>
+                    )}
+                </div>
+
                 <span className="text-xs font-semibold text-muted-foreground block">Отображаемые языки (колонки):</span>
 
                 <div className="flex flex-wrap gap-3">
