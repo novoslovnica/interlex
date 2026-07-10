@@ -2,6 +2,7 @@ import Credentials from "next-auth/providers/credentials"
 import type { NextAuthConfig } from "next-auth"
 import crypto from "crypto"
 import Yandex from "@auth/core/providers/yandex";
+import Google from "@auth/core/providers/google";
 
 // Функция валидации данных от Telegram
 function verifyTelegramAuth(data: Record<string, any>, botToken: string): boolean {
@@ -72,6 +73,10 @@ export default {
         Yandex({
             clientId: process.env.AUTH_YANDEX_ID,
             clientSecret: process.env.AUTH_YANDEX_SECRET,
+        }),
+        Google({
+            clientId: process.env.AUTH_GOOGLE_ID,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET,
         }),
     ],
 } satisfies NextAuthConfig

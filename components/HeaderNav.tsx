@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { signIn, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import {LanguageSwitcher} from "@/components/LanguageSwitcher";
 import {useState} from "react";
 
@@ -119,13 +119,9 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                     </li>
                 ) : (
                     <li>
-                        <button
-                            onClick={() => signIn("yandex", { callbackUrl: "/" })}
-                            className="nav-link border-none bg-transparent cursor-pointer"
-                            style={{ font: 'inherit', color: 'inherit' }}
-                        >
+                        <Link href="/login" className="nav-link" onClick={() => setIsOpen(false)}>
                             Войти
-                        </button>
+                        </Link>
                     </li>
                 )}
             </ul>
