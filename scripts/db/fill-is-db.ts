@@ -4,8 +4,23 @@ import fs from "fs";
 import Papa from "papaparse";
 import {init} from "@/lib/sqlite";
 import {csvGrammarMapper, heuristicStem, parseAddition, generateStemCandidates} from "@/lib/grammar/common";
+import {stripLatinDiacritics} from "@/lib/levenshtein";
+import {generateAllFlavors} from "@/lib/flavors";
+import Database from "better-sqlite3";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
+
+const ensureFlavors = (db: Database.Database) => {
+    const count = db.prepare("SELECT COUNT(*) as cnt FROM allophone_flavors").get() as { cnt: number };
+    if (count.cnt === 0) {
+        const insert = db.prepare("INSERT INTO allophone_flavors (code, label, description) VALUES (?, ?, ?)");
+insert.run("CORE", "Core (Latin)", "Standard Latin orthography");
+    insert.run("NSL", "NSL (Cyrillic)", "Scientific Cyrillic transliteration");
+    insert.run("EAST", "East Slavic", "Eastern Slavic orthographic variant");
+    insert.run("WEST", "West Slavic", "Western Slavic orthographic variant");
+    insert.run("SOUTH", "South Slavic", "Southern Slavic orthographic variant");
+    }
+};
 
 const file = path.resolve(process.cwd(), 'slovnik-2.csv');
 
@@ -111,8 +126,6 @@ decl,
     const insert = db.prepare(`INSERT INTO lexemes (
         external_id,
         value,
-        isv,
-        nsl,
         transcription,
         mainCategory,
         usageType,
@@ -139,7 +152,7 @@ decl,
         governsCase,
         hasAnomalies,
         updatedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
     const check = db.prepare(`SELECT * FROM lexemes WHERE slug = ? `).get(`${value}-${pos}`);
 
@@ -149,8 +162,6 @@ decl,
         const r = insert.run(
             externalId,
             value,
-            lat,
-            cyr,
             trans,
             null,
             'general',
@@ -179,8 +190,27 @@ decl,
             new Date().toISOString(),
         );
         wId = r.lastInsertRowid;
+
+        db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'CORE'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`).run(wId, lat.toLowerCase());
+        if (cyr) {
+            db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'NSL'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`).run(wId, cyr.toLowerCase());
+        }
+        const flavors = generateAllFlavors(lat);
+        for (const [code, val] of [["EAST", flavors.east], ["WEST", flavors.west], ["SOUTH", flavors.south]] as const) {
+            db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = ?), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`)
+                .run(wId, val.toLowerCase(), code);
+        }
     } else {
         wId = check.id;
+        db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'CORE'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`).run(wId, lat.toLowerCase());
+        if (cyr) {
+            db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'NSL'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`).run(wId, cyr.toLowerCase());
+        }
+        const flavors = generateAllFlavors(lat);
+        for (const [code, val] of [["EAST", flavors.east], ["WEST", flavors.west], ["SOUTH", flavors.south]] as const) {
+            db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = ?), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`)
+                .run(wId, val.toLowerCase(), code);
+        }
     }
 
     const insertMeaning = db.prepare(`INSERT INTO meanings (
@@ -244,6 +274,7 @@ const fillDb = async () => {
     const data = Papa.parse<Array<string>>(fileContent);
 
     const db = await init();
+    ensureFlavors(db);
 
     data.data.forEach((row, index) => {
         if (!index) return;
@@ -284,7 +315,7 @@ const fillDb = async () => {
             addition,
             cyr: "",
             lat: isv,
-            value: isv,
+            value: stripLatinDiacritics(isv),
             trans: "",
             rootId: "",
             decl: type,

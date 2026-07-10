@@ -1,9 +1,11 @@
 "use client"
 
-import { useState, useTransition, useEffect, useCallback } from "react"
+import { useState, useTransition, useEffect, useCallback, useMemo, useRef } from "react"
 import { parseComprehensionString, SLAVIC_LANGUAGES_MAP } from "@/lib/types/lexicon"
 import { UsageType, ALL_USAGE_TYPES } from "@/lib/enums/UsageType"
 import { MainCategory, ALL_MAIN_CATEGORIES } from "@/lib/enums/MainCategory"
+import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
+import { generateAllFlavors } from "@/lib/flavors"
 
 const LANGUAGES: { key: string; label: string }[] = [
   { key: "en", label: "English" },
@@ -187,6 +189,8 @@ interface ArticleFormProps {
     inflectionAnomalies: InflectionAnomalyItem[]
     attachedRoots: SelectedRootItem[]
     meanings: MeaningData[]
+    allophones?: Record<string, string>
+    homonymBases?: string[]
     pos?: string | null
     gender?: string | null
     aspect?: string | null
@@ -239,6 +243,13 @@ export default function ArticleForm({
 
   const [word, setWord] = useState(initialData?.word || "")
   const [stem, setStem] = useState(initialData?.stem || "")
+  const [allophones, setAllophones] = useState<Record<string, string>>(
+    initialData?.allophones || { core: "", nsl: "", east: "", west: "", south: "" }
+  )
+  const [homonymBases, setHomonymBases] = useState<string[]>(
+    initialData?.homonymBases || []
+  )
+  const [changedHomonyms, setChangedHomonyms] = useState<Set<string>>(new Set())
   const [hasAnomalies, setHasAnomalies] = useState(initialData?.hasAnomalies || false)
   const [properNoun, setProperNoun] = useState(initialData?.properNoun || false)
   const [inflectionAnomalies, setInflectionAnomalies] = useState<InflectionAnomalyItem[]>(
@@ -364,6 +375,86 @@ export default function ArticleForm({
     return () => clearTimeout(delayDebounceFn)
   }, [searchQuery, initialRoots])
 
+  // Recalculate homonym candidates when stem changes
+  const [initialStem] = useState(initialData?.stem || "")
+  useEffect(() => {
+    const s = stem.trim()
+    if (!s) {
+      setHomonymBases([])
+      return
+    }
+    const candidates = generateStemCandidates({
+      stem: s,
+      secondaryStem: null,
+      tertiaryStem: null,
+      pos: undefined,
+      isv: undefined,
+    })
+    const oldSet = new Set(initialData?.homonymBases || [])
+    const newChanged = new Set<string>()
+    for (const c of candidates) {
+      if (!oldSet.has(c)) newChanged.add(c)
+    }
+    setChangedHomonyms(newChanged)
+    setHomonymBases(candidates)
+  }, [stem])
+
+  // Auto-fill east/west/south allophones when core changes
+  useEffect(() => {
+    const core = allophones.core?.trim()
+    if (!core) return
+    const flavors = generateAllFlavors(core)
+    setAllophones((prev) => {
+      if (prev.east === flavors.east && prev.west === flavors.west && prev.south === flavors.south) return prev
+      return { ...prev, east: flavors.east, west: flavors.west, south: flavors.south }
+    })
+  }, [allophones.core])
+
+  // Add allophone values as homonym bases
+  const prevAllophonesRef = useRef("")
+  useEffect(() => {
+    const values = Object.values(allophones).filter((v) => v.trim().length > 0)
+    const key = values.sort().join("|")
+    if (key === prevAllophonesRef.current) return
+    prevAllophonesRef.current = key
+
+    const oldSet = new Set(initialData?.homonymBases || [])
+    setHomonymBases((prev) => {
+      const existing = new Set(prev)
+      let changed = false
+      const next = [...prev]
+      for (const v of values) {
+        if (!existing.has(v)) {
+          next.push(v)
+          existing.add(v)
+          if (!oldSet.has(v)) {
+            setChangedHomonyms((ch) => new Set(ch).add(v))
+          }
+          changed = true
+        }
+      }
+      return changed ? next : prev
+    })
+  }, [allophones])
+
+  const addHomonymBase = () => {
+    setHomonymBases((prev) => [...prev, ""])
+    setChangedHomonyms((prev) => new Set(prev).add(""))
+  }
+
+  const removeHomonymBase = (idx: number) => {
+    setHomonymBases((prev) => prev.filter((_, i) => i !== idx))
+  }
+
+  const updateHomonymBase = (idx: number, value: string) => {
+    setHomonymBases((prev) => {
+      const next = [...prev]
+      next[idx] = value
+      return next
+    })
+    setChangedHomonyms((prev) => new Set(prev).add(value))
+  }
+
   const handleToggleRoot = useCallback((root: RootOption) => {
     setSelectedRoots((prev) => {
       const exists = prev.some((r) => r.id === root.id)
@@ -468,6 +559,8 @@ export default function ArticleForm({
       await onSubmit({
         word,
         stem,
+        allophones,
+        homonymBases,
         hasAnomalies,
         properNoun,
         etymology,
@@ -574,15 +667,36 @@ export default function ArticleForm({
           {/* Left column: Word, stem, anomalies, grammar */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Слово</label>
+              <label className="block text-sm font-medium mb-1">Ключ для поиска</label>
               <input
                 type="text"
                 required
                 value={word}
                 onChange={(e) => setWord(e.target.value)}
                 className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
-                placeholder="Введите слово..."
+                placeholder="Введите ключ для поиска..."
               />
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                ["core", "ISV (CORE)"],
+                ["nsl", "NSL"],
+                ["east", "EAST"],
+                ["west", "WEST"],
+                ["south", "SOUTH"],
+              ].map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-sm font-medium mb-1">{label}</label>
+                  <input
+                    type="text"
+                    value={allophones[key] || ""}
+                    onChange={(e) => setAllophones((prev) => ({ ...prev, [key]: e.target.value }))}
+                    className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
+                    placeholder={label + "..."}
+                  />
+                </div>
+              ))}
             </div>
 
             <div>
@@ -595,6 +709,39 @@ export default function ArticleForm({
                 placeholder="Основа для поиска словоформ (н-р: vod)"
               />
             </div>
+
+            {homonymBases.length > 0 && (
+              <div className="p-3 border rounded-md bg-muted/10">
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-xs font-medium text-muted-foreground">Ключи омонимов (Base_Homonym)</label>
+                  <button type="button" onClick={addHomonymBase} className="text-xs px-2 py-1 border border-dashed rounded text-primary hover:bg-primary/5">+ Добавить</button>
+                </div>
+                <div className="space-y-2">
+                  {homonymBases.map((base, idx) => {
+                    const isChanged = changedHomonyms.has(base) && (!initialData?.homonymBases || !initialData.homonymBases.includes(base))
+                    return (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={base}
+                          onChange={(e) => updateHomonymBase(idx, e.target.value)}
+                          className={`flex-1 px-2 py-1 border rounded bg-background text-xs ${
+                            isChanged ? "border-amber-400 bg-amber-50 dark:bg-amber-950/20 ring-1 ring-amber-400/50" : ""
+                          }`}
+                          placeholder="Основа омонима..."
+                        />
+                        <button type="button" onClick={() => removeHomonymBase(idx)} className="text-xs text-destructive hover:text-destructive/80 px-1">✕</button>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {changedHomonyms.size > 0
+                    ? "⚠ Жёлтые поля — новые ключи, будут сохранены при отправке формы."
+                    : "Ключи генерируются автоматически из основы с учётом палатализации и беглых гласных."}
+                </p>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium mb-1">Этимология</label>

@@ -14,8 +14,6 @@ model Lexeme {
   slug            String           @unique
   external_id     Int?
   value           String?
-  nsl             String?
-  isv             String?
   transcription   String?
   mainCategory    String?
   usageType       String?
@@ -57,6 +55,7 @@ model Lexeme {
   meanings        Meaning[]
   lexemes_morphemes LexemeMorpheme[]
   anomalies       InflectionAnomaly[]
+  lexemeAllophones   LexemeAllophone[]
   actionHistory   String?
 
   @@map("lexemes")
@@ -105,16 +104,7 @@ model Candidate {
 
   @@map("candidates")
   @@index([value])
-  @@index([isv])
   @@index([pos])
-}
-
-model Lexeme_text {
-  id      Int    @id
-  value   String
-  lexemeId  String
-
-  @@ignore
 }
 
 model Meaning {
@@ -186,17 +176,10 @@ model Morpheme {
   type  Int?    @default(0)
 
   lexemes_morphemes LexemeMorpheme[]
+  morphemeAllophones  MorphemeAllophone[]
   actionHistory String?
 
   @@map("morphemes")
-}
-
-model Morpheme_text {
-  id      Int    @id
-  value   String
-  morphemeId  String
-
-  @@ignore
 }
 
 model LexemeMorpheme {
@@ -208,6 +191,56 @@ model LexemeMorpheme {
   morpheme   Morpheme? @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
 
   @@map("lexemes_morphemes")
+}
+
+model AllophoneFlavor {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique
+  label       String
+  description String?
+  lexemeAllophones   LexemeAllophone[]
+  morphemeAllophones MorphemeAllophone[]
+  endingAllophones   EndingAllophone[]
+  @@map("allophone_flavors")
+}
+
+model LexemeAllophone {
+  id        Int     @id @default(autoincrement())
+  lexemeId  Int
+  value     String
+  flavorId  Int
+  type      String  @default("standard")
+  lexeme    Lexeme               @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  flavor    AllophoneFlavor      @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  @@unique([lexemeId, flavorId, type])
+  @@map("lexeme_allophones")
+  @@index([lexemeId])
+  @@index([flavorId])
+}
+
+model MorphemeAllophone {
+  id         Int     @id @default(autoincrement())
+  morphemeId Int
+  value      String
+  flavorId   Int
+  morpheme   Morpheme             @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
+  flavor     AllophoneFlavor      @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  @@unique([morphemeId, flavorId])
+  @@map("morpheme_allophones")
+  @@index([morphemeId])
+  @@index([flavorId])
+}
+
+model EndingAllophone {
+  id        Int     @id @default(autoincrement())
+  stemType  String
+  grammeme  String
+  value     String
+  flavorId  Int
+  flavor    AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  @@unique([stemType, grammeme, flavorId])
+  @@map("ending_allophones")
+  @@index([flavorId])
 }
 
 model Synonym {

@@ -19,6 +19,12 @@ interface RootResult {
 async function main() {
   const { prismaData: db } = await import('@/lib/prisma')
 
+  const coreFlavor = await db.allophoneFlavor.findUnique({ where: { code: 'CORE' } })
+  if (!coreFlavor) {
+    console.error('CORE allophone flavor not found. Run fill:db or fill:is:db first.')
+    process.exit(1)
+  }
+
   const inputPath = path.resolve(process.cwd(), 'root-candidates.json')
   const data: RootResult[] = JSON.parse(fs.readFileSync(inputPath, 'utf-8'))
 
@@ -35,6 +41,13 @@ async function main() {
       where: { id: entry.id },
       data: { value: entry.primaryRoot },
     })
+
+    await db.morphemeAllophone.upsert({
+      where: { morphemeId_flavorId: { morphemeId: entry.id, flavorId: coreFlavor.id } },
+      update: { value: entry.primaryRoot },
+      create: { morphemeId: entry.id, value: entry.primaryRoot, flavorId: coreFlavor.id },
+    })
+
     updated++
   }
 

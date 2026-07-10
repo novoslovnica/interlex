@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
+import { requirePermission } from "@/lib/permissions"
 import { SynonymsClient } from "./synonyms-client"
 import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
@@ -34,13 +35,14 @@ export default async function AdminSynonymsPage() {
     const session = await auth()
     if (!session) redirect("/unauthorized")
 
-    if (session.user.role !== "ADMIN") {
-        if (session.user.role !== "MODERATOR") redirect("/unauthorized")
-        const hasFeature = await dbAuth.featurePermission.findFirst({
-            where: { userId: session.user.id, featureKey: Feature.DictionaryEdit }
-        })
-        if (!hasFeature) redirect("/unauthorized")
-    }
+    await requirePermission(session, Feature.SynonymsEdit)
+
+    const userPermissions = session.user.role === "MODERATOR"
+        ? (await dbAuth.featurePermission.findMany({
+            where: { userId: session.user.id },
+            select: { featureKey: true },
+          })).map(p => p.featureKey)
+        : []
 
     const initialWords = (await db.lexeme.findMany({
         select: {
@@ -118,7 +120,7 @@ export default async function AdminSynonymsPage() {
     return (
         <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
             <div className="flex flex-col h-full overflow-hidden">
-                <AdminNav userRole={session.user.role} />
+                <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
                 <div className="px-4 md:px-6 pb-2 shrink-0">
                     <h1 className="text-2xl font-bold">Управление синонимами</h1>
                     <p className="text-muted-foreground text-sm">

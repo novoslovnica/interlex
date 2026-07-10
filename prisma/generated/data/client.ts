@@ -67,6 +67,26 @@ export type Morpheme = Prisma.MorphemeModel
  */
 export type LexemeMorpheme = Prisma.LexemeMorphemeModel
 /**
+ * Model AllophoneFlavor
+ * 
+ */
+export type AllophoneFlavor = Prisma.AllophoneFlavorModel
+/**
+ * Model LexemeAllophone
+ * 
+ */
+export type LexemeAllophone = Prisma.LexemeAllophoneModel
+/**
+ * Model MorphemeAllophone
+ * 
+ */
+export type MorphemeAllophone = Prisma.MorphemeAllophoneModel
+/**
+ * Model EndingAllophone
+ * 
+ */
+export type EndingAllophone = Prisma.EndingAllophoneModel
+/**
  * Model Synonym
  * 
  */

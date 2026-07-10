@@ -389,6 +389,10 @@ export const ModelName = {
   Meaning: 'Meaning',
   Morpheme: 'Morpheme',
   LexemeMorpheme: 'LexemeMorpheme',
+  AllophoneFlavor: 'AllophoneFlavor',
+  LexemeAllophone: 'LexemeAllophone',
+  MorphemeAllophone: 'MorphemeAllophone',
+  EndingAllophone: 'EndingAllophone',
   Synonym: 'Synonym',
   Antonym: 'Antonym',
   En: 'En',
@@ -429,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "synonym" | "antonym" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -800,6 +804,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LexemeMorphemeCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LexemeMorphemeCountAggregateOutputType> | number
+        }
+      }
+    }
+    AllophoneFlavor: {
+      payload: Prisma.$AllophoneFlavorPayload<ExtArgs>
+      fields: Prisma.AllophoneFlavorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AllophoneFlavorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AllophoneFlavorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        findFirst: {
+          args: Prisma.AllophoneFlavorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AllophoneFlavorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        findMany: {
+          args: Prisma.AllophoneFlavorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>[]
+        }
+        create: {
+          args: Prisma.AllophoneFlavorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        createMany: {
+          args: Prisma.AllophoneFlavorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AllophoneFlavorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>[]
+        }
+        delete: {
+          args: Prisma.AllophoneFlavorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        update: {
+          args: Prisma.AllophoneFlavorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        deleteMany: {
+          args: Prisma.AllophoneFlavorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AllophoneFlavorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AllophoneFlavorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>[]
+        }
+        upsert: {
+          args: Prisma.AllophoneFlavorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AllophoneFlavorPayload>
+        }
+        aggregate: {
+          args: Prisma.AllophoneFlavorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAllophoneFlavor>
+        }
+        groupBy: {
+          args: Prisma.AllophoneFlavorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AllophoneFlavorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AllophoneFlavorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AllophoneFlavorCountAggregateOutputType> | number
+        }
+      }
+    }
+    LexemeAllophone: {
+      payload: Prisma.$LexemeAllophonePayload<ExtArgs>
+      fields: Prisma.LexemeAllophoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LexemeAllophoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LexemeAllophoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        findFirst: {
+          args: Prisma.LexemeAllophoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LexemeAllophoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        findMany: {
+          args: Prisma.LexemeAllophoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>[]
+        }
+        create: {
+          args: Prisma.LexemeAllophoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        createMany: {
+          args: Prisma.LexemeAllophoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LexemeAllophoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>[]
+        }
+        delete: {
+          args: Prisma.LexemeAllophoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        update: {
+          args: Prisma.LexemeAllophoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        deleteMany: {
+          args: Prisma.LexemeAllophoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LexemeAllophoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LexemeAllophoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>[]
+        }
+        upsert: {
+          args: Prisma.LexemeAllophoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LexemeAllophonePayload>
+        }
+        aggregate: {
+          args: Prisma.LexemeAllophoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLexemeAllophone>
+        }
+        groupBy: {
+          args: Prisma.LexemeAllophoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LexemeAllophoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LexemeAllophoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LexemeAllophoneCountAggregateOutputType> | number
+        }
+      }
+    }
+    MorphemeAllophone: {
+      payload: Prisma.$MorphemeAllophonePayload<ExtArgs>
+      fields: Prisma.MorphemeAllophoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MorphemeAllophoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MorphemeAllophoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        findFirst: {
+          args: Prisma.MorphemeAllophoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MorphemeAllophoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        findMany: {
+          args: Prisma.MorphemeAllophoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>[]
+        }
+        create: {
+          args: Prisma.MorphemeAllophoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        createMany: {
+          args: Prisma.MorphemeAllophoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MorphemeAllophoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>[]
+        }
+        delete: {
+          args: Prisma.MorphemeAllophoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        update: {
+          args: Prisma.MorphemeAllophoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        deleteMany: {
+          args: Prisma.MorphemeAllophoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MorphemeAllophoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MorphemeAllophoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>[]
+        }
+        upsert: {
+          args: Prisma.MorphemeAllophoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MorphemeAllophonePayload>
+        }
+        aggregate: {
+          args: Prisma.MorphemeAllophoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMorphemeAllophone>
+        }
+        groupBy: {
+          args: Prisma.MorphemeAllophoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MorphemeAllophoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MorphemeAllophoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MorphemeAllophoneCountAggregateOutputType> | number
+        }
+      }
+    }
+    EndingAllophone: {
+      payload: Prisma.$EndingAllophonePayload<ExtArgs>
+      fields: Prisma.EndingAllophoneFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EndingAllophoneFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EndingAllophoneFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        findFirst: {
+          args: Prisma.EndingAllophoneFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EndingAllophoneFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        findMany: {
+          args: Prisma.EndingAllophoneFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>[]
+        }
+        create: {
+          args: Prisma.EndingAllophoneCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        createMany: {
+          args: Prisma.EndingAllophoneCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EndingAllophoneCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>[]
+        }
+        delete: {
+          args: Prisma.EndingAllophoneDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        update: {
+          args: Prisma.EndingAllophoneUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        deleteMany: {
+          args: Prisma.EndingAllophoneDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EndingAllophoneUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EndingAllophoneUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>[]
+        }
+        upsert: {
+          args: Prisma.EndingAllophoneUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EndingAllophonePayload>
+        }
+        aggregate: {
+          args: Prisma.EndingAllophoneAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEndingAllophone>
+        }
+        groupBy: {
+          args: Prisma.EndingAllophoneGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EndingAllophoneGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EndingAllophoneCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EndingAllophoneCountAggregateOutputType> | number
         }
       }
     }
@@ -2696,8 +2996,6 @@ export const LexemeScalarFieldEnum = {
   slug: 'slug',
   external_id: 'external_id',
   value: 'value',
-  nsl: 'nsl',
-  isv: 'isv',
   transcription: 'transcription',
   mainCategory: 'mainCategory',
   usageType: 'usageType',
@@ -2808,6 +3106,48 @@ export const LexemeMorphemeScalarFieldEnum = {
 } as const
 
 export type LexemeMorphemeScalarFieldEnum = (typeof LexemeMorphemeScalarFieldEnum)[keyof typeof LexemeMorphemeScalarFieldEnum]
+
+
+export const AllophoneFlavorScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  description: 'description'
+} as const
+
+export type AllophoneFlavorScalarFieldEnum = (typeof AllophoneFlavorScalarFieldEnum)[keyof typeof AllophoneFlavorScalarFieldEnum]
+
+
+export const LexemeAllophoneScalarFieldEnum = {
+  id: 'id',
+  lexemeId: 'lexemeId',
+  value: 'value',
+  flavorId: 'flavorId',
+  type: 'type'
+} as const
+
+export type LexemeAllophoneScalarFieldEnum = (typeof LexemeAllophoneScalarFieldEnum)[keyof typeof LexemeAllophoneScalarFieldEnum]
+
+
+export const MorphemeAllophoneScalarFieldEnum = {
+  id: 'id',
+  morphemeId: 'morphemeId',
+  value: 'value',
+  flavorId: 'flavorId'
+} as const
+
+export type MorphemeAllophoneScalarFieldEnum = (typeof MorphemeAllophoneScalarFieldEnum)[keyof typeof MorphemeAllophoneScalarFieldEnum]
+
+
+export const EndingAllophoneScalarFieldEnum = {
+  id: 'id',
+  stemType: 'stemType',
+  grammeme: 'grammeme',
+  value: 'value',
+  flavorId: 'flavorId'
+} as const
+
+export type EndingAllophoneScalarFieldEnum = (typeof EndingAllophoneScalarFieldEnum)[keyof typeof EndingAllophoneScalarFieldEnum]
 
 
 export const SynonymScalarFieldEnum = {
@@ -3304,6 +3644,10 @@ export type GlobalOmitConfig = {
   meaning?: Prisma.MeaningOmit
   morpheme?: Prisma.MorphemeOmit
   lexemeMorpheme?: Prisma.LexemeMorphemeOmit
+  allophoneFlavor?: Prisma.AllophoneFlavorOmit
+  lexemeAllophone?: Prisma.LexemeAllophoneOmit
+  morphemeAllophone?: Prisma.MorphemeAllophoneOmit
+  endingAllophone?: Prisma.EndingAllophoneOmit
   synonym?: Prisma.SynonymOmit
   antonym?: Prisma.AntonymOmit
   en?: Prisma.EnOmit

@@ -1,0 +1,80 @@
+{
+  "interslavic_historical_dictionary_sources": {
+    "description": "Бесплатные академические корпуса и репозитории исторических славянских текстов с морфологической разметкой и леммами.",
+    "south_and_old_church_slavic": [
+      {
+        "corpus_name": "PROIEL Treebank",
+        "description": "Синтаксически размеченные старославянские памятники (Мариинское, Зографское евангелия, Супрасльская рукопись). Прекрасная лемматизация.",
+        "format": "XML, CoNLL-U",
+        "download_links": [
+          "https://github.com/proiel/proiel-treebank"
+        ]
+      },
+      {
+        "corpus_name": "TOROT Treebank (Old Church Slavic Section)",
+        "description": "Расширение корпуса PROIEL, включающее дополнительные старославянские тексты с пословным морфологическим анализом.",
+        "format": "XML, CoNLL-U",
+        "download_links": [
+          "https://github.com/torottreebank/treebank-releases"
+        ]
+      }
+    ],
+    "east_slavic": [
+      {
+        "corpus_name": "TOROT Treebank (Old East Slavic Section)",
+        "description": "Древнерусские и старорусские тексты (летописи, берестяные грамоты, жития) XI–XVII веков. Идеально для автоматического матчинга лемм.",
+        "format": "CoNLL-U, XML",
+        "download_links": [
+          "https://github.com/UniversalDependencies/UD_Old_East_Slavic-TOROT",
+          "https://github.com/torottreebank/treebank-releases"
+        ]
+      },
+      {
+        "corpus_name": "Национальный корпус русского языка (Древнерусский и Старорусский подкорпуса)",
+        "description": "Крупнейший массив аннотированных восточнославянских текстов. Полные датасеты выдаются бесплатно по запросу для некоммерческих ИТ-проектов.",
+        "format": "JSON, CSV, XML",
+        "download_links": [
+          "https://ruscorpora.ru/page/corpora-data/"
+        ],
+        "request_page": "https://ruscorpora.ru/page/corpora-data/"
+      }
+    ],
+    "west_slavic": [
+      {
+        "corpus_name": "PolDiAn (Polish Diachronic Analysis)",
+        "description": "Диахронический корпус польского языка, содержащий аннотированные исторические тексты (включая средневековые памятники).",
+        "format": "CoNLL-U",
+        "download_links": [
+          "https://github.com/PolDiAn/PolDiAn-1.0-CoNLL"
+        ]
+      },
+      {
+        "corpus_name": "Vokabulář webový (Staročeská textová banka)",
+        "description": "Исторический корпус и словари чешского языка от Института чешского языка Академии наук Чехии. Доступен для исследователей.",
+        "format": "XML (TEI), TXT",
+        "download_links": [
+          "https://lindat.mff.cuni.cz/repository/xmlui/discover?query=historical+czech",
+          "https://cas.cz"
+        ]
+      },
+      {
+        "corpus_name": "Исторический корпус словенского языка",
+        "download_links": [
+          "https://github.com/clarinsi/imp-conllu"
+        ]
+      },
+      {
+        "corpus_name": "Hrvatski",
+        "download_links": [
+          "https://github.com/hrvatski-jezicni-korpus"
+        ]
+      },
+      {
+        "corpus_name": "bg+sr",
+        "download_links": [
+          "https://clarin.si/repository/xmlui/discover?query=historical+slavic"
+        ]
+      }
+    ]
+  }
+}

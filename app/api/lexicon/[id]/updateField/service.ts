@@ -89,6 +89,45 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             })
 
             await syncBaseHomonym(parsedId, newStem, oldStem)
+        } else if (field === "isv" || field === "nsl") {
+            const flavorCode = field === "isv" ? "CORE" : "NSL"
+            const flavor = await prisma.allophoneFlavor.findUnique({ where: { code: flavorCode } })
+            if (!flavor) throw new Error(`Allophone flavor ${flavorCode} not found`)
+
+            const existing = await prisma.lexemeAllophone.findFirst({
+                where: { lexemeId: parsedId, flavorId: flavor.id, type: "standard" },
+            })
+
+            const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
+            const currentWithHistory = current as { actionHistory?: string | null } | null
+            const oldValue = existing?.value ?? null
+
+            if (existing) {
+                await prisma.lexemeAllophone.update({
+                    where: { id: existing.id },
+                    data: {
+                        value: newValue,
+                    },
+                })
+            } else {
+                await prisma.lexemeAllophone.create({
+                    data: {
+                        lexemeId: parsedId,
+                        flavorId: flavor.id,
+                        type: "standard",
+                        value: newValue,
+                    },
+                })
+            }
+
+            await prisma.lexeme.update({
+                where: { id: parsedId },
+                data: {
+                    actionHistory: append(currentWithHistory?.actionHistory, buildEntry(author, {
+                        [field]: { old: oldValue, new: newValue },
+                    })),
+                },
+            })
         } else {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
             const currentWithHistory = current as { [key: string]: unknown } | null

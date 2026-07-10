@@ -10,17 +10,30 @@ export async function GET(request: Request) {
 
         const words = await db.lexeme.findMany({
             where: {
-                value: { contains: query },
+                OR: [
+                    { value: { contains: query } },
+                    { lexemeAllophones: { some: { value: { contains: query } } } },
+                ],
             },
             select: {
                 id: true,
                 value: true,
-                isv: true,
+                lexemeAllophones: {
+                    where: { flavor: { code: 'CORE' }, type: 'standard' },
+                    select: { value: true },
+                    take: 1,
+                },
             },
             take: 20,
         })
 
-        return NextResponse.json(words)
+        const result = words.map(w => ({
+            id: w.id,
+            value: w.value,
+            isv: w.lexemeAllophones[0]?.value ?? w.value,
+        }))
+
+        return NextResponse.json(result)
     } catch (error) {
         return NextResponse.json({ error: "Internal Error" }, { status: 500 })
     }

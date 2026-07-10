@@ -5,6 +5,7 @@ slovnik*
 *.db
 NOTES.md
 drafts/
+scripts/python/pdf/
 
 # dependencies
 /node_modules

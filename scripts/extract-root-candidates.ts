@@ -76,7 +76,7 @@ async function main() {
       lexemes_morphemes: {
         select: {
           lexeme: {
-            select: { value: true, isv: true },
+            select: { value: true },
           },
         },
       },
@@ -88,7 +88,7 @@ async function main() {
   for (const root of roots) {
     const words = root.lexemes_morphemes
       .flatMap(rw => {
-        const v = rw.lexeme?.value || rw.lexeme?.isv
+        const v = rw.lexeme?.value
         return v ? v.split(/\s+/).filter(Boolean) : []
       })
       .filter((v): v is string => !!v)

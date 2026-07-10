@@ -2,6 +2,8 @@ import Table from "@/app/admin/Table";
 import {auth} from "@/auth";
 import {redirect} from "next/navigation";
 import AdminNav from "@/components/AdminNav";
+import { prismaAuth as dbAuth } from "@/lib/prisma"
+import { requirePermission } from "@/lib/permissions"
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,19 +14,21 @@ export const metadata: Metadata = {
 const AdminPage = async () => {
     const session = await auth()
 
-    // Если не авторизован — на вход
     if (!session) redirect("/login")
 
-    const hasAccess = ["ADMIN", "MODERATOR"].includes(session.user.role || "")
+    await requirePermission(session, "dictionary_edit")
 
-    if (!hasAccess) {
-        return <h1>Доступ запрещен. У вас нет прав на редактирование.</h1>
-    }
+    const userPermissions = session.user.role === "MODERATOR"
+        ? (await dbAuth.featurePermission.findMany({
+            where: { userId: session.user.id },
+            select: { featureKey: true },
+          })).map(p => p.featureKey)
+        : []
 
     return (
         <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
             <div>
-                <AdminNav userRole={session.user.role || ""} />
+                <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
                 <Table />
             </div>
         </div>

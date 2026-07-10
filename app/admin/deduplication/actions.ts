@@ -3,14 +3,21 @@
 import { prismaData as prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
+import { checkPermission } from '@/lib/permissions';
+import { Feature } from '@/config/features';
 import { buildEntry, append } from '@/lib/action-history';
 
-// Список поддерживаемых языковых таблиц для автоматизации переноса
 const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
+
+function extractAllophone(allophones: { value: string; flavor: { code: string }; type: string }[], code: string): string {
+    return allophones.find(a => a.flavor.code === code && a.type === 'standard')?.value ?? '';
+}
 
 function transformLexemeResults(results: any[]) {
     return results.map((word: any) => {
         const translations: Record<string, string[]> = {};
+        const isv = extractAllophone(word.lexemeAllophones, 'CORE');
+        const nsl = extractAllophone(word.lexemeAllophones, 'NSL');
 
         word.meanings.forEach((m: any) => {
             LANGUAGE_KEYS.forEach((lang) => {
@@ -29,8 +36,8 @@ function transformLexemeResults(results: any[]) {
         return {
             id: word.id,
             value: word.value || '',
-            isv: word.isv || '',
-            nsl: word.nsl || '',
+            isv,
+            nsl,
             usageType: word.usageType || '',
             addition: word.addition || 'Источник не указан',
             translations,
@@ -38,26 +45,37 @@ function transformLexemeResults(results: any[]) {
     });
 }
 
-/**
- * Реальный поиск слов по вашей схеме
- */
 export async function searchDuplicateWords(query: string, showDuplicates?: boolean) {
+    const session = await auth()
+    if (!await checkPermission(session, Feature.DeduplicationManage)) {
+        return []
+    }
+
     if (showDuplicates) {
         try {
-            // Находим isv-значения, которые встречаются более 1 раза
-            const duplicateRows = await prisma.$queryRaw<{ isv: string; cnt: bigint }[]>`
-                SELECT isv, COUNT(*) as cnt FROM lexemes WHERE isv IS NOT NULL AND isv != '' GROUP BY isv HAVING cnt > 1 LIMIT 100
+            const duplicateRows = await prisma.$queryRaw<{ lexemeId: number; cnt: bigint }[]>`
+                SELECT la.lexemeId, COUNT(DISTINCT l.id) as cnt
+                FROM lexeme_allophones la
+                JOIN allophone_flavors af ON af.id = la.flavorId
+                JOIN lexemes l ON l.id = la.lexemeId
+                WHERE af.code = 'CORE' AND la.type = 'standard' AND la.value IS NOT NULL AND la.value != ''
+                GROUP BY la.value
+                HAVING cnt > 1
+                LIMIT 100
             `;
 
-            const duplicateIsvValues = duplicateRows.map(r => r.isv);
+            const duplicateLexemeIds = duplicateRows.map(r => r.lexemeId);
 
-            if (duplicateIsvValues.length === 0) return [];
+            if (duplicateLexemeIds.length === 0) return [];
 
             const results = await prisma.lexeme.findMany({
                 where: {
-                    isv: { in: duplicateIsvValues },
+                    id: { in: duplicateLexemeIds },
                 },
                 include: {
+                    lexemeAllophones: {
+                        include: { flavor: true },
+                    },
                     meanings: {
                         include: {
                             ru_word: true, en_word: true, pl_word: true, uk_word: true,
@@ -68,7 +86,6 @@ export async function searchDuplicateWords(query: string, showDuplicates?: boole
                         }
                     }
                 },
-                orderBy: { isv: 'asc' },
                 take: 100,
             });
 
@@ -82,15 +99,23 @@ export async function searchDuplicateWords(query: string, showDuplicates?: boole
     if (!query || query.trim().length < 2) return [];
 
     try {
-        // Подтягиваем слова и их смыслы со всеми языковыми переводами
         const results = await prisma.lexeme.findMany({
             where: {
                 OR: [
                     { value: { contains: query } },
-                    { isv: { contains: query } },
+                    {
+                        lexemeAllophones: {
+                            some: {
+                                value: { contains: query },
+                            }
+                        }
+                    },
                 ],
             },
             include: {
+                lexemeAllophones: {
+                    include: { flavor: true },
+                },
                 meanings: {
                     include: {
                         ru_word: true, en_word: true, pl_word: true, uk_word: true,
@@ -104,7 +129,6 @@ export async function searchDuplicateWords(query: string, showDuplicates?: boole
             take: 30,
         });
 
-        // Трансформируем реляционную структуру в плоский вид для удобства фронтенда
         return transformLexemeResults(results);
     } catch (error) {
         console.error('Ошибка при поиске в БД:', error);
@@ -112,9 +136,6 @@ export async function searchDuplicateWords(query: string, showDuplicates?: boole
     }
 }
 
-/**
- * Продакшен-функция атомарного мержа по вашей реляционной схеме
- */
 export async function mergeWordsAction(
     targetId: number,
     sourceId: number,
@@ -122,24 +143,35 @@ export async function mergeWordsAction(
 ) {
     try {
         const session = await auth()
+        if (!await checkPermission(session, Feature.DeduplicationManage)) {
+            return { success: false, error: "Forbidden" }
+        }
         const author = session?.user?.email || "unknown"
 
         await prisma.$transaction(async (tx) => {
-            // 1. Получаем текущее состояние целевого слова для аудита
-            const targetWord = await tx.lexeme.findUnique({ where: { id: targetId } }) as { actionHistory?: string | null } | null
+            const targetWord = await tx.lexeme.findUnique({
+                where: { id: targetId },
+                include: { lexemeAllophones: { include: { flavor: true } } }
+            }) as { actionHistory?: string | null; value?: string | null; usageType?: string | null; addition?: string | null; lexemeAllophones?: { value: string; flavor: { code: string }; type: string }[] } | null
 
-            // 2. Обновляем метаданные главного слова
             const changes: Record<string, { old: unknown; new: unknown }> = {}
-            if (targetWord) {
-                for (const key of ['value', 'isv', 'nsl', 'usageType', 'addition'] as const) {
-                    if (String((targetWord as any)[key]) !== String(updatedFields[key])) {
-                        changes[key] = { old: (targetWord as any)[key] ?? null, new: updatedFields[key] }
-                    }
-                }
-            } else {
-                for (const key of ['value', 'isv', 'nsl', 'usageType', 'addition'] as const) {
-                    changes[key] = { old: null, new: updatedFields[key] }
-                }
+            const oldIsv = targetWord ? extractAllophone(targetWord.lexemeAllophones || [], 'CORE') : ''
+            const oldNsl = targetWord ? extractAllophone(targetWord.lexemeAllophones || [], 'NSL') : ''
+
+            if (String(oldIsv) !== String(updatedFields.isv)) {
+                changes.isv = { old: oldIsv || null, new: updatedFields.isv }
+            }
+            if (String(oldNsl) !== String(updatedFields.nsl)) {
+                changes.nsl = { old: oldNsl || null, new: updatedFields.nsl }
+            }
+            if (String(targetWord?.value ?? '') !== String(updatedFields.value)) {
+                changes.value = { old: targetWord?.value ?? null, new: updatedFields.value }
+            }
+            if (String(targetWord?.usageType ?? '') !== String(updatedFields.usageType)) {
+                changes.usageType = { old: targetWord?.usageType ?? null, new: updatedFields.usageType }
+            }
+            if (String(targetWord?.addition ?? '') !== String(updatedFields.addition)) {
+                changes.addition = { old: targetWord?.addition ?? null, new: updatedFields.addition }
             }
             changes.mergedFrom = { old: null, new: sourceId }
 
@@ -147,16 +179,50 @@ export async function mergeWordsAction(
                 where: { id: targetId },
                 data: {
                     value: updatedFields.value,
-                    isv: updatedFields.isv,
-                    nsl: updatedFields.nsl,
                     usageType: updatedFields.usageType,
                     addition: updatedFields.addition,
                     actionHistory: append(targetWord?.actionHistory, buildEntry(author, changes)),
                 },
             });
 
-            // 2. Переносим переводы из Meaning(source) в Meaning(target)
-            //    Находим первый смысл целевого слова (или создаём, если нет)
+            if (updatedFields.isv) {
+                const coreFlavor = await tx.allophoneFlavor.findUnique({ where: { code: 'CORE' } });
+                if (coreFlavor) {
+                    const existingCore = await tx.lexemeAllophone.findUnique({
+                        where: { lexemeId_flavorId_type: { lexemeId: targetId, flavorId: coreFlavor.id, type: 'standard' } }
+                    });
+                    if (existingCore) {
+                        await tx.lexemeAllophone.update({
+                            where: { id: existingCore.id },
+                            data: { value: updatedFields.isv }
+                        });
+                    } else {
+                        await tx.lexemeAllophone.create({
+                            data: { lexemeId: targetId, flavorId: coreFlavor.id, value: updatedFields.isv, type: 'standard' }
+                        });
+                    }
+                }
+            }
+
+            if (updatedFields.nsl) {
+                const nslFlavor = await tx.allophoneFlavor.findUnique({ where: { code: 'NSL' } });
+                if (nslFlavor) {
+                    const existingNsl = await tx.lexemeAllophone.findUnique({
+                        where: { lexemeId_flavorId_type: { lexemeId: targetId, flavorId: nslFlavor.id, type: 'standard' } }
+                    });
+                    if (existingNsl) {
+                        await tx.lexemeAllophone.update({
+                            where: { id: existingNsl.id },
+                            data: { value: updatedFields.nsl }
+                        });
+                    } else {
+                        await tx.lexemeAllophone.create({
+                            data: { lexemeId: targetId, flavorId: nslFlavor.id, value: updatedFields.nsl, type: 'standard' }
+                        });
+                    }
+                }
+            }
+
             const targetMeanings = await tx.meaning.findMany({
                 where: { lexemeId: targetId },
                 take: 1,
@@ -166,14 +232,12 @@ export async function mergeWordsAction(
             if (targetMeanings.length > 0) {
                 targetMeaningId = targetMeanings[0].id;
             } else {
-                // У целевого слова нет ни одного смысла — создаём пустой
                 const newMeaning = await tx.meaning.create({
                     data: { lexemeId: targetId },
                 });
                 targetMeaningId = newMeaning.id;
             }
 
-            // Получаем все ID смыслов удаляемого слова
             const sourceMeanings = await tx.meaning.findMany({
                 where: { lexemeId: sourceId },
                 select: { id: true },
@@ -181,7 +245,6 @@ export async function mergeWordsAction(
             const sourceMeaningIds = sourceMeanings.map(m => m.id);
 
             if (sourceMeaningIds.length > 0) {
-                // Перепривязываем все языковые записи от source к target
                 const languageModels = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
                 for (const lang of languageModels) {
                     await (tx as any)[lang].updateMany({
@@ -190,25 +253,21 @@ export async function mergeWordsAction(
                     });
                 }
 
-                // Удаляем исходные смыслы (после переноса переводов они пусты)
                 await tx.meaning.deleteMany({
                     where: { id: { in: sourceMeaningIds } },
                 });
             }
 
-            // 3. Перепривязываем связи с корнями (LexemeMorpheme)
             await tx.lexemeMorpheme.updateMany({
                 where: { lexemeId: sourceId },
                 data: { lexemeId: targetId },
             });
 
-            // 4. Перепривязываем аномалии флексий от удаляемого слова к главному
             await tx.inflectionAnomaly.updateMany({
                 where: { lexemeId: sourceId },
                 data: { lexemeId: targetId },
             });
 
-            // 5. Перепривязываем синонимы (обе стороны отношений в вашей схеме)
             await tx.synonym.updateMany({
                 where: { sourceId: sourceId },
                 data: { sourceId: targetId },
@@ -218,7 +277,6 @@ export async function mergeWordsAction(
                 data: { targetId: targetId },
             });
 
-            // 6. Перепривязываем антонимы (обе стороны отношений)
             await tx.antonym.updateMany({
                 where: { sourceId: sourceId },
                 data: { sourceId: targetId },
@@ -228,10 +286,25 @@ export async function mergeWordsAction(
                 data: { targetId: targetId },
             });
 
-            // 7. Теперь, когда у sourceId не осталось дочерних зависимостей, удаляем его
             await tx.lexeme.delete({
                 where: { id: sourceId },
             });
+
+            const allHomonyms = await tx.baseHomonym.findMany();
+            for (const h of allHomonyms) {
+                const ids: number[] = JSON.parse(h.wordIds);
+                if (ids.includes(sourceId)) {
+                    const filtered = ids.filter((id: number) => id !== sourceId);
+                    if (filtered.length === 0) {
+                        await tx.baseHomonym.delete({ where: { id: h.id } });
+                    } else {
+                        await tx.baseHomonym.update({
+                            where: { id: h.id },
+                            data: { wordIds: JSON.stringify(filtered) },
+                        });
+                    }
+                }
+            }
         });
 
         revalidatePath('/admin/deduplication');

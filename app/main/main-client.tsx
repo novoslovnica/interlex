@@ -1,7 +1,18 @@
 import Link from 'next/link';
 import {useTranslations} from "next-intl";
 import {WordOfDayWidget} from "@/app/main/ⷰ҇WordsOfTheDay";
-import {Word} from "@/prisma/generated/data/client";
+
+interface RandomWordResult {
+    id: number;
+    value: string | null;
+    isv: string | null;
+    pos: string | null;
+    meanings: {
+        id: number;
+        ru_mean: { id: number; value: string | null }[];
+        en_mean: { id: number; value: string | null }[];
+    }[];
+}
 
 interface StatsProps {
     stats: {
@@ -10,10 +21,11 @@ interface StatsProps {
         roots: number;
         meanings: number;
     };
-    randomWord: Word;
+    randomWord: RandomWordResult;
+    subStats: any[];
 }
 
-export default function MainClient({ stats, randomWord }: StatsProps) {
+export default function MainClient({ stats, subStats, randomWord }: StatsProps) {
     return (
         // max-w-7xl ограничивает контент на 1280px, что идеально центрирует его на 1920px без чрезмерного растягивания строк текста
         <main className="flex-1 h-full overflow-y-auto max-w-7xl mx-auto px-4 md:px-8 2xl:px-12 pb-24 md:pb-32 space-y-16 md:space-y-24 animate-fade-in text-sm no-scrollbar py-8">
@@ -105,6 +117,27 @@ export default function MainClient({ stats, randomWord }: StatsProps) {
                     <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">Смысловых значений</span>
                 </div>
             </section>
+
+            {/* Сетка карточек */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {subStats.map((stat) => (
+                    <div
+                        key={stat.id}
+                        className="p-4 rounded-xl border transition-all duration-200
+                       bg-slate-50/50 border-slate-200/60 text-slate-800
+                       dark:bg-slate-900/30 dark:border-slate-800/80 dark:text-slate-200"
+                    >
+                        {/* Менее яркое число */}
+                        <p className="text-xl font-medium tracking-tight md:text-2xl text-slate-700 dark:text-slate-300">
+                            {stat.value}
+                        </p>
+                        {/* Мелкий второстепенный текст */}
+                        <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500 line-clamp-1">
+                            {stat.label}
+                        </p>
+                    </div>
+                ))}
+            </div>
 
             <WordOfDayWidget
                 data={randomWord}

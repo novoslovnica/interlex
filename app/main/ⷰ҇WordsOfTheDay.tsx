@@ -1,10 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
-import {Word} from "@/prisma/generated/data/client";
 import {isvToCyr} from "@/lib/isv";
 
+interface WordOfDayData {
+    id: number;
+    value: string | null;
+    isv: string | null;
+    pos: string | null;
+    meanings: {
+        id: number;
+        ru_mean: { id: number; value: string | null }[];
+        en_mean: { id: number; value: string | null }[];
+    }[];
+}
+
 interface WordOfDayWidgetProps {
-    data: Word;
+    data: WordOfDayData;
 }
 
 export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {

@@ -4,6 +4,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { MorphemeType } from "@/lib/grammar/common"
+import { generateAllFlavors } from "@/lib/flavors"
 
 interface RootItem {
   id: number
@@ -16,14 +17,19 @@ interface RootItem {
 interface RootFull extends RootItem {
   lexemes_morphemes: {
     id: number
-    lexeme: { id: number; value: string | null; isv: string | null } | null
+    lexeme: { id: number; value: string | null } | null
+  }[]
+  morphemeAllophones?: {
+    id: number
+    value: string
+    flavorId: number
+    flavor: { code: string }
   }[]
 }
 
 interface WordOption {
   id: number
   value: string | null
-  isv: string | null
 }
 
 const ITEMS_PER_PAGE = 50
@@ -297,7 +303,29 @@ function EditRootModal({
 }) {
   const [value, setValue] = useState(root.value ?? "")
   const [type, setType] = useState(root.type ?? 0)
+  const [allophones, setAllophones] = useState<Record<string, string>>(() => {
+    const allos = root.morphemeAllophones || []
+    return {
+      core: allos.find((a) => a.flavor.code === "CORE")?.value || "",
+      nsl: allos.find((a) => a.flavor.code === "NSL")?.value || "",
+      east: allos.find((a) => a.flavor.code === "EAST")?.value || "",
+      west: allos.find((a) => a.flavor.code === "WEST")?.value || "",
+      south: allos.find((a) => a.flavor.code === "SOUTH")?.value || "",
+    }
+  })
   const [saving, setSaving] = useState(false)
+
+  // Auto-fill east/west/south allophones when core changes
+  useEffect(() => {
+    const core = allophones.core?.trim()
+    if (!core) return
+    const flavors = generateAllFlavors(core)
+    setAllophones((prev) => {
+      if (prev.east === flavors.east && prev.west === flavors.west && prev.south === flavors.south) return prev
+      return { ...prev, east: flavors.east, west: flavors.west, south: flavors.south }
+    })
+  }, [allophones.core])
+
   const [wordSearch, setWordSearch] = useState("")
   const [addingWord, setAddingWord] = useState(false)
 
@@ -321,7 +349,7 @@ function EditRootModal({
       const res = await fetch(`/api/roots/${root.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type }),
+        body: JSON.stringify({ value, type, allophones }),
       })
       if (res.ok) onSaved()
       else alert("Ошибка при сохранении")
@@ -400,6 +428,26 @@ function EditRootModal({
             </div>
           </div>
 
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              ["core", "ISV (CORE)"],
+              ["nsl", "NSL"],
+              ["east", "EAST"],
+              ["west", "WEST"],
+              ["south", "SOUTH"],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-xs font-semibold mb-1">{label}</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                  value={allophones[key] || ""}
+                  onChange={(e) => setAllophones((prev) => ({ ...prev, [key]: e.target.value }))}
+                />
+              </div>
+            ))}
+          </div>
+
           <div className="border-t pt-4">
             <h4 className="text-sm font-semibold mb-2">
               Связанные слова ({root.lexemes_morphemes.length})
@@ -414,9 +462,6 @@ function EditRootModal({
                   >
                     <span className="text-sm">
                       {rw.lexeme?.value || "—"}
-                      {rw.lexeme?.isv ? (
-                        <span className="text-blue-600 ml-1">({rw.lexeme.isv})</span>
-                      ) : null}
                       <span className="text-muted-foreground ml-1">
                         ID: {rw.lexeme?.id}
                       </span>
@@ -453,7 +498,7 @@ function EditRootModal({
                     .filter(
                       (w) =>
                         !root.lexemes_morphemes.some(
-                          (rw) => rw.word?.id === w.id
+                          (rw) => rw.lexeme?.id === w.id
                         )
                     )
                     .map((w) => (
@@ -463,10 +508,7 @@ function EditRootModal({
                         disabled={addingWord}
                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted/20 transition-colors disabled:opacity-50"
                       >
-                        {w.value || "—"}{" "}
-                        {w.isv ? (
-                          <span className="text-blue-600">({w.isv})</span>
-                        ) : null}
+                        {w.value || "—"}
                         <span className="text-muted-foreground ml-1">
                           ID: {w.id}
                         </span>
@@ -507,6 +549,7 @@ function CreateRootModal({
 }) {
   const [value, setValue] = useState("")
   const [type, setType] = useState(MorphemeType.ROOT)
+  const [allophones, setAllophones] = useState<Record<string, string>>({ core: "", nsl: "", east: "", west: "", south: "" })
   const [creating, setCreating] = useState(false)
 
   const handleCreate = async () => {
@@ -519,7 +562,7 @@ function CreateRootModal({
       const res = await fetch("/api/roots/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type }),
+        body: JSON.stringify({ value, type, allophones }),
       })
       if (res.ok) onCreated()
       else {
@@ -552,6 +595,26 @@ function CreateRootModal({
           <label className="block text-xs font-semibold mb-1">Тип морфемы</label>
           <MorphemeTypeSelect value={type} onChange={setType} />
         </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              ["core", "ISV (CORE)"],
+              ["nsl", "NSL"],
+              ["east", "EAST"],
+              ["west", "WEST"],
+              ["south", "SOUTH"],
+            ].map(([key, label]) => (
+              <div key={key}>
+                <label className="block text-xs font-semibold mb-1">{label}</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                  value={allophones[key] || ""}
+                  onChange={(e) => setAllophones((prev) => ({ ...prev, [key]: e.target.value }))}
+                />
+              </div>
+            ))}
+          </div>
 
         <div className="flex justify-end gap-3">
           <button

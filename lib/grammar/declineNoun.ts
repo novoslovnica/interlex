@@ -1,4 +1,5 @@
-import { StemType, Case, NumberType, SLAVIC_ENDINGS_REGISTRY } from './endingsRegistry';
+import { StemType, Case, NumberType } from './endingsRegistry';
+import { getEnding } from './endingLoader';
 import { applyAccent } from './accentUtils';
 import {applyPrepositionEnclitic, applyPrepositionEncliticWithFourTones} from './encliticEngine';
 import { generateBaseNounFormWithFourTones } from './fourTonesGenerator';
@@ -15,8 +16,8 @@ export interface ExtendedWordFormRequest {
 export function generateAccentedFormExtended(request: ExtendedWordFormRequest): string {
     const { interslavicWord, paradigm, stemType, targetCase, targetNumber } = request;
 
-    // 1. Получаем флексию из реестра классов
-    const ending = SLAVIC_ENDINGS_REGISTRY[stemType][targetNumber][targetCase];
+    // 1. Получаем флексию из реестра классов (с возможностью перегрузки из БД)
+    const ending = getEnding(stemType, targetNumber, targetCase);
     const fullForm = interslavicWord + ending;
 
     // ПАРАДИГМА A: Абсолютно неподвижное ударение на корне для всех родов
@@ -142,7 +143,7 @@ function generateBaseNounForm(request: IntegratedFormRequest): string {
     const { interslavicWord, paradigm, stemType, targetCase, targetNumber } = request;
 
     // Извлекаем окончание из нашего реестра классов
-    const ending = SLAVIC_ENDINGS_REGISTRY[stemType][targetNumber][targetCase];
+    const ending = getEnding(stemType, targetNumber, targetCase);
     const fullForm = interslavicWord + ending;
 
     // ПАРАДИГМА A: Неподвижное ударение на корне
@@ -204,7 +205,7 @@ export function declineNoun(request: IntegratedFormRequest): string {
         preposition: request.preposition,
         accentedNounForm: accentedNoun,
         paradigm: request.paradigm,
-        targetCase: request.targetCase,
+        targetCase: request.targetCase as 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative',
         targetNumber: request.targetNumber
     });
 }

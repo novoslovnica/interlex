@@ -6,11 +6,9 @@ CREATE TABLE "lexemes" (
     "slug" TEXT NOT NULL,
     "external_id" INTEGER,
     "value" TEXT,
-    "nsl" TEXT,
-    "isv" TEXT,
     "transcription" TEXT,
-    "field" TEXT,
-    "type" TEXT,
+    "mainCategory" TEXT,
+    "usageType" TEXT,
     "pos" TEXT,
     "aspect" TEXT,
     "transitivity" TEXT,
@@ -35,9 +33,7 @@ CREATE TABLE "lexemes" (
     "gender" TEXT,
     "declension" INTEGER,
     "conjugation" INTEGER,
-    "accentSyllable" INTEGER,
-    "alternationType" TEXT,
-    "fleetingVowelAt" INTEGER,
+    "properNoun" BOOLEAN NOT NULL DEFAULT false,
     "hasAnomalies" BOOLEAN NOT NULL DEFAULT false,
     "actionHistory" TEXT
 );
@@ -51,8 +47,8 @@ CREATE TABLE "candidates" (
     "isv" TEXT,
     "nsl" TEXT,
     "transcription" TEXT,
-    "field" TEXT,
-    "type" TEXT,
+    "mainCategory" TEXT,
+    "usageType" TEXT,
     "pos" TEXT,
     "aspect" TEXT,
     "transitivity" TEXT,
@@ -77,20 +73,11 @@ CREATE TABLE "candidates" (
     "gender" TEXT,
     "declension" INTEGER,
     "conjugation" INTEGER,
-    "accentSyllable" INTEGER,
-    "alternationType" TEXT,
-    "fleetingVowelAt" INTEGER,
+    "properNoun" BOOLEAN NOT NULL DEFAULT false,
     "hasAnomalies" BOOLEAN NOT NULL DEFAULT false,
     "actionHistory" TEXT,
     "promotedAt" DATETIME,
     "promotedToLexemeId" INTEGER
-);
-
--- CreateTable
-CREATE TABLE "Lexeme_text" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "value" TEXT NOT NULL,
-    "lexemeId" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -115,19 +102,51 @@ CREATE TABLE "morphemes" (
 );
 
 -- CreateTable
-CREATE TABLE "Morpheme_text" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "value" TEXT NOT NULL,
-    "morphemeId" TEXT NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "lexemes_morphemes" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "lexemeId" INTEGER,
     "morphemeId" INTEGER,
     CONSTRAINT "lexemes_morphemes_lexemeId_fkey" FOREIGN KEY ("lexemeId") REFERENCES "lexemes" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "lexemes_morphemes_morphemeId_fkey" FOREIGN KEY ("morphemeId") REFERENCES "morphemes" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "allophone_flavors" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "code" TEXT NOT NULL,
+    "label" TEXT NOT NULL,
+    "description" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "lexeme_allophones" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "lexemeId" INTEGER NOT NULL,
+    "value" TEXT NOT NULL,
+    "flavorId" INTEGER NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'standard',
+    CONSTRAINT "lexeme_allophones_lexemeId_fkey" FOREIGN KEY ("lexemeId") REFERENCES "lexemes" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "lexeme_allophones_flavorId_fkey" FOREIGN KEY ("flavorId") REFERENCES "allophone_flavors" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "morpheme_allophones" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "morphemeId" INTEGER NOT NULL,
+    "value" TEXT NOT NULL,
+    "flavorId" INTEGER NOT NULL,
+    CONSTRAINT "morpheme_allophones_morphemeId_fkey" FOREIGN KEY ("morphemeId") REFERENCES "morphemes" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "morpheme_allophones_flavorId_fkey" FOREIGN KEY ("flavorId") REFERENCES "allophone_flavors" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "ending_allophones" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "stemType" TEXT NOT NULL,
+    "grammeme" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "flavorId" INTEGER NOT NULL,
+    CONSTRAINT "ending_allophones_flavorId_fkey" FOREIGN KEY ("flavorId") REFERENCES "allophone_flavors" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -375,6 +394,34 @@ CREATE TABLE "eo" (
 );
 
 -- CreateTable
+CREATE TABLE "hsb" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "value" TEXT,
+    "veryfied" INTEGER,
+    "wordId" INTEGER,
+    "meaningId" INTEGER,
+    "actionHistory" TEXT,
+    CONSTRAINT "hsb_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "meanings" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "hsb_meaningId_fkey" FOREIGN KEY ("meaningId") REFERENCES "meanings" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "dsb" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "value" TEXT,
+    "veryfied" INTEGER,
+    "wordId" INTEGER,
+    "meaningId" INTEGER,
+    "actionHistory" TEXT,
+    CONSTRAINT "dsb_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "meanings" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "dsb_meaningId_fkey" FOREIGN KEY ("meaningId") REFERENCES "meanings" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "base_homonyms" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "base" TEXT NOT NULL,
@@ -390,6 +437,36 @@ CREATE TABLE "inflection_anomalies" (
     CONSTRAINT "inflection_anomalies_lexemeId_fkey" FOREIGN KEY ("lexemeId") REFERENCES "lexemes" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "proto_slavic_words" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "lemma" TEXT NOT NULL,
+    "body" TEXT NOT NULL DEFAULT '',
+    "source_url" TEXT NOT NULL DEFAULT ''
+);
+
+-- CreateTable
+CREATE TABLE "synsets" (
+    "synsetId" TEXT NOT NULL PRIMARY KEY,
+    "synset_external_id" TEXT,
+    "definition" TEXT,
+    "domains" TEXT,
+    "semantic_codes" TEXT,
+    "part_of_speech" TEXT
+);
+
+-- CreateTable
+CREATE TABLE "meanings_synsets" (
+    "meaningId" INTEGER NOT NULL,
+    "synsetId" TEXT NOT NULL,
+    "source" TEXT,
+    "confidence" REAL,
+
+    PRIMARY KEY ("meaningId", "synsetId"),
+    CONSTRAINT "meanings_synsets_meaningId_fkey" FOREIGN KEY ("meaningId") REFERENCES "meanings" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "meanings_synsets_synsetId_fkey" FOREIGN KEY ("synsetId") REFERENCES "synsets" ("synsetId") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "lexemes_slug_key" ON "lexemes"("slug");
 
@@ -400,10 +477,34 @@ CREATE INDEX "lexemes_slug_idx" ON "lexemes"("slug");
 CREATE INDEX "candidates_value_idx" ON "candidates"("value");
 
 -- CreateIndex
-CREATE INDEX "candidates_isv_idx" ON "candidates"("isv");
+CREATE INDEX "candidates_pos_idx" ON "candidates"("pos");
 
 -- CreateIndex
-CREATE INDEX "candidates_pos_idx" ON "candidates"("pos");
+CREATE UNIQUE INDEX "allophone_flavors_code_key" ON "allophone_flavors"("code");
+
+-- CreateIndex
+CREATE INDEX "lexeme_allophones_lexemeId_idx" ON "lexeme_allophones"("lexemeId");
+
+-- CreateIndex
+CREATE INDEX "lexeme_allophones_flavorId_idx" ON "lexeme_allophones"("flavorId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "lexeme_allophones_lexemeId_flavorId_type_key" ON "lexeme_allophones"("lexemeId", "flavorId", "type");
+
+-- CreateIndex
+CREATE INDEX "morpheme_allophones_morphemeId_idx" ON "morpheme_allophones"("morphemeId");
+
+-- CreateIndex
+CREATE INDEX "morpheme_allophones_flavorId_idx" ON "morpheme_allophones"("flavorId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "morpheme_allophones_morphemeId_flavorId_key" ON "morpheme_allophones"("morphemeId", "flavorId");
+
+-- CreateIndex
+CREATE INDEX "ending_allophones_flavorId_idx" ON "ending_allophones"("flavorId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ending_allophones_stemType_grammeme_flavorId_key" ON "ending_allophones"("stemType", "grammeme", "flavorId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "base_homonyms_base_key" ON "base_homonyms"("base");
@@ -416,3 +517,6 @@ CREATE INDEX "inflection_anomalies_lexemeId_idx" ON "inflection_anomalies"("lexe
 
 -- CreateIndex
 CREATE INDEX "inflection_anomalies_grammeme_idx" ON "inflection_anomalies"("grammeme");
+
+-- CreateIndex
+CREATE INDEX "proto_slavic_words_lemma_idx" ON "proto_slavic_words"("lemma");

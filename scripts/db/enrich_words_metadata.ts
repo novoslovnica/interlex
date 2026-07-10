@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {prismaData as prisma} from "@/lib/prisma";
+import {generateStemCandidates, heuristicStem} from "@/lib/grammar/common";
 import {init} from "@/lib/sqlite";
+import {generateAllFlavors} from "@/lib/flavors";
 import dotenv from "dotenv";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
@@ -65,12 +67,12 @@ async function enrichAndSeedDatabase() {
         // });
         const existingWord = db.prepare(`
           SELECT * FROM lexemes 
-          WHERE "value" LIKE ? OR "isv" LIKE ? 
+          WHERE "value" LIKE ? 
           LIMIT 1
-        `).get(cleanIsv, cleanIsv);
+        `).get(cleanIsv);
 
         // Проверяем строгое совпадение очищенных строк (защита от ложных contains на коротких подстроках)
-        const isMatched = existingWord && superCleanMatch(existingWord.value || existingWord.isv || '') === cleanIsv;
+        const isMatched = existingWord && superCleanMatch(existingWord.value || '') === cleanIsv;
 
         if (isMatched && existingWord) {
             // КЕЙС 1: Слово СУЩЕСТВУЕТ ➔ Обогащаем метаданными
@@ -130,44 +132,79 @@ async function enrichAndSeedDatabase() {
 
                 // 2. Подготавливаем SQL-запрос для вставки записи
                 const insertWord = db.prepare(`
-                    INSERT INTO lexemes ("value",
-                                       "isv",
+INSERT INTO lexemes ("value",
                                        "proto",
                                        "paradigm",
                                        "protoStemClass",
                                        "stemExtension",
                                        "pos",
-                                       "type",
+                                       "gender",
                                        "etymology",
                                        "slug",
                                        "updatedAt")
-                    VALUES (:value,
-                            :isv,
-                            :proto,
-                            :paradigm,
-                            :protoStemClass,
-                            :stemExtension,
-                            :pos,
-                            :type,
-                            :etymology,
-                            :slug,
-                            :updatedAt)
+                     VALUES (:value,
+                             :proto,
+                             :paradigm,
+                             :protoStemClass,
+                             :stemExtension,
+                             :pos,
+                             :gender,
+                             :etymology,
+                             :slug,
+                             :updatedAt)
                 `);
 
-                // 3. Выполняем запрос, передавая объект с данными
-                insertWord.run({
+// 3. Выполняем запрос, передавая объект с данными
+                const result = insertWord.run({
                     value: jsonItem.interslavic,
-                    isv: jsonItem.interslavic,
                     proto: jsonItem.protoSlavic,
                     paradigm: jsonItem.paradigm,
                     protoStemClass: jsonItem.protoStemClass,
-                    stemExtension: jsonItem.stemExtension || null, // SQLite запишет как NULL
+                    stemExtension: jsonItem.stemExtension || null,
                     pos: posValue,
-                    type: jsonItem.gender,
+                    gender: jsonItem.gender,
                     etymology: etymologyValue,
                     slug: `${jsonItem.interslavic}-${posValue}`,
                     updatedAt: new Date().toISOString(),
                 });
+
+                db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'CORE'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`)
+                    .run(result.lastInsertRowid, jsonItem.interslavic.toLowerCase());
+                db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = 'NSL'), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`)
+                    .run(result.lastInsertRowid, '');
+
+                const flavors = generateAllFlavors(jsonItem.interslavic);
+                for (const [code, val] of [["EAST", flavors.east], ["WEST", flavors.west], ["SOUTH", flavors.south]] as const) {
+                    db.prepare(`INSERT INTO lexeme_allophones (lexemeId, value, flavorId, type) VALUES (?, ?, (SELECT id FROM allophone_flavors WHERE code = ?), 'standard') ON CONFLICT(lexemeId, flavorId, type) DO UPDATE SET value = excluded.value`)
+                        .run(result.lastInsertRowid, val.toLowerCase(), code);
+                }
+
+                const stem = heuristicStem(jsonItem.interslavic, posValue).toLowerCase();
+                if (stem) {
+                    const candidates = generateStemCandidates({
+                        stem,
+                        secondaryStem: "",
+                        tertiaryStem: "",
+                        isv: jsonItem.interslavic,
+                        pos: posValue,
+                    });
+                    const lexemeIdNum = Number(result.lastInsertRowid);
+                    const upsertHomonym = (base: string) => {
+                        const existing = db.prepare(`SELECT * FROM base_homonyms WHERE base = ?`).get(base) as { id: bigint; wordIds: string } | undefined;
+                        if (existing) {
+                            const ids: number[] = JSON.parse(existing.wordIds);
+                            if (!ids.includes(lexemeIdNum)) {
+                                ids.push(lexemeIdNum);
+                                db.prepare(`UPDATE base_homonyms SET wordIds = ? WHERE id = ?`).run(JSON.stringify(ids), existing.id);
+                            }
+                        } else {
+                            db.prepare(`INSERT INTO base_homonyms (base, wordIds) VALUES (?, ?)`).run(base, JSON.stringify([lexemeIdNum]));
+                        }
+                    };
+                    for (const base of candidates) {
+                        upsertHomonym(base);
+                    }
+                }
             } else {
                 const updateWord = db.prepare(`
                   UPDATE lexemes

@@ -229,6 +229,7 @@ export type MorphemeWhereInput = {
   type?: Prisma.IntNullableFilter<"Morpheme"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"Morpheme"> | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
+  morphemeAllophones?: Prisma.MorphemeAllophoneListRelationFilter
 }
 
 export type MorphemeOrderByWithRelationInput = {
@@ -239,6 +240,7 @@ export type MorphemeOrderByWithRelationInput = {
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   lexemes_morphemes?: Prisma.LexemeMorphemeOrderByRelationAggregateInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneOrderByRelationAggregateInput
 }
 
 export type MorphemeWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +254,7 @@ export type MorphemeWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.IntNullableFilter<"Morpheme"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"Morpheme"> | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
+  morphemeAllophones?: Prisma.MorphemeAllophoneListRelationFilter
 }, "id">
 
 export type MorphemeOrderByWithAggregationInput = {
@@ -287,6 +290,7 @@ export type MorphemeCreateInput = {
   type?: number | null
   actionHistory?: string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutMorphemeInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneCreateNestedManyWithoutMorphemeInput
 }
 
 export type MorphemeUncheckedCreateInput = {
@@ -297,6 +301,7 @@ export type MorphemeUncheckedCreateInput = {
   type?: number | null
   actionHistory?: string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutMorphemeInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedCreateNestedManyWithoutMorphemeInput
 }
 
 export type MorphemeUpdateInput = {
@@ -306,6 +311,7 @@ export type MorphemeUpdateInput = {
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutMorphemeNestedInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUpdateManyWithoutMorphemeNestedInput
 }
 
 export type MorphemeUncheckedUpdateInput = {
@@ -316,6 +322,7 @@ export type MorphemeUncheckedUpdateInput = {
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutMorphemeNestedInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedUpdateManyWithoutMorphemeNestedInput
 }
 
 export type MorphemeCreateManyInput = {
@@ -386,6 +393,11 @@ export type MorphemeNullableScalarRelationFilter = {
   isNot?: Prisma.MorphemeWhereInput | null
 }
 
+export type MorphemeScalarRelationFilter = {
+  is?: Prisma.MorphemeWhereInput
+  isNot?: Prisma.MorphemeWhereInput
+}
+
 export type MorphemeCreateNestedOneWithoutLexemes_morphemesInput = {
   create?: Prisma.XOR<Prisma.MorphemeCreateWithoutLexemes_morphemesInput, Prisma.MorphemeUncheckedCreateWithoutLexemes_morphemesInput>
   connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutLexemes_morphemesInput
@@ -402,12 +414,27 @@ export type MorphemeUpdateOneWithoutLexemes_morphemesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MorphemeUpdateToOneWithWhereWithoutLexemes_morphemesInput, Prisma.MorphemeUpdateWithoutLexemes_morphemesInput>, Prisma.MorphemeUncheckedUpdateWithoutLexemes_morphemesInput>
 }
 
+export type MorphemeCreateNestedOneWithoutMorphemeAllophonesInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedCreateWithoutMorphemeAllophonesInput>
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutMorphemeAllophonesInput
+  connect?: Prisma.MorphemeWhereUniqueInput
+}
+
+export type MorphemeUpdateOneRequiredWithoutMorphemeAllophonesNestedInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedCreateWithoutMorphemeAllophonesInput>
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutMorphemeAllophonesInput
+  upsert?: Prisma.MorphemeUpsertWithoutMorphemeAllophonesInput
+  connect?: Prisma.MorphemeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MorphemeUpdateToOneWithWhereWithoutMorphemeAllophonesInput, Prisma.MorphemeUpdateWithoutMorphemeAllophonesInput>, Prisma.MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput>
+}
+
 export type MorphemeCreateWithoutLexemes_morphemesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   value?: string | null
   type?: number | null
   actionHistory?: string | null
+  morphemeAllophones?: Prisma.MorphemeAllophoneCreateNestedManyWithoutMorphemeInput
 }
 
 export type MorphemeUncheckedCreateWithoutLexemes_morphemesInput = {
@@ -417,6 +444,7 @@ export type MorphemeUncheckedCreateWithoutLexemes_morphemesInput = {
   value?: string | null
   type?: number | null
   actionHistory?: string | null
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedCreateNestedManyWithoutMorphemeInput
 }
 
 export type MorphemeCreateOrConnectWithoutLexemes_morphemesInput = {
@@ -441,6 +469,7 @@ export type MorphemeUpdateWithoutLexemes_morphemesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  morphemeAllophones?: Prisma.MorphemeAllophoneUpdateManyWithoutMorphemeNestedInput
 }
 
 export type MorphemeUncheckedUpdateWithoutLexemes_morphemesInput = {
@@ -450,6 +479,61 @@ export type MorphemeUncheckedUpdateWithoutLexemes_morphemesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedUpdateManyWithoutMorphemeNestedInput
+}
+
+export type MorphemeCreateWithoutMorphemeAllophonesInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  value?: string | null
+  type?: number | null
+  actionHistory?: string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutMorphemeInput
+}
+
+export type MorphemeUncheckedCreateWithoutMorphemeAllophonesInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  value?: string | null
+  type?: number | null
+  actionHistory?: string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutMorphemeInput
+}
+
+export type MorphemeCreateOrConnectWithoutMorphemeAllophonesInput = {
+  where: Prisma.MorphemeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MorphemeCreateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedCreateWithoutMorphemeAllophonesInput>
+}
+
+export type MorphemeUpsertWithoutMorphemeAllophonesInput = {
+  update: Prisma.XOR<Prisma.MorphemeUpdateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput>
+  create: Prisma.XOR<Prisma.MorphemeCreateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedCreateWithoutMorphemeAllophonesInput>
+  where?: Prisma.MorphemeWhereInput
+}
+
+export type MorphemeUpdateToOneWithWhereWithoutMorphemeAllophonesInput = {
+  where?: Prisma.MorphemeWhereInput
+  data: Prisma.XOR<Prisma.MorphemeUpdateWithoutMorphemeAllophonesInput, Prisma.MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput>
+}
+
+export type MorphemeUpdateWithoutMorphemeAllophonesInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutMorphemeNestedInput
+}
+
+export type MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutMorphemeNestedInput
 }
 
 
@@ -459,10 +543,12 @@ export type MorphemeUncheckedUpdateWithoutLexemes_morphemesInput = {
 
 export type MorphemeCountOutputType = {
   lexemes_morphemes: number
+  morphemeAllophones: number
 }
 
 export type MorphemeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lexemes_morphemes?: boolean | MorphemeCountOutputTypeCountLexemes_morphemesArgs
+  morphemeAllophones?: boolean | MorphemeCountOutputTypeCountMorphemeAllophonesArgs
 }
 
 /**
@@ -482,6 +568,13 @@ export type MorphemeCountOutputTypeCountLexemes_morphemesArgs<ExtArgs extends ru
   where?: Prisma.LexemeMorphemeWhereInput
 }
 
+/**
+ * MorphemeCountOutputType without action
+ */
+export type MorphemeCountOutputTypeCountMorphemeAllophonesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MorphemeAllophoneWhereInput
+}
+
 
 export type MorphemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -491,6 +584,7 @@ export type MorphemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   type?: boolean
   actionHistory?: boolean
   lexemes_morphemes?: boolean | Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>
+  morphemeAllophones?: boolean | Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>
   _count?: boolean | Prisma.MorphemeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["morpheme"]>
 
@@ -524,6 +618,7 @@ export type MorphemeSelectScalar = {
 export type MorphemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "type" | "actionHistory", ExtArgs["result"]["morpheme"]>
 export type MorphemeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lexemes_morphemes?: boolean | Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>
+  morphemeAllophones?: boolean | Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>
   _count?: boolean | Prisma.MorphemeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MorphemeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -533,6 +628,7 @@ export type $MorphemePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Morpheme"
   objects: {
     lexemes_morphemes: Prisma.$LexemeMorphemePayload<ExtArgs>[]
+    morphemeAllophones: Prisma.$MorphemeAllophonePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -936,6 +1032,7 @@ readonly fields: MorphemeFieldRefs;
 export interface Prisma__MorphemeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   lexemes_morphemes<T extends Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LexemeMorphemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  morphemeAllophones<T extends Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MorphemeAllophonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1383,6 +1480,30 @@ export type Morpheme$lexemes_morphemesArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.LexemeMorphemeScalarFieldEnum | Prisma.LexemeMorphemeScalarFieldEnum[]
+}
+
+/**
+ * Morpheme.morphemeAllophones
+ */
+export type Morpheme$morphemeAllophonesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MorphemeAllophone
+   */
+  select?: Prisma.MorphemeAllophoneSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MorphemeAllophone
+   */
+  omit?: Prisma.MorphemeAllophoneOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MorphemeAllophoneInclude<ExtArgs> | null
+  where?: Prisma.MorphemeAllophoneWhereInput
+  orderBy?: Prisma.MorphemeAllophoneOrderByWithRelationInput | Prisma.MorphemeAllophoneOrderByWithRelationInput[]
+  cursor?: Prisma.MorphemeAllophoneWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MorphemeAllophoneScalarFieldEnum | Prisma.MorphemeAllophoneScalarFieldEnum[]
 }
 
 /**

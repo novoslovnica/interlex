@@ -6,6 +6,33 @@ export enum SystemFeature {
     ModerationApprove = "moderation_approve",
     LogsView = "logs_view",
     SystemSettings = "system_settings",
+
+    // Детализированные права на слова
+    WordsCreate = "words_create",
+    WordsEdit = "words_edit",
+    WordsDelete = "words_delete",
+    WordsNslEdit = "words_nsl_edit",
+
+    // Синонимы и антонимы
+    SynonymsEdit = "synonyms_edit",
+    AntonymsEdit = "antonyms_edit",
+
+    // Корни (морфемы)
+    RootsCreate = "roots_create",
+    RootsEdit = "roots_edit",
+    RootsDelete = "roots_delete",
+
+    // Окончания (флексии)
+    EndingsCreate = "endings_create",
+    EndingsEdit = "endings_edit",
+    EndingsDelete = "endings_delete",
+
+    // Кандидаты
+    CandidatesPromote = "candidates_promote",
+    CandidatesDelete = "candidates_delete",
+
+    // Дедупликация
+    DeduplicationManage = "deduplication_manage",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -80,6 +107,95 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
         label: "Управление конфигурацией",
         description: "Изменение глобальных переменных окружения",
         category: "Система",
+    },
+
+    // Детализированные права на слова
+    [SystemFeature.WordsCreate]: {
+        label: "Создание слов",
+        description: "Создание новых словарных статей",
+        category: "Слова",
+    },
+    [SystemFeature.WordsEdit]: {
+        label: "Редактирование слов",
+        description: "Изменение основных полей словарных статей",
+        category: "Слова",
+    },
+    [SystemFeature.WordsDelete]: {
+        label: "Удаление слов",
+        description: "Безвозвратное удаление словарных статей",
+        category: "Слова",
+    },
+    [SystemFeature.WordsNslEdit]: {
+        label: "Редактирование NSL",
+        description: "Изменение поля NSL (allophone) у слов",
+        category: "Слова",
+    },
+
+    // Синонимы
+    [SystemFeature.SynonymsEdit]: {
+        label: "Управление синонимами",
+        description: "Добавление и удаление связей синонимов между значениями",
+        category: "Семантика",
+    },
+
+    // Антонимы
+    [SystemFeature.AntonymsEdit]: {
+        label: "Управление антонимами",
+        description: "Добавление и удаление связей антонимов между значениями",
+        category: "Семантика",
+    },
+
+    // Корни
+    [SystemFeature.RootsCreate]: {
+        label: "Создание корней",
+        description: "Создание новых корней (морфем)",
+        category: "Корни и окончания",
+    },
+    [SystemFeature.RootsEdit]: {
+        label: "Редактирование корней",
+        description: "Изменение существующих корней",
+        category: "Корни и окончания",
+    },
+    [SystemFeature.RootsDelete]: {
+        label: "Удаление корней",
+        description: "Удаление корней из базы",
+        category: "Корни и окончания",
+    },
+
+    // Окончания
+    [SystemFeature.EndingsCreate]: {
+        label: "Создание окончаний",
+        description: "Создание новых флексий",
+        category: "Корни и окончания",
+    },
+    [SystemFeature.EndingsEdit]: {
+        label: "Редактирование окончаний",
+        description: "Изменение существующих окончаний",
+        category: "Корни и окончания",
+    },
+    [SystemFeature.EndingsDelete]: {
+        label: "Удаление окончаний",
+        description: "Удаление окончаний из базы",
+        category: "Корни и окончания",
+    },
+
+    // Кандидаты
+    [SystemFeature.CandidatesPromote]: {
+        label: "Публикация кандидатов",
+        description: "Продвижение кандидатов в основные леммы",
+        category: "Кандидаты",
+    },
+    [SystemFeature.CandidatesDelete]: {
+        label: "Удаление кандидатов",
+        description: "Отклонение и удаление кандидатов",
+        category: "Кандидаты",
+    },
+
+    // Дедупликация
+    [SystemFeature.DeduplicationManage]: {
+        label: "Дедупликация",
+        description: "Слияние дублирующихся слов",
+        category: "Слова",
     },
 };
 

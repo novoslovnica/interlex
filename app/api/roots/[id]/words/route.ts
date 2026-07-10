@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { prismaData as db } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { checkPermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 
 export async function POST(
   request: Request,
@@ -8,7 +10,7 @@ export async function POST(
 ) {
   try {
     const session = await auth()
-    if (!session || !["ADMIN", "MODERATOR"].includes(session.user.role || "")) {
+    if (!await checkPermission(session, Feature.RootsEdit)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
@@ -47,7 +49,7 @@ export async function DELETE(
 ) {
   try {
     const session = await auth()
-    if (!session || !["ADMIN", "MODERATOR"].includes(session.user.role || "")) {
+    if (!await checkPermission(session, Feature.RootsEdit)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 

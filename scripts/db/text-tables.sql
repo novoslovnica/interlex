@@ -16,6 +16,24 @@ INSERT INTO lexemes_text (lexemes_text, rowid, value) VALUES ('delete', old.rowi
 INSERT INTO lexemes_text (rowid, value) VALUES (new.rowid, new.value);
 END;
 
+CREATE VIRTUAL TABLE IF NOT EXISTS "lexeme_allophones_text" USING FTS5(value, content=lexeme_allophones);
+
+CREATE TRIGGER IF NOT EXISTS lexeme_allophones_text_insert AFTER INSERT ON lexeme_allophones
+BEGIN
+INSERT INTO lexeme_allophones_text (rowid, value) VALUES (new.rowid, new.value);
+END;
+
+CREATE TRIGGER IF NOT EXISTS lexeme_allophones_text_delete AFTER DELETE ON lexeme_allophones
+BEGIN
+INSERT INTO lexeme_allophones_text (lexeme_allophones_text, rowid, value) VALUES ('delete', old.rowid, old.value);
+END;
+
+CREATE TRIGGER IF NOT EXISTS lexeme_allophones_text_update AFTER UPDATE ON lexeme_allophones
+BEGIN
+INSERT INTO lexeme_allophones_text (lexeme_allophones_text, rowid, value) VALUES ('delete', old.rowid, old.value);
+INSERT INTO lexeme_allophones_text (rowid, value) VALUES (new.rowid, new.value);
+END;
+
 CREATE VIRTUAL TABLE IF NOT EXISTS "morphemes_text" USING FTS5(value, content=morphemes);
 
 CREATE TRIGGER IF NOT EXISTS morphemes_text_insert AFTER INSERT ON morphemes
@@ -155,7 +173,7 @@ CREATE TRIGGER IF NOT EXISTS cu_text_delete AFTER DELETE ON cu BEGIN INSERT INTO
 
 CREATE TRIGGER IF NOT EXISTS cu_text_update AFTER UPDATE ON cu BEGIN INSERT INTO cu_text (cu_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO cu_text (rowid, value) VALUES (new.rowid, new.value); END;
 
-CREATE VIRTUAL TABLE IF NOT EXISTS "de_text" USING FTS5(value, content=de);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+CREATE VIRTUAL TABLE IF NOT EXISTS "de_text" USING FTS5(value, content=de);
 
 CREATE TRIGGER IF NOT EXISTS de_text_insert AFTER INSERT ON de BEGIN INSERT INTO de_text (rowid, value) VALUES (new.rowid, new.value); END;
 
@@ -163,15 +181,15 @@ CREATE TRIGGER IF NOT EXISTS de_text_delete AFTER DELETE ON de BEGIN INSERT INTO
 
 CREATE TRIGGER IF NOT EXISTS de_text_update AFTER UPDATE ON de BEGIN INSERT INTO de_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO de_text (rowid, value) VALUES (new.rowid, new.value); END;
 
-CREATE VIRTUAL TABLE IF NOT EXISTS "nl_text" USING FTS5(value, content=nl);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+CREATE VIRTUAL TABLE IF NOT EXISTS "nl_text" USING FTS5(value, content=nl);
 
 CREATE TRIGGER IF NOT EXISTS nl_text_insert AFTER INSERT ON nl BEGIN INSERT INTO nl_text (rowid, value) VALUES (new.rowid, new.value); END;
 
 CREATE TRIGGER IF NOT EXISTS nl_text_delete AFTER DELETE ON nl BEGIN INSERT INTO nl_text (nl_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
 
 CREATE TRIGGER IF NOT EXISTS nl_text_update AFTER UPDATE ON nl BEGIN INSERT INTO nl_text (nl_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO nl_text (rowid, value) VALUES (new.rowid, new.value); END;
-                                                                                                                                                                                                                        
-CREATE VIRTUAL TABLE IF NOT EXISTS "eo_text" USING FTS5(value, content=eo);                                                                                                                                                                                                                    CREATE VIRTUAL TABLE IF NOT EXISTS "cu_text" USING FTS5(value, content=cu);
+
+CREATE VIRTUAL TABLE IF NOT EXISTS "eo_text" USING FTS5(value, content=eo);
 
 CREATE TRIGGER IF NOT EXISTS eo_text_insert AFTER INSERT ON eo BEGIN INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;
 

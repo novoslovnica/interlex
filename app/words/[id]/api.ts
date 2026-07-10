@@ -13,6 +13,16 @@ export const getItem = async (id: string) => {
 
   const data = db.prepare('select * from lexemes where id = ?').get(id) as any;
 
+  const allophones = db.prepare(`
+    SELECT la.value, af.code AS flavorCode, la.type
+    FROM lexeme_allophones la
+    JOIN allophone_flavors af ON af.id = la.flavorId
+    WHERE la.lexemeId = ?
+  `).all(id) as { value: string; flavorCode: string; type: string }[];
+
+  const isv = allophones.find(a => a.flavorCode === 'CORE' && a.type === 'standard')?.value;
+  const nsl = allophones.find(a => a.flavorCode === 'NSL' && a.type === 'standard')?.value;
+
   const roots = db.prepare(`
     select * from morphemes where id IN (select morphemeId from lexemes_morphemes where lexemeId = ?)
   `).all(id);
@@ -83,6 +93,9 @@ export const getItem = async (id: string) => {
 
   return {
     ...data,
+    isv,
+    nsl,
+    allophones,
     meanings: meaningsWithRelations,
     en,
     ru,

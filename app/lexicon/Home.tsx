@@ -69,7 +69,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
     const searchParams = useSearchParams();
 
     const performSearch = useCallback((query: string, mc: string, ut: string) => {
-        const params = new URLSearchParams({ search: query, limit: '50', offset: '0' });
+        const params = new URLSearchParams({ search: query, limit: '50', offset: '0', grouped: '1' });
         if (mc) params.set('mainCategory', mc);
         if (ut) params.set('usageType', ut);
         fetch(`/api/lexicon?${params}`)

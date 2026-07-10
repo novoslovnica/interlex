@@ -14,8 +14,8 @@
     "init:db": "npx tsx scripts/db/init-db.ts",
     "db:gen-auth": "cross-env DB_TYPE=auth prisma generate",
     "db:gen-data": "cross-env DB_TYPE=data prisma generate",
-    "db:migrate-auth": "cross-env DB_TYPE=auth prisma migrate dev --create-only",
-    "db:migrate-data": "cross-env DB_TYPE=data prisma migrate dev --create-only"
+    "db:migrate-auth": "cross-env DB_TYPE=auth prisma migrate dev",
+    "db:migrate-data": "cross-env DB_TYPE=data prisma migrate dev"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",

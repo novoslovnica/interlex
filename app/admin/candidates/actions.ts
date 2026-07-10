@@ -2,6 +2,8 @@
 
 import { prismaData as db } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { checkPermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 
 interface PromoteCandidateInput {
   candidateId: number
@@ -19,7 +21,7 @@ export async function promoteCandidatesAction(
 ) {
   try {
     const session = await auth()
-    if (!session || !["ADMIN", "MODERATOR"].includes(session.user.role || "")) {
+    if (!await checkPermission(session, Feature.CandidatesPromote)) {
       return { success: false, error: "Forbidden" }
     }
 
@@ -39,8 +41,6 @@ export async function promoteCandidatesAction(
         data: {
           slug,
           value: input.value,
-          isv: candidate.isv,
-          nsl: candidate.nsl,
           transcription: candidate.transcription,
           mainCategory: candidate.mainCategory,
           usageType: candidate.usageType,
@@ -65,13 +65,24 @@ export async function promoteCandidatesAction(
           gender: input.gender || candidate.gender,
           declension: input.declension ?? candidate.declension,
           conjugation: input.conjugation ?? candidate.conjugation,
-          accentSyllable: candidate.accentSyllable,
-          alternationType: candidate.alternationType,
-          fleetingVowelAt: candidate.fleetingVowelAt,
           hasAnomalies: candidate.hasAnomalies,
           actionHistory: candidate.actionHistory,
         },
       })
+
+      const coreFlavor = await db.allophoneFlavor.findUnique({ where: { code: 'CORE' } })
+      const nslFlavor = await db.allophoneFlavor.findUnique({ where: { code: 'NSL' } })
+
+      if (coreFlavor && candidate.isv) {
+        await db.lexemeAllophone.create({
+          data: { lexemeId: word.id, flavorId: coreFlavor.id, value: candidate.isv, type: 'standard' },
+        })
+      }
+      if (nslFlavor && candidate.nsl) {
+        await db.lexemeAllophone.create({
+          data: { lexemeId: word.id, flavorId: nslFlavor.id, value: candidate.nsl, type: 'standard' },
+        })
+      }
 
       if (input.rootId) {
         await db.lexemeMorpheme.create({

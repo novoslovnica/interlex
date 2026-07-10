@@ -4,6 +4,8 @@ import {type Prisma} from "@/prisma/generated/data/client";
 import {redirect} from "next/navigation";
 import type { Metadata } from "next";
 import { auth } from "@/auth"
+import { requirePermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 import { buildEntry, append } from "@/lib/action-history"
 
 export const metadata: Metadata = {
@@ -31,6 +33,10 @@ export type MorphemeWithLexemes = Prisma.MorphemeGetPayload<{
 }>
 
 export default async function CreateArticlePage() {
+    const session = await auth()
+    if (!session) redirect("/login")
+    await requirePermission(session, Feature.WordsCreate)
+
     const pageSize = 30
 
     const initialRoots = (await db.morpheme.findMany({
@@ -44,10 +50,13 @@ export default async function CreateArticlePage() {
         const session = await auth()
         const author = session?.user?.email || "unknown"
         const stemValue = formData.stem?.trim() || null
+        const posValue = formData.pos?.trim() || "unknown"
+        const slug = `${formData.word?.toLowerCase()}-${posValue}`
 
         const newWord = await db.lexeme.create({
             data: {
                 value: formData.word,
+                slug,
                 stem: stemValue,
                 hasAnomalies: formData.hasAnomalies === true,
                 actionHistory: append(null, buildEntry(author, {
@@ -57,6 +66,17 @@ export default async function CreateArticlePage() {
                 })),
             },
         })
+
+        const allophoneData = formData.allophones || {}
+        for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {
+            const strValue = (allophoneData[code.toLowerCase()] as string)?.trim()
+            if (!strValue) continue
+            const flavor = await db.allophoneFlavor.findUnique({ where: { code } })
+            if (!flavor) continue
+            await db.lexemeAllophone.create({
+                data: { lexemeId: newWord.id, flavorId: flavor.id, type: "standard", value: strValue },
+            })
+        }
 
         if (stemValue) {
             const existing = await db.baseHomonym.findUnique({

@@ -12,6 +12,9 @@ npm run init:db
 npm run fill:db
 npm run fill:is:db
 
+# Seed ending_allophones from static registry
+npx tsx ./scripts/db/seed-endings.ts
+
 # Enrich words metadata from Derksen glossary
 npx tsx ./scripts/db/enrich_words_metadata.ts
 

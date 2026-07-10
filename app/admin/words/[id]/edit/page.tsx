@@ -4,7 +4,10 @@ import { type Prisma } from "@/prisma/generated/data/client"
 import ArticleForm from "@/components/ArticleForm"
 import type { Metadata } from "next"
 import { auth } from "@/auth"
+import { requirePermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 import { buildEntry, append } from "@/lib/action-history"
+import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -126,6 +129,10 @@ export default async function EditArticlePage({ params }: EditPageProps) {
 
   if (isNaN(wordId)) notFound()
 
+  const session = await auth()
+  if (!session) redirect("/login")
+  await requirePermission(session, Feature.WordsEdit)
+
   const [wordData, initialRoots] = await Promise.all([
     db.lexeme.findUnique({
       where: { id: wordId },
@@ -143,6 +150,9 @@ export default async function EditArticlePage({ params }: EditPageProps) {
           },
         },
         anomalies: true,
+        lexemeAllophones: {
+          include: { flavor: true },
+        },
       },
     }),
     db.morpheme.findMany({
@@ -159,9 +169,37 @@ export default async function EditArticlePage({ params }: EditPageProps) {
     grammeme: a.grammeme,
   }))
 
-  const attachedRoots = (wordData.lexemes_morphemes || [])
+const attachedRoots = (wordData.lexemes_morphemes || [])
     .map((rw) => rw.morpheme)
     .filter((r): r is { id: number; value: string } => !!r && !!r.value)
+
+  // Derive homonym base keys from stem using same heuristic as seed scripts
+  const stemCandidates = wordData.stem
+    ? generateStemCandidates({
+        stem: wordData.stem,
+        secondaryStem: wordData.secondaryStem || null,
+        tertiaryStem: wordData.tertiaryStem || null,
+        isv: wordData.value,
+        pos: wordData.pos,
+      })
+    : []
+
+  // Fetch existing base_homonyms where this word's id appears
+  const baseHomonyms = stemCandidates.length > 0
+    ? await db.baseHomonym.findMany({
+        where: { base: { in: stemCandidates } },
+      })
+    : []
+
+  const initialHomonymBases = baseHomonyms.map((h) => h.base)
+
+  const allophones = (wordData.lexemeAllophones || []).reduce<Record<string, string>>(
+  (acc, a) => {
+    acc[a.flavor.code.toLowerCase()] = a.value
+    return acc
+  },
+  { core: "", nsl: "", east: "", west: "", south: "" }
+)
 
   const meanings = (wordData.meanings || []).map((m) => ({
     id: m.id,
@@ -294,29 +332,72 @@ export default async function EditArticlePage({ params }: EditPageProps) {
       },
     })
 
-    const oldStem = currentWord?.stem?.trim() || null
-    if (oldStem && oldStem !== stemValue) {
-      const oldEntry = await db.baseHomonym.findUnique({ where: { base: oldStem } })
-      if (oldEntry) {
-        const ids: number[] = JSON.parse(oldEntry.wordIds).filter((id: number) => id !== wordId)
-        if (ids.length > 0) {
-          await db.baseHomonym.update({ where: { base: oldStem }, data: { wordIds: JSON.stringify(ids) } })
+    // Upsert allophones
+    const allophoneData = formData.allophones || {}
+    for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {
+      const rawValue = allophoneData[code.toLowerCase()]
+      const strValue = (rawValue as string)?.trim() || ""
+      const flavor = await db.allophoneFlavor.findUnique({ where: { code } })
+      if (!flavor) continue
+      const existing = await db.lexemeAllophone.findFirst({
+        where: { lexemeId: wordId, flavorId: flavor.id, type: "standard" },
+      })
+      if (existing) {
+        if (strValue) {
+          await db.lexemeAllophone.update({
+            where: { id: existing.id },
+            data: { value: strValue },
+          })
         } else {
-          await db.baseHomonym.delete({ where: { base: oldStem } })
+          await db.lexemeAllophone.delete({ where: { id: existing.id } })
+        }
+      } else if (strValue) {
+        await db.lexemeAllophone.create({
+          data: { lexemeId: wordId, flavorId: flavor.id, type: "standard", value: strValue },
+        })
+      }
+    }
+
+    const oldStem = currentWord?.stem?.trim() || null
+    const oldCandidates = oldStem
+      ? generateStemCandidates({
+          stem: oldStem,
+          secondaryStem: currentWord?.secondaryStem || null,
+          tertiaryStem: currentWord?.tertiaryStem || null,
+          isv: currentWord?.value,
+          pos: currentWord?.pos,
+        })
+      : []
+    const formHomonymBases: string[] = formData.homonymBases || []
+    const oldBases = new Set(oldCandidates)
+    const newBases = new Set(formHomonymBases)
+
+    for (const base of oldCandidates) {
+      if (!newBases.has(base)) {
+        const entry = await db.baseHomonym.findUnique({ where: { base } })
+        if (entry) {
+          const ids: number[] = JSON.parse(entry.wordIds).filter((id: number) => id !== wordId)
+          if (ids.length > 0) {
+            await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(ids) } })
+          } else {
+            await db.baseHomonym.delete({ where: { base } })
+          }
         }
       }
     }
 
-    if (stemValue) {
-      const existing = await db.baseHomonym.findUnique({ where: { base: stemValue } })
-      if (existing) {
-        const ids: number[] = JSON.parse(existing.wordIds)
-        if (!ids.includes(wordId)) {
-          ids.push(wordId)
-          await db.baseHomonym.update({ where: { base: stemValue }, data: { wordIds: JSON.stringify(ids) } })
+    for (const base of formHomonymBases) {
+      if (!oldBases.has(base)) {
+        const entry = await db.baseHomonym.findUnique({ where: { base } })
+        if (entry) {
+          const ids: number[] = JSON.parse(entry.wordIds)
+          if (!ids.includes(wordId)) {
+            ids.push(wordId)
+            await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(ids) } })
+          }
+        } else {
+          await db.baseHomonym.create({ data: { base, wordIds: JSON.stringify([wordId]) } })
         }
-      } else {
-        await db.baseHomonym.create({ data: { base: stemValue, wordIds: JSON.stringify([wordId]) } })
       }
     }
 
@@ -413,6 +494,8 @@ export default async function EditArticlePage({ params }: EditPageProps) {
         initialData={{
           word: wordData.value || "",
           stem: wordData.stem || "",
+          allophones,
+          homonymBases: initialHomonymBases,
           hasAnomalies: wordData.hasAnomalies,
           properNoun: wordData.properNoun,
           inflectionAnomalies: currentAnomalies,

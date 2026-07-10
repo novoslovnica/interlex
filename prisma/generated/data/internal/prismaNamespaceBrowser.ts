@@ -56,6 +56,10 @@ export const ModelName = {
   Meaning: 'Meaning',
   Morpheme: 'Morpheme',
   LexemeMorpheme: 'LexemeMorpheme',
+  AllophoneFlavor: 'AllophoneFlavor',
+  LexemeAllophone: 'LexemeAllophone',
+  MorphemeAllophone: 'MorphemeAllophone',
+  EndingAllophone: 'EndingAllophone',
   Synonym: 'Synonym',
   Antonym: 'Antonym',
   En: 'En',
@@ -103,8 +107,6 @@ export const LexemeScalarFieldEnum = {
   slug: 'slug',
   external_id: 'external_id',
   value: 'value',
-  nsl: 'nsl',
-  isv: 'isv',
   transcription: 'transcription',
   mainCategory: 'mainCategory',
   usageType: 'usageType',
@@ -215,6 +217,48 @@ export const LexemeMorphemeScalarFieldEnum = {
 } as const
 
 export type LexemeMorphemeScalarFieldEnum = (typeof LexemeMorphemeScalarFieldEnum)[keyof typeof LexemeMorphemeScalarFieldEnum]
+
+
+export const AllophoneFlavorScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  description: 'description'
+} as const
+
+export type AllophoneFlavorScalarFieldEnum = (typeof AllophoneFlavorScalarFieldEnum)[keyof typeof AllophoneFlavorScalarFieldEnum]
+
+
+export const LexemeAllophoneScalarFieldEnum = {
+  id: 'id',
+  lexemeId: 'lexemeId',
+  value: 'value',
+  flavorId: 'flavorId',
+  type: 'type'
+} as const
+
+export type LexemeAllophoneScalarFieldEnum = (typeof LexemeAllophoneScalarFieldEnum)[keyof typeof LexemeAllophoneScalarFieldEnum]
+
+
+export const MorphemeAllophoneScalarFieldEnum = {
+  id: 'id',
+  morphemeId: 'morphemeId',
+  value: 'value',
+  flavorId: 'flavorId'
+} as const
+
+export type MorphemeAllophoneScalarFieldEnum = (typeof MorphemeAllophoneScalarFieldEnum)[keyof typeof MorphemeAllophoneScalarFieldEnum]
+
+
+export const EndingAllophoneScalarFieldEnum = {
+  id: 'id',
+  stemType: 'stemType',
+  grammeme: 'grammeme',
+  value: 'value',
+  flavorId: 'flavorId'
+} as const
+
+export type EndingAllophoneScalarFieldEnum = (typeof EndingAllophoneScalarFieldEnum)[keyof typeof EndingAllophoneScalarFieldEnum]
 
 
 export const SynonymScalarFieldEnum = {
