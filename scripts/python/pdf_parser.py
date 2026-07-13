@@ -92,7 +92,7 @@ def parse_pdf_to_json_structure(pdf_path: str) -> list[dict]:
 # --- Пример использования и сохранения в .json файл ---
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_file = os.path.join(current_dir, "pdf", "2020-1.pdf")
+    pdf_file = os.path.join(current_dir, "pdf", "maly_princ_lat.pdf")
 
     try:
         # Получаем структуру в виде Python-списка с диктами
