@@ -36,7 +36,7 @@ const navItems: NavEntry[] = [
     {
         label: "Отношения",
         roles: ["ADMIN", "MODERATOR"],
-        feature: Feature.HypernymsEdit,
+        feature: Feature.RelationsManage,
         children: [
             { href: "/admin/relations/hypernyms", label: "Гиперонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.HypernymsEdit },
             { href: "/admin/relations/hyponyms", label: "Гипонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.HyponymsEdit },

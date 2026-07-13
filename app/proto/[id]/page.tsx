@@ -1,20 +1,23 @@
 import {getProtoItem} from "@/app/proto/[id]/api";
 import {Suspense} from "react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import './proto-word.css';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
+  const t = await getTranslations("proto");
   const item = await getProtoItem(id) as { lemma: string } | null;
   return {
     title: `*${item?.lemma ?? id}`,
-    description: `Праславянская реконструкция *${item?.lemma ?? id} — словарная статья из ESSJa (Этимологический словарь славянских языков).`,
+    description: `${t("source")} *${item?.lemma ?? id} — ${t("title")}.`,
   };
 }
 
 const ProtoWordPage = async ({params}: { params: Promise<{ id: string }> }) => {
     const {id} = await params;
+    const t = await getTranslations("proto");
     const item = await getProtoItem(id) as { id: number; lemma: string; body: string; source_url: string } | null;
 
     if (!item) {
@@ -22,9 +25,9 @@ const ProtoWordPage = async ({params}: { params: Promise<{ id: string }> }) => {
             <main className="main-content">
                 <div className="scroll-container w-full pt-6 px-4">
                     <div className="text-center py-20 text-slate-400">
-                        <p className="text-lg">Статья не найдена</p>
+                        <p className="text-lg">{t("notFound")}</p>
                         <Link href="/proto" className="text-blue-600 hover:underline mt-4 inline-block">
-                            ← Вернуться к поиску
+                            {t("backLink")}
                         </Link>
                     </div>
                 </div>
@@ -40,7 +43,7 @@ const ProtoWordPage = async ({params}: { params: Promise<{ id: string }> }) => {
                 <Suspense fallback={<div>Loading...</div>}>
                     <article className="max-w-3xl mx-auto mb-8 bg-white p-6 md:p-8 rounded-2xl shadow-md border border-slate-100">
                         <Link href="/proto" className="text-sm text-blue-600 hover:underline mb-4 inline-block">
-                            ← К списку
+                            {t("backLink")}
                         </Link>
 
                         <header className="border-b border-slate-200 pb-4 mb-5">
@@ -63,7 +66,7 @@ const ProtoWordPage = async ({params}: { params: Promise<{ id: string }> }) => {
                                     rel="noopener noreferrer"
                                     className="text-blue-600 hover:underline inline-flex items-center gap-1 text-sm"
                                 >
-                                    Источник {item.source_url} <span>→</span>
+                                    {t("source")} {item.source_url} <span>→</span>
                                 </a>
                             </div>
                         )}

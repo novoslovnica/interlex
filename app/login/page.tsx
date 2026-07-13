@@ -3,17 +3,19 @@
 import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
+import {useTranslations} from "next-intl"
 
 function LoginContent() {
+    const t = useTranslations("login");
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get("callbackUrl") || "/"
 
     return (
         <div className="flex-1 flex items-center justify-center">
             <div className="w-full max-w-sm mx-auto px-4">
-                <h1 className="text-2xl font-bold tracking-tight text-center mb-2">Вход в аккаунт</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-center mb-2">{t("title")}</h1>
                 <p className="text-muted-foreground text-sm text-center mb-8">
-                    Войдите через Яндекс или Google, чтобы получить доступ к настройкам и управлению.
+                    {t("description")}
                 </p>
 
                 <div className="space-y-4">
@@ -25,7 +27,7 @@ function LoginContent() {
                             <rect width="24" height="24" rx="6" fill="#FC3F1D"/>
                             <text x="12" y="16" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" fontFamily="sans-serif">Я</text>
                         </svg>
-Войти через Яндекс
+                        {t("yandex")}
                     </button>
 
                     <button
@@ -38,7 +40,7 @@ function LoginContent() {
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                         </svg>
-                        Войти через Google
+                        {t("google")}
                     </button>
                 </div>
             </div>

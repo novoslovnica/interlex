@@ -1,10 +1,13 @@
 import TransliterationClient from "./transliteration-client"
 import type { Metadata } from "next"
+import {getTranslations} from "next-intl/server"
 
-export const metadata: Metadata = {
-  title: "Транслитератор",
-  description:
-    "Конвертация текста между системами правописания межславянского языка: этимологическая, стандартная и простая (латиница и кириллица).",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("transliteration");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 }
 
 export default function TransliterationPage() {

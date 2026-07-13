@@ -34,3 +34,4 @@ npx tsx ./scripts/db/upload-synsets.ts
 npx tsx ./scripts/db/upload-synset-relations.ts
 
 #npx tsx ./scripts/db/update-generated-meanings.ts
+npx tsx scripts/db/update-meanings-from-csv.ts data/meanings_definitions.csv

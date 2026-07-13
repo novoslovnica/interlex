@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { generateAdjectiveForm, EnhancedAdjDbItem } from '@/lib/grammar/adjective/index';
 import { Case, NumberType } from '@/lib/grammar/noun/index';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
@@ -13,72 +14,73 @@ interface AdjectiveDeclensionTablesProps {
     isQualitative?: boolean;
 }
 
-const CASES = [
-    { key: Case.NOMINATIVE, label: 'Именительный', short: 'Им.' },
-    { key: Case.GENITIVE, label: 'Родительный', short: 'Род.' },
-    { key: Case.DATIVE, label: 'Дательный', short: 'Дат.' },
-    { key: Case.ACCUSATIVE, label: 'Винительный', short: 'Вин.' },
-    { key: Case.INSTRUMENTAL, label: 'Творительный', short: 'Твор.' },
-    { key: Case.LOCATIVE, label: 'Местный', short: 'Мест.' },
-    { key: Case.VOCATIVE, label: 'Звательный', short: 'Зват.' },
-] as const;
-
-const GENDERS = [
-    { key: GrammaticalGender.MASC, label: 'Мужской (Masc)' },
-    { key: GrammaticalGender.FEM, label: 'Женский (Fem)' },
-    { key: GrammaticalGender.NEUT, label: 'Средний (Neut)' },
-] as const;
-
-const NUMBERS = [
-    { key: NumberType.SINGULAR, title: 'Sg' },
-    { key: NumberType.DUAL, title: 'Du' },
-    { key: NumberType.PLURAL, title: 'Pl' },
-] as const;
-
-const DEGREES: { key: 'pos' | 'comp' | 'sup'; label: string }[] = [
-    { key: 'pos', label: 'Положительная (Positivus)' },
-    { key: 'comp', label: 'Сравнительная (Comparativus)' },
-    { key: 'sup', label: 'Превосходная (Superlativus)' },
-];
-
-function generateAdjFormWithDegree(
-    dbItem: EnhancedAdjDbItem,
-    targetCase: Case,
-    targetNumber: NumberType,
-    targetGender: GrammaticalGender,
-    degree: 'pos' | 'comp' | 'sup'
-): string {
-    if (degree === 'pos') {
-        return generateAdjectiveForm({ dbItem, targetCase, targetNumber, targetGender });
-    }
-
-    const base = dbItem.interslavic.slice(0, -1);
-    const softDbItem: EnhancedAdjDbItem = {
-        ...dbItem,
-        protoStemClass: ProtoStemClass.JO_SHORT,
-    };
-    let stem: string;
-    if (degree === 'comp') {
-        stem = base + 'ějš';
-    } else {
-        stem = 'naj' + base + 'ějš';
-    }
-    return generateAdjectiveForm({
-        dbItem: { ...softDbItem, interslavic: stem + 'i' },
-        targetCase,
-        targetNumber,
-        targetGender,
-    });
-}
-
 export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps> = ({
     isv,
     paradigm,
     protoStemClass,
     isQualitative = false,
 }) => {
+    const t = useTranslations("word");
     const [activeGender, setActiveGender] = useState<GrammaticalGender>(GrammaticalGender.MASC);
     const [activeDegree, setActiveDegree] = useState<'pos' | 'comp' | 'sup'>('pos');
+
+    const CASES = [
+        { key: Case.NOMINATIVE, lookup: 'nominative' },
+        { key: Case.GENITIVE, lookup: 'genitive' },
+        { key: Case.DATIVE, lookup: 'dative' },
+        { key: Case.ACCUSATIVE, lookup: 'accusative' },
+        { key: Case.INSTRUMENTAL, lookup: 'instrumental' },
+        { key: Case.LOCATIVE, lookup: 'locative' },
+        { key: Case.VOCATIVE, lookup: 'vocative' },
+    ] as const;
+
+    const GENDERS = [
+        { key: GrammaticalGender.MASC, lookup: 'masculine' },
+        { key: GrammaticalGender.FEM, lookup: 'feminine' },
+        { key: GrammaticalGender.NEUT, lookup: 'neuter' },
+    ] as const;
+
+    const NUMBERS = [
+        { key: NumberType.SINGULAR, title: t('numbers.singular') },
+        { key: NumberType.DUAL, title: t('numbers.dual') },
+        { key: NumberType.PLURAL, title: t('numbers.plural') },
+    ] as const;
+
+    const DEGREES: { key: 'pos' | 'comp' | 'sup'; lookup: string }[] = [
+        { key: 'pos', lookup: 'adjective.positive' },
+        { key: 'comp', lookup: 'adjective.comparative' },
+        { key: 'sup', lookup: 'adjective.superlative' },
+    ];
+
+    function generateAdjFormWithDegree(
+        dbItem: EnhancedAdjDbItem,
+        targetCase: Case,
+        targetNumber: NumberType,
+        targetGender: GrammaticalGender,
+        degree: 'pos' | 'comp' | 'sup'
+    ): string {
+        if (degree === 'pos') {
+            return generateAdjectiveForm({ dbItem, targetCase, targetNumber, targetGender });
+        }
+
+        const base = dbItem.interslavic.slice(0, -1);
+        const softDbItem: EnhancedAdjDbItem = {
+            ...dbItem,
+            protoStemClass: ProtoStemClass.JO_SHORT,
+        };
+        let stem: string;
+        if (degree === 'comp') {
+            stem = base + 'ějš';
+        } else {
+            stem = 'naj' + base + 'ějš';
+        }
+        return generateAdjectiveForm({
+            dbItem: { ...softDbItem, interslavic: stem + 'i' },
+            targetCase,
+            targetNumber,
+            targetGender,
+        });
+    }
 
     const dbItem: EnhancedAdjDbItem = {
         interslavic: isv,
@@ -109,7 +111,7 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
                                     : 'text-slate-500 hover:bg-slate-100'
                             }`}
                         >
-                            {d.label}
+                            {t(d.lookup)}
                         </button>
                     ))}
                 </div>
@@ -125,7 +127,7 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
                                 : 'text-slate-500 hover:bg-slate-100'
                         }`}
                     >
-                        {g.label}
+                        {t(`genders.${g.lookup}`)}
                     </button>
                 ))}
             </div>
@@ -145,8 +147,8 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
                                     if (!formValue) return null;
                                     return (
                                         <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
-                                            <span className="text-slate-400 font-medium shrink-0" title={c.label}>
-                                                {c.short}
+                                            <span className="text-slate-400 font-medium shrink-0" title={t(`cases.${c.lookup}`)}>
+                                                {t(`cases.${c.lookup}Short`)}
                                             </span>
                                             <span className="text-blue-700 font-semibold text-right break-all">
                                                 {formValue}

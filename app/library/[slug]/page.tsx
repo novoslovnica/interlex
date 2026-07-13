@@ -4,6 +4,7 @@ import { prismaLibrary as db } from "@/lib/prisma"
 import { MarkdownRenderer } from "./MarkdownRenderer"
 import { getFlavorLabel } from "@/config/flavor"
 import type { Metadata } from "next"
+import {getTranslations} from "next-intl/server"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -11,11 +12,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
+  const t = await getTranslations("library");
   const entry = await db.libraryEntry.findUnique({ where: { slug } })
-  if (!entry) return { title: "Текст не найден" }
+  if (!entry) return { title: t("notFound") }
   return {
-    title: `${entry.title} — Sbornik / Библиотека`,
-    description: entry.summary || `Текст на межславянском языке: ${entry.title}`,
+    title: `${entry.title} — ${t("title")}`,
+    description: entry.summary || `${t("description")} ${entry.title}`,
   }
 }
 
@@ -40,6 +42,7 @@ const icons: Record<string, string> = {
 
 export default async function LibraryReadingPage({ params }: PageProps) {
   const { slug } = await params
+  const t = await getTranslations("library");
   const entry = await db.libraryEntry.findUnique({ where: { slug } })
   if (!entry) notFound()
 
@@ -55,7 +58,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
           href="/library"
           className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Vratiti se do biblioteky / Вернуться в библиотеку
+          {t("backLink")}
         </Link>
 
         <article className="space-y-6">
@@ -81,7 +84,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
               {entry.verified && (
                 <>
                   <span>·</span>
-                  <span className="text-green-600 font-semibold">✓ Проверено</span>
+                  <span className="text-green-600 font-semibold">{t("verified")}</span>
                 </>
               )}
             </div>
@@ -91,7 +94,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
             )}
             {entry.source && (
               <p className="text-xs text-muted-foreground">
-                Istočnik / Источник:{" "}
+                {t("source")}{" "}
                 <a href={entry.source} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
                   {entry.source}
                 </a>
@@ -104,7 +107,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
               <MarkdownRenderer content={entry.body} />
             </div>
           ) : (
-            <p className="text-muted-foreground italic">Текст пока не добавлен.</p>
+            <p className="text-muted-foreground italic">{t("emptyBody")}</p>
           )}
         </article>
       </div>

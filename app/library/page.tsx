@@ -1,25 +1,34 @@
 import { prismaLibrary as db } from "@/lib/prisma"
 import { LibraryClient } from "./LibraryClient"
 import type { Metadata } from "next"
+import {getTranslations} from "next-intl/server"
+import { auth } from "@/auth"
+import { Feature } from "@/config/features"
+import { checkPermission } from "@/lib/permissions"
 
-export const metadata: Metadata = {
-  title: "Sbornik / Библиотека",
-  description: "Коллекция избранных текстов на межславянском языке.",
-}
-
-const categoryMap: Record<string, { id: string; title: string; icon: string }> = {
-  poem: { id: "poem", title: "Poemy / Поэмы", icon: "📜" },
-  article: { id: "article", title: "Členky / Статьи", icon: "📰" },
-  book: { id: "book", title: "Knigy / Книги", icon: "📖" },
-  joke: { id: "joke", title: "Zasměšky / Анекдоты", icon: "😂" },
-  story: { id: "story", title: "Povědky / Рассказы", icon: "✍️" },
-  song: { id: "song", title: "Pěsnje / Песни", icon: "🎶" },
-  prayer: { id: "prayer", title: "Molitvy / Молитвы", icon: "🙏" },
-  quote: { id: "quote", title: "Citaty i prislovice / Цитаты", icon: "💬" },
-  study: { id: "study", title: "Nauka medžuslovjanskogo / Изучение", icon: "🎓" },
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("library");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 }
 
 export default async function LibraryPage() {
+  const t = await getTranslations("library.categories");
+
+  const categoryMap: Record<string, { id: string; title: string; icon: string }> = {
+    poem: { id: "poem", title: t("poem"), icon: "📜" },
+    article: { id: "article", title: t("article"), icon: "📰" },
+    book: { id: "book", title: t("book"), icon: "📖" },
+    joke: { id: "joke", title: t("joke"), icon: "😂" },
+    story: { id: "story", title: t("story"), icon: "✍️" },
+    song: { id: "song", title: t("song"), icon: "🎶" },
+    prayer: { id: "prayer", title: t("prayer"), icon: "🙏" },
+    quote: { id: "quote", title: t("quote"), icon: "💬" },
+    study: { id: "study", title: t("study"), icon: "🎓" },
+  };
+
   const entries = await db.libraryEntry.findMany({
     orderBy: { createdAt: "desc" },
     select: {
@@ -33,6 +42,9 @@ export default async function LibraryPage() {
     },
   })
 
+  const session = await auth()
+  const canCreate = await checkPermission(session, Feature.LibraryManage)
+
   const items = entries.map(e => ({
     slug: e.slug,
     title: e.title,
@@ -45,9 +57,9 @@ export default async function LibraryPage() {
   }))
 
   const categories = [
-    { id: "all", title: "Vse teksty / Все тексты", icon: "📚" },
+    { id: "all", title: t("all"), icon: "📚" },
     ...Object.values(categoryMap),
   ]
 
-  return <LibraryClient categories={categories} items={items} />
+  return <LibraryClient categories={categories} items={items} canCreate={canCreate} />
 }

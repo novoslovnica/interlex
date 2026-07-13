@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
+import {useTranslations} from "next-intl";
 
 import "./main-page.css";
 
@@ -58,6 +59,7 @@ const WordCard = ({ onClickCard, item, currentScript }: any) => {
 }
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
+    const t = useTranslations("lexicon");
     const [searchValue, setSearchValue] = useState("");
     const [mainCategory, setMainCategory] = useState("");
     const [usageType, setUsageType] = useState("");
@@ -153,7 +155,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     type="text"
                     id="searchInput"
                     className="search-box"
-                    placeholder="Введите текст для поиска..."
+                    placeholder={t("searchPlaceholder")}
                     value={searchValue}
                     onKeyDown={onKeyDown}
                     onChange={onChangeSearch}
@@ -171,9 +173,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0a15.634 15.634 0 01-3.75-6.75A15.63 15.63 0 0112 7.5a15.626 15.626 0 013.75 6.75A15.63 15.63 0 0112 21zm-8.625-7.5h17.25" />
                         </svg>
-                        <span>
-                            При переводе с междуславянского локаль автоматически подстроена под локаль вашего браузера.
-                        </span>
+                        <span>{t("guestBanner")}</span>
                     </div>
                 )}
             </div>
@@ -193,7 +193,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                 )}
 
                 {hasFetched && !items.length && (
-                    <div id="noResults" className="no-results">Ничего не найдено</div>
+                    <div id="noResults" className="no-results">{t("noResults")}</div>
                 )}
             </div>
         </>

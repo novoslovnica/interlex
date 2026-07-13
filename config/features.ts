@@ -18,6 +18,7 @@ export enum SystemFeature {
     AntonymsEdit = "antonyms_edit",
 
     // Семантические отношения из RuWordNet
+    RelationsManage = "relations_manage",
     HypernymsEdit = "hypernyms_edit",
     HyponymsEdit = "hyponyms_edit",
     MeronymsEdit = "meronyms_edit",
@@ -156,6 +157,13 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.AntonymsEdit]: {
         label: "Управление антонимами",
         description: "Добавление и удаление связей антонимов между значениями",
+        category: "Семантика",
+    },
+
+    // Управление отношениями (общий доступ ко всем 9 типам)
+    [SystemFeature.RelationsManage]: {
+        label: "Управление отношениями",
+        description: "Общий доступ к управлению всеми семантическими отношениями (гиперонимы, гипонимы, меронимы, холонимы, связанные, причины, следствия, предпосылки, заключения)",
         category: "Семантика",
     },
 

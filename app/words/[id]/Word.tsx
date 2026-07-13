@@ -2,6 +2,7 @@
 import {isvToCyr, isvToGlagolitic, isvToTranscription, standardToSimple, standardToSimpleCyr} from "@/lib/isv";
 import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 import {extractProtoStems} from "@/lib/grammar/morphonology";
 import {conjugateFullVerb} from "@/lib/grammar/verb/conjugator2";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
@@ -20,6 +21,7 @@ import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
 
 const Word = ({ item, currentScript }: any) => {
+    const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
 
@@ -55,7 +57,6 @@ const Word = ({ item, currentScript }: any) => {
     const isAdv = meta.partOfSpeech === PosType.ADV;
     const hasParadigm = isVerb || isNoun || isAdj || isNum || isPron || isAdv;
 
-    // На лету вычисляем глагольную парадигму, если это глагол
     let verbData = null;
     if (isVerb) {
         try {
@@ -69,7 +70,7 @@ const Word = ({ item, currentScript }: any) => {
                 aspect: meta.aspect || 'imperfective'
             });
         } catch (e) {
-            console.error("Ошибка генерации парадигмы глагола:", e);
+            console.error("Error generating verb paradigm:", e);
         }
     }
 
@@ -77,19 +78,19 @@ const Word = ({ item, currentScript }: any) => {
     if (isNoun) {
         try {
             const CASES_LIST = [
-                { key: 'nominative', label: 'Именительный', short: 'Им.' },
-                { key: 'genitive', label: 'Родительный', short: 'Род.' },
-                { key: 'dative', label: 'Дательный', short: 'Дат.' },
-                { key: 'accusative', label: 'Винительный', short: 'Вин.' },
-                { key: 'instrumental', label: 'Творительный', short: 'Твор.' },
-                { key: 'locative', label: 'Местный', short: 'Мест.' },
-                { key: 'vocative', label: 'Звательный', short: 'Зват.' },
+                { key: 'nominative' },
+                { key: 'genitive' },
+                { key: 'dative' },
+                { key: 'accusative' },
+                { key: 'instrumental' },
+                { key: 'locative' },
+                { key: 'vocative' },
             ] as const;
 
             const NUMBERS_LIST = [
-                { key: 'singular', title: 'Единственное (Sg)' },
-                { key: 'dual', title: 'Двойственное (Du)' },
-                { key: 'plural', title: 'Множественное (Pl)' },
+                { key: 'singular' },
+                { key: 'dual' },
+                { key: 'plural' },
             ] as const;
 
             const paradigmData: Record<string, Record<string, string>> = {
@@ -113,7 +114,7 @@ const Word = ({ item, currentScript }: any) => {
                             targetNumber: num.key,
                         });
                     } catch (error) {
-                        console.error(`Ошибка генерации формы: ${num.key} ${c.key}`, error);
+                        console.error(`Error generating form: ${num.key} ${c.key}`, error);
                         paradigmData[num.key][c.key] = '—';
                     }
                 }
@@ -121,36 +122,19 @@ const Word = ({ item, currentScript }: any) => {
 
             nounData = paradigmData;
         } catch {
-            console.log('Не удалось загрузить модуль деклинования');
+            console.log('Failed to load declension module');
         }
     }
 
     const meaningsArray = Array.isArray(item.meanings) ? item.meanings : (item.meanings ? [item.meanings] : []);
 
-    const LANG_CONFIG: Record<string, { label: string; data: any[] | null | undefined }> = {
-        en: { label: "Английский", data: item.en },
-        ru: { label: "Русский", data: item.ru },
-        uk: { label: "Украинский", data: item.uk },
-        be: { label: "Белорусский", data: item.be },
-        cu: { label: "Церковнославянский", data: item.cu },
-        bg: { label: "Болгарский", data: item.bg },
-        mk: { label: "Македонский", data: item.mk },
-        sr: { label: "Сербский", data: item.sr },
-        hr: { label: "Хорватский", data: item.hr },
-        sl: { label: "Словенский", data: item.sl },
-        pl: { label: "Польский", data: item.pl },
-        sk: { label: "Словацкий", data: item.sk },
-        cs: { label: "Чешский", data: item.cs },
-        de: { label: "Немецкий", data: item.de },
-        nl: { label: "Нидерландский", data: item.nl },
-        eo: { label: "Эсперанто", data: item.eo },
-    };
-
     const getTranslationsForMeaning = (meaningId: number) => {
         const result: Record<string, string> = {};
-        for (const [code, cfg] of Object.entries(LANG_CONFIG)) {
-            if (!Array.isArray(cfg.data)) continue;
-            const match = cfg.data.find((t: any) => t.meaningId === meaningId);
+        for (const [code] of Object.entries(item)) {
+            if (!['en', 'ru', 'uk', 'be', 'cu', 'bg', 'mk', 'sr', 'hr', 'sl', 'pl', 'sk', 'cs', 'de', 'nl', 'eo'].includes(code)) continue;
+            const data = item[code];
+            if (!Array.isArray(data)) continue;
+            const match = data.find((t: any) => t.meaningId === meaningId);
             if (match?.value) {
                 result[code] = match.value;
             }
@@ -161,18 +145,18 @@ const Word = ({ item, currentScript }: any) => {
     const etymologyLinks = [
         ...(item.proto ? [
             {
-                label: "Этимология",
+                label: t("sections.etymologyLink"),
                 url: `/proto/word/${item.proto}`,
                 target: "",
             },
             {
-                label: "Реконструкция (Википедия)",
+                label: t("sections.wiktionary"),
                 url: `https://en.wiktionary.org/wiki/Reconstruction:Proto-Slavic/${item.proto}`,
                 target: "_blank",
             },
         ] : [
             {
-                label: "Этимология",
+                label: t("sections.etymologyLink"),
                 url: item.etymology,
                 target: "_blank",
             },
@@ -200,42 +184,42 @@ const Word = ({ item, currentScript }: any) => {
     if (!item) {
         return (
             <div>
-                Информация отсутствует
+                {t("notFound")}
             </div>
         );
     }
+
+    const languageLabel = (code: string) => t(`languages.${code}`);
 
     return (
         <>
         <article className="max-w-3xl mx-auto mb-8 bg-white p-6 md:p-8 rounded-2xl shadow-md border border-slate-100 h-auto">
 
-            {/* 1. Заголовок (Слово и Траскрипция) */}
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
                 <span className="font-mono text-slate-400 text-lg">{transcription}</span>
             </header>
 
-            {/* 2. Варианты написания */}
             <div className="bg-slate-50 p-4 rounded-lg mb-6 text-sm text-slate-700 space-y-2">
                 {nslVariant && (
                     <div>
-                        <span className="font-semibold text-slate-600">Кириллица новословницы:</span> {nslVariant}
+                        <span className="font-semibold text-slate-600">{t("display.nslCyrillic")}</span> {nslVariant}
                     </div>
                 )}
                 <div>
-                    <span className="font-semibold text-slate-600">Кириллица:</span>{' '}
+                    <span className="font-semibold text-slate-600">{t("display.stdCyrillic")}</span>{' '}
                     <span style={{ fontFamily: "'Monomakh', 'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
                         {cyrillicVariant}
                     </span>
                 </div>
                 <div>
-                    <span className="font-semibold text-slate-600">Глаголица:</span>{' '}
+                    <span className="font-semibold text-slate-600">{t("display.glagolitic")}</span>{' '}
                     <span style={{ fontFamily: "'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
                         {glagoliticVariant}
                     </span>
                 </div>
                 <div>
-                    <span className="font-semibold text-slate-600">Простая форма:</span>{' '}
+                    <span className="font-semibold text-slate-600">{t("display.simpleForm")}</span>{' '}
                     <span className="space-x-2">
             {scientificVariants.map((variant, idx) => (
                 <span key={idx} className="after:content-[','] last:after:content-none font-medium">
@@ -246,7 +230,6 @@ const Word = ({ item, currentScript }: any) => {
                 </div>
             </div>
 
-            {/* 2.5. Морфемный разбор */}
             <MorphemeAnalysis
                 word={item.value}
                 roots={item.roots}
@@ -254,68 +237,67 @@ const Word = ({ item, currentScript }: any) => {
                 currentScript={currentScript}
             />
 
-            {/* 3. Краткая мета-информация */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border border-slate-200 rounded-lg mb-6 text-sm">
                 <div>
-                    <span className="block font-semibold text-slate-500">Часть речи</span>
+                    <span className="block font-semibold text-slate-500">{t("meta.pos")}</span>
                     <span className="text-slate-800">{meta.partOfSpeech}</span>
                 </div>
                 {meta.gender && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Род</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.gender")}</span>
                         <span className="text-slate-800">{meta.gender}</span>
                     </div>
                 )}
                 {meta.declension != null && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Склонение</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.declension")}</span>
                         <span className="text-slate-800">{meta.declension}</span>
                     </div>
                 )}
                 {meta.conjugation != null && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Спряжение</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.conjugation")}</span>
                         <span className="text-slate-800">{meta.conjugation}</span>
                     </div>
                 )}
                 {meta.stem && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Основа</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.stem")}</span>
                         <span className="text-slate-800">{meta.stem}</span>
                     </div>
                 )}
                 {meta.protoStemClass && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Класс основы</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.stemClass")}</span>
                         <span className="text-slate-800">{meta.protoStemClass}</span>
                     </div>
                 )}
                 {meta.paradigm && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Парадигма</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.paradigm")}</span>
                         <span className="text-slate-800">{meta.paradigm}</span>
                     </div>
                 )}
                 {meta.aspect && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Вид</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.aspect")}</span>
                         <span className="text-slate-800">{meta.aspect}</span>
                     </div>
                 )}
                 {meta.transitivity && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Переходность</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.transitivity")}</span>
                         <span className="text-slate-800">{meta.transitivity}</span>
                     </div>
                 )}
                 {meta.animacy && (
                     <div>
-                        <span className="block font-semibold text-slate-500">Одушевлённость</span>
+                        <span className="block font-semibold text-slate-500">{t("meta.animacy")}</span>
                         <span className="text-slate-800">{meta.animacy}</span>
                     </div>
                 )}
                 <div>
-                    <span className="block font-semibold text-slate-500">ID статьи</span>
+                    <span className="block font-semibold text-slate-500">{t("meta.articleId")}</span>
                     <span className="text-slate-400 font-mono">#{item.id}</span>
                 </div>
             </div>
@@ -330,13 +312,13 @@ const Word = ({ item, currentScript }: any) => {
                     >
                         <span className="flex items-center gap-2">
                             📊 {
-                                isVerb ? 'Показать спряжение глагола (3 числа, 6 времён)'
-                                : isNoun ? 'Показать таблицы склонения существительного'
-                                : isAdj ? 'Показать склонение прилагательного'
-                                : isNum ? 'Показать склонение числительного'
-                                : isPron ? 'Показать склонение местоимения'
-                                : isAdv ? 'Показать степени сравнения наречия'
-                                : 'Показать парадигму'
+                                isVerb ? t("paradigmButtons.verb")
+                                : isNoun ? t("paradigmButtons.noun")
+                                : isAdj ? t("paradigmButtons.adjective")
+                                : isNum ? t("paradigmButtons.numeral")
+                                : isPron ? t("paradigmButtons.pronoun")
+                                : isAdv ? t("paradigmButtons.adverb")
+                                : t("paradigmButtons.default")
                             }
                         </span>
                             <span className={`transform transition-transform duration-200 ${showParadigm ? 'rotate-180' : ''}`}>
@@ -371,7 +353,7 @@ const Word = ({ item, currentScript }: any) => {
                                 <AdverbComparisonTables isv={item.value} />
                             ) : (
                                 <div className="p-4 text-sm text-slate-500 italic text-center">
-                                    Ошибка загрузки данных форм слова.
+                                    {t("paradigmError")}
                                 </div>
                             )}
                         </div>
@@ -379,10 +361,9 @@ const Word = ({ item, currentScript }: any) => {
                 </div>
             )}
 
-            {/* 4. Однокоренные слова */}
             {cognateWords?.length > 0 && (
                 <section className="mb-6">
-                    <h2 className="text-base font-bold text-slate-400 uppercase tracking-wider mb-2.5">Однокоренные слова</h2>
+                    <h2 className="text-base font-bold text-slate-400 uppercase tracking-wider mb-2.5">{t("sections.cognates")}</h2>
                     <div className="flex flex-wrap gap-2">
                         {cognateWords.map((item, idx) => (
                             <Link
@@ -400,13 +381,12 @@ const Word = ({ item, currentScript }: any) => {
                 </section>
             )}
 
-            {/* 5. Значения */}
             <section className="mb-6">
-                <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Значения</h2>
+                <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t("sections.meanings")}</h2>
 
                 {meaningsArray.length === 0 && (
                     <p className="text-base md:text-lg text-slate-500 italic leading-relaxed">
-                        Здесь будет толкование
+                        {t("sections.placeholder")}
                     </p>
                 )}
 
@@ -423,20 +403,20 @@ const Word = ({ item, currentScript }: any) => {
                             <div className="space-y-3">
                                 {meaningsArray.length > 1 && (
                                     <span className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-                                        Значение {idx + 1}
+                                        {t("sections.meaning")} {idx + 1}
                                     </span>
                                 )}
 
                                 <div className="text-base md:text-lg text-slate-700 leading-relaxed">
                                    <ReactMarkdown>
-                                       {m.meaning || "Здесь будет толкование"}
+                                       {m.meaning || t("sections.placeholder")}
                                    </ReactMarkdown>
                                 </div>
 
                                 {m.examples && (
                                     <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 pl-4">
                                         <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase block mb-1">
-                                            Пример
+                                            {t("sections.examples")}
                                         </span>
                                         <div className="italic text-slate-600 text-sm leading-relaxed">
                                             <ReactMarkdown>
@@ -454,7 +434,7 @@ const Word = ({ item, currentScript }: any) => {
                                                 key={lang}
                                                 className="flex flex-col justify-center p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
                                             >
-                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{LANG_CONFIG[lang].label}</span>
+                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{languageLabel(lang)}</span>
                                                 <span className="text-base font-medium text-slate-800">
                                                     {val.split(",").map((word, index) => (
                                                         <Link
@@ -474,11 +454,11 @@ const Word = ({ item, currentScript }: any) => {
                                 {m.synonyms?.length > 0 && (
                                     <div className="mt-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs font-semibold tracking-wider text-green-600 uppercase">Синонимы</span>
+                                            <span className="text-xs font-semibold tracking-wider text-green-600 uppercase">{t("sections.synonyms")}</span>
                                             <button
                                                 onClick={() => setSynonymGraphMeaning(m)}
                                                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-white bg-green-500 hover:bg-green-600 px-2 py-0.5 rounded-full transition-colors shadow-sm"
-                                                title="Граф синонимов"
+                                                title={t("sections.synonymGraph")}
                                             >
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                     <circle cx="12" cy="5" r="2.5"/>
@@ -487,7 +467,7 @@ const Word = ({ item, currentScript }: any) => {
                                                     <line x1="12" y1="7.5" x2="5" y2="16.5"/>
                                                     <line x1="12" y1="7.5" x2="19" y2="16.5"/>
                                                 </svg>
-                                                Граф
+                                                {t("sections.graph")}
                                             </button>
                                         </div>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
@@ -509,7 +489,7 @@ const Word = ({ item, currentScript }: any) => {
 
                                 {m.antonyms?.length > 0 && (
                                     <div className="mt-2">
-                                        <span className="text-xs font-semibold tracking-wider text-red-600 uppercase">Антонимы</span>
+                                        <span className="text-xs font-semibold tracking-wider text-red-600 uppercase">{t("sections.antonyms")}</span>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
                                             {m.antonyms.map((ant: any) => (
                                                 <Link
@@ -532,13 +512,11 @@ const Word = ({ item, currentScript }: any) => {
                 })}
             </section>
 
-            {/* 6. Диаграмма когнатов */}
             <CognateRadarChart item={item} />
 
-            {/* 7. Этимологические ссылки */}
             {etymologyLinks.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
-                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Этимология и внешние ссылки</h2>
+                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t("sections.etymology")}</h2>
                     <ul className="space-y-2 text-sm">
                         {etymologyLinks.map((link, idx) => (
                             <li key={idx}>

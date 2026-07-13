@@ -1,39 +1,37 @@
+'use client';
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface CaseForms {
-    nom: string;
-    gen: string;
-    dat: string;
-    acc: string;
-    ins: string;
-    loc: string;
-    voc: string;
+    [caseName: string]: string;
 }
 
 interface NounDeclensionTablesProps {
     data: {
         singular: CaseForms;
-        dual?: CaseForms; // Двойственное число может отсутствовать у некоторых существительных pl. tantum
+        dual?: CaseForms;
         plural: CaseForms;
     };
 }
 
-const CASES = [
-    { key: 'nominative', label: 'Именительный', short: 'Им.' },
-    { key: 'genitive', label: 'Родительный', short: 'Род.' },
-    { key: 'dative', label: 'Дательный', short: 'Дат.' },
-    { key: 'accusative', label: 'Винительный', short: 'Вин.' },
-    { key: 'instrumental', label: 'Творительный', short: 'Твор.' },
-    { key: 'locative', label: 'Местный', short: 'Мест.' },
-    { key: 'vocative', label: 'Звательный', short: 'Зват.' },
-] as const;
-
 export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data }) => {
+    const t = useTranslations("word");
+
+    const CASES = [
+        { key: 'nominative', lookup: 'nominative' },
+        { key: 'genitive', lookup: 'genitive' },
+        { key: 'dative', lookup: 'dative' },
+        { key: 'accusative', lookup: 'accusative' },
+        { key: 'instrumental', lookup: 'instrumental' },
+        { key: 'locative', lookup: 'locative' },
+        { key: 'vocative', lookup: 'vocative' },
+    ] as const;
+
     const columns = [
-        { title: 'Единственное (Sg)', forms: data.singular },
-        { title: 'Двойственное (Du)', forms: data.dual },
-        { title: 'Множественное (Pl)', forms: data.plural },
-    ].filter(col => col.forms); // Убираем колонку, если данных по числу нет
+        { title: t('numbers.singular'), forms: data.singular },
+        { title: t('numbers.dual'), forms: data.dual },
+        { title: t('numbers.plural'), forms: data.plural },
+    ].filter(col => col.forms);
 
     return (
         <div className="p-4 bg-slate-50 rounded-xl space-y-6">
@@ -54,8 +52,8 @@ export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data
 
                                     return (
                                         <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
-                                            <span className="text-slate-400 font-medium shrink-0" title={c.label}>
-                                                {c.short}
+                                            <span className="text-slate-400 font-medium shrink-0" title={t(`cases.${c.lookup}`)}>
+                                                {t(`cases.${c.lookup}Short`)}
                                             </span>
                                             <span className="text-blue-700 font-semibold text-right break-all">
                                                 {formValue}

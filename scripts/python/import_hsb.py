@@ -44,7 +44,7 @@ def import_hsb():
 
         if len(batch) >= BATCH_SIZE:
             cur.executemany(
-                "INSERT INTO hsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
+                "INSERT OR IGNORE INTO hsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
                 batch
             )
             conn.commit()
@@ -54,7 +54,7 @@ def import_hsb():
 
     if batch:
         cur.executemany(
-            "INSERT INTO hsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO hsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
             batch
         )
         conn.commit()

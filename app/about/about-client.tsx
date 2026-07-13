@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslations } from "next-intl"
+
 interface TechnicalAboutProps {
     data: {
         wordCount: string
@@ -12,120 +14,87 @@ interface TechnicalAboutProps {
     }
 }
 
-interface VersionHistory {
-    version: string;
-    year: string;
-    title: string;
-    description?: string;
-}
-
-const versions: VersionHistory[] = [
-    {
-        version: "v 1.0",
-        year: "2015",
-        title: "Словник Новословницы",
-        description: "Первая база слов Новословницы и начальная фиксация лексических норм."
-    },
-    {
-        version: "v 2.0+",
-        year: "2016",
-        title: "Мрежны словник Новословницы",
-        description: "Переход в онлайн-формат, запуск веб-версии и расширение базы данных."
-    },
-    {
-        version: "v 3.0",
-        year: "2019",
-        title: "Common Web Interslavic Dictionary",
-        description: "Интеграция со стандартами межславянского языка."
-    },
-    {
-        version: "v 4.0",
-        year: "2026",
-        title: "Interslavic Lexicon",
-        description: "Текущая версия. Полное обновление архитектуры, современный интерфейс и инструменты экосистемы. Формирование текстового корпуса междуславянского."
-    }
-];
-
 export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
+    const t = useTranslations("about")
+
+    const versions = [
+        { version: "v 1.0", year: "2015", title: t("versions.v1"), description: t("versions.v1desc") },
+        { version: "v 2.0+", year: "2016", title: t("versions.v2"), description: t("versions.v2desc") },
+        { version: "v 3.0", year: "2019", title: "Common Web Interslavic Dictionary", description: t("versions.v3desc") },
+        { version: "v 4.0", year: "2026", title: "Interslavic Lexicon", description: t("versions.v4desc") },
+    ]
+
+    const orthographyRules = t.raw("orthographyRules") as string[]
+
     return (
-        // Добавили h-full, overflow-y-auto для скролла контента и pb-12 для отступа снизу
         <div className="h-full overflow-y-auto max-w-4xl mx-auto px-4 md:px-6 pb-12 space-y-12 animate-fade-in text-sm no-scrollbar">
 
-            {/* ЗАГОЛОВОК И КРАТКАЯ СПРАВКА */}
             <div className="space-y-3">
                 <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                    О программе / Спецификация
+                    {t("heading")}
                 </h1>
                 <p className="text-muted-foreground leading-relaxed">
-                    Электронный лексикон представляет собой специализированную реляционную базу данных
-                    межславянского языка (Medžuslovjansky). Программа разработана для автоматизации
-                    процессов многоязычного перевода, анализа этимологических гнезд и управления
-                    морфемным составом слов.
+                    {t("intro")}
                 </p>
             </div>
 
-            {/* РАЗДЕЛ 1: МАТРИЦА СИСТЕМНЫХ ХАРАКТЕРИСТИК (ТАБЛИЦА) */}
             <div className="space-y-3">
                 <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider border-b pb-1">
-                    1. Системные метрики и статистика БД
+                    {t("sections.metrics")}
                 </h2>
                 <div className="border rounded-xl bg-background overflow-hidden shadow-sm">
                     <table className="w-full text-left border-collapse">
                         <tbody className="divide-y text-xs">
                         <tr className="hover:bg-muted/30 transition-colors">
-                            <td className="p-3 font-semibold text-muted-foreground w-1/2">Общее количество лексем (words)</td>
+                            <td className="p-3 font-semibold text-muted-foreground w-1/2">{t("metrics.words")}</td>
                             <td className="p-3 font-mono text-foreground">{data.wordCount}</td>
                         </tr>
                         <tr className="hover:bg-muted/30 transition-colors">
-                            <td className="p-3 font-semibold text-muted-foreground">Индексированных корней и морфем (roots)</td>
+                            <td className="p-3 font-semibold text-muted-foreground">{t("metrics.roots")}</td>
                             <td className="p-3 font-mono text-foreground">{data.rootCount}</td>
                         </tr>
                         <tr className="hover:bg-muted/30 transition-colors">
-                            <td className="p-3 font-semibold text-muted-foreground">Связанных семантических значений (meanings)</td>
+                            <td className="p-3 font-semibold text-muted-foreground">{t("metrics.meanings")}</td>
                             <td className="p-3 font-mono text-foreground">{data.meaningCount}</td>
                         </tr>
                         <tr className="hover:bg-muted/30 transition-colors">
-                            <td className="p-3 font-semibold text-muted-foreground">Поддерживаемые целевые славянские языки</td>
-                            <td className="p-3 font-mono text-foreground">{data.languageCount} (изолированные таблицы)</td>
+                            <td className="p-3 font-semibold text-muted-foreground">{t("metrics.languages")}</td>
+                            <td className="p-3 font-mono text-foreground">{data.languageCount} {t("metrics.isolatedTables")}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {/* РАЗДЕЛ 2: ЛИНГВИСТИЧЕСКИЕ И ОРФОГРАФИЧЕСКИЕ СТАНДАРТЫ */}
             <div className="space-y-3">
                 <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider border-b pb-1">
-                    2. Алгоритмы орфографии и стандарты данных
+                    {t("sections.orthography")}
                 </h2>
                 <div className="p-4 border rounded-xl bg-background space-y-2">
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                        Программа поддерживает динамическое переключение графических систем без перезагрузки страниц
-                        интерфейса. Детекция и вывод осуществляются по следующим правилам:
+                        {t("orthographyText")}
                     </p>
                     <ul className="list-disc pl-4 text-xs text-muted-foreground space-y-1">
-                        <li>При наличии активной сессии пользователя применяется конфигурация из таблицы `user_settings` базы `auth`.</li>
-                        <li>Для неавторизованных пользователей парсится HTTP-заголовок `Accept-Language` локали браузера с автоматическим вычислением латинских локалей славянских стран (pl, cs, sk, hr, sl).</li>
-                        <li>Транслитерация латиницы опирается на стандартную нотацию межславянского алфавита (**isv**), включая спецсимволы (č, ž, š, ě).</li>
+                        {orthographyRules.map((rule: string, i: number) => (
+                            <li key={i}>{rule}</li>
+                        ))}
                     </ul>
                 </div>
             </div>
 
-            {/* РАЗДЕЛ 3: СВЯЗАННЫЕ ПРОЕКТЫ (НОВЫЙ РАЗДЕЛ) */}
             <div className="space-y-3">
                 <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider border-b pb-1">
-                    3. Связанные проекты сообщества
+                    {t("sections.projects")}
                 </h2>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    Рекомендуемые внешние ресурсы и официальные платформы межславянского комьюнити, дополняющие инфраструктуру лексикона:
+                    {t("projectsIntro")}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                    {/* Проект 1: Официальный портал */}
                     <div className="p-4 border rounded-xl bg-background space-y-1">
                         <span className="font-bold text-xs block text-foreground">Interslavic Language Portal</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-              Главный информационный веб-сайт языка: грамматика, история, правила и стандарты.
-            </span>
+                            {t("projects.portal")}
+                        </span>
                         <a
                             href="http://interslavic-language.org"
                             target="_blank"
@@ -136,12 +105,11 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                         </a>
                     </div>
 
-                    {/* Проект 2: Динамический переводчик слов */}
                     <div className="p-4 border rounded-xl bg-background space-y-1">
                         <span className="font-bold text-xs block text-foreground">Interslavic Dictionary Service</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-              Многоязычный словарный веб-сервис и база данных, развиваемая участниками сообщества.
-            </span>
+                            {t("projects.dictionary")}
+                        </span>
                         <a
                             href="https://interslavic-dictionary.com"
                             target="_blank"
@@ -152,11 +120,10 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                         </a>
                     </div>
 
-                    {/* Проект 3: Межславянские новости */}
                     <div className="p-4 border rounded-xl bg-background space-y-1 hover:border-blue-500/30 transition-colors">
                         <span className="font-bold text-xs block text-foreground">Interslavic Community (Facebook)</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-                          Крупнейшее официальное международное сообщество для общения, практики и координации развития межславянского языка.
+                            {t("projects.community")}
                         </span>
                         <a
                             href="https://www.facebook.com/groups/interslavic/"
@@ -168,14 +135,13 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                         </a>
                     </div>
 
-                    {/* Проект 4: Группа в Смежной сети */}
                     <div className="p-4 border rounded-xl bg-background space-y-1 hover:border-blue-500/30 transition-colors">
                         <span className="font-bold text-xs block text-foreground">Interslavic Wiki</span>
                         <span className="text-xs text-muted-foreground block leading-normal">
-                          Открытая база знаний и вики-энциклопедия статей, написанная и модерируемая участниками комьюнити.
+                            {t("projects.wiki")}
                         </span>
                         <a
-                            href="https://wikipedia.org" // Или актуальная ссылка на вики-сообщество проекта
+                            href="https://wikipedia.org"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 dark:text-blue-400 hover:underline inline-block pt-1 font-medium"
@@ -186,20 +152,18 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                 </div>
             </div>
 
-            {/* РАЗДЕЛ 4: КОНТАКТЫ И ОБРАТНАЯ СВЯЗЬ */}
             <div className="space-y-3">
                 <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider border-b pb-1">
-                    4. Контакты и обратная связь
+                    {t("sections.contacts")}
                 </h2>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                    Если вы нашли неточность в переводе словарной статьи, хотите предложить улучшение алгоритмов транслитерации или запросить расширенные права модератора (с доступом к конкретным языковым группам), свяжитесь с нами:
+                    {t("contactsDescription")}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                    {/* Канал 1: Email */}
                     <div className="p-4 border rounded-xl bg-background space-y-1">
-                        <span className="font-bold text-xs block text-foreground">Электронная почта</span>
+                        <span className="font-bold text-xs block text-foreground">{t("contacts.email")}</span>
                         <span className="text-xs text-muted-foreground block">
-                          Для официальных запросов и координации:
+                            {t("contacts.emailDesc")}
                         </span>
                         <a
                             href="mailto:support@interslavic-lexicon.com"
@@ -209,14 +173,13 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                         </a>
                     </div>
 
-                    {/* Канал 2: Telegram */}
                     <div className="p-4 border rounded-xl bg-background space-y-1">
-                        <span className="font-bold text-xs block text-foreground">Сообщество и поддержка</span>
+                        <span className="font-bold text-xs block text-foreground">{t("contacts.community")}</span>
                         <span className="text-xs text-muted-foreground block">
-              Оперативное обсуждение и чат разработчиков:
-            </span>
+                            {t("contacts.communityDesc")}
+                        </span>
                         <a
-                            href="https://t.me" // Замените на реальный адрес вашей группы при наличии
+                            href="https://t.me"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 dark:text-blue-400 hover:underline inline-block pt-1 font-medium"
@@ -227,12 +190,11 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                 </div>
             </div>
 
-            {/* РАЗДЕЛ 4: ОТКРЫТЫЙ ИСХОДНЫЙ КОД */}
             <div className="border border-dashed rounded-xl p-4 bg-muted/10 flex items-center justify-between gap-4">
                 <div className="space-y-0.5">
-                    <h3 className="font-bold text-xs text-foreground">Открытый исходный код (Open Source)</h3>
+                    <h3 className="font-bold text-xs text-foreground">{t("openSource")}</h3>
                     <p className="text-xs text-muted-foreground">
-                        Проект и архитектурные наработки лексикона публикуются в репозитории GitHub сообщества.
+                        {t("openSourceDesc")}
                     </p>
                 </div>
                 <a
@@ -241,17 +203,17 @@ export function TechnicalAboutClient({ data }: TechnicalAboutProps) {
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 bg-background border rounded-md text-xs font-semibold hover:bg-muted transition-colors shrink-0 shadow-sm"
                 >
-                    Репозиторий GitHub →
+                    {t("githubLink")}
                 </a>
             </div>
 
             <section className="mt-12">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-black border-b border-black pb-2 mb-4">
-                    5. История версий
+                    {t("sections.history")}
                 </h2>
 
                 <p className="text-xs text-neutral-600 mb-6 leading-relaxed">
-                    Эволюция развития веб-версии проекта:
+                    {t("historyIntro")}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

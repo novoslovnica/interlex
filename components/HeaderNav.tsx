@@ -4,6 +4,7 @@ import Link from "next/link"
 import { signOut } from "next-auth/react"
 import {LanguageSwitcher} from "@/components/LanguageSwitcher";
 import {useState} from "react";
+import {useTranslations} from "next-intl";
 
 interface HeaderNavProps {
     session: any
@@ -13,6 +14,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [toolsOpen, setToolsOpen] = useState(false)
     const [userMenuOpen, setUserMenuOpen] = useState(false)
+    const t = useTranslations("common.navigation")
 
     const user = session?.user
 
@@ -21,7 +23,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
             <button
                 className={`hamburger ${isOpen ? 'active' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
-                aria-label="Переключить меню"
+                aria-label={t("toggleMenu")}
             >
                 <span></span>
                 <span></span>
@@ -30,9 +32,9 @@ export default function HeaderNav({ session }: HeaderNavProps) {
 
             <ul className={`header-nav ${isOpen ? 'open' : ''}`}>
 
-                <li><Link href="/lexicon" className="nav-link" onClick={() => setIsOpen(false)}>Лексикон</Link></li>
-                <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>Перевод</Link></li>
-                <li><Link href="/library" className="nav-link" onClick={() => setIsOpen(false)}>Библиотека</Link></li>
+                <li><Link href="/lexicon" className="nav-link" onClick={() => setIsOpen(false)}>{t("lexicon")}</Link></li>
+                <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>{t("translate")}</Link></li>
+                <li><Link href="/library" className="nav-link" onClick={() => setIsOpen(false)}>{t("library")}</Link></li>
                 <li style={{ position: "relative" }}>
                     <button
                         className="nav-link submenu-toggle"
@@ -52,14 +54,14 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                         }}
                         onClick={() => setToolsOpen(!toolsOpen)}
                     >
-                        Утилиты
+                        {t("tools")}
                         <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
                     </button>
                     {toolsOpen && (
                         <ul className="submenu open" style={{ paddingLeft: 0 }}>
                             <li>
                                 <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false); setToolsOpen(false) }}>
-                                    Транслитератор
+                                    {t("transliterator")}
                                 </Link>
                             </li>
                         </ul>
@@ -76,7 +78,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                             {user.image && (
                                 <img
                                     src={user.image}
-                                    alt={user.name || "Аватар"}
+                                    alt={user.name || t("avatar")}
                                     className="w-5 h-5 rounded-full border border-gray-300 inline-block align-middle"
                                 />
                             )}
@@ -88,13 +90,13 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                         >
                             <li>
                                 <Link href="/settings" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
-                                    Настройки
+                                    {t("settings")}
                                 </Link>
                             </li>
                             {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
                                 <li>
                                     <Link href="/admin" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
-                                        Админка
+                                        {t("admin")}
                                     </Link>
                                 </li>
                             )}
@@ -113,7 +115,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    Выйти
+                                    {t("logout")}
                                 </button>
                             </li>
                         </ul>
@@ -121,7 +123,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 ) : (
                     <li>
                         <Link href="/login" className="nav-link" onClick={() => setIsOpen(false)}>
-                            Войти
+                            {t("login")}
                         </Link>
                     </li>
                 )}

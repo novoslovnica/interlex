@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {isvToCyr} from "@/lib/isv";
+import {getTranslations} from "next-intl/server";
 
 interface WordOfDayData {
     id: number;
@@ -18,7 +19,8 @@ interface WordOfDayWidgetProps {
     data: WordOfDayData;
 }
 
-export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
+export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = async ({ data }) => {
+    const t = await getTranslations("main.wordOfTheDay");
     return (
         <div className="w-full max-w-7xl mx-auto px-4 mb-12">
             <Link
@@ -43,7 +45,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
                             /* Темная тема */
                             dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20"
                           >
-                            Слово дня
+                            {t("badge")}
                           </span>
                                             <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
                             {data.pos}
@@ -68,7 +70,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
                     {/* Правый блок: Перевод значения */}
                     <div className="flex flex-col sm:items-end justify-center max-w-md">
                         <span className="text-xs uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">
-                          Значение
+                          {t("meaning")}
                         </span>
                         <p className="text-lg font-semibold sm:text-right line-clamp-2 mt-0.5
                           /* Светлая тема */
@@ -80,7 +82,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
                         </p>
 
                         <span className="mt-1.5 inline-flex items-center text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform duration-200">
-                          Открыть статью
+                          {t("openArticle")}
                                             <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                           </svg>

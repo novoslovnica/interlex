@@ -1,19 +1,25 @@
 import Link from "next/link"
 import { APP_VERSION, CHANGELOG } from "@/config/app"
+import { getTranslations } from "next-intl/server"
 import type { Metadata } from "next"
 
-export const metadata: Metadata = {
-  title: "Istorija versij / История версий",
-  description: "История изменений платформы Interslavic Lexicon.",
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("changelog")
+  return {
+    title: t("title"),
+    description: t("description"),
+  }
 }
 
-export default function ChangelogPage() {
+export default async function ChangelogPage() {
+  const t = await getTranslations("changelog")
+
   return (
     <div className="h-full overflow-y-auto bg-background text-foreground">
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-12">
         <header className="space-y-2 text-center">
           <h1 className="text-2xl md:text-3xl font-black tracking-tight">
-            Istorija versij / История версий
+            {t("heading")}
           </h1>
           <p className="text-sm text-muted-foreground">
             Tekuča versija: <span className="font-bold text-foreground">{APP_VERSION}</span>
@@ -61,7 +67,7 @@ export default function ChangelogPage() {
             href="/"
             className="text-xs text-muted-foreground hover:text-foreground underline transition-colors"
           >
-            ← Glavna stranica / На главную
+            {t("backLink")}
           </Link>
         </div>
       </div>

@@ -1,5 +1,6 @@
 'use client';
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { MorphemeType, type MorphemePart } from '@/lib/grammar/common';
 
 interface MorphemeAnalysisProps {
@@ -81,16 +82,8 @@ const COLOR: Record<MorphemeType, string> = {
   [MorphemeType.UNKNOWN]: '#cbd5e1',
 };
 
-const LABEL: Record<MorphemeType, string> = {
-  [MorphemeType.ROOT]: 'корень',
-  [MorphemeType.PREFIX]: 'приставка',
-  [MorphemeType.SUFFIX]: 'суффикс',
-  [MorphemeType.UNKNOWN]: 'соединительный элемент',
-};
-
 function measureWidths(parts: { text: string }[]): number[] {
   if (typeof document === 'undefined') {
-    // В моноширинном шрифте 20px соотношение сторон ~0.6, то есть 12px на символ
     return parts.map(p => p.text.length * 12);
   }
 
@@ -98,18 +91,16 @@ function measureWidths(parts: { text: string }[]): number[] {
   const ctx = canvas.getContext('2d');
   if (!ctx) return parts.map(p => p.text.length * 12);
 
-  // Обязательно добавляем "500", чтобы вес шрифта в Canvas точно совпадал с SVG
   ctx.font = '500 20px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
 
   return parts.map(p => {
     const width = ctx.measureText(p.text).width;
-    // Если Canvas вернул 0 или измерил некорректно из-за непрогрузившегося шрифта,
-    // используем надежный математический фолбек для моноширины
     return width > 0 ? width : p.text.length * 12;
   });
 }
 
 export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysisProps) {
+  const t = useTranslations("word");
   const raw = useMemo(() => extractMorphemes(word, roots), [word, roots]);
 
   const morphemes: MorphemePart[] | null = raw;
@@ -128,10 +119,10 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
   if (!hasVisible) {
     return (
       <section className="mb-6">
-        <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Морфемный разбор</h2>
+        <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t('morpheme.heading')}</h2>
         <div className="bg-slate-50 border border-slate-100 rounded-xl p-6 text-center text-slate-400 italic text-sm">
           <span className="text-xl font-mono tracking-wide text-slate-300">{word}</span>
-          <p className="mt-2">Морфемный анализ недоступен — данные корня отсутствуют</p>
+          <p className="mt-2">{t('morpheme.unavailable')}</p>
         </div>
       </section>
     );
@@ -140,6 +131,13 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
   let x = 20;
   const nodes: React.ReactNode[] = [];
   const labelNodes: React.ReactNode[] = [];
+
+  const LABEL: Record<MorphemeType, string> = {
+    [MorphemeType.ROOT]: t('morpheme.legend.root'),
+    [MorphemeType.PREFIX]: t('morpheme.legend.prefix'),
+    [MorphemeType.SUFFIX]: t('morpheme.legend.suffix'),
+    [MorphemeType.UNKNOWN]: t('morpheme.legend.connective'),
+  };
 
   for (let i = 0; i < morphemes!.length; i++) {
     const part = morphemes![i];
@@ -187,7 +185,7 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
 
   return (
     <section className="mb-6">
-      <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">Морфемный разбор</h2>
+      <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t('morpheme.heading')}</h2>
       <div className="bg-slate-50 border border-slate-100 rounded-xl p-6">
         <div className="flex flex-col items-center gap-3">
           <svg width={svgWidth} height={svgHeight} className="block">
@@ -247,7 +245,7 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
           <div className="flex flex-wrap justify-center gap-3 text-xs text-slate-500">{labelNodes}</div>
 
           {base && word.toLowerCase().includes(base.toLowerCase()) && (
-            <span className="block text-xs text-slate-400 -mt-1">Основа слова: <b>{base}</b></span>
+            <span className="block text-xs text-slate-400 -mt-1">{t('morpheme.stem')} <b>{base}</b></span>
           )}
         </div>
       </div>

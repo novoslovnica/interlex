@@ -26,6 +26,7 @@ interface StatsProps {
 }
 
 export default function MainClient({ stats, subStats, randomWord }: StatsProps) {
+    const t = useTranslations("main")
     return (
         // max-w-7xl ограничивает контент на 1280px, что идеально центрирует его на 1920px без чрезмерного растягивания строк текста
         <main className="flex-1 h-full overflow-y-auto max-w-7xl mx-auto px-4 md:px-8 2xl:px-12 pb-24 md:pb-32 space-y-16 md:space-y-24 animate-fade-in text-sm no-scrollbar py-8">
@@ -33,19 +34,19 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
             {/* СЕКЦИЯ 1: ГЛАВНЫЙ БАННЕР */}
             <section className="text-center space-y-6 max-w-4xl mx-auto pt-4 md:pt-12">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 border border-blue-500/20 dark:text-blue-400">
-                    🌍 Цифровой лексикон
+                    {t("badge")}
                 </div>
                 <h1 className="text-3xl md:text-5xl 2xl:text-6xl font-black tracking-tight text-foreground leading-tight">
-                    Межславянский лингвистический корпус и лексикон
+                    {t("heading")}
                 </h1>
                 <p className="text-base md:text-lg 2xl:text-xl text-muted-foreground leading-relaxed">
-                    Интегрированная научно-исследовательская платформа для автоматизированной обработки естественного языка (NLP) и компаративного анализа славянских языковых систем. Объединяет в себе верифицированный лексикон праславянских корней, многоязычный параллельный корпус и семантический граф отношений
+                    {t("subtitle")}
                 </p>
             </section>
 
             {/* СЕКЦИЯ 2: ОПИСАНИЕ И ОСОБЕННОСТИ ПРОГРАММЫ */}
             <section className="space-y-8 max-w-6xl mx-auto">
-                <h2 className="text-xl md:text-2xl font-bold text-foreground border-b pb-3">Основные возможности платформы</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-foreground border-b pb-3">{t("featuresTitle")}</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 2xl:gap-12">
                     <div className="flex gap-4 items-start">
@@ -53,9 +54,11 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
                             Aa
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Многоскриптовая орфографическая конверсия</h3>
+                            <h3 className="font-bold text-base">{t("features.orthography.title")}</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Динамическая транслитерация текстовых массивов между кириллической и латинской (научная <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">isv</code>-нотация) графическими системами. Модуль обеспечивает автоматическую адаптацию визуализации лексем и фонетической транскрипции (IPA) под локальные метаданные пользователя.
+                                {t.rich("features.orthography.description", {
+                                    code: (chunks) => <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono">{chunks}</code>
+                                })}
                             </p>
                         </div>
                     </div>
@@ -65,9 +68,9 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
                             🔗
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Морфемно-семантическое картирование</h3>
+                            <h3 className="font-bold text-base">{t("features.morpheme.title")}</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Декомпозиция лексем на деривационные морфемы и интеграция в многоуровневый граф знаний. Система устанавливает веса синонимической, антонимической и корневой близости сущностей, визуализируя кластеры когнатов и праславянских этимологических связей.
+                                {t("features.morpheme.description")}
                             </p>
                         </div>
                     </div>
@@ -77,9 +80,9 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
                             👥
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Кросс-языковое лексическое выравнивание</h3>
+                            <h3 className="font-bold text-base">{t("features.crosslingual.title")}</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Компоративный анализ и семантическое сопоставление междуславянских лексем с параллельными денотатами в 16 живых славянских языках. Архитектура поддерживает строгую реляционную верификацию и валидацию переводных эквивалентов экспертным сообществом.
+                                {t("features.crosslingual.description")}
                             </p>
                         </div>
                     </div>
@@ -89,9 +92,9 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
                             ⚡
                         </div>
                         <div className="space-y-1.5">
-                            <h3 className="font-bold text-base">Параллельный лингвистический корпус</h3>
+                            <h3 className="font-bold text-base">{t("features.corpus.title")}</h3>
                             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-                                Полнотекстовый и лексико-синтаксический поиск по сегментированным текстовым массивам (KWIC). Система поддерживает морфологическую разметку (POS-tagging) и учитывает статистические метрики частотности употребления словоформ для прецизионного ранжирования выдачи.
+                                {t("features.corpus.description")}
                             </p>
                         </div>
                     </div>
@@ -99,14 +102,14 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
             </section>
 
             {/* СЕКЦИЯ 3: ЖИВАЯ СТАТИСТИКА (ИНФОГРАФИКА) — СДВИНУТА НИЖЕ */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto" aria-label="Статистика лексикона">
+            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto" aria-label={t("stats.ariaLabel")}>
                 <div className="p-6 md:p-8 border rounded-2xl bg-background shadow-sm text-center space-y-2 transition-all hover:shadow-md hover:border-muted-foreground/20">
                     <span className="block text-3xl md:text-4xl 2xl:text-5xl font-black text-blue-600">{stats.words}</span>
-                    <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">Всего слов</span>
+                    <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t("stats.totalWords")}</span>
                 </div>
                 <div className="p-6 md:p-8 border rounded-2xl bg-background shadow-sm text-center space-y-2 transition-all hover:shadow-md hover:border-muted-foreground/20">
                     <span className="block text-3xl md:text-4xl 2xl:text-5xl font-black text-foreground">{stats.languages}</span>
-                    <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">Языков перевода</span>
+                    <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-widest">{t("stats.translationLanguages")}</span>
                 </div>
                 <div className="p-6 md:p-8 border rounded-2xl bg-background shadow-sm text-center space-y-2 transition-all hover:shadow-md hover:border-muted-foreground/20">
                     <span className="block text-3xl md:text-4xl 2xl:text-5xl font-black text-foreground">{stats.roots}</span>

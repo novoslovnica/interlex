@@ -1,14 +1,882 @@
 {
-  "Navigation": {
-    "search": "Поиск",
-    "admin": "Админка",
-    "deduplication": "Дедупликация"
-  },
-  "Deduplication": {
-    "title": "Дедупликация базы данных",
-    "searchPlaceholder": "Поиск по лемме или кириллице..."
-  },
   "common": {
-    "title": "Междуславянский лексикон"
+    "title": "Interslavic Lexicon",
+    "navigation": {
+      "toggleMenu": "Toggle menu",
+      "lexicon": "Lexicon",
+      "translate": "Translate",
+      "library": "Library",
+      "tools": "Tools",
+      "transliterator": "Transliterator",
+      "avatar": "Avatar",
+      "settings": "Settings",
+      "admin": "Admin",
+      "logout": "Log out",
+      "login": "Log in"
+    },
+    "footer": {
+      "protoslavic": "Proto-Slavic",
+      "library": "Library",
+      "textbook": "Textbook",
+      "about": "About",
+      "versionHistory": "Version history"
+    }
+  },
+  "main": {
+    "title": "Home",
+    "description": "Interslavic Lexicon — the Interslavic lexicon. Search, grammar, translation and learning materials.",
+    "badge": "🌍 Digital Lexicon",
+    "heading": "Interslavic Linguistic Corpus and Lexicon",
+    "subtitle": "An integrated research platform for automated natural language processing (NLP) and comparative analysis of Slavic language systems. It combines a verified lexicon of Proto-Slavic roots, a multilingual parallel corpus and a semantic relation graph.",
+    "featuresTitle": "Core Platform Features",
+    "features": {
+      "orthography": {
+        "title": "Multi-script Orthographic Conversion",
+        "description": "Dynamic transliteration of text between Cyrillic and Latin (scientific isv-notation) writing systems. The module provides automatic adaptation of lexeme display and phonetic transcription (IPA) to the user's local metadata."
+      },
+      "morpheme": {
+        "title": "Morpheme-Semantic Mapping",
+        "description": "Decomposition of lexemes into derivational morphemes and integration into a multi-level knowledge graph. The system assigns weights to synonymic, antonymic and root proximity of entities, visualizing clusters of cognates and Proto-Slavic etymological links."
+      },
+      "crosslingual": {
+        "title": "Cross-lingual Lexical Alignment",
+        "description": "Comparative analysis and semantic mapping of Interslavic lexemes with parallel denotations in 16 living Slavic languages. The architecture supports strict relational verification and validation of translation equivalents by the expert community."
+      },
+      "corpus": {
+        "title": "Parallel Linguistic Corpus",
+        "description": "Full-text and lexico-syntactic search across segmented text corpora (KWIC). The system supports morphological tagging (POS-tagging) and accounts for statistical frequency metrics of word-form usage for precise result ranking."
+      }
+    },
+    "stats": {
+      "ariaLabel": "Lexicon statistics",
+      "totalWords": "Total words",
+      "translationLanguages": "Translation languages",
+      "uniqueRoots": "Unique roots",
+      "meanings": "Meanings",
+      "flavorizations": "Flavorizations"
+    },
+    "cta": {
+      "title": "Want to contribute to the lexicon?",
+      "description": "Register to gain access to basic features or request moderator privileges.",
+      "textbook": "Read the textbook",
+      "search": "Go to search 🔍",
+      "translate": "Go to translator ⚡"
+    },
+    "wordOfTheDay": {
+      "badge": "Word of the Day",
+      "meaning": "Meaning",
+      "openArticle": "Open article"
+    }
+  },
+  "lexicon": {
+    "title": "Lexicon",
+    "description": "Search the Interslavic dictionary. Meanings, translations, grammatical forms, etymology and cognate words.",
+    "searchPlaceholder": "Enter text to search...",
+    "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
+    "noResults": "No results found"
+  },
+  "translate": {
+    "title": "Translate",
+    "description": "Translate from Interslavic into 16 Slavic and non-Slavic languages with active links to explanatory dictionaries.",
+    "searchPlaceholder": "Enter text to search...",
+    "swapTooltip": "Swap languages",
+    "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
+    "noResults": "No results found",
+    "languages": {
+      "ru": "Russian",
+      "uk": "Ukrainian",
+      "pl": "Polish",
+      "cs": "Czech",
+      "sk": "Slovak",
+      "sl": "Slovenian"
+    }
+  },
+  "library": {
+    "title": "Sbornik / Library",
+    "description": "A collection of selected texts in Interslavic.",
+    "emptyFilter": "Try changing the filter settings",
+    "notFound": "Text not found",
+    "backLink": "← Vratiti se do biblioteky / Back to library",
+    "verified": "✓ Verified",
+    "source": "Istočnik / Source:",
+    "emptyBody": "Text has not been added yet.",
+    "categories": {
+      "poem": "Poemy / Poems",
+      "article": "Členky / Articles",
+      "book": "Knigy / Books",
+      "joke": "Zasměšky / Jokes",
+      "story": "Povědky / Stories",
+      "song": "Pěsnje / Songs",
+      "prayer": "Molitvy / Prayers",
+      "quote": "Citaty i prislovice / Quotes",
+      "study": "Nauka medžuslovjanskogo / Study",
+      "all": "Vse teksty / All texts"
+    }
+  },
+  "corpus": {
+    "title": "Text Corpus",
+    "description": "Search the Interslavic text corpus. Concordance and analysis of word usage in parallel texts."
+  },
+  "transliteration": {
+    "title": "Transliterator",
+    "description": "Convert text between Interslavic writing systems: etymological, standard and simple (Latin and Cyrillic).",
+    "heading": "Transliterator",
+    "subtitle": "Convert text between Interslavic writing systems. All conversions pass through etymological Latin.",
+    "inputPlaceholder": "Enter text to convert...",
+    "swapTooltip": "Swap directions",
+    "resultPlaceholder": "Result...",
+    "scriptLabels": {
+      "etymLatin": "Etymological (scientific), Latin",
+      "etymCyrillic": "Etymological (scientific), Cyrillic",
+      "stdLatin": "Standard, Latin",
+      "stdCyrillic": "Standard, Cyrillic",
+      "simpleLatin": "Simple, Latin",
+      "simpleCyrillic": "Simple, Cyrillic"
+    }
+  },
+  "about": {
+    "title": "About",
+    "description": "Technical information about the Interslavic Lexicon project — word count, meanings, roots, supported translation languages and environment details.",
+    "heading": "About / Specification",
+    "intro": "The electronic lexicon is a specialized relational database of the Interslavic language (Medžuslovjansky). The program is designed to automate multilingual translation processes, analyze etymological nests and manage the morphemic composition of words.",
+    "sections": {
+      "metrics": "1. System Metrics and DB Statistics",
+      "orthography": "2. Orthography Algorithms and Data Standards",
+      "projects": "3. Related Community Projects",
+      "contacts": "4. Contacts and Feedback",
+      "history": "5. Version History"
+    },
+    "metrics": {
+      "words": "Total number of lexemes (words)",
+      "roots": "Indexed roots and morphemes (roots)",
+      "meanings": "Linked semantic meanings (meanings)",
+      "languages": "Supported target Slavic languages",
+      "isolatedTables": "(isolated tables)"
+    },
+    "orthographyText": "The program supports dynamic switching of writing systems without page reloads. Detection and output follow these rules:",
+    "orthographyRules": [
+      "When an active user session exists, the configuration from the user_settings table in the auth database is applied.",
+      "For unauthenticated users, the HTTP Accept-Language header of the browser locale is parsed, with automatic detection of Latin locales for Slavic countries (pl, cs, sk, hr, sl).",
+      "Latin transliteration follows the standard Interslavic alphabet notation (**isv**), including special characters (č, ž, š, ě)."
+    ],
+    "projectsIntro": "Recommended external resources and official Interslavic community platforms that complement the lexicon infrastructure:",
+    "projects": {
+      "portal": "The main informational website of the language: grammar, history, rules and standards.",
+      "dictionary": "A multilingual dictionary web service and database developed by community members.",
+      "community": "The largest official international community for communication, practice and coordination of Interslavic language development.",
+      "wiki": "An open knowledge base and wiki encyclopedia of articles, written and moderated by community members."
+    },
+    "contactsDescription": "If you find an inaccuracy in a dictionary entry translation, want to suggest an improvement to transliteration algorithms, or request extended moderator privileges (with access to specific language groups), contact us:",
+    "contacts": {
+      "email": "Email",
+      "emailDesc": "For official requests and coordination:",
+      "community": "Community and support",
+      "communityDesc": "Prompt discussion and developer chat:"
+    },
+    "openSource": "Open Source",
+    "openSourceDesc": "The project and architectural developments of the lexicon are published in the community GitHub repository.",
+    "githubLink": "GitHub Repository →",
+    "historyIntro": "Evolution of the project's web version:",
+    "versions": {
+      "v1": "Novoslovnica Word List",
+      "v1desc": "The first database of Novoslovnica words and initial codification of lexical norms.",
+      "v2": "Novoslovnica Online Dictionary",
+      "v2desc": "Transition to online format, launch of the web version and database expansion.",
+      "v3desc": "Integration with Interslavic language standards.",
+      "v4desc": "Current version. Complete architecture overhaul, modern interface and ecosystem tools. Formation of the Interslavic text corpus."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Account settings and personalization of the Interslavic lexicon display — choose Cyrillic or Latin script, site theme, default language.",
+    "heading": "Account Settings",
+    "subtitle": "Personalize the Interslavic lexicon display to your preferences.",
+    "sections": {
+      "script": "Script Display (Alphabet)",
+      "theme": "Theme",
+      "language": "Default Language"
+    },
+    "scriptDescription": "Choose which writing system (script) to use by default for displaying Interslavic words in lexicon interfaces and tables.",
+    "scriptOptions": {
+      "cyrillic": "Cyrillic",
+      "cyrillicExample": "Display example: меджуславянскы",
+      "latin": "Latin",
+      "latinExample": "Display example: medžuslavjanski"
+    },
+    "themeDescription": "Choose a site theme. System automatically follows your operating system settings.",
+    "themeOptions": {
+      "light": "Light",
+      "lightDesc": "Always light background",
+      "dark": "Dark",
+      "darkDesc": "Always dark background",
+      "system": "System",
+      "systemDesc": "Same as OS"
+    },
+    "languageDescription": "Choose the default interface and translation language. This setting does not yet affect functionality but will be used in the future.",
+    "languageName": "Interslavic",
+    "errors": {
+      "script": "Failed to save script preference",
+      "theme": "Failed to save theme preference",
+      "language": "Failed to save language preference"
+    },
+    "saving": "Saving..."
+  },
+  "login": {
+    "title": "Log In",
+    "description": "Log in via Yandex or Google to access settings and management.",
+    "yandex": "Log in with Yandex",
+    "google": "Log in with Google"
+  },
+  "changelog": {
+    "title": "Istorija versij / Version History",
+    "description": "History of changes to the Interslavic Lexicon platform.",
+    "heading": "Istorija versij / Version History",
+    "backLink": "← Glavna stranica / Back to home",
+    "entries": {
+      "v40": "First release",
+      "v40items": [
+        "Parsing and structuring data from authoritative dictionaries",
+        "Dictionary search with real-time translation into 16 languages",
+        "Admin panel for managing translations",
+        "Management of synonyms, antonyms and cognate words",
+        "Complete grammatical paradigm: declensions, conjugations, degrees of comparison",
+        "Support for Latin and Cyrillic script with dynamic switching"
+      ],
+      "v41": "Flavorization and syntactic relations",
+      "v41items": [
+        "Flavorization tracking (Latinica / Kirilica) and script selection in texts",
+        "9 new relation types between words from synsets",
+        "Inflectional variability and extended morphological rules",
+        "Verification markers and change approval system",
+        "Complete action history for lexemes and morphemes",
+        "Enriched external data and etymological links"
+      ],
+      "v42": "Text Library",
+      "v42items": [
+        "Addition of text library with admin panel",
+        "Markdown format and rich text formatting",
+        "Search and filtering of texts by category",
+        "Slug system and readable URLs",
+        "Contribution tracking (who added the text) and change history",
+        "Metadata: source, year written, translation, flavorization (CORE/NSL/EAST/WEST/SOUTH)"
+      ]
+    }
+  },
+  "textbook": {
+    "backToLexicon": "← Back to lexicon",
+    "sidebarTitle": "Pan-Slavic Textbook",
+    "breadcrumb": "Textbook",
+    "breadcrumbFallback": "Chapter",
+    "dictionaryLink": "Dictionary 🔍",
+    "chapterBadge": "Chapter",
+    "sectionBadge": "Section",
+    "loading": "Content loading...",
+    "loadingDesc": "Full grammar reference, declension examples, paradigms and self-assessment audio materials will be expanded here.",
+    "emptyChapter": "Materials for this subsection are being synchronized with the Interslavic manual.",
+    "prevChapter": "← Back",
+    "nextChapter": "Forward →",
+    "categories": ["Basics", "Grammar", "Verbs", "Vocabulary"],
+    "chapters": {
+      "preface": "Preface and introduction",
+      "ch1": "1. Pronunciation and alphabet",
+      "ch2": "2. Sentence structure, word order",
+      "ch3": "3. Definite and indefinite articles",
+      "ch4": "4. Nouns. Cases. Prepositions",
+      "ch5": "5. Verbs to be and to have",
+      "ch6": "6. Interrogative sentences. Yes and no. Negation",
+      "ch7": "7. Pronouns",
+      "ch8": "8. Adjectives",
+      "ch9": "9. Numerals",
+      "ch10": "10. Present tense of verbs",
+      "ch11": "11. Adverbs, idioms",
+      "ch12": "12. Imperative mood of verbs",
+      "ch13": "13. Past tenses of verbs",
+      "ch14": "14. Future tenses of verbs",
+      "ch15": "15. Aspects of the verb system",
+      "ch16": "16. Verbal nouns, participles",
+      "ch17": "17. Conjunctions, particles and interjections",
+      "ch18": "18. Compound and complex sentences",
+      "ch20": "20. Word formation, diminutives"
+    },
+    "chapter1": {
+      "title": "Pronunciation and alphabet",
+      "description": "Basic reading rules, writing systems (Latin and Cyrillic) and phonetic structure of Interslavic.",
+      "subsections": {
+        "basics": "Basics of script",
+        "basicsText": "Interslavic is designed in a balanced way, allowing the use of both the Latin alphabet (isv-Latin) and Cyrillic. The systems are completely equivalent, and the choice depends solely on context and user preference."
+      },
+      "tableHeaders": {
+        "latin": "Latin",
+        "cyrillic": "Cyrillic",
+        "ipa": "Pronunciation (IPA)",
+        "example": "Example"
+      },
+      "tableExamples": {
+        "a": "common Slavic sound «a»",
+        "c": "soft «ch», as in English «church»",
+        "z": "«zh», as in «measure»"
+      },
+      "factBox": "💡 Interslavic Fact",
+      "factText": "Thanks to a mathematically calibrated root system, knowing the pronunciation rules, a speaker of any Slavic language will understand up to 80% of spoken speech without prior training!"
+    }
+  },
+  "proto": {
+    "title": "Proto-Slavic Dictionary",
+    "description": "Search the Proto-Slavic dictionary (ESSJa — Etymological Dictionary of Slavic Languages edited by O. N. Trubachyov). Lemmas, reconstructions and historical contexts.",
+    "heading": "Proto-Slavic Dictionary (ESSJa)",
+    "searchPlaceholder": "Search by lemma…",
+    "noResults": "No results found",
+    "notFound": "Article not found",
+    "backLink": "← Back to search",
+    "source": "Source"
+  },
+  "word": {
+    "title": "Word",
+    "notFound": "Information not available",
+    "meta": {
+      "pos": "Part of speech",
+      "gender": "Gender",
+      "declension": "Declension",
+      "conjugation": "Conjugation",
+      "stem": "Stem",
+      "stemClass": "Stem class",
+      "paradigm": "Paradigm",
+      "aspect": "Aspect",
+      "transitivity": "Transitivity",
+      "animacy": "Animacy",
+      "articleId": "Article ID"
+    },
+    "display": {
+      "nslCyrillic": "Novoslovnica Cyrillic:",
+      "stdCyrillic": "Cyrillic:",
+      "glagolitic": "Glagolitic:",
+      "simpleForm": "Simple form:"
+    },
+    "paradigmButtons": {
+      "verb": "Show verb conjugation (3 numbers, 6 tenses)",
+      "noun": "Show noun declension tables",
+      "adjective": "Show adjective declension",
+      "numeral": "Show numeral declension",
+      "pronoun": "Show pronoun declension",
+      "adverb": "Show adverb degrees of comparison",
+      "default": "Show paradigm"
+    },
+    "paradigmError": "Error loading word form data.",
+    "sections": {
+      "cognates": "Cognate words",
+      "meanings": "Meanings",
+      "meaning": "Meaning",
+      "placeholder": "Definition will appear here",
+      "examples": "Example",
+      "synonyms": "Synonyms",
+      "synonymGraph": "Synonym graph",
+      "graph": "Graph",
+      "antonyms": "Antonyms",
+      "etymology": "Etymology and external links",
+      "etymologyLink": "Etymology",
+      "wiktionary": "Reconstruction (Wikipedia)"
+    },
+    "cases": {
+      "nominative": "Nominative",
+      "nominativeShort": "Nom.",
+      "genitive": "Genitive",
+      "genitiveShort": "Gen.",
+      "dative": "Dative",
+      "dativeShort": "Dat.",
+      "accusative": "Accusative",
+      "accusativeShort": "Acc.",
+      "instrumental": "Instrumental",
+      "instrumentalShort": "Instr.",
+      "locative": "Locative",
+      "locativeShort": "Loc.",
+      "vocative": "Vocative",
+      "vocativeShort": "Voc."
+    },
+    "numbers": {
+      "singular": "Singular (Sg)",
+      "dual": "Dual (Du)",
+      "plural": "Plural (Pl)"
+    },
+    "genders": {
+      "masculine": "Masculine (Masc)",
+      "feminine": "Feminine (Fem)",
+      "neuter": "Neuter (Neut)",
+      "masculineShort": "Masculine",
+      "feminineShort": "Feminine",
+      "neuterShort": "Neuter"
+    },
+    "verb": {
+      "person": "Person",
+      "firstPerson": "1st person",
+      "secondPerson": "2nd person",
+      "thirdPerson": "3rd person",
+      "indicative": "Indicative (Indicativus)",
+      "imperativeSubjunctive": "Imperative and Subjunctive",
+      "tenses": {
+        "present": "Present tense (Praesens)",
+        "futureSimple": "Simple future (Futurum Rectum)",
+        "futureAnalytical": "Analytical future (Futurum Periphrasticum)",
+        "withByti": "With byti:",
+        "withImati": "With imati:",
+        "withHteti": "With htěti:",
+        "aorist": "Aorist (Aoristus)",
+        "imperfect": "Imperfect (Imperfectus)",
+        "perfect": "Perfect (Perfectum, masc.)",
+        "pluperfect": "Pluperfect (Plusquamperfectum, masc.)"
+      },
+      "imperative": "Imperative mood (Imperativus)",
+      "imperativeLabels": {
+        "sg": "Sg (you):",
+        "du": "Du (you two):",
+        "pl": "Pl (you):"
+      },
+      "conditional": "Conditional mood (Conditionalis, masc.)"
+    },
+    "adjective": {
+      "positive": "Positive (Positivus)",
+      "comparative": "Comparative (Comparativus)",
+      "superlative": "Superlative (Superlativus)"
+    },
+    "numeral": {
+      "section5to10": "Case forms (5-10)"
+    },
+    "morpheme": {
+      "heading": "Morpheme analysis",
+      "unavailable": "Morpheme analysis unavailable — root data missing",
+      "stem": "Word stem:",
+      "legend": {
+        "root": "root",
+        "prefix": "prefix",
+        "suffix": "suffix",
+        "connective": "connective element"
+      }
+    },
+    "comprehension": {
+      "heading": "Comprehensibility in Slavic languages",
+      "understood": "Understandable without translation",
+      "needsTranslation": "Requires translation"
+    },
+    "cognateChart": {
+      "south": "South Slavic",
+      "east": "East Slavic",
+      "west": "West Slavic",
+      "romance": "Romance",
+      "germanic": "Germanic",
+      "greek": "Greek",
+      "heading": "Cognate chart",
+      "series": "Cognates"
+    },
+    "synonymGraph": {
+      "heading": "Synonym graph",
+      "loading": "Loading graph..."
+    },
+    "languages": {
+      "en": "English",
+      "ru": "Russian",
+      "uk": "Ukrainian",
+      "be": "Belarusian",
+      "cu": "Church Slavonic",
+      "bg": "Bulgarian",
+      "mk": "Macedonian",
+      "sr": "Serbian",
+      "hr": "Croatian",
+      "sl": "Slovenian",
+      "pl": "Polish",
+      "sk": "Slovak",
+      "cs": "Czech",
+      "de": "German",
+      "nl": "Dutch",
+      "eo": "Esperanto"
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "description": "Interslavic dictionary management panel. Edit entries, manage synonyms, antonyms and roots.",
+    "antonyms": {
+      "title": "Antonyms",
+      "description": "Manage antonyms at the meaning level. Search and link opposite meanings of words.",
+      "heading": "Antonym Management",
+      "instruction": "Select a word, then its meaning, to link opposite meanings of other words to it.",
+      "saveSuccess": "Antonym links successfully updated!",
+      "saveError": "Error saving",
+      "searchLabel": "Find a word from scratch",
+      "searchPlaceholder": "Enter a word to link...",
+      "searching": "Searching...",
+      "select": "select",
+      "selectedWords": "Selected words ({count})",
+      "antonymCount": "{count} ant.",
+      "antonymsFor": "Antonyms for:",
+      "wordId": "Word ID:",
+      "meaning": "Meaning:",
+      "meaningFallback": "Meaning #{id}",
+      "currentAntonyms": "Current antonyms of meaning",
+      "emptyAntonyms": "Antonym list is empty. Use the search below to add opposite meanings.",
+      "searchAntonym": "Search and add antonym",
+      "searchingDb": "Searching database...",
+      "searchAntonymPlaceholder": "Start typing the opposite word...",
+      "selected": "✓ Selected",
+      "add": "+ Add",
+      "noMeanings": "No meanings found",
+      "saving": "Saving...",
+      "save": "Save links",
+      "selectMeaning": "Select a word meaning to manage antonyms",
+      "selectWord": "Select a word or find it via search on the left to create links from scratch"
+    },
+    "synonyms": {
+      "title": "Synonyms",
+      "description": "Manage synonyms at the meaning level. Search and link synonymous meanings of words.",
+      "heading": "Synonym Management",
+      "instruction": "Select a word, then its meaning, to link synonymous meanings of other words to it.",
+      "saveSuccess": "Synonym links successfully updated!",
+      "saveError": "Error saving",
+      "searchLabel": "Find a word from scratch",
+      "searchPlaceholder": "Enter a word to link...",
+      "searching": "Searching...",
+      "select": "select",
+      "selectedWords": "Selected words ({count})",
+      "synonymCount": "{count} syn.",
+      "synonymsFor": "Synonyms for:",
+      "wordId": "Word ID:",
+      "meaning": "Meaning:",
+      "currentValue": "Current value:",
+      "currentSynonyms": "Current synonyms of meaning",
+      "emptySynonyms": "Synonym list is empty. Use the search below to add meanings from scratch.",
+      "searchSynonym": "Search and add synonym",
+      "searchingDb": "Searching database...",
+      "searchSynonymPlaceholder": "Start typing a word to search for synonyms...",
+      "selected": "✓ Selected",
+      "add": "+ Add",
+      "noMeanings": "No meanings found",
+      "saving": "Saving...",
+      "save": "Save links",
+      "selectMeaning": "Select a word meaning to manage synonyms",
+      "selectWord": "Select a word or find it via search on the left to create links from scratch"
+    },
+    "relations": {
+      "unknownType": "Unknown type",
+      "heading": "Manage {label}",
+      "instruction": "Select a word, then its meaning, to {description}."
+    },
+    "roots": {
+      "title": "Roots | Admin Panel",
+      "description": "Manage Interslavic roots (morphemes).",
+      "heading": "Roots (morphemes)",
+      "subtitle": "Edit roots and manage linked words.",
+      "create": "+ Create root",
+      "searchPlaceholder": "Search by root value...",
+      "searching": "Searching...",
+      "table": {
+        "id": "ID",
+        "value": "Value",
+        "type": "Type",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "loading": "Loading...",
+      "empty": "No roots",
+      "edit": "Edit",
+      "delete": "Delete",
+      "scrollMore": "Scroll to load more",
+      "allLoaded": "All roots loaded",
+      "saveError": "Error saving",
+      "wordAlreadyLinked": "Word already linked to this root",
+      "addWordError": "Error adding word",
+      "removeWordError": "Error removing word",
+      "editModal": {
+        "title": "Edit root",
+        "value": "Value",
+        "type": "Morpheme type",
+        "linkedWords": "Linked words ({count})",
+        "noWords": "No linked words",
+        "addWord": "Add word",
+        "searchWordPlaceholder": "Search word...",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "save": "Save"
+      },
+      "createModal": {
+        "title": "Create root",
+        "value": "Value",
+        "type": "Morpheme type",
+        "cancel": "Cancel",
+        "creating": "Creating...",
+        "create": "Create",
+        "valueRequired": "Root value is required"
+      },
+      "deleteModal": {
+        "title": "Delete confirmation",
+        "confirmText": "Are you sure you want to delete root ID: {id}? Linked records (roots_words) will be deleted cascadingly.",
+        "cancel": "Cancel",
+        "deleting": "Deleting...",
+        "delete": "Delete"
+      },
+      "morphemeTypes": {
+        "root": "Root",
+        "prefix": "Prefix",
+        "suffix": "Suffix",
+        "unknown": "Unknown"
+      }
+    },
+    "candidates": {
+      "title": "Candidates | Admin Panel",
+      "description": "Manage candidates for the Interslavic lexicon.",
+      "heading": "Lexicon Candidates",
+      "subtitle": "Words proposed for addition to the dictionary. Review and transfer to the main table.",
+      "searchPlaceholder": "Search by value, isv or nsl...",
+      "searching": "Searching...",
+      "promote": "Promote to dictionary ({count})",
+      "delete": "Delete ({count})",
+      "tableHeaders": {
+        "type": "Type",
+        "source": "Source"
+      },
+      "loading": "Loading...",
+      "empty": "No candidates",
+      "scrollMore": "Scroll to load more",
+      "allLoaded": "All candidates loaded",
+      "promoteModal": {
+        "title": "Promote to dictionary",
+        "instruction": "Fill in the fields for each candidate. Slug will be generated as value-pos.",
+        "candidate": "Candidate #{n} (ID: {id})",
+        "autoSlug": "Slug (auto): {slug}",
+        "root": "Root (optional)",
+        "searchRoot": "Search root...",
+        "noRoot": "— no root —",
+        "cancel": "Cancel",
+        "promoting": "Promoting...",
+        "promote": "Promote to dictionary"
+      },
+      "deleteModal": {
+        "title": "Delete confirmation",
+        "confirmText": "Are you sure you want to delete {count} candidate(s)? This action cannot be undone.",
+        "cancel": "Cancel",
+        "deleting": "Deleting...",
+        "delete": "Delete"
+      }
+    },
+    "endings": {
+      "title": "Endings | Admin Panel",
+      "description": "Manage Interslavic endings (inflections).",
+      "heading": "Endings (inflections)",
+      "subtitle": "Manage endings for all stem types and grammemes.",
+      "create": "+ Create",
+      "allStemTypes": "All stem types",
+      "tableHeaders": {
+        "id": "ID",
+        "stemType": "Stem type",
+        "grammeme": "Grammeme",
+        "variant": "Variant",
+        "ending": "Ending",
+        "actions": "Actions"
+      },
+      "loading": "Loading...",
+      "empty": "No records",
+      "edit": "Edit",
+      "delete": "Delete",
+      "loadError": "Error loading",
+      "saveError": "Error saving",
+      "deleteModal": {
+        "title": "Delete confirmation",
+        "confirmText": "Are you sure you want to delete record ID: {id}?",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      },
+      "editModal": {
+        "title": "Edit ending",
+        "stemType": "Stem type:",
+        "grammeme": "Grammeme:",
+        "variant": "Variant:",
+        "ending": "Ending",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "save": "Save"
+      },
+      "createModal": {
+        "title": "Create ending",
+        "stemType": "Stem type",
+        "grammeme": "Grammeme",
+        "variant": "Variant",
+        "ending": "Ending",
+        "placeholder": "ъ, a, u, omъ...",
+        "cancel": "Cancel",
+        "creating": "Creating...",
+        "create": "Create",
+        "validation": "Enter ending"
+      }
+    },
+    "deduplication": {
+      "title": "Deduplication",
+      "description": "Eliminate duplicates in the lexicon (not homonyms).",
+      "heading": "Database Deduplication (Relational Structure)",
+      "subtitle": "Cascade transfer of meanings, synonyms, antonyms and root links.",
+      "searchPlaceholder": "Search by value or isv (minimum 2 characters)...",
+      "searching": "Searching...",
+      "showDuplicates": "Show duplicate words",
+      "merge": "Merge selected ({count}/2)",
+      "tableHeaders": {
+        "select": "Select",
+        "translations": "Translations (From Meanings)",
+        "source": "Source (Addition)"
+      },
+      "loading": "Loading data...",
+      "searchPrompt": "Enter a string to search for duplicates",
+      "selectTwo": "Select exactly 2 words to merge.",
+      "success": "Objects merged. Meanings and links transferred cascadingly.",
+      "mergeModal": {
+        "title": "Merge Records Constructor",
+        "description": "Meanings and links will be transferred to the retained ID.",
+        "keep": "KEEP (ID: {id})",
+        "remove": "DELETE (ID: {id})",
+        "value": "Value",
+        "isv": "ISV",
+        "nsl": "NSL",
+        "usageType": "Usage type",
+        "sources": "Sources (Addition field)",
+        "info": "💡 **Info:** All language translations (Ru, En, Pl...) are linked to Meaning records. Since the updateMany command transfers the value objects themselves entirely to the new word's ID, the structure and links of your translations will be preserved without changes or conflicts at the DB level.",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "merge": "Execute merge"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "description": "Manage users and access rights in the Interslavic lexicon admin panel.",
+      "heading": "Permission Management",
+      "instruction": "Select a user from the list on the left to configure their role and individual features.",
+      "noName": "No name",
+      "permissionsFor": "Permissions for: {name}",
+      "globalStatus": "Global status: {role}",
+      "noUser": "No user selected"
+    },
+    "words": {
+      "create": {
+        "title": "Create entry",
+        "description": "Create a new dictionary entry in the Interslavic lexicon database with stem, roots and translations.",
+        "formTitle": "Create new dictionary entry",
+        "submit": "Create entry",
+        "defaultMeaning": "Primary meaning"
+      },
+      "edit": {
+        "title": "Editing: {value}",
+        "description": "Edit the dictionary entry «{value}» in the Interslavic lexicon database.",
+        "formTitle": "Edit entry: {value}",
+        "submit": "Save changes",
+        "tabs": {
+          "article": "Entry",
+          "relations": "Relations"
+        }
+      }
+    },
+    "library": {
+      "title": "Library — Administration",
+      "description": "Manage Interslavic library texts.",
+      "heading": "Library",
+      "addText": "+ Add text",
+      "tableHeaders": {
+        "title": "Title",
+        "author": "Author",
+        "category": "Category",
+        "flavorization": "Flavorization",
+        "year": "Year",
+        "translator": "Translator",
+        "addedBy": "Added by",
+        "verified": "Verified",
+        "views": "Views",
+        "actions": "Actions"
+      },
+      "empty": "No texts in the library yet",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete text?",
+      "new": {
+        "title": "New text — library",
+        "description": "Add a new text to the Interslavic library.",
+        "heading": "New text",
+        "form": {
+          "title": "Title *",
+          "titlePlaceholder": "Text title",
+          "authorPlaceholder": "Author name",
+          "categoryDefault": "Select category",
+          "sourceLink": "Source link",
+          "yearWritten": "Year written",
+          "yearTranslated": "Year translated",
+          "translator": "Translator",
+          "translatorPlaceholder": "Translator name",
+          "description": "Short description",
+          "descriptionPlaceholder": "Short description of the text",
+          "corpusSlug": "Corpus slug",
+          "corpusSlugPlaceholder": "Link to document in corpus",
+          "body": "Text (Markdown) *",
+          "bodyPlaceholder": "Enter text in Markdown format...",
+          "orthographyVerified": "Orthography verified",
+          "cancel": "Cancel",
+          "saving": "Saving...",
+          "save": "Save",
+          "categories": {
+            "poem": "Poema / Poem",
+            "article": "Členok / Article",
+            "book": "Kniga / Book",
+            "joke": "Zasměška / Joke",
+            "story": "Povědka / Story",
+            "song": "Pěsńa / Song",
+            "prayer": "Molitva / Prayer",
+            "quote": "Citata / Quote",
+            "study": "Nauka / Study"
+          }
+        }
+      },
+      "editPage": {
+        "title": "Edit text — library",
+        "description": "Edit a text in the Interslavic library.",
+        "heading": "Editing: {title}"
+      }
+    },
+    "table": {
+      "searchPlaceholder": "Search all languages...",
+      "createArticle": "Create dictionary entry",
+      "filterLabel": "Filter language:",
+      "filterDefault": "— not selected —",
+      "onlyUnverified": "Only unverified ({language})",
+      "columnsLabel": "Display languages (columns):",
+      "showAll": "Show all",
+      "loading": "Searching database for matches...",
+      "noResults": "No results found",
+      "loadingMore": "Loading...",
+      "columnHeaders": {
+        "meaning": "Meaning",
+        "nsl": "Novoslovnica (archive)",
+        "isv": "Interslavic",
+        "value": "Search key"
+      },
+      "languages": {
+        "ru": "Russian",
+        "en": "English",
+        "mk": "Macedonian",
+        "bg": "Bulgarian",
+        "sr": "Serbian",
+        "hr": "Croatian",
+        "pl": "Polish",
+        "cs": "Czech",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "de": "German",
+        "uk": "Ukrainian",
+        "be": "Belarusian",
+        "hsb": "Upper Sorbian",
+        "dsb": "Lower Sorbian",
+        "cu": "Church Slavonic",
+        "nl": "Dutch",
+        "eo": "Esperanto"
+      },
+      "editableCell": {
+        "rejectTitle": "Rejection comment",
+        "rejectPlaceholder": "Specify reason for rejection...",
+        "cancel": "Cancel",
+        "reject": "Reject",
+        "saveError": "Failed to save changes",
+        "verify": "Verify",
+        "unverify": "Unverify"
+      }
+    }
   }
 }

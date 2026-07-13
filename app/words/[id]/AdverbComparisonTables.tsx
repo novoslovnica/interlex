@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface AdverbComparisonTablesProps {
     isv: string;
@@ -21,13 +22,20 @@ function generateAdverbDegrees(lemma: string): { positive: string; comparative: 
 }
 
 export const AdverbComparisonTables: React.FC<AdverbComparisonTablesProps> = ({ isv }) => {
+    const t = useTranslations("word");
     const { positive, comparative, superlative } = generateAdverbDegrees(isv);
 
     const rows = [
-        { label: 'Положительная (Positivus)', key: 'pos', value: positive },
-        ...(comparative ? [{ label: 'Сравнительная (Comparativus)', key: 'comp', value: comparative }] : []),
-        ...(superlative ? [{ label: 'Превосходная (Superlativus)', key: 'sup', value: superlative }] : []),
+        { key: 'pos', value: positive },
+        ...(comparative ? [{ key: 'comp', value: comparative }] : []),
+        ...(superlative ? [{ key: 'sup', value: superlative }] : []),
     ];
+
+    const LABELS: Record<string, string> = {
+        pos: t('adjective.positive'),
+        comp: t('adjective.comparative'),
+        sup: t('adjective.superlative'),
+    };
 
     return (
         <div className="p-4 bg-slate-50 rounded-xl">
@@ -35,7 +43,7 @@ export const AdverbComparisonTables: React.FC<AdverbComparisonTablesProps> = ({ 
                 <div className="space-y-3">
                     {rows.map((row) => (
                         <div key={row.key} className="flex justify-between items-baseline gap-2 text-sm">
-                            <span className="text-slate-400 font-medium">{row.label}</span>
+                            <span className="text-slate-400 font-medium">{LABELS[row.key]}</span>
                             <span className="text-blue-700 font-semibold text-right break-all">{row.value}</span>
                         </div>
                     ))}

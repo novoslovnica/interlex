@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import {getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Корпус текстов",
-  description: "Поиск по корпусу текстов на межславянском языке. Конкорданс и анализ словоупотребления в параллельных текстах.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("corpus");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 const Corpus = () => {
     const match = {

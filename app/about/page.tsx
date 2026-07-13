@@ -2,14 +2,17 @@ import { prismaData as db } from "@/lib/prisma"
 import { TRANSLATION_LANGUAGES } from "@/config/features"
 import { TechnicalAboutClient } from "./about-client"
 import type { Metadata } from "next";
+import {getTranslations} from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "О проекте",
-  description: "Техническая информация о проекте Interslavic Lexicon — количество слов, значений, корней, поддерживаемые языки перевода и сведения об окружении.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("about");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function AboutPage() {
-    // Вычисляем размер базы данных или каунтеры ключевых индексов
     const [totalWords, totalMeanings, totalRoots] = await Promise.all([
         db.lexeme.count(),
         db.meaning.count(),
@@ -22,7 +25,7 @@ export default async function AboutPage() {
         rootCount: totalRoots.toLocaleString(),
         languageCount: TRANSLATION_LANGUAGES.length,
         environment: process.env.NODE_ENV || "development",
-        nextVersion: "15.0 (App Router)", // Замените на вашу актуальную версию
+        nextVersion: "15.0 (App Router)",
         ormVersion: "Prisma 5.x",
     }
 

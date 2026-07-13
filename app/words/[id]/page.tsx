@@ -3,14 +3,16 @@ import {Suspense} from "react";
 import Word from "@/app/words/[id]/Word";
 import './word-page.css';
 import {getUserScript} from "@/lib/get-user-script";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
+  const t = await getTranslations("word");
   const item = await getItem(id) as { value?: string } | null;
   return {
-    title: item?.value ?? `Слово #${id}`,
-    description: `Словарная статья «${item?.value ?? id}» в межславянском лексиконе — значения, грамматика, этимология, переводы и однокоренные слова.`,
+    title: item?.value ?? `${t("title")} #${id}`,
+    description: `${t("title")} «${item?.value ?? id}» — ${t("meta.pos")}, ${t("sections.meanings")}, ${t("sections.etymology")}.`,
   };
 }
 

@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
+import Title from "@/components/Title";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,7 +56,7 @@ export default async function RootLayout({
                   <NextIntlClientProvider messages={messages}>
                       <header className="site-header">
                           <div className="header-content">
-                              <h1><Link href="/">Межславянский лексикон</Link></h1>
+                              <Title />
                               <nav>
                                   <HeaderNav session={session} />
                               </nav>

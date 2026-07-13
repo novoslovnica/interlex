@@ -9,13 +9,13 @@ CSV_PATH = os.path.join(os.path.dirname(__file__), 'dsb_translated.csv')
 BATCH_SIZE = 500
 NOW = datetime.datetime.now(datetime.UTC).isoformat()
 
-def import_hsb():
+def import_dsb():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
     existing = cur.execute("SELECT COUNT(*) FROM dsb").fetchone()[0]
     if existing > 0:
-        answer = input(f"hsb table already has {existing} rows. Delete and reimport? (y/N): ")
+        answer = input(f"dsb table already has {existing} rows. Delete and reimport? (y/N): ")
         if answer.lower() == 'y':
             cur.execute("DELETE FROM dsb")
             conn.commit()
@@ -44,7 +44,7 @@ def import_hsb():
 
         if len(batch) >= BATCH_SIZE:
             cur.executemany(
-                "INSERT INTO dsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
+                "INSERT OR IGNORE INTO dsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
                 batch
             )
             conn.commit()
@@ -54,7 +54,7 @@ def import_hsb():
 
     if batch:
         cur.executemany(
-            "INSERT INTO dsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO dsb (createdAt, updatedAt, value, wordId, meaningId) VALUES (?, ?, ?, ?, ?)",
             batch
         )
         conn.commit()
@@ -64,4 +64,4 @@ def import_hsb():
     print(f"Done. Inserted {inserted} rows into dsb.")
 
 if __name__ == "__main__":
-    import_hsb()
+    import_dsb()

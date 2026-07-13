@@ -1,5 +1,6 @@
 'use client';
 import {useEffect, useState} from "react";
+import {useTranslations} from "next-intl";
 import {isvToCyr} from "@/lib/isv";
 
 interface SynonymGraphProps {
@@ -15,6 +16,7 @@ const FIRST_COLOR = "#3b82f6";
 const SECOND_COLOR = "#d1d5db";
 
 export default function SynonymGraph({word, wordId, currentScript, firstLevelSynonyms, onClose}: SynonymGraphProps) {
+    const t = useTranslations("word");
     const [secondLevelMap, setSecondLevelMap] = useState<Record<number, any[]>>({});
     const [loading, setLoading] = useState(true);
 
@@ -110,7 +112,7 @@ export default function SynonymGraph({word, wordId, currentScript, firstLevelSyn
             <div className="bg-white rounded-2xl shadow-2xl w-[90vw] h-[90vh] max-w-[900px] max-h-[800px] p-6 flex flex-col"
                  onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-lg font-bold text-slate-800">Граф синонимов</h2>
+                    <h2 className="text-lg font-bold text-slate-800">{t('synonymGraph.heading')}</h2>
                     <button onClick={onClose}
                             className="text-slate-400 hover:text-slate-600 text-2xl leading-none p-1">&times;</button>
                 </div>
@@ -121,7 +123,7 @@ export default function SynonymGraph({word, wordId, currentScript, firstLevelSyn
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                             </svg>
-                            Загрузка графа...
+                            {t('synonymGraph.loading')}
                         </div>
                     ) : (
                     <svg viewBox="0 0 800 700" className="w-full h-full" preserveAspectRatio="xMidYMid meet">

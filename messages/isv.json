@@ -1,14 +1,882 @@
 {
-  "Navigation": {
-    "search": "Iskati",
-    "admin": "Administracija",
-    "deduplication": "Deduplikacija"
-  },
-  "Deduplication": {
-    "title": "Deduplikacija bazy danyh",
-    "searchPlaceholder": "Iskati po leme ili kirilice..."
-  },
   "common": {
-    "title": "Medzuslovensky lexykon"
+    "title": "Medžuslověnsky lexikon",
+    "navigation": {
+      "toggleMenu": "Perključiti menju",
+      "lexicon": "Leksikon",
+      "translate": "Prěvod",
+      "library": "Biblioteka",
+      "tools": "Orudja",
+      "transliterator": "Transliterator",
+      "avatar": "Avatar",
+      "settings": "Nastajenja",
+      "admin": "Administracija",
+      "logout": "Vyjti",
+      "login": "Vniti"
+    },
+    "footer": {
+      "protoslavic": "Prěslověnsky",
+      "library": "Biblioteka",
+      "textbook": "Učebnik",
+      "about": "O projektu",
+      "versionHistory": "Istorija versij"
+    }
+  },
+  "main": {
+    "title": "Glavna",
+    "description": "Interslavic Lexicon — medžuslovjansky leksikon. Iskanje, gramatika, prěvod i učebne materialy.",
+    "badge": "🌍 Digitalny leksikon",
+    "heading": "Medžuslovjansky lingvističny korpus i leksikon",
+    "subtitle": "Integrovana naučno-istraživatelska platforma za avtomatizovanu obrabotku prirodnogo jezyka (NLP) i komparativny analiz slověnskyh jezykovyh sistem. Sjedinjaje v sebě verificirovanny leksikon prěslověnskyh korenjev, mnogojęzyčny paralelny korpus i semantičny graf otnošenij.",
+    "featuresTitle": "Osnovne možnosti platformy",
+    "features": {
+      "orthography": {
+        "title": "Mnogopisjmennaja ortografična konversija",
+        "description": "Dinamična transliteracija tekstovyh masivov medžu kirilicom i latinicej (naučna isv-notacija) grafičnimi sistemami. Modul obezpečaje avtomatičnu adaptaciju vizualizacije leksem i fonetičnoj transkripcije (IPA) pod lokalne metadaty uživatelja."
+      },
+      "morpheme": {
+        "title": "Morfemno-semantično kartiranje",
+        "description": "Dekompozicija leksem na derivacijne morfemy i integracija v mnogourovnevy graf znanija. Sistema ustanovljaje vage sinonimičnoj, antonimičnoj i korennoj blizosti entitetov, vizualizujuči klastery kognatov i prěslověnskyh etimologičnyh svęzej."
+      },
+      "crosslingual": {
+        "title": "Kros-jezykovo leksično poravnanje",
+        "description": "Komparativny analiz i semantično sopostavjenje medžuslovjanskyh leksem s paralelnymi denotatami v 16 živyh slověnskyh jezykah. Arhitektura poddržaje strogu relacionu verifikaciju i validaciju prěvodnyh ekvivalentov ekspertnym soobščestvom."
+      },
+      "corpus": {
+        "title": "Paralelny lingvističny korpus",
+        "description": "Polnotekstovo i leksiko-sintaksično iskanje po segmentirovanym tekstovym masivam (KWIC). Sistema poddržaje morfologičnu razmětku (POS-tagging) i učityvaje statistične metrikę čestotnosti upotreby slovoform dlja precisijnogo rangirovanja vydači."
+      }
+    },
+    "stats": {
+      "ariaLabel": "Statistika leksikona",
+      "totalWords": "Vsego slov",
+      "translationLanguages": "Językov prěvoda",
+      "uniqueRoots": "Unikalnyh korenjev",
+      "meanings": "Smyslovyh značenij",
+      "flavorizations": "Flavorizacij"
+    },
+    "cta": {
+      "title": "Hočete vnesti vklad v razvitije leksikona?",
+      "description": "Registrujte se v sistemě, aby dostali dostup k bazovym funkcijam ili zaprositi prava moderatora.",
+      "textbook": "Čitati učebnik",
+      "search": "Perejti k iskanju 🔍",
+      "translate": "Perejti k prěvodniku ⚡"
+    },
+    "wordOfTheDay": {
+      "badge": "Slovo dnja",
+      "meaning": "Značenje",
+      "openArticle": "Otvori ti statju"
+    }
+  },
+  "lexicon": {
+    "title": "Leksikon",
+    "description": "Iskanje po slovniku medžuslovjanskogo jezyka. Značenja, prěvody, gramatične formy, etimologija i jednokorenne slova.",
+    "searchPlaceholder": "Vvedite tekst dlja iskanja...",
+    "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
+    "noResults": "Ničego ne najdeno"
+  },
+  "translate": {
+    "title": "Prěvod",
+    "description": "Prěvod s medžuslovjanskogo na 16 slověnskyh i neslověnskyh językov s aktivnymi odkazami na tolkovyje slovari.",
+    "searchPlaceholder": "Vvedite tekst dlja iskanja...",
+    "swapTooltip": "Poměniti jezyky mjestami",
+    "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
+    "noResults": "Ničego ne najdeno",
+    "languages": {
+      "ru": "Rusky",
+      "uk": "Ukrajinsky",
+      "pl": "Polsky",
+      "cs": "Češsky",
+      "sk": "Slovačsky",
+      "sl": "Slověnsky"
+    }
+  },
+  "library": {
+    "title": "Sbornik / Biblioteka",
+    "description": "Kolekcija izbranyh tekstov na medžuslovjanskom jezyku.",
+    "emptyFilter": "Poprobujte izměniti parametry filtracije",
+    "notFound": "Tekst ne najden",
+    "backLink": "← Vratiti se do biblioteky / Vratiti se do biblioteky",
+    "verified": "✓ Proverjeno",
+    "source": "Istočnik / Istočnik:",
+    "emptyBody": "Tekst poka ne dobavjen.",
+    "categories": {
+      "poem": "Poemy / Poemy",
+      "article": "Členky / Členky",
+      "book": "Knigy / Knigy",
+      "joke": "Zasměšky / Zasměšky",
+      "story": "Povědky / Povědky",
+      "song": "Pěsnje / Pěsnje",
+      "prayer": "Molitvy / Molitvy",
+      "quote": "Citaty i prislovice / Citaty i prislovice",
+      "study": "Nauka medžuslovjanskogo / Nauka medžuslovjanskogo",
+      "all": "Vse teksty / Vse teksty"
+    }
+  },
+  "corpus": {
+    "title": "Korpus tekstov",
+    "description": "Iskanje po korpusu tekstov na medžuslovjanskom jezyku. Konkordans i analiz slovoupotreby v paralelnyh tekstah."
+  },
+  "transliteration": {
+    "title": "Transliterator",
+    "description": "Konverzija teksta medžu sistemami pravopisanja medžuslovjanskogo jezyka: etimologična, standardna i prostaja (latinica i kirilica).",
+    "heading": "Transliterator",
+    "subtitle": "Konverzija teksta medžu sistemami pravopisanja medžuslovjanskogo jezyka. Vse preobrazovanja prohodęt črz etimologičnu latinicu.",
+    "inputPlaceholder": "Vvedite tekst dlja konvertacije...",
+    "swapTooltip": "Poměniti napravlenja",
+    "resultPlaceholder": "Rezultat...",
+    "scriptLabels": {
+      "etymLatin": "Etimologičny (naučny), latinica",
+      "etymCyrillic": "Etimologičny (naučny), kirilica",
+      "stdLatin": "Standardny, latinica",
+      "stdCyrillic": "Standardny, kirilica",
+      "simpleLatin": "Prosty, latinica",
+      "simpleCyrillic": "Prosty, kirilica"
+    }
+  },
+  "about": {
+    "title": "O projektu",
+    "description": "Tehnična informacija o projektu Interslavic Lexicon — količestvo slov, značenij, korenjev, poddržane jezyky prěvoda i sveděnija ob okruženju.",
+    "heading": "O programu / Specifikacija",
+    "intro": "Elektronsky leksikon predstavljaje specializovanu relacionu bazu danyh medžuslovjanskogo jezyka (Medžuslovjansky). Programma razrabotana dlja avtomatizacije procesov mnogojęzyčnogo prěvoda, analiza etimologičnyh gnězd i upravlenja morfemnym sostavom slov.",
+    "sections": {
+      "metrics": "1. Systemne metrikę i statistika BD",
+      "orthography": "2. Algoritmy ortografije i standardy danyh",
+      "projects": "3. Svęzane projekty soobščestva",
+      "contacts": "4. Kontakty i obratna svęz",
+      "history": "5. Istorija versij"
+    },
+    "metrics": {
+      "words": "Obščeje količestvo leksem (words)",
+      "roots": "Indeksirovannyh korenjev i morfem (roots)",
+      "meanings": "Svęzannyh semantičnyh značenij (meanings)",
+      "languages": "Poddržane cělevyje slověnsky jezyky",
+      "isolatedTables": "(izolovane tablicy)"
+    },
+    "orthographyText": "Programma poddržaje dinamično pereključenje grafičnyh sistem bez perezgružki stranic interfejsa. Detekcija i vyvod osuščestvljajut se po slědujučim pravylam:",
+    "orthographyRules": [
+      "Pri aktivnoj sessii uživatelja primenjaje se konfiguracija iz tablicy user_settings bazy auth.",
+      "Dlja neavtorizovanyh uživateljev parsit se HTTP-zagolovok Accept-Language lokalа brauzera s avtomatičnym vyčislenjem latinskyh lokal slověnskyh stran (pl, cs, sk, hr, sl).",
+      "Transliteracija latinicy opiraje se na standardnu notaciju medžuslovjanskogo alfabeta (**isv**), vključaja specsimvoly (č, ž, š, ě)."
+    ],
+    "projectsIntro": "Rekomendovane vněšnje resursy i oficialne platformy medžuslovjanskogo soobščestva, dopolňajuščije infrastrukturu leksikona:",
+    "projects": {
+      "portal": "Glavny informacionny veb-sajt jezyka: gramatika, istorija, pravila i standardy.",
+      "dictionary": "Mnogojęzyčny slovarny veb-servis i baza danyh, razvivajema učastnikami soobščestva.",
+      "community": "Najbolše oficialne medžunarodne soobščestvo dlja komunikacije, praktiky i koordinacije razvitja medžuslovjanskogo jezyka.",
+      "wiki": "Otvorena baza znanij i wiki-enciklopedija statjev, napisana i moderirana učastnikami soobščestva."
+    },
+    "contactsDescription": "Jesli vy našli netočnost v prěvodě slovarnoj statji, hočete predložiti ulěpšenje algoritmov transliteracije ili zaprositi rozširene prava moderatora (s dostupom k konkretnym jezykovym grupam), svęžite se s nami:",
+    "contacts": {
+      "email": "Elektronska pošta",
+      "emailDesc": "Dlja oficialnyh zaprosov i koordinacije:",
+      "community": "Soobščestvo i poddržka",
+      "communityDesc": "Operativno obsuždenje i čat razrabotčikov:"
+    },
+    "openSource": "Otvoreny kod (Open Source)",
+    "openSourceDesc": "Projekt i arhitekturnyje razrabotky leksikona publikujut se v repozitoriju GitHub soobščestva.",
+    "githubLink": "Repozitorij GitHub →",
+    "historyIntro": "Evolucija razvitja veb-versije projekta:",
+    "versions": {
+      "v1": "Slovnik Novoslovnice",
+      "v1desc": "Prva baza slov Novoslovnice i počina fiksacija leksičnyh norm.",
+      "v2": "Mrěžny slovnik Novoslovnice",
+      "v2desc": "Perehod v onlajn-format, zapusk veb-versije i rozširenje bazy danyh.",
+      "v3desc": "Integracija so standardami medžuslovjanskogo jezyka.",
+      "v4desc": "Tekučaja versija. Polno obnovlenje arhitektury, sovremenny interfejs i instrumenty ekosystemy. Formirovanje tekstovogo korpusa medžuslovjanskogo."
+    }
+  },
+  "settings": {
+    "title": "Nastajenja",
+    "description": "Nastajenja akkonta i personalizacija otobraženja medžuslovjanskogo leksikona — vybor kirilice ili latinice, temy sajta, jezyka po umolčanju.",
+    "heading": "Nastajenja akkonta",
+    "subtitle": "Personalizacija otobraženja Medžuslovjanskogo leksikona pod vaše preferencije.",
+    "sections": {
+      "script": "Otobraženje pismenosti (Alfabet)",
+      "theme": "Tema oformlenja",
+      "language": "Język po umolčanju"
+    },
+    "scriptDescription": "Vyberite, kaku grafičnu sistemu (skript) ispolzovati po umolčanju dlja vyvoda medžuslovjanskyh slov v interfejsah leksikona i tablicah.",
+    "scriptOptions": {
+      "cyrillic": "Kirilica",
+      "cyrillicExample": "Priměr vyvoda: меджуславянскы",
+      "latin": "Latinica",
+      "latinExample": "Priměr vyvoda: medžuslavjanski"
+    },
+    "themeDescription": "Vyberite temu oformlenja sajta. Systemna avtomatično slěduje nastajenjam vašej operacionnoj systemy.",
+    "themeOptions": {
+      "light": "Světla",
+      "lightDesc": "Vsegda světly fon",
+      "dark": "Temna",
+      "darkDesc": "Vsegda temny fon",
+      "system": "Systemna",
+      "systemDesc": "Kak v OS"
+    },
+    "languageDescription": "Vyberite język interfejsa i prěvodov po umolčanju. Nastajenje poka ne vlijaje na funkcional, ale budet ispolzovano v budučnosti.",
+    "languageName": "Medžuslovjansky",
+    "errors": {
+      "script": "Ne udalo se sohraniti nastajenje pismenosti",
+      "theme": "Ne udalo se sohraniti nastajenje temy",
+      "language": "Ne udalo se sohraniti nastajenje jezyka"
+    },
+    "saving": "Sohranjaju..."
+  },
+  "login": {
+    "title": "Vhod v akkont",
+    "description": "Vnidite črz Yandex ili Google, aby dostali dostup k nastajenjam i upravlenju.",
+    "yandex": "Vniti črz Yandex",
+    "google": "Vniti črz Google"
+  },
+  "changelog": {
+    "title": "Istorija versij",
+    "description": "Istorija izměnenij platformy Interslavic Lexicon.",
+    "heading": "Istorija versij",
+    "backLink": "← Glavna stranica",
+    "entries": {
+      "v40": "Prvy vypusk",
+      "v40items": [
+        "Parsing i strukturiranje danyh iz avtoritetnyh slovarej",
+        "Iskanje po slovniku s prěvodom na 16 językov v realnom vremeni",
+        "Administrativna panel dlja upravlenja prěvody",
+        "Upravlenje sinonimami, antonimami i jednokorennymi slovami",
+        "Polna gramatična paradigma: sklonjenja, sprjaženja, stepeni sravnenja",
+        "Poddržka latinskogo i kiriličeskogo pisma s dinamičnym pereključenjem"
+      ],
+      "v41": "Flavorizacija i sintaksične otnošenja",
+      "v41items": [
+        "Učet flavorizacij (Latinica / Kirilica) i vybor pisma v tekstah",
+        "9 novyh tipov otnošenij medžu slovami iz synsetov",
+        "Variativnost fleksij i rozširene morfologične pravila",
+        "Markery verifikacije i sistema odobrenja izměnenij",
+        "Polna istorija izměnenij (action history) dlja leksem i morfem",
+        "Obogatili vněšnje danyje i etimologične svęzi"
+      ],
+      "v42": "Biblioteka tekstov",
+      "v42items": [
+        "Dobavjenje biblioteky tekstov s admin-panelju",
+        "Markdown-format i bogato formatiranje tekstov",
+        "Iskanje i filtracija tekstov po kategorijam",
+        "Slug-sistema i čitajemyje URL",
+        "Učet vkladov (kto dobavil tekst) i istorija izměnenij",
+        "Metadany: istočnik, god napisanja, prěvod, flavorizacija (CORE/NSL/EAST/WEST/SOUTH)"
+      ]
+    }
+  },
+  "textbook": {
+    "backToLexicon": "← Na glavnu leksikona",
+    "sidebarTitle": "Učebnik panslovjanskogo",
+    "breadcrumb": "Učebnik",
+    "breadcrumbFallback": "Glava",
+    "dictionaryLink": "Slovnik 🔍",
+    "chapterBadge": "Glava",
+    "sectionBadge": "Razděl",
+    "loading": "Kontent nagružaje se...",
+    "loadingDesc": "Tut budet rozvernuta polna gramatična spravka, priměry sklonjenij, paradigmy i audiomaterialy dlja samoproverky.",
+    "emptyChapter": "Materialy danogo podrazděla nahodęt se v procese sinhronizacije s medžuslovjanskym manualom.",
+    "prevChapter": "← Nazad",
+    "nextChapter": "Vpered →",
+    "categories": ["Osnovy", "Gramatika", "Glagoly", "Leksika"],
+    "chapters": {
+      "preface": "Prědslovije i vvedenije",
+      "ch1": "1. Proiznošenije i alfabet",
+      "ch2": "2. Struktura prědloženja, porjadok slov",
+      "ch3": "3. Oprěděljeny i neoprěděljeny artikli",
+      "ch4": "4. Imja suščestvitelnoje. Padeži. Prědlogy",
+      "ch5": "5. Glagoly byti i iměti",
+      "ch6": "6. Voprositelnyje prědloženja. Da i ne. Otricanije",
+      "ch7": "7. Městoimenija",
+      "ch8": "8. Imja prilagatelnoje",
+      "ch9": "9. Imja čislitelnoje",
+      "ch10": "10. Nastojnoje vremja u glagolov",
+      "ch11": "11. Narěčija, idiomy",
+      "ch12": "12. Povělitelnoje naklonenije glagola",
+      "ch13": "13. Prošedšije vremena glagola",
+      "ch14": "14. Budučije vremena glagola",
+      "ch15": "15. Aspekty glagolnoj systemy",
+      "ch16": "16. Otglagolnyje suščestvitelnyje, pričastija",
+      "ch17": "17. Sojuzy, časticy i meždometija",
+      "ch18": "18. Složnosočiněnnyje i složnopodčiněnnyje prědloženja",
+      "ch20": "20. Slovoobrazovanje, umenšitelnyje slova"
+    },
+    "chapter1": {
+      "title": "Proiznošenije i alfabet",
+      "description": "Bazovyje pravila čtenija, grafične systemy (latinica i kirilica) i fonetična struktura medžuslovjanskogo jezyka.",
+      "subsections": {
+        "basics": "Osnovy grafiky",
+        "basicsText": "Medžuslovjansky jezyk razrabotan sbalansirovanym obrazom, pozvoljajuči ispolzovati kak latinsky alfabet (isv-latinica), tak i kiriličny. Systemy absoljutno ekvivalentny, i vybor zavisit isključitelno od konteksta i preferencij uživatelja."
+      },
+      "tableHeaders": {
+        "latin": "Latinica",
+        "cyrillic": "Kirilica",
+        "ipa": "Proiznošenje (MFA)",
+        "example": "Priměr"
+      },
+      "tableExamples": {
+        "a": "občij slověnsky zvuk «a»",
+        "c": "męgkoje «č», kak v ruskom jezyku",
+        "z": "«ž», kak v slově «žizn»"
+      },
+      "factBox": "💡 Medžuslovjansky fakt",
+      "factText": "Blagodarja matematično vyvěrenoj korennoj sistemě, znajući pravila proiznošenija, nositel ljubogo slověnskogo jezyka ponimet do 80% ustnoj rěči bez prědvaritelnogo učenja!"
+    }
+  },
+  "proto": {
+    "title": "Prěslověnsky slovnik",
+    "description": "Iskanje po prěslověnskomu slovniku (ESSJa — Etimologičny slovnik slověnskyh językov pod redakcijej O. N. Trubačova). Lemmy, rekonstrukcije i istorične konteksty.",
+    "heading": "Prěslověnsky slovnik (ESSJa)",
+    "searchPlaceholder": "Iskanje po lemmě…",
+    "noResults": "Ničego ne najdeno",
+    "notFound": "Statja ne najdena",
+    "backLink": "← Vratiti se k iskanju",
+    "source": "Istočnik"
+  },
+  "word": {
+    "title": "Slovo",
+    "notFound": "Informacija otsutstvuje",
+    "meta": {
+      "pos": "Čast rěči",
+      "gender": "Rod",
+      "declension": "Sklonjenje",
+      "conjugation": "Sprjaženje",
+      "stem": "Osnova",
+      "stemClass": "Klas osnovy",
+      "paradigm": "Paradigma",
+      "aspect": "Vid",
+      "transitivity": "Perehodnost",
+      "animacy": "Duševnost",
+      "articleId": "ID statji"
+    },
+    "display": {
+      "nslCyrillic": "Kirilica Novoslovnice:",
+      "stdCyrillic": "Kirilica:",
+      "glagolitic": "Glagolica:",
+      "simpleForm": "Prosta forma:"
+    },
+    "paradigmButtons": {
+      "verb": "Pokazati sprjaženje glagola (3 čisla, 6 vremen)",
+      "noun": "Pokazati tablicy sklonjenja suščestvitelnogo",
+      "adjective": "Pokazati sklonjenje prilagatelnogo",
+      "numeral": "Pokazati sklonjenje čislitelnogo",
+      "pronoun": "Pokazati sklonjenje městoimenija",
+      "adverb": "Pokazati stepeni sravnenja narěčija",
+      "default": "Pokazati paradigmu"
+    },
+    "paradigmError": "Ošibka nagruženja danyh form slova.",
+    "sections": {
+      "cognates": "Jednokorenne slova",
+      "meanings": "Značenja",
+      "meaning": "Značenje",
+      "placeholder": "Tut bude tolkovanje",
+      "examples": "Priměr",
+      "synonyms": "Sinonimy",
+      "synonymGraph": "Graf sinonimov",
+      "graph": "Graf",
+      "antonyms": "Antonimy",
+      "etymology": "Etimologija i vněšnje odkazky",
+      "etymologyLink": "Etimologija",
+      "wiktionary": "Rekonstrukcija (Vikipedija)"
+    },
+    "cases": {
+      "nominative": "Měnitelny",
+      "nominativeShort": "Měn.",
+      "genitive": "Roditelny",
+      "genitiveShort": "Rod.",
+      "dative": "Dativny",
+      "dativeShort": "Dat.",
+      "accusative": "Vinitelny",
+      "accusativeShort": "Vin.",
+      "instrumental": "Tvoritelny",
+      "instrumentalShort": "Tvor.",
+      "locative": "Městny",
+      "locativeShort": "Měst.",
+      "vocative": "Zvatelny",
+      "vocativeShort": "Zvat."
+    },
+    "numbers": {
+      "singular": "Jedinstveno (Sg)",
+      "dual": "Dvojstveno (Du)",
+      "plural": "Množestveno (Pl)"
+    },
+    "genders": {
+      "masculine": "Mužsky (Masc)",
+      "feminine": "Žensky (Fem)",
+      "neuter": "Sredny (Neut)",
+      "masculineShort": "Mužsky",
+      "feminineShort": "Žensky",
+      "neuterShort": "Sredny"
+    },
+    "verb": {
+      "person": "Lice",
+      "firstPerson": "1-je lice",
+      "secondPerson": "2-je lice",
+      "thirdPerson": "3-je lice",
+      "indicative": "Izjavitelno (Indicativus)",
+      "imperativeSubjunctive": "Imperativ i Soslagatelno",
+      "tenses": {
+        "present": "Nastojnoje vremja (Praesens)",
+        "futureSimple": "Budučeje prostoje (Futurum Rectum)",
+        "futureAnalytical": "Budučeje analitično (Futurum Periphrasticum)",
+        "withByti": "S byti:",
+        "withImati": "S imati:",
+        "withHteti": "S htěti:",
+        "aorist": "Aorist (Aoristus)",
+        "imperfect": "Imperfekt (Imperfectus)",
+        "perfect": "Perfekt (Perfectum, m.r.)",
+        "pluperfect": "Pljuskvamperfekt (Plusquamperfectum, m.r.)"
+      },
+      "imperative": "Povělitelno naklonenje (Imperativus)",
+      "imperativeLabels": {
+        "sg": "Sg (ty):",
+        "du": "Du (vy dva):",
+        "pl": "Pl (vy):"
+      },
+      "conditional": "Soslagatelno naklonenje (Conditionalis, m.r.)"
+    },
+    "adjective": {
+      "positive": "Polozitelna (Positivus)",
+      "comparative": "Sravnitelna (Comparativus)",
+      "superlative": "Prěvoshodna (Superlativus)"
+    },
+    "numeral": {
+      "section5to10": "Padežnyje formy (5-10)"
+    },
+    "morpheme": {
+      "heading": "Morfemny razbor",
+      "unavailable": "Morfemny analiz nedostupen — danyje korenja otsutstvujut",
+      "stem": "Osnova slova:",
+      "legend": {
+        "root": "korenj",
+        "prefix": "pristavka",
+        "suffix": "sufiks",
+        "connective": "sjedinitelny element"
+      }
+    },
+    "comprehension": {
+      "heading": "Ponatnost v slověnskyh jezykah",
+      "understood": "Ponatno bez prěvoda",
+      "needsTranslation": "Trěbuje prěvoda"
+    },
+    "cognateChart": {
+      "south": "Južnoslověnsky",
+      "east": "Vostočnoslověnsky",
+      "west": "Zapadnoslověnsky",
+      "romance": "Romansky",
+      "germanic": "Germansky",
+      "greek": "Grčsky",
+      "heading": "Diagrama kognatov",
+      "series": "Kognaty"
+    },
+    "synonymGraph": {
+      "heading": "Graf sinonimov",
+      "loading": "Nagruženje grafa..."
+    },
+    "languages": {
+      "en": "Anglijsky",
+      "ru": "Rusky",
+      "uk": "Ukrajinsky",
+      "be": "Bělorusky",
+      "cu": "Cerkvenoslověnsky",
+      "bg": "Bolgarsky",
+      "mk": "Makedonsky",
+      "sr": "Serbsky",
+      "hr": "Hrvatsky",
+      "sl": "Slověnsky",
+      "pl": "Polsky",
+      "sk": "Slovačsky",
+      "cs": "Češsky",
+      "de": "Německy",
+      "nl": "Niderlandsky",
+      "eo": "Esperanto"
+    }
+  },
+  "admin": {
+    "title": "Admin-panel",
+    "description": "Panel upravlenja slovnikom medžuslovjanskogo jezyka. Redigovanje statjev, upravlenje sinonimami, antonimami i korenjami.",
+    "antonyms": {
+      "title": "Antonimy",
+      "description": "Upravlenje antonimami na urovně značenij. Iskanje i privęzka protivopoloznyh po smyslu značenij slov.",
+      "heading": "Upravlenje antonimami",
+      "instruction": "Vyberite slovo, potom jego značenje, aby privęzati k njemu protivopoloznyje po smyslu značenja drugyh slov.",
+      "saveSuccess": "Svęzi antonimov uspěšno obnovjeny!",
+      "saveError": "Ošibka pri sohranenju",
+      "searchLabel": "Najti slovo s nulja",
+      "searchPlaceholder": "Vvedite slovo dlja svęzyvanja...",
+      "searching": "Išču...",
+      "select": "vybrati",
+      "selectedWords": "Vybranyje slova ({count})",
+      "antonymCount": "{count} ant.",
+      "antonymsFor": "Antonimy dlja:",
+      "wordId": "ID slova:",
+      "meaning": "Značenje:",
+      "meaningFallback": "Značenje #{id}",
+      "currentAntonyms": "Tekuće antonimy značenja",
+      "emptyAntonyms": "Spisok antonimov pust. Ispolzujte iskanje niže, aby dodati protivopoloznyje po smyslu značenja.",
+      "searchAntonym": "Iskati i dodati antonim",
+      "searchingDb": "Iskanje po bazě...",
+      "searchAntonymPlaceholder": "Načnite vvoditi protivopoloznoje slovo...",
+      "selected": "✓ Vybrano",
+      "add": "+ Dodati",
+      "noMeanings": "Značenja ne najdeny",
+      "saving": "Sohranjenje...",
+      "save": "Sohraniti svęzi",
+      "selectMeaning": "Vyberite značenje slova dlja upravlenja antonimami",
+      "selectWord": "Vyberite slovo ili najdite jego črz iskanje slěva, aby zavesti svęzi s nulja"
+    },
+    "synonyms": {
+      "title": "Sinonimy",
+      "description": "Upravlenje sinonimami na urovně značenij. Iskanje i privęzka blizkih po smyslu značenij slov.",
+      "heading": "Upravlenje sinonimami",
+      "instruction": "Vyberite slovo, potom jeho značenje, aby privęzati k njemu sinonimične značenja drugyh slov.",
+      "saveSuccess": "Svęzi sinonimov uspěšno obnovjeny!",
+      "saveError": "Ošibka pri sohranenju",
+      "searchLabel": "Najti slovo s nulja",
+      "searchPlaceholder": "Vvedite slovo dlja svęzyvanja...",
+      "searching": "Išču...",
+      "select": "vybrati",
+      "selectedWords": "Vybranyje slova ({count})",
+      "synonymCount": "{count} sin.",
+      "synonymsFor": "Sinonimy dlja:",
+      "wordId": "ID slova:",
+      "meaning": "Značenje:",
+      "currentValue": "Tekučeje značenje:",
+      "currentSynonyms": "Tekuće sinonimy značenja",
+      "emptySynonyms": "Spisok sinonimov pust. Ispolzujte iskanje niže, aby dodati značenja s nulja.",
+      "searchSynonym": "Iskati i dodati sinonim",
+      "searchingDb": "Iskanje po bazě...",
+      "searchSynonymPlaceholder": "Načnite vvoditi slovo dlja iskanja sinonimov...",
+      "selected": "✓ Vybrano",
+      "add": "+ Dodati",
+      "noMeanings": "Značenja ne najdeny",
+      "saving": "Sohranjenje...",
+      "save": "Sohraniti svęzi",
+      "selectMeaning": "Vyberite značenje slova dlja upravlenja sinonimami",
+      "selectWord": "Vyberite slovo ili najdite jego črz iskanje slěva, aby zavesti svęzi s nulja"
+    },
+    "relations": {
+      "unknownType": "Neznany tip",
+      "heading": "Upravlenje {label}",
+      "instruction": "Vyberite slovo, potom jego značenje, aby {description}."
+    },
+    "roots": {
+      "title": "Korenje | Admin-panel",
+      "description": "Upravlenje korenjami (morfemami) medžuslovjanskogo jezyka.",
+      "heading": "Korenje (morfemy)",
+      "subtitle": "Redigovanje korenjev i upravlenje svęzannymi slovami.",
+      "create": "+ Sozdati korenj",
+      "searchPlaceholder": "Iskanje po značenju korenja...",
+      "searching": "Iskanje...",
+      "table": {
+        "id": "ID",
+        "value": "Značenje",
+        "type": "Tip",
+        "created": "Sozdan",
+        "actions": "Dějstva"
+      },
+      "loading": "Nagruženje...",
+      "empty": "Nět korenjev",
+      "edit": "Praviti",
+      "delete": "Vymazati",
+      "scrollMore": "Prokrutite dlja nagruženja",
+      "allLoaded": "Vse korenje nagruženy",
+      "saveError": "Ošibka pri sohranenju",
+      "wordAlreadyLinked": "Slovo uže privęzano k tomu korenju",
+      "addWordError": "Ošibka pri dobavjenju slova",
+      "removeWordError": "Ošibka pri vymazanju slova",
+      "editModal": {
+        "title": "Redigovanje korenja",
+        "value": "Značenje",
+        "type": "Tip morfemy",
+        "linkedWords": "Svęzannyje slova ({count})",
+        "noWords": "Nět svęzannyh slov",
+        "addWord": "Dodati slovo",
+        "searchWordPlaceholder": "Iskanje slova...",
+        "cancel": "Otměna",
+        "saving": "Sohranjenje...",
+        "save": "Sohraniti"
+      },
+      "createModal": {
+        "title": "Sozdanje korenja",
+        "value": "Značenje",
+        "type": "Tip morfemy",
+        "cancel": "Otměna",
+        "creating": "Sozdanje...",
+        "create": "Sozdati",
+        "valueRequired": "Značenje korenja obezatelno"
+      },
+      "deleteModal": {
+        "title": "Potvrždenje vymazanja",
+        "confirmText": "Jeste-li uvěreny, že hočete vymazati korenj ID: {id}? Svęzannyje zapisi (roots_words) budut vymazany kaskadno.",
+        "cancel": "Otměna",
+        "deleting": "Vymazanje...",
+        "delete": "Vymazati"
+      },
+      "morphemeTypes": {
+        "root": "Korenj",
+        "prefix": "Pristavka",
+        "suffix": "Sufiks",
+        "unknown": "Neznano"
+      }
+    },
+    "candidates": {
+      "title": "Kandidaty | Admin-panel",
+      "description": "Upravlenje kandidatami v leksikon medžuslovjanskogo jezyka.",
+      "heading": "Kandidaty v leksikon",
+      "subtitle": "Slova, prědložene dlja dobavjenja v slovnik. Proverite i pereneste v glavnu tablicu.",
+      "searchPlaceholder": "Iskanje po value, isv ili nsl...",
+      "searching": "Iskanje...",
+      "promote": "Perenesti v slovnik ({count})",
+      "delete": "Vymazati ({count})",
+      "tableHeaders": {
+        "type": "Tip",
+        "source": "Istočnik"
+      },
+      "loading": "Nagruženje...",
+      "empty": "Nět kandidatov",
+      "scrollMore": "Prokrutite dlja nagruženja",
+      "allLoaded": "Vse kandidaty nagruženy",
+      "promoteModal": {
+        "title": "Perenos v slovnik",
+        "instruction": "Zapolnite polja dlja každogo kandidata. Slug budet generirovan kak value-pos.",
+        "candidate": "Kandidat #{n} (ID: {id})",
+        "autoSlug": "Slug (avto): {slug}",
+        "root": "Korenj (neobezatelno)",
+        "searchRoot": "Iskanje korenja...",
+        "noRoot": "— bez korenja —",
+        "cancel": "Otměna",
+        "promoting": "Perenos...",
+        "promote": "Perenesti v slovnik"
+      },
+      "deleteModal": {
+        "title": "Potvrždenje vymazanja",
+        "confirmText": "Jeste-li uvěreny, že hočete vymazati {count} kandidat(ov)? To dějstvo ne možno otměniti.",
+        "cancel": "Otměna",
+        "deleting": "Vymazanje...",
+        "delete": "Vymazati"
+      }
+    },
+    "endings": {
+      "title": "Okončanja | Admin-panel",
+      "description": "Upravlenje okončanijami (fleksijami) medžuslovjanskogo jezyka.",
+      "heading": "Okončanja (fleksije)",
+      "subtitle": "Upravlenje okončanijami dlja vseh tipov osnov i grammem.",
+      "create": "+ Sozdati",
+      "allStemTypes": "Vse tipy osnov",
+      "tableHeaders": {
+        "id": "ID",
+        "stemType": "Tip osnovy",
+        "grammeme": "Grammema",
+        "variant": "Variant",
+        "ending": "Okončanje",
+        "actions": "Dějstva"
+      },
+      "loading": "Nagruženje...",
+      "empty": "Nět zapisej",
+      "edit": "Praviti",
+      "delete": "Vymazati",
+      "loadError": "Ošibka nagruženja",
+      "saveError": "Ošibka pri sohranenju",
+      "deleteModal": {
+        "title": "Potvrždenje vymazanja",
+        "confirmText": "Jeste-li uvěreny, že hočete vymazati zapis ID: {id}?",
+        "cancel": "Otměna",
+        "delete": "Vymazati"
+      },
+      "editModal": {
+        "title": "Redigovanje okončanja",
+        "stemType": "Tip osnovy:",
+        "grammeme": "Grammema:",
+        "variant": "Variant:",
+        "ending": "Okončanje",
+        "cancel": "Otměna",
+        "saving": "Sohranjenje...",
+        "save": "Sohraniti"
+      },
+      "createModal": {
+        "title": "Sozdanje okončanja",
+        "stemType": "Tip osnovy",
+        "grammeme": "Grammema",
+        "variant": "Variant",
+        "ending": "Okončanje",
+        "placeholder": "ъ, a, u, omъ...",
+        "cancel": "Otměna",
+        "creating": "Sozdanje...",
+        "create": "Sozdati",
+        "validation": "Vvedite okončanje"
+      }
+    },
+    "deduplication": {
+      "title": "Deduplikacija",
+      "description": "Ustranjenje duplikatov v leksikoně (ne omonimov).",
+      "heading": "Deduplikacija bazy (Relaciona struktura)",
+      "subtitle": "Kaskadny perenos smyslov (Meaning), sinonimov, antonimov i svęzej korenjev.",
+      "searchPlaceholder": "Iskanje po value ili isv (minimum 2 simvoly)...",
+      "searching": "Iskanje...",
+      "showDuplicates": "Vyvoditi duplirujučije slova",
+      "merge": "Sjediniti vybranyje ({count}/2)",
+      "tableHeaders": {
+        "select": "Vybor",
+        "translations": "Prěvody (Iz Meanings)",
+        "source": "Istočnik (Addition)"
+      },
+      "loading": "Nagruženje danyh...",
+      "searchPrompt": "Vvedite stroku dlja iskanja duplikatov",
+      "selectTwo": "Vyberite strogo 2 slova dlja provedenja slijanja.",
+      "success": "Objekty sjedinény. Smysly i svęzi pereneseny kaskadno.",
+      "mergeModal": {
+        "title": "Konstruktor slijanja zapisej",
+        "description": "Smysly (Meaning) i svęzi budut pereneseny na sohranjajemy ID.",
+        "keep": "SOHRANITI (ID: {id})",
+        "remove": "ZYMAZATI (ID: {id})",
+        "value": "Value",
+        "isv": "ISV",
+        "nsl": "NSL",
+        "usageType": "Tip upotreby",
+        "sources": "Istočniky (Pole addition)",
+        "info": "💡 **Info:** Vse prěvody językov (Ru, En, Pl...) privęzany k zapisam Meaning. Tak kak komanda updateMany perenosit sama objekty značenij cělostno na ID novogo slova, struktura i svęzi vaših prěvodov sohranęt se bez izměnenij i konfliktov na urovně BD.",
+        "cancel": "Otměna",
+        "saving": "Sohranjenje...",
+        "merge": "Vypoliniti merž"
+      }
+    },
+    "users": {
+      "title": "Uživatelje",
+      "description": "Upravlenje uživateljami i pravami dostupa v paneli administratora medžuslovjanskogo leksikona.",
+      "heading": "Upravlenje pravami",
+      "instruction": "Vyberite uživatelja iz spiska slěva, aby nastroiti jego rol i individualne fečy.",
+      "noName": "Bez imeni",
+      "permissionsFor": "Razrešenja dlja: {name}",
+      "globalStatus": "Globalny status: {role}",
+      "noUser": "Uživatelj ne vybran"
+    },
+    "words": {
+      "create": {
+        "title": "Sozdanje statji",
+        "description": "Sozdanje novoj slovarnoj statji v bazě medžuslovjanskogo leksikona s ukazanjem osnovy, korenjev i prěvodov.",
+        "formTitle": "Sozdanje novoj slovarnoj statji",
+        "submit": "Sozdati statju",
+        "defaultMeaning": "Osnovnoje značenje"
+      },
+      "edit": {
+        "title": "Redigovanje: {value}",
+        "description": "Redigovanje slovarnoj statji «{value}» v bazě medžuslovjanskogo leksikona.",
+        "formTitle": "Redigovanje statji: {value}",
+        "submit": "Sohraniti izměnenja",
+        "tabs": {
+          "article": "Statja",
+          "relations": "Otnošenja"
+        }
+      }
+    },
+    "library": {
+      "title": "Biblioteka — administracija",
+      "description": "Upravlenje tekstami biblioteky medžuslovjanskogo jezyka.",
+      "heading": "Biblioteka",
+      "addText": "+ Dodati tekst",
+      "tableHeaders": {
+        "title": "Nazvanje",
+        "author": "Avtor",
+        "category": "Kategorija",
+        "flavorization": "Flavorizacija",
+        "year": "God",
+        "translator": "Prěvodnik",
+        "addedBy": "Dobavil",
+        "verified": "Proverjeno",
+        "views": "Pregledy",
+        "actions": "Dějstva"
+      },
+      "empty": "V bibliotekě poka nět tekstov",
+      "edit": "Redigovati",
+      "delete": "Vymazati",
+      "deleteConfirm": "Vymazati tekst?",
+      "new": {
+        "title": "Novy tekst — biblioteka",
+        "description": "Dobavjenje novogo teksta v biblioteku medžuslovjanskogo jezyka.",
+        "heading": "Novy tekst",
+        "form": {
+          "title": "Nazvanje *",
+          "titlePlaceholder": "Nazvanje teksta",
+          "authorPlaceholder": "Imja avtora",
+          "categoryDefault": "Vyberite kategoriju",
+          "sourceLink": "Odkazka na istočnik",
+          "yearWritten": "God napisanja",
+          "yearTranslated": "God prěvoda",
+          "translator": "Avtor prěvoda",
+          "translatorPlaceholder": "Imja prěvodnika",
+          "description": "Kratko opisanje",
+          "descriptionPlaceholder": "Kratko opisanje teksta",
+          "corpusSlug": "Corpus slug",
+          "corpusSlugPlaceholder": "Odkazka na dokument v korpusě",
+          "body": "Tekst (Markdown) *",
+          "bodyPlaceholder": "Vvedite tekst v formatě Markdown...",
+          "orthographyVerified": "Ortografija proverjena",
+          "cancel": "Otměna",
+          "saving": "Sohranjenje...",
+          "save": "Sohraniti",
+          "categories": {
+            "poem": "Poema / Poema",
+            "article": "Členok / Členok",
+            "book": "Kniga / Kniga",
+            "joke": "Zasměška / Zasměška",
+            "story": "Povědka / Povědka",
+            "song": "Pěsńa / Pěsńa",
+            "prayer": "Molitva / Molitva",
+            "quote": "Citata / Citata",
+            "study": "Nauka / Nauka"
+          }
+        }
+      },
+      "editPage": {
+        "title": "Redigovanje teksta — biblioteka",
+        "description": "Redigovanje teksta v bibliotekě medžuslovjanskogo jezyka.",
+        "heading": "Redigovanje: {title}"
+      }
+    },
+    "table": {
+      "searchPlaceholder": "Iskanje po vsem językam...",
+      "createArticle": "Sozdati slovarnu statju",
+      "filterLabel": "Język filtra:",
+      "filterDefault": "— ne vybran —",
+      "onlyUnverified": "Tolko neproverjenyje ({language})",
+      "columnsLabel": "Otobražajemyje jezyky (kolonky):",
+      "showAll": "Pokazati vse",
+      "loading": "Iščemo sovpadanja v bazě danyh...",
+      "noResults": "Ničego ne najdeno",
+      "loadingMore": "Nagruženje...",
+      "columnHeaders": {
+        "meaning": "Značenje",
+        "nsl": "Novoslovnica (arhiv)",
+        "isv": "Medžuslovjansky",
+        "value": "Ključ iskanja"
+      },
+      "languages": {
+        "ru": "Rusky",
+        "en": "Anglijsky",
+        "mk": "Makedonsky",
+        "bg": "Bolgarsky",
+        "sr": "Serbsky",
+        "hr": "Hrvatsky",
+        "pl": "Polsky",
+        "cs": "Češsky",
+        "sk": "Slovačsky",
+        "sl": "Slověnsky",
+        "de": "Německy",
+        "uk": "Ukrajinsky",
+        "be": "Bělorusky",
+        "hsb": "Gornolužicky",
+        "dsb": "Dolnolužicky",
+        "cu": "Cerkvenoslověnsky",
+        "nl": "Niderlandsky",
+        "eo": "Esperanto"
+      },
+      "editableCell": {
+        "rejectTitle": "Komentar k otklonenju",
+        "rejectPlaceholder": "Ukažite pričinu otklonenja...",
+        "cancel": "Otměna",
+        "reject": "Otk Loniti",
+        "saveError": "Ne udalo se sohraniti izměnenja",
+        "verify": "Verificirovati",
+        "unverify": "Sneti verifikaciju"
+      }
+    }
   }
 }

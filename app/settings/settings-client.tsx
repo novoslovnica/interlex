@@ -2,15 +2,11 @@
 
 import { useState, useTransition } from "react"
 import { useTheme } from "next-themes"
+import { useTranslations } from "next-intl"
 import { TRANSLATION_LANGUAGES } from "@/config/features"
 
 type ScriptPreference = "CYRILLIC" | "LATIN"
 type ThemePreference = "LIGHT" | "DARK" | "SYSTEM"
-
-const LANGUAGE_OPTIONS = [
-    { code: "isv", name: "Междуславянский" },
-    ...TRANSLATION_LANGUAGES,
-] as const
 
 interface SettingsClientProps {
     initialScript: ScriptPreference
@@ -22,6 +18,7 @@ interface SettingsClientProps {
 }
 
 export function SettingsClient({ initialScript, initialTheme, initialLanguage, onSaveScript, onSaveTheme, onSaveLanguage }: SettingsClientProps) {
+    const t = useTranslations("settings")
     const [script, setScript] = useState<ScriptPreference>(initialScript)
     const [theme, setTheme] = useState<ThemePreference>(initialTheme)
     const [language, setLanguage] = useState(initialLanguage)
@@ -29,6 +26,11 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
     const [isPending, startTransition] = useTransition()
 
     const { setTheme: applyTheme } = useTheme()
+
+    const LANGUAGE_OPTIONS = [
+        { code: "isv", name: t("languageName") },
+        ...TRANSLATION_LANGUAGES,
+    ] as const
 
     const handleScriptChange = (selectedScript: ScriptPreference) => {
         if (script === selectedScript) return
@@ -38,7 +40,7 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
             try {
                 await onSaveScript(selectedScript)
             } catch {
-                alert("Не удалось сохранить настройку письменности")
+                alert(t("errors.script"))
                 setScript(initialScript)
             } finally {
                 setSaving(null)
@@ -55,7 +57,7 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
             try {
                 await onSaveTheme(selectedTheme)
             } catch {
-                alert("Не удалось сохранить настройку темы")
+                alert(t("errors.theme"))
                 setTheme(initialTheme)
                 applyTheme(initialTheme === "SYSTEM" ? "system" : initialTheme.toLowerCase())
             } finally {
@@ -72,7 +74,7 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
             try {
                 await onSaveLanguage(selectedLanguage)
             } catch {
-                alert("Не удалось сохранить настройку языка")
+                alert(t("errors.language"))
                 setLanguage(initialLanguage)
             } finally {
                 setSaving(null)
@@ -82,20 +84,26 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
 
     const isSaving = (field: string) => saving === field || isPending
 
+    const themeOptions = [
+        { value: "LIGHT" as const, label: t("themeOptions.light"), desc: t("themeOptions.lightDesc") },
+        { value: "DARK" as const, label: t("themeOptions.dark"), desc: t("themeOptions.darkDesc") },
+        { value: "SYSTEM" as const, label: t("themeOptions.system"), desc: t("themeOptions.systemDesc") },
+    ]
+
     return (
         <div className="space-y-6 max-w-2xl">
             <div className="border rounded-xl bg-background p-6 shadow-sm border-border/60">
                 <div className="space-y-3">
                     <div className="flex justify-between items-center border-b pb-2">
                         <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
-                            Отображение письменности (Алфавит)
+                            {t("sections.script")}
                         </h2>
                         {isSaving("script") && (
-                            <span className="text-xs text-blue-600 animate-pulse font-medium">Сохраняю...</span>
+                            <span className="text-xs text-blue-600 animate-pulse font-medium">{t("saving")}</span>
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground leading-normal">
-                        Выберите, какую графическую систему (скрипт) использовать по умолчанию для вывода межславянских слов в интерфейсах лексикона и таблицах.
+                        {t("scriptDescription")}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                         <div
@@ -107,11 +115,11 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
                             }`}
                         >
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-sm text-foreground">Кириллица</span>
+                                <span className="font-bold text-sm text-foreground">{t("scriptOptions.cyrillic")}</span>
                                 <input type="radio" checked={script === "CYRILLIC"} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
                             </div>
                             <span className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-                                Пример вывода: <span className="font-semibold text-foreground">меджуславянскы</span>
+                                {t("scriptOptions.cyrillicExample")}
                             </span>
                         </div>
                         <div
@@ -123,11 +131,11 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
                             }`}
                         >
                             <div className="flex items-center justify-between">
-                                <span className="font-bold text-sm text-foreground">Латиница</span>
+                                <span className="font-bold text-sm text-foreground">{t("scriptOptions.latin")}</span>
                                 <input type="radio" checked={script === "LATIN"} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
                             </div>
                             <span className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-                                Пример вывода: <span className="font-semibold text-foreground">medžuslavjanski</span>
+                                {t("scriptOptions.latinExample")}
                             </span>
                         </div>
                     </div>
@@ -138,21 +146,17 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
                 <div className="space-y-3">
                     <div className="flex justify-between items-center border-b pb-2">
                         <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
-                            Тема оформления
+                            {t("sections.theme")}
                         </h2>
                         {isSaving("theme") && (
-                            <span className="text-xs text-blue-600 animate-pulse font-medium">Сохраняю...</span>
+                            <span className="text-xs text-blue-600 animate-pulse font-medium">{t("saving")}</span>
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground leading-normal">
-                        Выберите тему оформления сайта. Системная автоматически следует настройкам вашей операционной системы.
+                        {t("themeDescription")}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                        {[
-                            { value: "LIGHT" as const, label: "Светлая", desc: "Всегда светлый фон" },
-                            { value: "DARK" as const, label: "Тёмная", desc: "Всегда тёмный фон" },
-                            { value: "SYSTEM" as const, label: "Системная", desc: "Как в ОС" },
-                        ].map(({ value, label, desc }) => (
+                        {themeOptions.map(({ value, label, desc }) => (
                             <div
                                 key={value}
                                 onClick={() => handleThemeChange(value)}
@@ -177,14 +181,14 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
                 <div className="space-y-3">
                     <div className="flex justify-between items-center border-b pb-2">
                         <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
-                            Язык по умолчанию
+                            {t("sections.language")}
                         </h2>
                         {isSaving("language") && (
-                            <span className="text-xs text-blue-600 animate-pulse font-medium">Сохраняю...</span>
+                            <span className="text-xs text-blue-600 animate-pulse font-medium">{t("saving")}</span>
                         )}
                     </div>
                     <p className="text-xs text-muted-foreground leading-normal">
-                        Выберите язык интерфейса и переводов по умолчанию. Настройка пока не влияет на функционал, но будет использоваться в будущем.
+                        {t("languageDescription")}
                     </p>
                     <select
                         value={language}

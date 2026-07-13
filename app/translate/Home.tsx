@@ -3,26 +3,11 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
+import {useTranslations} from "next-intl";
 
 import "./main-page.css";
 
-const options = [
-    <option key="ru" value="ru">Русский</option>,
-    <option key="en" value="en">English</option>,
-    <option key="uk" value="uk">Украинский</option>,
-    <option key="be" value="be">Беларускы</option>,
-    <option key="bg" value="gb">Български</option>,
-    <option key="hr" value="hr">Хрватски</option>,
-    <option key="sr" value="sr">Српски</option>,
-    <option key="mk" value="mk">Македонски</option>,
-    <option key="sl" value="sl">Словенский</option>,
-    <option key="pl" value="pl">Польский</option>,
-    <option key="cs" value="cs">Чешский</option>,
-    <option key="sk" value="sk">Словацкий</option>,
-    <option key="de" value="de">Deutsch</option>,
-    <option key="hsb" value="hsb">Hornjoserbsce</option>,
-    <option key="dsb" value="dsb">Dolnoserbski</option>,
-];
+const LANGUAGE_CODES = ["ru", "en", "uk", "be", "bg", "hr", "sr", "mk", "sl", "pl", "cs", "sk", "de", "hsb", "dsb"];
 
 const MAIN_CATEGORY_LABELS: Record<string, string> = {
     '': 'Вси категории',
@@ -78,7 +63,15 @@ const WordCard = ({ item, onClickCard, currentScript, toValue}: any) => {
 }
 
 export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
+    const t = useTranslations("translate");
     const [fromValue, setFromValue] = useState("ru");
+
+    const languageOptions = useMemo(() =>
+        LANGUAGE_CODES.map(code => (
+            <option key={code} value={code}>{t(`languages.${code}`)}</option>
+        )),
+        [t]
+    );
     const [toValue, setToValue] = useState("is");
     const [searchValue, setSearchValue] = useState("");
     const [mainCategory, setMainCategory] = useState("");
@@ -178,16 +171,16 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         onChange={onChangeFrom}
                         disabled={fromValue === "is"}
                     >
-                        {[...options]}
+                        {languageOptions}
                         {fromValue === "is" && (
-                            <option value="is">Меджусловіанскы</option>
+                            <option value="is">{t("languages.is")}</option>
                         )}
                     </select>
 
                     <button
                         id="swapLanguages"
                         className="swap-btn inline-flex items-center justify-center p-2 rounded-lg hover:bg-muted/60 transition-colors cursor-pointer"
-                        title="Поменять языки местами"
+                        title={t("swapTooltip")}
                         onClick={onSwitchClick}
                     >
                         <svg
@@ -209,9 +202,9 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         onChange={onChangeTo}
                         disabled={toValue === "is"}
                     >
-                        {[...options]}
+                        {languageOptions}
                         {toValue === "is" && (
-                            <option value="is">Меджусловіанскы</option>
+                            <option value="is">{t("languages.is")}</option>
                         )}
                     </select>
                 </div>
@@ -248,7 +241,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     type="text"
                     id="searchInput"
                     className="search-box"
-                    placeholder="Введите текст для поиска..."
+                    placeholder={t("searchPlaceholder")}
                     value={searchValue}
                     onKeyDown={onKeyDown}
                     onChange={onChangeSearch}
@@ -266,9 +259,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0a15.634 15.634 0 01-3.75-6.75A15.63 15.63 0 0112 7.5a15.626 15.626 0 013.75 6.75A15.63 15.63 0 0112 21zm-8.625-7.5h17.25" />
                         </svg>
-                        <span>
-                            При переводе с междуславянского локаль автоматически подстроена под локаль вашего браузера.
-                        </span>
+                        <span>{t("guestBanner")}</span>
                     </div>
                 )}
             </div>
@@ -289,7 +280,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                 )}
 
                 {hasFetched && !items.length && (
-                    <div id="noResults" className="no-results">Ничего не найдено</div>
+                    <div id="noResults" className="no-results">{t("noResults")}</div>
                 )}
             </div>
         </>

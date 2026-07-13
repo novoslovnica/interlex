@@ -1,6 +1,7 @@
 'use client';
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
+import { useTranslations } from "next-intl";
 import "./main-page.css";
 
 interface ProtoWord {
@@ -27,6 +28,7 @@ const WordCard = ({onClickCard, item}: { onClickCard: (item: ProtoWord) => () =>
 };
 
 export default function Home({currentScript}: { currentScript: string; isGuest?: boolean }) {
+    const t = useTranslations("proto");
     const [searchValue, setSearchValue] = useState("");
     const [items, setItems] = useState<ProtoWord[]>([]);
     const [hasFetched, setHasFetched] = useState(false);
@@ -70,11 +72,11 @@ export default function Home({currentScript}: { currentScript: string; isGuest?:
     return (
         <>
             <div className="search-container">
-                <h1 className="text-xl font-bold text-slate-800 mb-4">Праславянский словарь (ESSJa)</h1>
+                <h1 className="text-xl font-bold text-slate-800 mb-4">{t("heading")}</h1>
                 <input
                     type="text"
                     className="search-box"
-                    placeholder="Поиск по лемме…"
+                    placeholder={t("searchPlaceholder")}
                     value={searchValue}
                     onKeyDown={onKeyDown}
                     onChange={onChangeSearch}
@@ -89,7 +91,7 @@ export default function Home({currentScript}: { currentScript: string; isGuest?:
                     </ul>
                 )}
                 {hasFetched && !items.length && (
-                    <div id="noResults" className="no-results">Ничего не найдено</div>
+                    <div id="noResults" className="no-results">{t("noResults")}</div>
                 )}
             </div>
         </>

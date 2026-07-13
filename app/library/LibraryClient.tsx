@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import {useTranslations} from "next-intl"
 
 interface Category {
   id: string
@@ -23,9 +24,11 @@ interface LibraryItem {
 interface LibraryClientProps {
   categories: Category[]
   items: LibraryItem[]
+  canCreate?: boolean
 }
 
-export function LibraryClient({ categories, items }: LibraryClientProps) {
+export function LibraryClient({ categories, items, canCreate }: LibraryClientProps) {
+  const t = useTranslations("library");
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -97,12 +100,14 @@ export function LibraryClient({ categories, items }: LibraryClientProps) {
           >
             Učebnik
           </Link>
-          <Link
-            href="/admin/library/new"
-            className="text-xs font-medium px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
-          >
-            + Dodati
-          </Link>
+          {canCreate && (
+            <Link
+              href="/admin/library/new"
+              className="text-xs font-medium px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
+            >
+              + Dodati
+            </Link>
+          )}
         </header>
 
         <div className="flex-1 overflow-y-auto">
@@ -138,7 +143,7 @@ export function LibraryClient({ categories, items }: LibraryClientProps) {
               <div className="py-16 text-center space-y-2">
                 <p className="text-sm text-muted-foreground">Teksty ne nahodili se</p>
                 <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
-                  Попробуйте изменить параметры фильтрации
+                  {t("emptyFilter")}
                 </p>
               </div>
             )}
