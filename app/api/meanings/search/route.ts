@@ -10,21 +10,21 @@ export async function GET(request: Request) {
 
         const meanings = await db.meaning.findMany({
             where: {
-                word: {
+                lexeme: {
                     value: { contains: query },
                 },
             },
             select: {
                 id: true,
                 meaning: true,
-                word: {
+                lexeme: {
                     select: { id: true, value: true },
                 },
             },
             take: 20,
         })
 
-        return NextResponse.json(meanings)
+        return NextResponse.json(meanings.map(m => ({ id: m.id, meaning: m.meaning, word: m.lexeme })))
     } catch (error) {
         return NextResponse.json({ error: "Internal Error" }, { status: 500 })
     }

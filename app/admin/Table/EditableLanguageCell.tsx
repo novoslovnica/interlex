@@ -36,27 +36,27 @@ function RejectDialog({
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-lg shadow-xl p-4 w-80"
+                className="dark:bg-gray-800 dark:text-gray-100 bg-white rounded-lg shadow-xl p-4 w-80"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h3 className="text-sm font-semibold mb-2">Комментарий к отклонению</h3>
                 <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="w-full border rounded px-2 py-1.5 text-sm resize-none h-20"
+                    className="w-full border rounded px-2 py-1.5 text-sm resize-none h-20 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
                     placeholder="Укажите причину отклонения..."
                     autoFocus
                 />
                 <div className="flex justify-end gap-2 mt-3">
                     <button
                         onClick={onClose}
-                        className="px-3 py-1.5 text-xs rounded border hover:bg-gray-100"
+                        className="px-3 py-1.5 text-xs rounded border dark:border-gray-600 dark:hover:bg-gray-700 dark:text-gray-300 hover:bg-gray-100"
                     >
                         Отмена
                     </button>
                     <button
                         onClick={() => onConfirm(text)}
-                        className="px-3 py-1.5 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+                        className="px-3 py-1.5 text-xs rounded bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800"
                     >
                         Отклонить
                     </button>
@@ -205,7 +205,7 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
                 </span>
                 <span
                     className={`truncate flex-1 min-w-0 ${isVerified ? 'text-foreground' : 'text-gray-400 italic'}`}
-                    title={!isVerified && localMessage ? localMessage : displayText || undefined}
+                    title={displayText}
                 >
                     {displayText || <span className="text-gray-300">—</span>}
                 </span>

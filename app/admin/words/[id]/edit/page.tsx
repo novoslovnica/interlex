@@ -1,4 +1,4 @@
-import { prismaData as db } from "@/lib/prisma"
+import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import { type Prisma } from "@/prisma/generated/data/client"
 import ArticleForm from "@/components/ArticleForm"
@@ -8,6 +8,9 @@ import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { buildEntry, append } from "@/lib/action-history"
 import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
+import { init } from "@/lib/sqlite"
+import AdminNav from "@/components/AdminNav"
+import { RelationsTab } from "./_components/relations-tab"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -41,6 +44,7 @@ export type MorphemeWithLexemes = Prisma.MorphemeGetPayload<{
 
 interface EditPageProps {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ tab?: string }>
 }
 
 const meaningLanguageInclude = {
@@ -123,8 +127,10 @@ function extractTranslations(meaning: {
   return result
 }
 
-export default async function EditArticlePage({ params }: EditPageProps) {
+export default async function EditArticlePage({ params, searchParams }: EditPageProps) {
   const { id } = await params
+  const { tab } = await searchParams
+  const activeTab = tab === "relations" ? "relations" : "article"
   const wordId = parseInt(id, 10)
 
   if (isNaN(wordId)) notFound()
@@ -498,50 +504,148 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     redirect("/admin/dictionary")
   }
 
+  const userPermissions = session.user.role === "MODERATOR"
+    ? (await dbAuth.featurePermission.findMany({
+        where: { userId: session.user.id },
+        select: { featureKey: true },
+      })).map(p => p.featureKey)
+    : []
+
+  const dbSimple = await init()
+  const ALL_TABLES: { key: string; table: string }[] = [
+    { key: "synonyms", table: "synonyms" },
+    { key: "antonyms", table: "antonyms" },
+    { key: "hypernyms", table: "hypernyms" },
+    { key: "hyponyms", table: "hyponyms" },
+    { key: "meronyms", table: "meronyms" },
+    { key: "holonyms", table: "holonyms" },
+    { key: "related-words", table: "related_words" },
+    { key: "causes", table: "causes" },
+    { key: "effects", table: "effects" },
+    { key: "premises", table: "premises" },
+    { key: "conclusions", table: "conclusions" },
+  ]
+  const relationsByMeaning: Record<number, Record<string, any[]>> = {}
+  for (const meaning of wordData.meanings || []) {
+    relationsByMeaning[meaning.id] = {}
+    for (const t of ALL_TABLES) {
+      relationsByMeaning[meaning.id][t.key] = []
+    }
+  }
+  for (const { key, table } of ALL_TABLES) {
+    const rows = dbSimple.prepare(`
+      SELECT m.id AS meaningId, r.id AS relationId, r.targetId AS targetMeaningId, r.proximity,
+             t.meaning AS targetMeaning, tl.value AS targetWord, tl.id AS targetWordId
+      FROM meanings m
+      LEFT JOIN ${table} r ON r.sourceId = m.id
+      LEFT JOIN meanings t ON t.id = r.targetId
+      LEFT JOIN lexemes tl ON tl.id = t.lexemeId
+      WHERE m.lexemeId = ?
+    `).all(wordId) as any[]
+    for (const row of rows) {
+      if (row.relationId && relationsByMeaning[row.meaningId]) {
+        relationsByMeaning[row.meaningId][key].push({
+          id: row.relationId,
+          targetMeaningId: row.targetMeaningId,
+          targetMeaning: row.targetMeaning,
+          targetWordId: row.targetWordId,
+          targetWord: row.targetWord,
+        })
+      }
+    }
+  }
+
+  const meaningRelations = (wordData.meanings || []).map(m => ({
+    id: m.id,
+    meaning: m.meaning ?? null,
+    relations: relationsByMeaning[m.id] ?? {},
+  }))
+
   return (
-    <div className="p-6 min-h-0 flex flex-1 flex-col overflow-scroll no-scrollbar">
-      <ArticleForm
-        title={`Редактирование статьи: ${wordData.value || "Без названия"}`}
-        submitButtonText="Сохранить изменения"
-        initialRoots={initialRoots}
-        onSubmit={updateArticle}
-        initialData={{
-          word: wordData.value || "",
-          stem: wordData.stem || "",
-          allophones,
-          homonymBases: initialHomonymBases,
-          hasAnomalies: wordData.hasAnomalies,
-          properNoun: wordData.properNoun,
-          inflectionAnomalies: currentAnomalies,
-          attachedRoots,
-          meanings,
-          pos: wordData.pos,
-          gender: wordData.gender,
-          aspect: wordData.aspect,
-          transitivity: wordData.transitivity,
-          animacy: wordData.animacy,
-          degree: wordData.degree,
-          pronType: wordData.pronType,
-          numType: wordData.numType,
-          governsCase: wordData.governsCase,
-          declension: wordData.declension,
-          conjugation: wordData.conjugation,
-          mainCategory: wordData.mainCategory,
-          usageType: wordData.usageType,
-          frequency: wordData.frequency,
-          intelligibility: wordData.intelligibility,
-          addition: wordData.addition,
-          sameInLanguages: wordData.sameInLanguages,
-          etymology: wordData.etymology,
-          proto: wordData.proto,
-          paradigm: wordData.paradigm,
-          protoStemClass: wordData.protoStemClass,
-          stemExtension: wordData.stemExtension,
-          genesis: wordData.genesis,
-          secondaryStem: wordData.secondaryStem,
-          tertiaryStem: wordData.tertiaryStem,
-        }}
-      />
+    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
+      <div className="flex flex-col h-full overflow-hidden">
+        <div className="px-4 md:px-6 py-3 border-b shrink-0">
+          <div className="flex gap-4">
+            <a
+              href={`/admin/words/${wordId}/edit?tab=article`}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+                activeTab === "article"
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground/80"
+              }`}
+            >
+              Статья
+            </a>
+            <a
+              href={`/admin/words/${wordId}/edit?tab=relations`}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+                activeTab === "relations"
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground/80"
+              }`}
+            >
+              Отношения
+            </a>
+          </div>
+        </div>
+        <div className="flex-1 min-h-0 overflow-auto">
+          {activeTab === "article" ? (
+            <div className="p-6 min-h-0 flex flex-1 flex-col overflow-scroll no-scrollbar">
+              <ArticleForm
+                title={`Редактирование статьи: ${wordData.value || "Без названия"}`}
+                submitButtonText="Сохранить изменения"
+                initialRoots={initialRoots}
+                onSubmit={updateArticle}
+                initialData={{
+                  word: wordData.value || "",
+                  stem: wordData.stem || "",
+                  allophones,
+                  homonymBases: initialHomonymBases,
+                  hasAnomalies: wordData.hasAnomalies,
+                  properNoun: wordData.properNoun,
+                  inflectionAnomalies: currentAnomalies,
+                  attachedRoots,
+                  meanings,
+                  pos: wordData.pos,
+                  gender: wordData.gender,
+                  aspect: wordData.aspect,
+                  transitivity: wordData.transitivity,
+                  animacy: wordData.animacy,
+                  degree: wordData.degree,
+                  pronType: wordData.pronType,
+                  numType: wordData.numType,
+                  governsCase: wordData.governsCase,
+                  declension: wordData.declension,
+                  conjugation: wordData.conjugation,
+                  mainCategory: wordData.mainCategory,
+                  usageType: wordData.usageType,
+                  frequency: wordData.frequency,
+                  intelligibility: wordData.intelligibility,
+                  addition: wordData.addition,
+                  sameInLanguages: wordData.sameInLanguages,
+                  etymology: wordData.etymology,
+                  proto: wordData.proto,
+                  paradigm: wordData.paradigm,
+                  protoStemClass: wordData.protoStemClass,
+                  stemExtension: wordData.stemExtension,
+                  genesis: wordData.genesis,
+                  secondaryStem: wordData.secondaryStem,
+                  tertiaryStem: wordData.tertiaryStem,
+                }}
+              />
+            </div>
+          ) : (
+            <div className="p-6">
+              <RelationsTab
+                wordId={wordId}
+                wordValue={wordData.value}
+                meanings={meaningRelations}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
