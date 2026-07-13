@@ -10,7 +10,6 @@
     "release": "bash release.sh",
     "fill:db": "npx tsx scripts/db/fill-db.ts",
     "fill:is:db": "npx tsx scripts/db/fill-is-db.ts",
-    "recreate:db": "sh ./scripts/db/common.sh",
     "init:db": "npx tsx scripts/db/init-db.ts",
     "db:gen-auth": "cross-env DB_TYPE=auth prisma generate",
     "db:gen-data": "cross-env DB_TYPE=data prisma generate",

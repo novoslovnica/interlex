@@ -87,14 +87,15 @@ enum ThemePreference {
 }
 
 model UserSettings {
-  id        String           @id @default(cuid())
-  userId    String           @unique
-  script    ScriptPreference @default(CYRILLIC)
-  theme     ThemePreference  @default(SYSTEM)
-  language  String           @default("isv")
-  updatedAt DateTime         @updatedAt
+  id               String           @id @default(cuid())
+  userId           String           @unique
+  script           ScriptPreference @default(CYRILLIC)
+  theme            ThemePreference  @default(SYSTEM)
+  language         String           @default("isv")
+  columnVisibility String?
+  updatedAt        DateTime         @updatedAt
 
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_settings")
 }

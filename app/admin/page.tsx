@@ -4,6 +4,7 @@ import {redirect} from "next/navigation";
 import AdminNav from "@/components/AdminNav";
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
+import { saveColumnVisibilityPreference } from "@/app/settings/actions"
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,11 +26,16 @@ const AdminPage = async () => {
           })).map(p => p.featureKey)
         : []
 
+    const userSettings = await dbAuth.userSettings.findUnique({
+        where: { userId: session.user.id },
+        select: { columnVisibility: true },
+    })
+
     return (
         <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
             <div>
                 <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-                <Table />
+                <Table initialColumnVisibility={userSettings?.columnVisibility ?? null} onSaveColumnVisibility={saveColumnVisibilityPreference} />
             </div>
         </div>
     );

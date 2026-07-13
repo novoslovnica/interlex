@@ -12,6 +12,31 @@ import { EditableCell } from './EditableCell';
 import {EditableLanguageCell} from "@/app/admin/Table/EditableLanguageCell";
 import Link from "next/link";
 
+const DEFAULT_COLUMN_VISIBILITY: VisibilityState = {
+    id: true,
+    meaningText: true,
+    nsl: true,
+    isv: true,
+    ru: true,
+    en: false,
+    mk: false,
+    bg: false,
+    sr: false,
+    hr: false,
+    pl: false,
+    cs: false,
+    sk: false,
+    sl: false,
+    de: false,
+    uk: false,
+    be: false,
+    hsb: false,
+    dsb: false,
+    cu: false,
+    nl: false,
+    eo: false,
+};
+
 export function useDebounce<T>(value: T, delay: number): T {
     const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -28,16 +53,37 @@ export function useDebounce<T>(value: T, delay: number): T {
     return debouncedValue;
 }
 
-export default function InfiniteEditableTable() {
+export default function InfiniteEditableTable({ initialColumnVisibility, onSaveColumnVisibility }: { initialColumnVisibility?: string | null, onSaveColumnVisibility: (json: string) => Promise<void> }) {
     const tableContainerRef = useRef<HTMLDivElement>(null);
 
     const queryClient = useQueryClient();
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filterLang, setFilterLang] = useState('');
-    const [unverifiedOnly, setUnverifiedOnly] = useState(false);
+const [unverifiedOnly, setUnverifiedOnly] = useState(false);
 
     const debouncedSearch = useDebounce(searchQuery, 400);
+
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+        if (initialColumnVisibility) {
+            try {
+                const saved = JSON.parse(initialColumnVisibility);
+                return { ...DEFAULT_COLUMN_VISIBILITY, ...saved };
+            } catch {
+                return DEFAULT_COLUMN_VISIBILITY;
+            }
+        }
+        return DEFAULT_COLUMN_VISIBILITY;
+    });
+
+    const columnVisibilityJson = JSON.stringify(columnVisibility);
+    const debouncedColumnVisibility = useDebounce(columnVisibilityJson, 1000);
+
+    useEffect(() => {
+        if (debouncedColumnVisibility !== JSON.stringify(DEFAULT_COLUMN_VISIBILITY)) {
+            onSaveColumnVisibility(debouncedColumnVisibility);
+        }
+    }, [debouncedColumnVisibility, onSaveColumnVisibility]);
 
     const LANG_OPTIONS = [
         { code: 'ru', label: 'Русский' },
@@ -59,32 +105,6 @@ export default function InfiniteEditableTable() {
         { code: 'nl', label: 'Нидерландский' },
         { code: 'eo', label: 'Эсперанто' },
     ];
-
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-        id: true,
-        meaningText: true,
-        nsl: true,
-        isv: true,
-        ru: true,
-
-        en: false,
-        mk: false,
-        bg: false,
-        sr: false,
-        hr: false,
-        pl: false,
-        cs: false,
-        sk: false,
-        sl: false,
-        de: false,
-        uk: false,
-        be: false,
-        hsb: false,
-        dsb: false,
-        cu: false,
-        nl: false,
-        eo: false,
-    });
 
     const queryKey = useMemo(() => ['lexicon-infinite', debouncedSearch, filterLang, unverifiedOnly], [debouncedSearch, filterLang, unverifiedOnly]);
 

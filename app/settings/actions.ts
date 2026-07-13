@@ -51,3 +51,19 @@ export async function saveLanguagePreference(language: string) {
         }
     })
 }
+
+export async function saveColumnVisibilityPreference(columnVisibilityJson: string) {
+    const session = await auth()
+    if (!session?.user?.id) throw new Error("Unauthorized")
+
+    await dbAuth.userSettings.upsert({
+        where: { userId: session.user.id },
+        create: {
+            userId: session.user.id,
+            columnVisibility: columnVisibilityJson
+        },
+        update: {
+            columnVisibility: columnVisibilityJson
+        }
+    })
+}

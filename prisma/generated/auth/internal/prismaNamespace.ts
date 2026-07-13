@@ -954,6 +954,7 @@ export const UserSettingsScalarFieldEnum = {
   script: 'script',
   theme: 'theme',
   language: 'language',
+  columnVisibility: 'columnVisibility',
   updatedAt: 'updatedAt'
 } as const
 
