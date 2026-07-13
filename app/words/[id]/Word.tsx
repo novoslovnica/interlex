@@ -25,14 +25,14 @@ const Word = ({ item, currentScript }: any) => {
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
 
-    const word = item.value;
-    const transcription = isvToTranscription(item.value);
-    const cyrillicVariant = isvToCyr(item.value);
+    const word = item.word?.value || item.value;
+    const transcription = isvToTranscription(word);
+    const cyrillicVariant = isvToCyr(word);
     const nslVariant = item.nsl;
-    const glagoliticVariant = isvToGlagolitic(item.value);
+    const glagoliticVariant = isvToGlagolitic(word);
     const scientificVariants = [
-        standardToSimple(item.value),
-        standardToSimpleCyr(item.value),
+        standardToSimple(word),
+        standardToSimpleCyr(word),
     ];
     const meta = {
         partOfSpeech: item.pos,

@@ -39,14 +39,16 @@ const USAGE_TYPE_LABELS: Record<string, string> = {
 };
 
 const WordCard = ({ item, onClickCard, currentScript, toValue}: any) => {
-    const cyrillicVariant = isvToCyr(item.value);
-    const latinVariant = item.value.toLowerCase();
+    const lexeme = item;
+    const wordValue = lexeme?.word?.value || lexeme?.value;
+    const cyrillicVariant = isvToCyr(wordValue);
+    const latinVariant = wordValue.toLowerCase();
     const title = useMemo(() => {
         if (currentScript === "CYRILLIC") {
             return `${cyrillicVariant} (${latinVariant})`
         }
         return `${latinVariant} (${cyrillicVariant})`;
-    }, [currentScript, cyrillicVariant]);
+    }, [currentScript, cyrillicVariant, latinVariant]);
 
     return (
         <li

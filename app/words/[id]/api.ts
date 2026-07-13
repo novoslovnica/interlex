@@ -20,7 +20,8 @@ export const getItem = async (id: string) => {
     WHERE la.lexemeId = ?
   `).all(id) as { value: string; flavorCode: string; type: string }[];
 
-  const isv = allophones.find(a => a.flavorCode === 'CORE' && a.type === 'standard')?.value;
+  const word = allophones.find(a => a.flavorCode === 'CORE' && a.type === 'standard') || null;
+  const isv = word?.value;
   const nsl = allophones.find(a => a.flavorCode === 'NSL' && a.type === 'standard')?.value;
 
   const roots = db.prepare(`
@@ -93,6 +94,7 @@ export const getItem = async (id: string) => {
 
   return {
     ...data,
+    word,
     isv,
     nsl,
     allophones,

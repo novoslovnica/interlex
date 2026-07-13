@@ -210,5 +210,29 @@ export const getDictItems = async (search: string, offset: number, limit: number
         });
     }
 
+    const resLexemeIds = [...new Set(res.map(item => item.id).filter(Boolean))];
+    if (resLexemeIds.length > 0) {
+        const idPlaceholders = resLexemeIds.map(() => '?').join(',');
+        const allophoneRows = db.prepare(`
+            SELECT la.lexemeId, la.value, af.code AS flavorCode, la.type
+            FROM lexeme_allophones la
+            JOIN allophone_flavors af ON af.id = la.flavorId
+            WHERE la.lexemeId IN (${idPlaceholders})
+        `).all(...resLexemeIds) as { lexemeId: number; value: string; flavorCode: string; type: string }[];
+
+        const allophonesByLexeme: Record<number, { value: string; flavorCode: string; type: string }[]> = {};
+        for (const row of allophoneRows) {
+            if (!allophonesByLexeme[row.lexemeId]) allophonesByLexeme[row.lexemeId] = [];
+            allophonesByLexeme[row.lexemeId].push({ value: row.value, flavorCode: row.flavorCode, type: row.type });
+        }
+
+        for (const item of res) {
+            const lexemeAllophones = allophonesByLexeme[item.id] || [];
+            const word = lexemeAllophones.find(a => a.flavorCode === 'CORE' && a.type === 'standard') || null;
+            item.word = word;
+            item.allophones = lexemeAllophones;
+        }
+    }
+
     return res;
 };
