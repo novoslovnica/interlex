@@ -1,4 +1,4 @@
-оimport Database from 'better-sqlite3';
+import Database from 'better-sqlite3';
 import * as path from 'path';
 
 const DB_PATH = path.resolve(process.cwd(), 'interlex.db');
