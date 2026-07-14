@@ -17,6 +17,20 @@ export const metadata: Metadata = {
   description: "Редактирование текста в библиотеке межславянского языка.",
 }
 
+function getCoversDir(): string {
+  const dir = process.env.COVERS_DIR || "public/covers"
+  return path.isAbsolute(dir) ? dir : path.resolve(process.cwd(), dir)
+}
+
+function coverFilename(coverPath: string | null): string | null {
+  if (!coverPath) return null
+  return coverPath.replace(/^\/api\/covers\//, "").replace(/^\/covers\//, "") || null
+}
+
+async function safeUnlink(filepath: string) {
+  try { await unlink(filepath) } catch { /* ignore */ }
+}
+
 export default async function EditLibraryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const session = await auth()
@@ -89,35 +103,24 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
     const deleteCoverImage = formData.get("deleteCoverImage") === "on"
     let coverImage = currentEntry.coverImage
     if (deleteCoverImage) {
-      if (currentEntry.coverImage) {
-        const oldPath = path.join(process.cwd(), "public", currentEntry.coverImage)
-        try { await unlink(oldPath) } catch { /* ignore if file doesn't exist */ }
+      const oldFilename = coverFilename(currentEntry.coverImage)
+      if (oldFilename) {
+        await safeUnlink(path.join(getCoversDir(), oldFilename))
       }
       coverImage = null
-    } else if (coverImageRaw instanceof File && coverImageRaw.size > 0) {
-      const ext = coverImageRaw.name.split(".").pop() || "jpg"
-      const filename = `${slug}-${Date.now()}.${ext}`
-      const dir = path.join(process.cwd(), "public", "covers")
-      await mkdir(dir, { recursive: true })
-      await writeFile(path.join(dir, filename), Buffer.from(await coverImageRaw.arrayBuffer()))
-      coverImage = `/covers/${filename}`
+    } else if (typeof coverImageRaw === "string" && coverImageRaw.length > 0) {
+      coverImage = coverImageRaw
     }
     const audioFileRaw = formData.get("audioFile")
     const deleteAudioFile = formData.get("deleteAudioFile") === "on"
     let audioFile = currentEntry.audioFile
     if (deleteAudioFile) {
       if (currentEntry.audioFile) {
-        const oldPath = path.join(process.cwd(), "public", currentEntry.audioFile)
-        try { await unlink(oldPath) } catch { /* ignore if file doesn't exist */ }
+        await safeUnlink(path.join(process.cwd(), "public", currentEntry.audioFile))
       }
       audioFile = null
-    } else if (audioFileRaw instanceof File && audioFileRaw.size > 0) {
-      const ext = audioFileRaw.name.split(".").pop() || "mp3"
-      const filename = `${slug}-${Date.now()}.${ext}`
-      const dir = path.join(process.cwd(), "public", "audio")
-      await mkdir(dir, { recursive: true })
-      await writeFile(path.join(dir, filename), Buffer.from(await audioFileRaw.arrayBuffer()))
-      audioFile = `/audio/${filename}`
+    } else if (typeof audioFileRaw === "string" && audioFileRaw.length > 0) {
+      audioFile = audioFileRaw
     }
     const body = (formData.get("body") as string) || null
     const decompressedBody = currentEntry.body ? decompressBody(currentEntry.body) : ""

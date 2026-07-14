@@ -83,15 +83,16 @@ interface LibraryFormProps {
   initialChildren?: EntryBrief[]
 }
 
-function SubmitButton() {
+function SubmitButton({ uploading }: { uploading?: boolean }) {
   const { pending } = useFormStatus()
+  const disabled = pending || uploading
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={disabled}
       className="px-4 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 transition-opacity"
     >
-      {pending ? "Sohranjenje..." : "Sohraniti"}
+      {uploading ? "Sylajem fajly..." : pending ? "Sohranjenje..." : "Sohraniti"}
     </button>
   )
 }
@@ -399,6 +400,7 @@ export function LibraryForm({
       ? entries.find(e => e.id === initial.parentId) || null
       : null
   )
+  const [uploading, setUploading] = useState(false)
 
   const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -446,8 +448,44 @@ export function LibraryForm({
     setSelectedParent(null)
   }, [])
 
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setUploading(true)
+    const form = e.currentTarget
+    const fd = new FormData(form)
+
+    const coverFile = (form.querySelector<HTMLInputElement>('input[name="coverImage"]'))?.files?.[0]
+    if (coverFile) {
+      const uploadFd = new FormData()
+      uploadFd.set("file", coverFile)
+      uploadFd.set("slug", fd.get("slug") as string)
+      uploadFd.set("type", "cover")
+      const res = await fetch("/api/admin/library/upload", { method: "POST", body: uploadFd })
+      if (res.ok) {
+        const { path } = await res.json()
+        fd.set("coverImage", path)
+      }
+    }
+
+    const audioFile = (form.querySelector<HTMLInputElement>('input[name="audioFile"]'))?.files?.[0]
+    if (audioFile) {
+      const uploadFd = new FormData()
+      uploadFd.set("file", audioFile)
+      uploadFd.set("slug", fd.get("slug") as string)
+      uploadFd.set("type", "audio")
+      const res = await fetch("/api/admin/library/upload", { method: "POST", body: uploadFd })
+      if (res.ok) {
+        const { path } = await res.json()
+        fd.set("audioFile", path)
+      }
+    }
+
+    setUploading(false)
+    action(fd)
+  }, [action])
+
   return (
-    <form action={action} className="relative space-y-4">
+    <form action={action} onSubmit={handleSubmit} className="relative space-y-4">
       <div className="grid grid-cols-[1fr_1fr_220px] gap-4">
         <div className="space-y-1">
           <label className="text-xs font-medium text-muted-foreground">Slug *</label>
@@ -723,7 +761,7 @@ export function LibraryForm({
           </div>
 
       <div className="fixed bottom-6 right-6 z-50 flex gap-2 bg-background/90 backdrop-blur-sm border rounded-lg p-3 shadow-lg">
-        <SubmitButton />
+        <SubmitButton uploading={uploading} />
         <a
           href="/admin/library"
           className="px-4 py-2 text-sm font-medium rounded border hover:bg-muted transition-colors"

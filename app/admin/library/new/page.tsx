@@ -9,8 +9,6 @@ import { buildEntry, append } from "@/lib/action-history"
 import { compressBody } from "@/lib/body"
 import { LibraryForm } from "./form"
 import type { Metadata } from "next"
-import { writeFile, mkdir } from "fs/promises"
-import path from "path"
 
 export const metadata: Metadata = {
   title: "Новый текст — библиотека",
@@ -49,23 +47,13 @@ export default async function NewLibraryPage() {
     const translator = (formData.get("translator") as string) || null
     const coverImageRaw = formData.get("coverImage")
     let coverImage: string | null = null
-    if (coverImageRaw instanceof File && coverImageRaw.size > 0) {
-      const ext = coverImageRaw.name.split(".").pop() || "jpg"
-      const filename = `${slug}-${Date.now()}.${ext}`
-      const dir = path.join(process.cwd(), "public", "covers")
-      await mkdir(dir, { recursive: true })
-      await writeFile(path.join(dir, filename), Buffer.from(await coverImageRaw.arrayBuffer()))
-      coverImage = `/covers/${filename}`
+    if (typeof coverImageRaw === "string" && coverImageRaw.length > 0) {
+      coverImage = coverImageRaw
     }
     const audioFileRaw = formData.get("audioFile")
     let audioFile: string | null = null
-    if (audioFileRaw instanceof File && audioFileRaw.size > 0) {
-      const ext = audioFileRaw.name.split(".").pop() || "mp3"
-      const filename = `${slug}-${Date.now()}.${ext}`
-      const dir = path.join(process.cwd(), "public", "audio")
-      await mkdir(dir, { recursive: true })
-      await writeFile(path.join(dir, filename), Buffer.from(await audioFileRaw.arrayBuffer()))
-      audioFile = `/audio/${filename}`
+    if (typeof audioFileRaw === "string" && audioFileRaw.length > 0) {
+      audioFile = audioFileRaw
     }
     const body = (formData.get("body") as string) || null
     const summary = (formData.get("summary") as string) || null
