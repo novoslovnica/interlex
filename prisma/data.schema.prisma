@@ -44,6 +44,7 @@ model Lexeme {
   gender          String?
   declension      Int?
   conjugation     Int?
+  stressPosition  Int?               // Ударный слог от начала слова (0=первый). Для paradigm A, override penultimate.
 
   // Имя собственное / нарицательное
   properNoun      Boolean          @default(false)
@@ -198,6 +199,7 @@ model Morpheme {
   updatedAt DateTime @updatedAt
   value String?
   type  Int?    @default(0)
+  stressPosition Int?               // Какой слог внутри морфемы ударный (0=первый, NULL=нейтральный)
 
   lexemes_morphemes LexemeMorpheme[]
   morphemeAllophones  MorphemeAllophone[]

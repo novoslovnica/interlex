@@ -82,7 +82,8 @@ export function generateBaseNounFormWithFourTones(
     paradigm: 'A' | 'B' | 'C',
     stemType: StemType,
     targetCase: Case,
-    targetNumber: NumberType
+    targetNumber: NumberType,
+    stressPosition?: number,
 ): string {
 
     const ending = SLAVIC_ENDINGS_REGISTRY[stemType][targetNumber][targetCase];
@@ -93,8 +94,9 @@ export function generateBaseNounFormWithFourTones(
     // Дифференцируется на ДОЛГИЙ АКУТ (́) и КРАТКИЙ АКУТ (̀) в зависимости от гласной.
     // =========================================================================
     if (paradigm === 'A') {
-        const toneType = getAcuteToneType(fullForm, 1); // Проверяем гласную корня
-        return applyFourTonesMark(fullForm, 1, toneType);
+        const effectiveStressPosition = stressPosition ?? 1;
+        const toneType = getAcuteToneType(fullForm, effectiveStressPosition);
+        return applyFourTonesMark(fullForm, effectiveStressPosition, toneType);
     }
 
     // =========================================================================

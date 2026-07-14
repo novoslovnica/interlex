@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { value, type, actionHistory, allophones } = body
+    const { value, type, actionHistory, allophones, stressPosition } = body
 
     if (!value || !value.trim()) {
       return NextResponse.json({ error: "value is required" }, { status: 400 })
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
         value,
         type: type !== undefined ? type : 0,
         actionHistory: actionHistory || null,
+        stressPosition: stressPosition ?? null,
       },
     })
 

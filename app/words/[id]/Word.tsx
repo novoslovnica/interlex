@@ -111,6 +111,11 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
                                 gender: item.gender || "masculine",
                                 protoStemClass: item.protoStemClass || "u",
                                 paradigm: item.paradigm || "A",
+                                stressPosition: item.stressPosition,
+                                morphemes: item.roots?.map((r: any) => ({
+                                    value: r.value,
+                                    stressPosition: r.stressPosition,
+                                })),
                             },
                             targetCase: c.key,
                             targetNumber: num.key,

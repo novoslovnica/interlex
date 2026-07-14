@@ -64,7 +64,7 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { value, type, actionHistory, allophones } = body
+    const { value, type, actionHistory, allophones, stressPosition } = body
 
     const root = await db.morpheme.update({
       where: { id: rootId },
@@ -72,6 +72,7 @@ export async function PATCH(
         ...(value !== undefined && { value }),
         ...(type !== undefined && { type }),
         ...(actionHistory !== undefined && { actionHistory }),
+        ...(stressPosition !== undefined && { stressPosition: stressPosition ?? null }),
       },
     })
 

@@ -12,6 +12,7 @@ interface RootItem {
   updatedAt: string
   value: string | null
   type: number | null
+  stressPosition: number | null
 }
 
 interface RootFull extends RootItem {
@@ -181,6 +182,7 @@ function RootsClientInner() {
               <th className="p-3">ID</th>
               <th className="p-3">Значение</th>
               <th className="p-3">Тип</th>
+              <th className="p-3">Удар.</th>
               <th className="p-3">Создан</th>
               <th className="p-3 w-24">Действия</th>
             </tr>
@@ -188,7 +190,7 @@ function RootsClientInner() {
           <tbody className="divide-y">
             {allItems.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-8 text-center text-muted-foreground">
+                <td colSpan={6} className="p-8 text-center text-muted-foreground">
                   {isLoading ? "Загрузка..." : "Нет корней"}
                 </td>
               </tr>
@@ -198,6 +200,7 @@ function RootsClientInner() {
                   <td className="p-3 text-muted-foreground">{root.id}</td>
                   <td className="p-3 font-semibold">{root.value || "—"}</td>
                   <td className="p-3">{typeLabel(root.type)}</td>
+                  <td className="p-3 text-xs text-muted-foreground">{root.stressPosition !== null ? root.stressPosition : "—"}</td>
                   <td className="p-3 text-xs text-muted-foreground whitespace-nowrap">
                     {new Date(root.createdAt).toLocaleDateString("ru-RU")}
                   </td>
@@ -303,6 +306,7 @@ function EditRootModal({
 }) {
   const [value, setValue] = useState(root.value ?? "")
   const [type, setType] = useState(root.type ?? 0)
+  const [stressPosition, setStressPosition] = useState<number | null>(root.stressPosition ?? null)
   const [allophones, setAllophones] = useState<Record<string, string>>(() => {
     const allos = root.morphemeAllophones || []
     return {
@@ -349,7 +353,7 @@ function EditRootModal({
       const res = await fetch(`/api/roots/${root.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type, allophones }),
+        body: JSON.stringify({ value, type, allophones, stressPosition }),
       })
       if (res.ok) onSaved()
       else alert("Ошибка при сохранении")
@@ -425,6 +429,17 @@ function EditRootModal({
             <div>
               <label className="block text-xs font-semibold mb-1">Тип морфемы</label>
               <MorphemeTypeSelect value={type} onChange={setType} />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Ударный слог (0=первый)</label>
+              <input
+                type="number"
+                className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                value={stressPosition ?? ""}
+                onChange={(e) => setStressPosition(e.target.value === "" ? null : Number(e.target.value))}
+                placeholder="—"
+                min={0}
+              />
             </div>
           </div>
 
@@ -549,6 +564,7 @@ function CreateRootModal({
 }) {
   const [value, setValue] = useState("")
   const [type, setType] = useState(MorphemeType.ROOT)
+  const [stressPosition, setStressPosition] = useState<number | null>(null)
   const [allophones, setAllophones] = useState<Record<string, string>>({ core: "", nsl: "", east: "", west: "", south: "" })
   const [creating, setCreating] = useState(false)
 
@@ -562,7 +578,7 @@ function CreateRootModal({
       const res = await fetch("/api/roots/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type, allophones }),
+        body: JSON.stringify({ value, type, allophones, stressPosition }),
       })
       if (res.ok) onCreated()
       else {
@@ -594,6 +610,18 @@ function CreateRootModal({
         <div>
           <label className="block text-xs font-semibold mb-1">Тип морфемы</label>
           <MorphemeTypeSelect value={type} onChange={setType} />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1">Ударный слог (0=первый)</label>
+          <input
+            type="number"
+            className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+            value={stressPosition ?? ""}
+            onChange={(e) => setStressPosition(e.target.value === "" ? null : Number(e.target.value))}
+            placeholder="—"
+            min={0}
+          />
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">

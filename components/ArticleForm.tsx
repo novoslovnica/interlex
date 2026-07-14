@@ -218,6 +218,7 @@ interface ArticleFormProps {
     paradigm?: string | null
     protoStemClass?: string | null
     stemExtension?: string | null
+    stressPosition?: number | null
     genesis?: string | null
     secondaryStem?: string | null
     tertiaryStem?: string | null
@@ -281,6 +282,7 @@ export default function ArticleForm({
     paradigm: initialData?.paradigm ?? "",
     protoStemClass: initialData?.protoStemClass ?? "",
     stemExtension: initialData?.stemExtension ?? "",
+    stressPosition: initialData?.stressPosition ?? null,
     secondaryStem: initialData?.secondaryStem ?? "",
     tertiaryStem: initialData?.tertiaryStem ?? "",
   })
@@ -916,6 +918,7 @@ export default function ArticleForm({
                     <TextField label="Парадигма" value={grammar.paradigm} onChange={(v) => setGram("paradigm", v)} />
                     <TextField label="Класс прото-основы" value={grammar.protoStemClass} onChange={(v) => setGram("protoStemClass", v)} />
                     <TextField label="Расширение основы" value={grammar.stemExtension} onChange={(v) => setGram("stemExtension", v)} />
+                    <NumberField label="Ударный слог (0=первый)" value={grammar.stressPosition} onChange={(v) => setGram("stressPosition", v)} placeholder="0–" />
                     <TextField label="Дополнение" value={grammar.addition} onChange={(v) => setGram("addition", v)} />
                     <TextField label="Те же в языках" value={grammar.sameInLanguages} onChange={(v) => setGram("sameInLanguages", v)} />
                     <TextField label="Праславянский" value={grammar.proto} onChange={(v) => setGram("proto", v)} />

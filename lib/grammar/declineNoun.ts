@@ -4,6 +4,7 @@ import { applyAccent } from './accentUtils';
 import {applyPrepositionEnclitic, applyPrepositionEncliticWithFourTones} from './encliticEngine';
 import { generateBaseNounFormWithFourTones } from './fourTonesGenerator';
 import {EnhancedDbItem, identifyStemTypeByDb} from "@/lib/grammar/stemClassifier";
+import {computeStressFromMorphemes, countSyllables} from "@/lib/grammar/stress";
 
 export interface ExtendedWordFormRequest {
     interslavicWord: string;
@@ -263,21 +264,38 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
     // 1. Автоматически вычисляем класс склонения по метаданным из базы
     const stemType = identifyStemTypeByDb(dbItem);
 
-    // 2. Генерируем форму с точным расчетом одного из 4 тонов Зализняка
+    // 2. Вычисляем позицию ударения: морфемы → stressPosition на лексеме → penultimate
+    const ending = getEnding(stemType, targetNumber, targetCase);
+    const fullForm = dbItem.interslavic + ending;
+
+    let effectiveStressPosition: number | undefined = undefined;
+    if (dbItem.paradigm === 'A') {
+        const fromMorphemes = dbItem.morphemes
+            ? computeStressFromMorphemes(fullForm, dbItem.morphemes)
+            : null;
+        const stressFromStart = fromMorphemes ?? dbItem.stressPosition ?? null;
+        if (stressFromStart != null) {
+            const total = countSyllables(fullForm);
+            effectiveStressPosition = total - 1 - stressFromStart;
+        }
+    }
+
+    // 3. Генерируем форму с точным расчетом одного из 4 тонов Зализняка
     const baseAccentedNoun = generateBaseNounFormWithFourTones(
         dbItem.interslavic,
         dbItem.paradigm,
         stemType,
         targetCase,
-        targetNumber
+        targetNumber,
+        effectiveStressPosition,
     );
 
-    // 3. Если предлога нет — возвращаем форму
+    // 4. Если предлога нет — возвращаем форму
     if (!preposition) {
         return baseAccentedNoun;
     }
 
-    // 4. Если предлог есть — прогоняем через тоновый движок клитик
+    // 5. Если предлог есть — прогоняем через тоновый движок клитик
     return applyPrepositionEncliticWithFourTones({
         preposition,
         accentedNounForm: baseAccentedNoun,

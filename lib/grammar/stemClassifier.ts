@@ -7,6 +7,8 @@ export interface EnhancedDbItem {
     gender: 'masculine' | 'feminine' | 'neuter' | 'verb';
     protoStemClass: string; // Данные из нашего нового JSON (ā, jā, o, jo, i, u, consonant)
     stemExtension?: string; // Данные из нашего нового JSON (en, es, et, er)
+    stressPosition?: number | null; // Ударный слог от начала слова (0=первый), override penultimate
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Для вычисления ударения по морфемам
 }
 
 /**

@@ -321,7 +321,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       "pronType", "numType", "governsCase", "declension", "conjugation",
       "mainCategory", "usageType", "intelligibility", "addition",
       "sameInLanguages", "etymology", "proto", "paradigm", "protoStemClass",
-      "stemExtension", "genesis", "secondaryStem", "tertiaryStem",
+      "stemExtension", "stressPosition", "genesis", "secondaryStem", "tertiaryStem",
     ]
 
     const grammarData: Record<string, unknown> = {}
@@ -629,6 +629,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
                   paradigm: wordData.paradigm,
                   protoStemClass: wordData.protoStemClass,
                   stemExtension: wordData.stemExtension,
+                  stressPosition: wordData.stressPosition,
                   genesis: wordData.genesis,
                   secondaryStem: wordData.secondaryStem,
                   tertiaryStem: wordData.tertiaryStem,

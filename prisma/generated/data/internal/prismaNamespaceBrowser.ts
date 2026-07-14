@@ -143,6 +143,7 @@ export const LexemeScalarFieldEnum = {
   gender: 'gender',
   declension: 'declension',
   conjugation: 'conjugation',
+  stressPosition: 'stressPosition',
   properNoun: 'properNoun',
   hasAnomalies: 'hasAnomalies',
   actionHistory: 'actionHistory'
@@ -217,6 +218,7 @@ export const MorphemeScalarFieldEnum = {
   updatedAt: 'updatedAt',
   value: 'value',
   type: 'type',
+  stressPosition: 'stressPosition',
   actionHistory: 'actionHistory'
 } as const
 
