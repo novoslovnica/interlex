@@ -2,12 +2,13 @@
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { MorphemeType, type MorphemePart } from '@/lib/grammar/common';
+import {ScriptMode} from "@/lib/script-mode";
 
 interface MorphemeAnalysisProps {
   word: string;
   roots: { id: number; value: string; type: number }[] | null | undefined;
   base: string | null | undefined;
-  currentScript: string;
+  currentScript: ScriptMode;
 }
 
 function isNumeric(value: string): boolean {
@@ -27,7 +28,7 @@ function normalizeType(type: any): MorphemeType {
   return MorphemeType.UNKNOWN;
 }
 
-function extractMorphemes(word: string, roots: { id: number; value: string; type: number }[] | null | undefined): MorphemePart[] | null {
+function extractMorphemes(word: string, base: string|undefined, roots: { id: number; value: string; type: number }[] | null | undefined): MorphemePart[] | null {
   if (!roots || roots.length === 0) return null;
 
   const wordLower = word.toLowerCase();
@@ -67,8 +68,18 @@ function extractMorphemes(word: string, roots: { id: number; value: string; type
     cursor = m.end;
   }
 
-  if (cursor < word.length) {
-    parts.push({ type: MorphemeType.SUFFIX, text: word.slice(cursor) });
+  if (cursor < (base ? base.length : word.length)) {
+    parts.push({
+      type: MorphemeType.SUFFIX,
+      text: base
+          ? word.slice((cursor - 1) - base.length, base.length - word.length )
+          : word.slice(cursor)
+    });
+    cursor = (base ? base.length : word.length);
+  }
+
+  if (base && (base.length < word.length)) {
+    parts.push({ type: MorphemeType.ENDING, text: word.slice(cursor) });
   }
 
   if (!parts.some(p => p.type === MorphemeType.ROOT)) return null;
@@ -101,7 +112,7 @@ function measureWidths(parts: { text: string }[]): number[] {
 
 export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysisProps) {
   const t = useTranslations("word");
-  const raw = useMemo(() => extractMorphemes(word, roots), [word, roots]);
+  const raw = useMemo(() => extractMorphemes(word, base, roots), [word, roots]);
 
   const morphemes: MorphemePart[] | null = raw;
 
@@ -137,6 +148,7 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
     [MorphemeType.PREFIX]: t('morpheme.legend.prefix'),
     [MorphemeType.SUFFIX]: t('morpheme.legend.suffix'),
     [MorphemeType.UNKNOWN]: t('morpheme.legend.connective'),
+    [MorphemeType.ENDING]: t('morpheme.legend.ending'),
   };
 
   for (let i = 0; i < morphemes!.length; i++) {

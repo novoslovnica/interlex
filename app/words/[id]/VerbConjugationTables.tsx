@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ConjugationResult, FullParadigm } from '@/lib/grammar/verb/types/conjugator';
+import {ScriptMode, writeOrTranslate} from "@/lib/script-mode";
 
 interface TablesProps {
     data: ConjugationResult;
+    currentScript: ScriptMode;
 }
 
-export const VerbConjugationTables: React.FC<TablesProps> = ({ data }) => {
+export const VerbConjugationTables: React.FC<TablesProps> = ({ data, currentScript }) => {
     const t = useTranslations("word");
     const [activeTab, setActiveTab] = useState<'indicative' | 'non-indicative'>('indicative');
 
@@ -27,21 +29,21 @@ export const VerbConjugationTables: React.FC<TablesProps> = ({ data }) => {
                     <tbody className="divide-y divide-slate-50 text-slate-700 font-medium">
                     <tr>
                         <td className="py-2 text-slate-400 font-normal">{t('verb.firstPerson')}</td>
-                        <td className="py-2 text-blue-600 font-semibold">{paradigm['1sg']}</td>
-                        <td className="py-2 text-indigo-600">{paradigm['1du']}</td>
-                        <td className="py-2 text-slate-800">{paradigm['1pl']}</td>
+                        <td className="py-2 text-blue-600 font-semibold">{writeOrTranslate(paradigm['1sg'], currentScript)}</td>
+                        <td className="py-2 text-indigo-600">{writeOrTranslate(paradigm['1du'], currentScript)}</td>
+                        <td className="py-2 text-slate-800">{writeOrTranslate(paradigm['1pl'], currentScript)}</td>
                     </tr>
                     <tr>
                         <td className="py-2 text-slate-400 font-normal">{t('verb.secondPerson')}</td>
-                        <td className="py-2 text-blue-600 font-semibold">{paradigm['2sg']}</td>
-                        <td className="py-2 text-indigo-600">{paradigm['2du']}</td>
-                        <td className="py-2 text-slate-800">{paradigm['2pl']}</td>
+                        <td className="py-2 text-blue-600 font-semibold">{writeOrTranslate(paradigm['2sg'], currentScript)}</td>
+                        <td className="py-2 text-indigo-600">{writeOrTranslate(paradigm['2du'], currentScript)}</td>
+                        <td className="py-2 text-slate-800">{writeOrTranslate(paradigm['2pl'], currentScript)}</td>
                     </tr>
                     <tr>
                         <td className="py-2 text-slate-400 font-normal">{t('verb.thirdPerson')}</td>
-                        <td className="py-2 text-blue-600 font-semibold">{paradigm['3sg']}</td>
-                        <td className="py-2 text-indigo-600">{paradigm['3du']}</td>
-                        <td className="py-2 text-slate-800">{paradigm['3pl']}</td>
+                        <td className="py-2 text-blue-600 font-semibold">{writeOrTranslate(paradigm['3sg'], currentScript)}</td>
+                        <td className="py-2 text-indigo-600">{writeOrTranslate(paradigm['3du'], currentScript)}</td>
+                        <td className="py-2 text-slate-800">{writeOrTranslate(paradigm['3pl'], currentScript)}</td>
                     </tr>
                     </tbody>
                 </table>

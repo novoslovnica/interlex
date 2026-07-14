@@ -1,8 +1,7 @@
 import { auth } from "@/auth"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { headers } from "next/headers"
-
-export type ScriptMode = "CYRILLIC" | "LATIN"
+import { ScriptMode } from "@/lib/script-mode"
 
 export async function getUserScript(): Promise<ScriptMode> {
     const session = await auth()
@@ -30,9 +29,9 @@ export async function getUserScript(): Promise<ScriptMode> {
     const primaryLocale = acceptLanguage.split(",")[0].split("-")[0].toLowerCase()
 
     if (latinLocales.includes(primaryLocale)) {
-        return "LATIN"
+        return ScriptMode.LATIN
     }
 
     // По умолчанию для всех остальных (ru, bg, mk, uk, be, sr) отдаем кириллицу
-    return "CYRILLIC"
+    return ScriptMode.CYRILLIC
 }

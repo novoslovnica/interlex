@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 import HeaderNav from "@/components/HeaderNav";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 import Title from "@/components/Title";
@@ -23,11 +24,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: process.env.NEXTAUTH_URL
+    ? new URL(process.env.NEXTAUTH_URL)
+    : new URL('http://localhost:3000'),
   title: {
-    default: "Междуславянский лексикон | Interslavic Lexicon",
-    template: "%s | Междуславянский лексикон",
+    default: "Межславянский лексикон | Interslavic Lexicon",
+    template: "%s | Межславянский лексикон",
   },
   description: "Поиск по словарю междуславянского языка с переводом, морфологией, этимологией и корпусами текстов. Interslavic lexical dictionary with translations, grammar, and etymology.",
+  openGraph: {
+    type: "website",
+    siteName: "Interslavic Lexicon",
+    locale: "ru_RU",
+  },
+  twitter: {
+    card: "summary",
+  },
 };
 
 export default async function RootLayout({
@@ -53,6 +65,7 @@ export default async function RootLayout({
       </head>
           <body className="h-screen overflow-hidden flex flex-col">
               <ThemeProvider>
+                  <SessionProviderWrapper>
                   <NextIntlClientProvider messages={messages}>
                       <header className="site-header">
                           <div className="header-content">
@@ -67,6 +80,7 @@ export default async function RootLayout({
                       </div>
                       <Footer />
                   </NextIntlClientProvider>
+                  </SessionProviderWrapper>
               </ThemeProvider>
           </body>
       </html>

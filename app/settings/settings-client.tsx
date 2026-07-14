@@ -4,8 +4,9 @@ import { useState, useTransition } from "react"
 import { useTheme } from "next-themes"
 import { useTranslations } from "next-intl"
 import { TRANSLATION_LANGUAGES } from "@/config/features"
+import {ScriptMode} from "@/lib/script-mode"
 
-type ScriptPreference = "CYRILLIC" | "LATIN"
+type ScriptPreference = ScriptMode
 type ThemePreference = "LIGHT" | "DARK" | "SYSTEM"
 
 interface SettingsClientProps {
@@ -107,32 +108,32 @@ export function SettingsClient({ initialScript, initialTheme, initialLanguage, o
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                         <div
-                            onClick={() => handleScriptChange("CYRILLIC")}
+                            onClick={() => handleScriptChange(ScriptMode.CYRILLIC)}
                             className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer select-none transition-all ${
-                                script === "CYRILLIC"
+script === ScriptMode.CYRILLIC
                                     ? "bg-blue-500/10 border-blue-500 ring-1 ring-blue-500/20"
                                     : "bg-background border-border hover:bg-muted/40"
                             }`}
                         >
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-sm text-foreground">{t("scriptOptions.cyrillic")}</span>
-                                <input type="radio" checked={script === "CYRILLIC"} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
+                                <input type="radio" checked={script === ScriptMode.CYRILLIC} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
                             </div>
                             <span className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
                                 {t("scriptOptions.cyrillicExample")}
                             </span>
                         </div>
                         <div
-                            onClick={() => handleScriptChange("LATIN")}
+                            onClick={() => handleScriptChange(ScriptMode.LATIN)}
                             className={`p-4 rounded-xl border flex flex-col justify-between cursor-pointer select-none transition-all ${
-                                script === "LATIN"
+script === ScriptMode.LATIN
                                     ? "bg-blue-500/10 border-blue-500 ring-1 ring-blue-500/20"
                                     : "bg-background border-border hover:bg-muted/40"
                             }`}
                         >
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-sm text-foreground">{t("scriptOptions.latin")}</span>
-                                <input type="radio" checked={script === "LATIN"} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
+                                <input type="radio" checked={script === ScriptMode.LATIN} readOnly className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer" />
                             </div>
                             <span className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
                                 {t("scriptOptions.latinExample")}

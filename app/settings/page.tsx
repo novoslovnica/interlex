@@ -5,6 +5,7 @@ import {ScriptPreference, ThemePreference} from "@/prisma/generated/auth/enums";
 import { SettingsClient } from "./settings-client"
 import { saveScriptPreference, saveThemePreference, saveLanguagePreference } from "./actions"
 import type { Metadata } from "next";
+import {ScriptMode} from "@/lib/script-mode";
 
 export const metadata: Metadata = {
   title: "Настройки",
@@ -22,7 +23,7 @@ export default async function UserSettingsPage() {
         select: { script: true, theme: true, language: true }
     })
 
-    const currentScript = (userSettings?.script || ScriptPreference.CYRILLIC) as "CYRILLIC" | "LATIN"
+    const currentScript = (userSettings?.script || ScriptPreference.CYRILLIC) as ScriptMode
     const currentTheme = (userSettings?.theme || ThemePreference.SYSTEM) as "LIGHT" | "DARK" | "SYSTEM"
     const currentLanguage = userSettings?.language || "isv"
 

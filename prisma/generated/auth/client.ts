@@ -71,3 +71,8 @@ export type FeaturePermission = Prisma.FeaturePermissionModel
  * 
  */
 export type UserSettings = Prisma.UserSettingsModel
+/**
+ * Model UserWordCollection
+ * 
+ */
+export type UserWordCollection = Prisma.UserWordCollectionModel

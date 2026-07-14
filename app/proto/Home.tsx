@@ -2,6 +2,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import { useTranslations } from "next-intl";
+import {ScriptMode} from "@/lib/script-mode";
 import "./main-page.css";
 
 interface ProtoWord {
@@ -27,7 +28,7 @@ const WordCard = ({onClickCard, item}: { onClickCard: (item: ProtoWord) => () =>
     );
 };
 
-export default function Home({currentScript}: { currentScript: string; isGuest?: boolean }) {
+export default function Home({currentScript}: { currentScript: ScriptMode; isGuest?: boolean }) {
     const t = useTranslations("proto");
     const [searchValue, setSearchValue] = useState("");
     const [items, setItems] = useState<ProtoWord[]>([]);

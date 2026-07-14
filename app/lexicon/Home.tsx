@@ -1,9 +1,12 @@
 'use client';
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 import {useTranslations} from "next-intl";
+import {saveScriptPreference} from "@/app/settings/actions";
+import BookmarkButton from "@/components/BookmarkButton";
+import {ScriptMode} from "@/lib/script-mode";
 
 import "./main-page.css";
 
@@ -36,12 +39,12 @@ const USAGE_TYPE_LABELS: Record<string, string> = {
   neologism: 'Неологизам',
 };
 
-const WordCard = ({ onClickCard, item, currentScript }: any) => {
+const WordCard = ({ onClickCard, item, currentScript }: { onClickCard: any; item: any; currentScript: ScriptMode }) => {
     const wordValue = item.word?.value || item.value;
     const cyrillicVariant = isvToCyr(wordValue);
     const latinVariant = wordValue.toLowerCase();
     const title = useMemo(() => {
-        if (currentScript === "CYRILLIC") {
+        if (currentScript === ScriptMode.CYRILLIC) {
             return `${cyrillicVariant} (${latinVariant})`
         }
         return `${latinVariant} (${cyrillicVariant})`;
@@ -55,21 +58,26 @@ const WordCard = ({ onClickCard, item, currentScript }: any) => {
             <div className="card-title">{title}</div>
             <div className="card-meta">{`${item.pos}`}</div>
             <div className="card-desc">{item.target?.value}</div>
+            <div className="absolute top-2 right-2">
+                <BookmarkButton wordId={item.id} />
+            </div>
         </li>
     )
 }
 
-export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
+export default function Home({ currentScript, isGuest }: { currentScript: ScriptMode; isGuest?: boolean; }) {
     const t = useTranslations("lexicon");
     const [searchValue, setSearchValue] = useState("");
     const [mainCategory, setMainCategory] = useState("");
     const [usageType, setUsageType] = useState("");
-    const [formScript, setFormScript] = useState(currentScript);
+    const [formScript, setFormScript] = useState<ScriptMode>(currentScript);
     const [items, setItems] = useState<Array<any>>([]);
     const [hasFetched, setHasFetched] = useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const performSearch = useCallback((query: string, mc: string, ut: string) => {
         const params = new URLSearchParams({ search: query, limit: '50', offset: '0', grouped: '1' });
@@ -83,6 +91,18 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
             });
     }, []);
 
+    const executeSearch = useCallback(() => {
+        const sValue = formScript === ScriptMode.CYRILLIC
+            ? standardToSimple(mapNslToEtymologized(searchValue))
+            : searchValue;
+
+        const params = new URLSearchParams({ q: searchValue });
+        if (mainCategory) params.set('mainCategory', mainCategory);
+        if (usageType) params.set('usageType', usageType);
+        performSearch(sValue, mainCategory, usageType);
+        router.replace(`/lexicon?${params}`);
+    }, [searchValue, mainCategory, usageType, formScript, performSearch, router]);
+
     useEffect(() => {
         const q = searchParams.get('q');
         const mc = searchParams.get('mainCategory') || '';
@@ -91,23 +111,20 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
             setSearchValue(q);
             setMainCategory(mc);
             setUsageType(ut);
-            performSearch(q, mc, ut);
+            const detectedScript = /[а-яА-ЯёЁ]/.test(q) ? ScriptMode.CYRILLIC : ScriptMode.LATIN;
+            setFormScript(detectedScript);
+            const normalized = detectedScript === ScriptMode.CYRILLIC
+                ? standardToSimple(mapNslToEtymologized(q))
+                : q;
+            performSearch(normalized, mc, ut);
         }
     }, []);
 
-    const onKeyDown = useCallback((e) => {
+    const onKeyDown = useCallback((e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            const sValue = formScript === "CYRILLIC"
-                    ? standardToSimple(mapNslToEtymologized(searchValue))
-                    : searchValue;
-
-            const params = new URLSearchParams({ q: sValue });
-            if (mainCategory) params.set('mainCategory', mainCategory);
-            if (usageType) params.set('usageType', usageType);
-            performSearch(sValue, mainCategory, usageType);
-            router.replace(`/lexicon?${params}`);
+            executeSearch();
         }
-    }, [searchValue, mainCategory, usageType, formScript, performSearch, router]);
+    }, [executeSearch]);
 
     const onClickCard = useCallback((item) => () => {
         router.push(`/words/${item.id}`);
@@ -118,8 +135,14 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
     }, []);
 
     const toggleScript = useCallback(() => {
-        setFormScript(prev => prev === "CYRILLIC" ? "LATIN" : "CYRILLIC");
-    }, []);
+        setFormScript(prev => {
+            const next = prev === ScriptMode.CYRILLIC ? ScriptMode.LATIN : ScriptMode.CYRILLIC;
+            if (!isGuest) {
+                saveScriptPreference(next).catch(() => {});
+            }
+            return next;
+        });
+    }, [isGuest]);
 
     return (
         <>
@@ -146,21 +169,33 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
                     <button
                         className="script-switcher"
                         onClick={toggleScript}
-                        title={formScript === "CYRILLIC" ? "Преключи на латиницу" : "Преключи на кириллицу"}
+                        title={formScript === ScriptMode.CYRILLIC ? "Преключи на латиницу" : "Преключи на кириллицу"}
                     >
-                        {formScript === "CYRILLIC" ? "Кир" : "Lat"}
+                        {formScript === ScriptMode.CYRILLIC ? "Кир" : "Lat"}
                     </button>
                 </div>
 
-                <input
-                    type="text"
-                    id="searchInput"
-                    className="search-box"
-                    placeholder={t("searchPlaceholder")}
-                    value={searchValue}
-                    onKeyDown={onKeyDown}
-                    onChange={onChangeSearch}
-                />
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        className="search-box flex-1"
+                        placeholder={t("searchPlaceholder")}
+                        value={searchValue}
+                        onKeyDown={onKeyDown}
+                        onChange={onChangeSearch}
+                        ref={searchInputRef}
+                    />
+                    <button
+                        className="search-btn"
+                        onClick={executeSearch}
+                        title="Искати"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                            <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
 
                 {isGuest && (
                     <div className="flex items-center gap-1.5 px-1 mt-2 text-[11px] text-muted-foreground font-normal animate-fade-in">

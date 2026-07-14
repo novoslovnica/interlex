@@ -19,8 +19,10 @@ import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
 import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
+import BookmarkButton from "@/components/BookmarkButton";
+import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript }: any) => {
+const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -104,8 +106,8 @@ const Word = ({ item, currentScript }: any) => {
                     try {
                         paradigmData[num.key][c.key] = declineWordAutomatically({
                             dbItem: {
-                                interslavic: item.value,
-                                protoSlavic: item.value,
+                                interslavic: item.stem || item.word?.value || item.value,
+                                protoSlavic: item.proto || "",
                                 gender: item.gender || "masculine",
                                 protoStemClass: item.protoStemClass || "u",
                                 paradigm: item.paradigm || "A",
@@ -164,7 +166,7 @@ const Word = ({ item, currentScript }: any) => {
     ];
 
     const title = useMemo(() => {
-        if (currentScript === "CYRILLIC") {
+        if (currentScript === ScriptMode.CYRILLIC) {
             return `${cyrillicVariant} (${word})`
         }
         return `${word} (${cyrillicVariant})`;
@@ -198,6 +200,7 @@ const Word = ({ item, currentScript }: any) => {
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
                 <span className="font-mono text-slate-400 text-lg">{transcription}</span>
+                <BookmarkButton wordId={item.id} className="ml-auto" />
             </header>
 
             <div className="bg-slate-50 p-4 rounded-lg mb-6 text-sm text-slate-700 space-y-2">
@@ -329,9 +332,15 @@ const Word = ({ item, currentScript }: any) => {
                     {showParadigm && (
                         <div className="mt-4 p-1 bg-slate-50/50 rounded-xl border border-slate-100 animate-fadeIn">
                             {isVerb && verbData ? (
-                                <VerbConjugationTables data={verbData} />
+                                <VerbConjugationTables
+                                    data={verbData}
+                                    currentScript={currentScript}
+                                />
                             ) : isNoun && nounData ? (
-                                <NounDeclensionTables data={nounData} />
+                                <NounDeclensionTables
+                                    data={nounData}
+                                    currentScript={currentScript}
+                                />
                             ) : isAdj ? (
                                 <AdjectiveDeclensionTables
                                     isv={item.value}
@@ -371,7 +380,7 @@ const Word = ({ item, currentScript }: any) => {
                                 href={`/words/${item.id}`}
                                 className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 border border-slate-200/70 hover:border-blue-200 px-3 py-1.5 rounded-xl text-slate-800 hover:text-blue-700 font-medium text-sm transition-all duration-150 shadow-sm"
                             >
-                                <span>{currentScript === "CYRILLIC" ? isvToCyr(item.value) : item.value}</span>
+                                <span>{currentScript === ScriptMode.CYRILLIC ? isvToCyr(item.value) : item.value}</span>
                                 <span className="text-[10px] text-slate-400 font-normal uppercase bg-slate-200/50 px-1 rounded">
                   {item.pos}
                 </span>
@@ -477,7 +486,7 @@ const Word = ({ item, currentScript }: any) => {
                                                     href={`/words/${syn.targetWordId}`}
                                                     className="inline-flex items-center gap-1 bg-green-50 hover:bg-green-100 border border-green-200 px-2 py-1 rounded-lg text-sm text-green-800 hover:text-green-900 transition-colors"
                                                 >
-                                                    <span>{currentScript === "CYRILLIC" ? isvToCyr(syn.targetWord) : syn.targetWord}</span>
+                                                    <span>{currentScript === ScriptMode.CYRILLIC ? isvToCyr(syn.targetWord) : syn.targetWord}</span>
                                                     {syn.targetMeaning && (
                                                         <span className="text-[11px] text-green-500">— {syn.targetMeaning}</span>
                                                     )}
@@ -497,7 +506,7 @@ const Word = ({ item, currentScript }: any) => {
                                                     href={`/words/${ant.targetWordId}`}
                                                     className="inline-flex items-center gap-1 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1 rounded-lg text-sm text-red-800 hover:text-red-900 transition-colors"
                                                 >
-                                                    <span>{currentScript === "CYRILLIC" ? isvToCyr(ant.targetWord) : ant.targetWord}</span>
+                                                    <span>{currentScript === ScriptMode.CYRILLIC ? isvToCyr(ant.targetWord) : ant.targetWord}</span>
                                                     {ant.targetMeaning && (
                                                         <span className="text-[11px] text-red-500">— {ant.targetMeaning}</span>
                                                     )}

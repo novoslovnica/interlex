@@ -2,11 +2,12 @@
 import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import {isvToCyr} from "@/lib/isv";
+import {ScriptMode} from "@/lib/script-mode";
 
 interface SynonymGraphProps {
     word: string;
     wordId: number;
-    currentScript: string;
+    currentScript: ScriptMode;
     firstLevelSynonyms: { targetWordId: number; targetWord: string; targetMeaning: string }[];
     onClose: () => void;
 }
@@ -98,7 +99,7 @@ export default function SynonymGraph({word, wordId, currentScript, firstLevelSyn
 
     const dotR = 6;
     const labelOffset = dotR + 6;
-    const displayVal = (val: string) => currentScript === "CYRILLIC" ? isvToCyr(val) : val;
+    const displayVal = (val: string) => currentScript === ScriptMode.CYRILLIC ? isvToCyr(val) : val;
 
     const fillForLevel = (level: number) =>
         level === 0 ? ROOT_COLOR : level === 1 ? FIRST_COLOR : SECOND_COLOR;

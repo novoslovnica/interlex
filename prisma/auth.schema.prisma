@@ -25,6 +25,7 @@ model User {
 
   permissions   FeaturePermission[]
   settings      UserSettings?
+  collections   UserWordCollection[]
 }
 
 model Account {
@@ -98,4 +99,17 @@ model UserSettings {
   user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_settings")
+}
+
+model UserWordCollection {
+  id        String   @id @default(cuid())
+  userId    String
+  wordId    Int
+  notes     String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordId])
+  @@map("user_word_collection")
 }

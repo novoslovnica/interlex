@@ -16,9 +16,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = await getTranslations("library");
   const entry = await db.libraryEntry.findUnique({ where: { slug } })
   if (!entry) return { title: t("notFound") }
+  const title = `${entry.title} — ${t("title")}`
+  const description = entry.summary || `${t("description")} ${entry.title}`
   return {
-    title: `${entry.title} — ${t("title")}`,
-    description: entry.summary || `${t("description")} ${entry.title}`,
+    title,
+    description,
+    openGraph: {
+      title: `${entry.title} — Interslavic Lexicon`,
+      description,
+      type: "article",
+      url: `/library/${slug}`,
+      images: entry.coverImage ? [{ url: entry.coverImage }] : undefined,
+    },
+    twitter: {
+      card: entry.coverImage ? "summary_large_image" : "summary",
+      title: `${entry.title} — Interslavic Lexicon`,
+      description,
+      images: entry.coverImage ? [entry.coverImage] : undefined,
+    },
+    alternates: {
+      canonical: `/library/${slug}`,
+    },
   }
 }
 
@@ -91,8 +109,31 @@ export default async function LibraryReadingPage({ params }: PageProps) {
     ? childAuthors.slice(0, 3).join(", ") + (childAuthors.length > 3 ? " i drugi" : "")
     : "Neznany autor")
 
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: entry.title,
+    description: entry.summary || undefined,
+    url: `/library/${slug}`,
+    inLanguage: "isv",
+  }
+  if (entry.author) {
+    jsonLd.author = { "@type": "Person", name: entry.author }
+  }
+  if (entry.coverImage) {
+    jsonLd.image = entry.coverImage
+  }
+  if (entry.yearWritten) {
+    jsonLd.datePublished = `${entry.yearWritten}`
+  }
+  jsonLd.publisher = { "@type": "Organization", name: "Interslavic Lexicon" }
+
   return (
     <div className="h-full overflow-y-auto bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <Link

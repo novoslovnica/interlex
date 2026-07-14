@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import {ScriptMode, writeOrTranslate} from "@/lib/script-mode";
+import {isvToCyr} from "@/lib/isv";
 
 interface CaseForms {
     [caseName: string]: string;
@@ -12,9 +14,10 @@ interface NounDeclensionTablesProps {
         dual?: CaseForms;
         plural: CaseForms;
     };
+    currentScript: ScriptMode
 }
 
-export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data }) => {
+export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data, currentScript }) => {
     const t = useTranslations("word");
 
     const CASES = [
@@ -56,7 +59,7 @@ export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data
                                                 {t(`cases.${c.lookup}Short`)}
                                             </span>
                                             <span className="text-blue-700 font-semibold text-right break-all">
-                                                {formValue}
+                                                {writeOrTranslate(formValue, currentScript)}
                                             </span>
                                         </div>
                                     );

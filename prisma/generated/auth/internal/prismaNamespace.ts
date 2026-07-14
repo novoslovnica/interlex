@@ -389,7 +389,8 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   FeaturePermission: 'FeaturePermission',
-  UserSettings: 'UserSettings'
+  UserSettings: 'UserSettings',
+  UserWordCollection: 'UserWordCollection'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserWordCollection: {
+      payload: Prisma.$UserWordCollectionPayload<ExtArgs>
+      fields: Prisma.UserWordCollectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserWordCollectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserWordCollectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserWordCollectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserWordCollectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        findMany: {
+          args: Prisma.UserWordCollectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>[]
+        }
+        create: {
+          args: Prisma.UserWordCollectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        createMany: {
+          args: Prisma.UserWordCollectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserWordCollectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserWordCollectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        update: {
+          args: Prisma.UserWordCollectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserWordCollectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserWordCollectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserWordCollectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserWordCollectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWordCollectionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserWordCollectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserWordCollection>
+        }
+        groupBy: {
+          args: Prisma.UserWordCollectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWordCollectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserWordCollectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWordCollectionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -959,6 +1034,17 @@ export const UserSettingsScalarFieldEnum = {
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
+
+
+export const UserWordCollectionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  wordId: 'wordId',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type UserWordCollectionScalarFieldEnum = (typeof UserWordCollectionScalarFieldEnum)[keyof typeof UserWordCollectionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1147,6 +1233,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   featurePermission?: Prisma.FeaturePermissionOmit
   userSettings?: Prisma.UserSettingsOmit
+  userWordCollection?: Prisma.UserWordCollectionOmit
 }
 
 /* Types for Logging */

@@ -89,6 +89,11 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                             style={{ right: 0, left: 'auto' }}
                         >
                             <li>
+                                <Link href="/profile" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
+                                    Profile
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/settings" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
                                     {t("settings")}
                                 </Link>

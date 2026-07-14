@@ -61,6 +61,7 @@ export default function InfiniteEditableTable({ initialColumnVisibility, onSaveC
     const [searchQuery, setSearchQuery] = useState('');
     const [filterLang, setFilterLang] = useState('');
 const [unverifiedOnly, setUnverifiedOnly] = useState(false);
+const [langFilterExpanded, setLangFilterExpanded] = useState(true);
 
     const debouncedSearch = useDebounce(searchQuery, 400);
 
@@ -451,35 +452,46 @@ const [unverifiedOnly, setUnverifiedOnly] = useState(false);
                     )}
                 </div>
 
-                <span className="text-xs font-semibold text-muted-foreground block">Отображаемые языки (колонки):</span>
+                <button
+                    onClick={() => setLangFilterExpanded(!langFilterExpanded)}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors w-full text-left"
+                >
+                    <span className="text-[10px] font-mono">{langFilterExpanded ? '▼' : '▶'}</span>
+                    <span>Отображаемые языки (колонки):</span>
+                    <span className="text-[10px] text-muted-foreground font-normal ml-auto">
+                        {table.getAllLeafColumns().filter(c => c.id !== 'id' && c.getIsVisible()).length} видимых
+                    </span>
+                </button>
 
-                <div className="flex flex-wrap gap-3">
-                    <button
-                        onClick={() => table.toggleAllColumnsVisible(true)}
-                        className="text-xs bg-background border border-border rounded px-2 py-1 hover:bg-muted/50"
-                    >
-                        Показать все
-                    </button>
+                {langFilterExpanded && (
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => table.toggleAllColumnsVisible(true)}
+                            className="text-xs bg-background border border-border rounded px-2 py-1 hover:bg-muted/50"
+                        >
+                            Показать все
+                        </button>
 
-                    {table.getAllLeafColumns().map(column => {
-                        if (column.id === 'id') return null;
+                        {table.getAllLeafColumns().map(column => {
+                            if (column.id === 'id') return null;
 
-                        return (
-                            <label
-                                key={column.id}
-                                className="flex items-center gap-1.5 text-sm bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors"
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={column.getIsVisible()}
-                                    onChange={column.getToggleVisibilityHandler()}
-                                    className="rounded border text-blue-600 focus:ring-blue-500"
-                                />
-                                <span>{column.columnDef.header as string}</span>
-                            </label>
-                        );
-                    })}
-                </div>
+                            return (
+                                <label
+                                    key={column.id}
+                                    className="flex items-center gap-1.5 text-sm bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={column.getIsVisible()}
+                                        onChange={column.getToggleVisibilityHandler()}
+                                        className="rounded border text-blue-600 focus:ring-blue-500"
+                                    />
+                                    <span>{column.columnDef.header as string}</span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             <div

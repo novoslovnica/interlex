@@ -56,7 +56,8 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   FeaturePermission: 'FeaturePermission',
-  UserSettings: 'UserSettings'
+  UserSettings: 'UserSettings',
+  UserWordCollection: 'UserWordCollection'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -142,6 +143,17 @@ export const UserSettingsScalarFieldEnum = {
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
+
+
+export const UserWordCollectionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  wordId: 'wordId',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type UserWordCollectionScalarFieldEnum = (typeof UserWordCollectionScalarFieldEnum)[keyof typeof UserWordCollectionScalarFieldEnum]
 
 
 export const SortOrder = {

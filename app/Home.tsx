@@ -3,6 +3,7 @@ import React, {useCallback} from "react";
 import {useRouter} from "next/navigation";
 import {standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
+import {ScriptMode} from "@/lib/script-mode";
 
 import "./translate/main-page.css";
 
@@ -22,7 +23,7 @@ const options = [
     <option key="de" value="de">Deutsch</option>,
 ];
 
-export default function Home({ currentScript, isGuest }: { currentScript: string; isGuest?: boolean; }) {
+export default function Home({ currentScript, isGuest }: { currentScript: ScriptMode; isGuest?: boolean; }) {
     const [fromValue, setFromValue] = React.useState("ru");
     const [toValue, setToValue] = React.useState("is");
     const [searchValue, setSearchValue] = React.useState("");
@@ -37,7 +38,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: string
     const onKeyDown = useCallback((e) => {
         if (e.key === "Enter") {
             const sValue = fromValue === "is"
-                ? currentScript === "CYRILLIC"
+                ? currentScript === ScriptMode.CYRILLIC
                     ? standardToSimple(mapNslToEtymologized(searchValue))
                     : searchValue
                 : searchValue;
