@@ -1,11 +1,6 @@
 import { Case, NumberType } from './endingsRegistry';
 
-export type Grammeme =
-  | 'SgNom' | 'SgAcc' | 'SgGen' | 'SgDat' | 'SgIns' | 'SgLoc' | 'SgVoc'
-  | 'PlNom' | 'PlAcc' | 'PlGen' | 'PlDat' | 'PlIns' | 'PlLoc' | 'PlVoc'
-  | 'DuNom' | 'DuAcc' | 'DuGen' | 'DuDat' | 'DuIns' | 'DuLoc' | 'DuVoc';
-
-const CASE_TO_SHORT: Record<Case, string> = {
+const UD_CASE: Record<Case, string> = {
   nominative: 'Nom',
   accusative: 'Acc',
   genitive: 'Gen',
@@ -15,7 +10,7 @@ const CASE_TO_SHORT: Record<Case, string> = {
   vocative: 'Voc',
 };
 
-const SHORT_TO_CASE: Record<string, Case> = {
+const CASE_FROM_UD: Record<string, Case> = {
   Nom: 'nominative',
   Acc: 'accusative',
   Gen: 'genitive',
@@ -25,37 +20,49 @@ const SHORT_TO_CASE: Record<string, Case> = {
   Voc: 'vocative',
 };
 
-const NUMBER_TO_SHORT: Record<NumberType, string> = {
-  singular: 'Sg',
-  plural: 'Pl',
-  dual: 'Du',
+const UD_NUMBER: Record<NumberType, string> = {
+  singular: 'Sing',
+  plural: 'Plur',
+  dual: 'Dual',
 };
 
-const SHORT_TO_NUMBER: Record<string, NumberType> = {
-  Sg: 'singular',
-  Pl: 'plural',
-  Du: 'dual',
+const NUMBER_FROM_UD: Record<string, NumberType> = {
+  Sing: 'singular',
+  Plur: 'plural',
+  Dual: 'dual',
 };
 
-export function caseNumberToGrammeme(c: Case, n: NumberType): Grammeme {
-  return `${NUMBER_TO_SHORT[n]}${CASE_TO_SHORT[c]}` as Grammeme;
+export const UD_GENDER = {
+  masculine: 'Masc',
+  feminine: 'Fem',
+  neuter: 'Neut',
+} as const;
+
+export const UD_ANIMACY = {
+  animate: 'Anim',
+  inanimate: 'Inan',
+} as const;
+
+export type Grammeme = string;
+
+export function buildGrammeme(c: Case, n: NumberType, gender?: string, animacy?: string): string {
+  const parts: string[] = [
+    `Case=${UD_CASE[c]}`,
+    `Number=${UD_NUMBER[n]}`,
+  ];
+  if (gender) parts.push(`Gender=${UD_GENDER[gender as keyof typeof UD_GENDER] ?? gender}`);
+  if (animacy) parts.push(`Animacy=${UD_ANIMACY[animacy as keyof typeof UD_ANIMACY] ?? animacy}`);
+  return parts.join('|');
 }
 
-export function grammemeToCaseNumber(g: Grammeme): { case: Case; number: NumberType } {
-  const numShort = g.slice(0, 2) as 'Sg' | 'Pl' | 'Du';
-  const caseShort = g.slice(2) as keyof typeof SHORT_TO_CASE;
+export function parseGrammeme(g: Grammeme): { case: Case; number: NumberType } {
+  const feats = Object.fromEntries(
+    g.split('|').map(p => p.split('='))
+  );
+  const caseUD = feats['Case'];
+  const numUD = feats['Number'];
   return {
-    number: SHORT_TO_NUMBER[numShort],
-    case: SHORT_TO_CASE[caseShort],
+    case: CASE_FROM_UD[caseUD] || 'nominative',
+    number: NUMBER_FROM_UD[numUD] || 'singular',
   };
-}
-
-export function grammemeToCase(g: Grammeme): Case {
-  const caseShort = g.slice(2) as keyof typeof SHORT_TO_CASE;
-  return SHORT_TO_CASE[caseShort];
-}
-
-export function grammemeToNumber(g: Grammeme): NumberType {
-  const numShort = g.slice(0, 2) as 'Sg' | 'Pl' | 'Du';
-  return SHORT_TO_NUMBER[numShort];
 }

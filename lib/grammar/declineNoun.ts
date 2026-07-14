@@ -265,7 +265,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
     const stemType = identifyStemTypeByDb(dbItem);
 
     // 2. Вычисляем позицию ударения: морфемы → stressPosition на лексеме → penultimate
-    const ending = getEnding(stemType, targetNumber, targetCase);
+    const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', dbItem.gender, dbItem.animacy);
     const fullForm = dbItem.interslavic + ending;
 
     let effectiveStressPosition: number | undefined = undefined;
@@ -288,6 +288,8 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
         targetCase,
         targetNumber,
         effectiveStressPosition,
+        dbItem.gender,
+        dbItem.animacy,
     );
 
     // 4. Если предлога нет — возвращаем форму

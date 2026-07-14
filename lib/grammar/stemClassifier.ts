@@ -5,6 +5,7 @@ export interface EnhancedDbItem {
     protoSlavic: string;
     paradigm: 'A' | 'B' | 'C';
     gender: 'masculine' | 'feminine' | 'neuter' | 'verb';
+    animacy?: string;
     protoStemClass: string; // Данные из нашего нового JSON (ā, jā, o, jo, i, u, consonant)
     stemExtension?: string; // Данные из нашего нового JSON (en, es, et, er)
     stressPosition?: number | null; // Ударный слог от начала слова (0=первый), override penultimate
@@ -14,6 +15,18 @@ export interface EnhancedDbItem {
 /**
  * Идеальный динамический определитель класса склонения на основе метаданных БД
  */
+export function resolveGender(gender: string | null | undefined, protoStemClass?: string): 'masculine' | 'feminine' | 'neuter' {
+  if (gender) {
+    const lower = gender.toLowerCase();
+    if (lower === 'fem' || lower === 'feminine') return 'feminine';
+    if (lower === 'masc' || lower === 'masculine') return 'masculine';
+    if (lower === 'neuter' || lower === 'neut') return 'neuter';
+  }
+  if (protoStemClass === 'ā' || protoStemClass === 'jā' || protoStemClass === 'i') return 'feminine';
+  if (protoStemClass === 'u') return 'masculine';
+  return 'masculine';
+}
+
 export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
     const { protoStemClass, stemExtension, gender } = item;
 

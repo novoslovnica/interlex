@@ -12,6 +12,7 @@ import {NumeralDeclensionTables} from "@/app/words/[id]/NumeralDeclensionTables"
 import {PronounDeclensionTables} from "@/app/words/[id]/PronounDeclensionTables";
 import {AdverbComparisonTables} from "@/app/words/[id]/AdverbComparisonTables";
 import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
+import {resolveGender} from "@/lib/grammar/stemClassifier";
 import {PosType} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
@@ -108,7 +109,8 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
                             dbItem: {
                                 interslavic: item.stem || item.word?.value || item.value,
                                 protoSlavic: item.proto || "",
-                                gender: item.gender || "masculine",
+                                gender: resolveGender(item.gender, item.protoStemClass),
+                                animacy: item.animacy || undefined,
                                 protoStemClass: item.protoStemClass || "u",
                                 paradigm: item.paradigm || "A",
                                 stressPosition: item.stressPosition,

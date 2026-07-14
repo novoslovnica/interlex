@@ -15,11 +15,19 @@ const STEM_TYPES = [
   "u_basis", "i_basis", "consonant_n", "consonant_s",
 ]
 
-const GRAMMEMES = [
-  "SgNom", "SgAcc", "SgGen", "SgDat", "SgIns", "SgLoc", "SgVoc",
-  "PlNom", "PlAcc", "PlGen", "PlDat", "PlIns", "PlLoc", "PlVoc",
-  "DuNom", "DuAcc", "DuGen", "DuDat", "DuIns", "DuLoc",
-]
+const CASES = ["Nom", "Acc", "Gen", "Dat", "Ins", "Loc", "Voc"]
+const NUMBERS = ["Sing", "Plur", "Dual"]
+const GENDERS = ["", "Masc", "Fem", "Neut"]
+const ANIMACY_OPTIONS = ["", "Anim", "Inan"]
+
+function buildGrammemeUD(c: string, n: string, g: string, a: string): string {
+  let gs = `Case=${c}|Number=${n}`
+  if (g) gs += `|Gender=${g}`
+  if (a) gs += `|Animacy=${a}`
+  return gs
+}
+
+const BASE_GRAMMEMES = CASES.flatMap(c => NUMBERS.map(n => buildGrammemeUD(c, n, "", "")))
 
 const FLAVOR_LABELS: Record<string, string> = {
   CORE: "CORE (ISV)",
@@ -287,10 +295,15 @@ function CreateEndingModal({
   onCreated: () => void
 }) {
   const [stemType, setStemType] = useState("o_hard")
-  const [grammeme, setGrammeme] = useState("SgNom")
+  const [caseVal, setCaseVal] = useState("Nom")
+  const [numberVal, setNumberVal] = useState("Sing")
+  const [genderVal, setGenderVal] = useState("")
+  const [animacyVal, setAnimacyVal] = useState("")
   const [flavorCode, setFlavorCode] = useState<string>("CORE")
   const [value, setValue] = useState("")
   const [creating, setCreating] = useState(false)
+
+  const grammeme = buildGrammemeUD(caseVal, numberVal, genderVal, animacyVal)
 
   const handleCreate = async () => {
     if (!value.trim()) {
@@ -337,20 +350,59 @@ function CreateEndingModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold mb-1">Граммема</label>
+              <label className="block text-xs font-semibold mb-1">Падеж</label>
               <select
                 className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
-                value={grammeme}
-                onChange={(e) => setGrammeme(e.target.value)}
+                value={caseVal}
+                onChange={(e) => setCaseVal(e.target.value)}
               >
-                {GRAMMEMES.map((g) => (
-                  <option key={g} value={g}>{g}</option>
+                {CASES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold mb-1">Число</label>
+              <select
+                className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                value={numberVal}
+                onChange={(e) => setNumberVal(e.target.value)}
+              >
+                {NUMBERS.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Род</label>
+              <select
+                className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                value={genderVal}
+                onChange={(e) => setGenderVal(e.target.value)}
+              >
+                {GENDERS.map((g) => (
+                  <option key={g || "none"} value={g}>{g || "(любой)"}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold mb-1">Одушевлённость</label>
+              <select
+                className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                value={animacyVal}
+                onChange={(e) => setAnimacyVal(e.target.value)}
+              >
+                {ANIMACY_OPTIONS.map((a) => (
+                  <option key={a || "none"} value={a}>{a || "(любая)"}</option>
+                ))}
+              </select>
+            </div>
             <div>
               <label className="block text-xs font-semibold mb-1">Вариант</label>
               <select
@@ -363,6 +415,9 @@ function CreateEndingModal({
                 ))}
               </select>
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1">Окончание</label>
               <input
@@ -371,6 +426,15 @@ function CreateEndingModal({
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="ъ, a, u, omъ..."
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Граммема (авто)</label>
+              <input
+                type="text"
+                className="w-full px-3 py-1.5 border rounded-md bg-gray-100 text-muted-foreground"
+                value={grammeme}
+                readOnly
               />
             </div>
           </div>

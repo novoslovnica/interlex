@@ -7,6 +7,8 @@ NOTES.md
 drafts/
 scripts/python/pdf/
 public/covers/
+interlex.db-shm
+interlex.db-wal
 
 # dependencies
 /node_modules

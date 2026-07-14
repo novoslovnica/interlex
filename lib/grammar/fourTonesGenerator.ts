@@ -1,4 +1,5 @@
-import { StemType, Case, NumberType, SLAVIC_ENDINGS_REGISTRY } from './endingsRegistry';
+import { StemType, Case, NumberType } from './endingsRegistry';
+import { getEnding } from './endingLoader';
 
 // Четыре строгих академических тона
 export type FourSlavicTones = 'long_acute' | 'short_acute' | 'long_circumflex' | 'short_circumflex';
@@ -84,9 +85,11 @@ export function generateBaseNounFormWithFourTones(
     targetCase: Case,
     targetNumber: NumberType,
     stressPosition?: number,
+    gender?: string,
+    animacy?: string,
 ): string {
 
-    const ending = SLAVIC_ENDINGS_REGISTRY[stemType][targetNumber][targetCase];
+    const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', gender, animacy);
     const fullForm = interslavicWord + ending;
 
     // =========================================================================
