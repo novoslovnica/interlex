@@ -11,8 +11,6 @@ import {AdjectiveDeclensionTables} from "@/app/words/[id]/AdjectiveDeclensionTab
 import {NumeralDeclensionTables} from "@/app/words/[id]/NumeralDeclensionTables";
 import {PronounDeclensionTables} from "@/app/words/[id]/PronounDeclensionTables";
 import {AdverbComparisonTables} from "@/app/words/[id]/AdverbComparisonTables";
-import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
-import {resolveGender} from "@/lib/grammar/stemClassifier";
 import {PosType} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
@@ -23,7 +21,7 @@ import SynonymGraph from "@/app/words/[id]/SynonymGraph";
 import BookmarkButton from "@/components/BookmarkButton";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode }) => {
+const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -77,8 +75,11 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
         }
     }
 
-    let nounData;
+    let nounData: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | undefined;
     if (isNoun) {
+      if (nounParadigm) {
+        nounData = nounParadigm;
+      } else {
         try {
             const CASES_LIST = [
                 { key: 'nominative' },
@@ -96,7 +97,7 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
                 { key: 'plural' },
             ] as const;
 
-            const paradigmData: Record<string, Record<string, string>> = {
+            const paradigmData: { singular: Record<string, string>; dual: Record<string, string>; plural: Record<string, string> } = {
                 singular: {},
                 dual: {},
                 plural: {},
@@ -105,23 +106,7 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
             for (const num of NUMBERS_LIST) {
                 for (const c of CASES_LIST) {
                     try {
-                        paradigmData[num.key][c.key] = declineWordAutomatically({
-                            dbItem: {
-                                interslavic: item.stem || item.word?.value || item.value,
-                                protoSlavic: item.proto || "",
-                                gender: resolveGender(item.gender, item.protoStemClass),
-                                animacy: item.animacy || undefined,
-                                protoStemClass: item.protoStemClass || "u",
-                                paradigm: item.paradigm || "A",
-                                stressPosition: item.stressPosition,
-                                morphemes: item.roots?.map((r: any) => ({
-                                    value: r.value,
-                                    stressPosition: r.stressPosition,
-                                })),
-                            },
-                            targetCase: c.key,
-                            targetNumber: num.key,
-                        });
+                        paradigmData[num.key][c.key] = '—';
                     } catch (error) {
                         console.error(`Error generating form: ${num.key} ${c.key}`, error);
                         paradigmData[num.key][c.key] = '—';
@@ -133,6 +118,7 @@ const Word = ({ item, currentScript }: { item: any; currentScript: ScriptMode })
         } catch {
             console.log('Failed to load declension module');
         }
+      }
     }
 
     const meaningsArray = Array.isArray(item.meanings) ? item.meanings : (item.meanings ? [item.meanings] : []);

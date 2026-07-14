@@ -5,6 +5,9 @@ import './word-page.css';
 import {getUserScript} from "@/lib/get-user-script";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
+import {resolveGender} from "@/lib/grammar/stemClassifier";
+import {PosType} from "@/lib/grammar/common";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -40,6 +43,41 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const currentScript = await getUserScript();
 
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
+
+    let nounParadigm: { singular: Record<string, string>; dual: Record<string, string>; plural: Record<string, string> } | null = null;
+    if (item?.pos === PosType.NOUN) {
+      const CASES_LIST = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'locative', 'vocative'] as const;
+      const NUMBERS_LIST = ['singular', 'dual', 'plural'] as const;
+
+      nounParadigm = { singular: {}, dual: {}, plural: {} };
+
+      for (const num of NUMBERS_LIST) {
+        for (const c of CASES_LIST) {
+          try {
+            nounParadigm[num][c] = declineWordAutomatically({
+              dbItem: {
+                interslavic: item.stem || item.word?.value || item.value,
+                protoSlavic: item.proto || "",
+                gender: resolveGender(item.gender, item.protoStemClass),
+                animacy: item.animacy || undefined,
+                protoStemClass: item.protoStemClass || "u",
+                paradigm: item.paradigm || "A",
+                stressPosition: item.stressPosition,
+                morphemes: item.roots?.map((r: any) => ({
+                  value: r.value,
+                  stressPosition: r.stressPosition,
+                })),
+              },
+              targetCase: c,
+              targetNumber: num,
+            });
+          } catch {
+            nounParadigm[num][c] = '—';
+          }
+        }
+      }
+    }
+
     const jsonLd = wordValue ? {
       "@context": "https://schema.org",
       "@type": "DefinedTerm",
@@ -59,7 +97,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             )}
             <div className="scroll-container w-full pt-6 px-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Word item={item} currentScript={currentScript} />
+                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} />
                 </Suspense>
             </div>
         </main>
