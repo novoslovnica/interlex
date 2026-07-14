@@ -27,7 +27,10 @@ export default async function AdminLibraryPage() {
       })).map(p => p.featureKey)
     : []
 
-  const entries = await db.libraryEntry.findMany({ orderBy: { createdAt: "desc" } })
+  const entries = await db.libraryEntry.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { children: true } } },
+  })
 
   async function deleteEntry(formData: FormData) {
     "use server"
@@ -57,11 +60,15 @@ export default async function AdminLibraryPage() {
               <tr>
                 <th className="text-left px-3 py-2 font-medium">Название</th>
                 <th className="text-left px-3 py-2 font-medium">Автор</th>
-                <th className="text-left px-3 py-2 font-medium">Категория</th>
-                <th className="text-left px-3 py-2 font-medium">Флаворизация</th>
+                <th className="text-left px-3 py-2 font-medium">Žanr</th>
+                <th className="text-left px-3 py-2 font-medium">Tematika</th>
+                <th className="text-left px-3 py-2 font-medium">Flavorizacija</th>
                 <th className="text-left px-3 py-2 font-medium">Год</th>
                 <th className="text-left px-3 py-2 font-medium">Переводчик</th>
                 <th className="text-left px-3 py-2 font-medium">Добавил</th>
+                <th className="text-center px-3 py-2 font-medium">Аудио</th>
+                <th className="text-center px-3 py-2 font-medium">Публично</th>
+                <th className="text-center px-3 py-2 font-medium">Детей</th>
                 <th className="text-center px-3 py-2 font-medium">Проверено</th>
                 <th className="text-right px-3 py-2 font-medium">Просмотры</th>
                 <th className="text-right px-3 py-2 font-medium">Действия</th>
@@ -70,7 +77,7 @@ export default async function AdminLibraryPage() {
             <tbody className="divide-y">
               {entries.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="px-3 py-8 text-center text-muted-foreground text-sm">
+                  <td colSpan={13} className="px-3 py-8 text-center text-muted-foreground text-sm">
                     В библиотеке пока нет текстов
                   </td>
                 </tr>
@@ -79,13 +86,25 @@ export default async function AdminLibraryPage() {
                 <tr key={entry.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-3 py-2 font-medium max-w-[200px] truncate" title={entry.title}>{entry.title}</td>
                   <td className="px-3 py-2 text-muted-foreground">{entry.author || "—"}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{entry.category}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{entry.genre}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{entry.topic || "—"}</td>
                   <td className="px-3 py-2 text-muted-foreground">{getFlavorLabel(entry.flavor)}</td>
                   <td className="px-3 py-2 text-muted-foreground">
                     {entry.yearWritten ? (entry.yearTranslated ? `${entry.yearWritten}→${entry.yearTranslated}` : entry.yearWritten) : (entry.yearTranslated ? entry.yearTranslated : "—")}
                   </td>
                   <td className="px-3 py-2 text-muted-foreground">{entry.translator || "—"}</td>
                   <td className="px-3 py-2 text-muted-foreground max-w-[120px] truncate" title={entry.addedBy || ""}>{entry.addedBy || "—"}</td>
+                  <td className="px-3 py-2 text-center">
+                    {entry.audioFile ? <span className="text-lg" title={entry.audioFile}>🎧</span> : <span className="text-muted-foreground">—</span>}
+                  </td>
+                  <td className="px-3 py-2 text-center">
+                    {entry.isPublic ? (
+                      <span className="text-green-600 font-bold">✓</span>
+                    ) : (
+                      <span className="text-red-400 font-bold">✗</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-center text-muted-foreground">{entry._count.children}</td>
                   <td className="px-3 py-2 text-center">
                     {entry.verified ? (
                       <span className="text-green-600 font-bold">✓</span>

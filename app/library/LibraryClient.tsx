@@ -13,30 +13,54 @@ interface Category {
 interface LibraryItem {
   slug: string
   title: string
-  category: string
-  categoryMeta: { id: string; title: string; icon: string }
+  genre: string
+  genreMeta: { id: string; title: string; icon: string }
+  topic: string | null
+  topicMeta: { id: string; title: string; icon: string } | null
   author: string
+  translator: string | null
+  coverImage: string | null
+  audioFile: string | null
   summary: string | null
   views: number
+  bodyLength: number
   date: string
+  isCollection: boolean
 }
 
 interface LibraryClientProps {
-  categories: Category[]
+  genres: Category[]
+  topics: Category[]
   items: LibraryItem[]
   canCreate?: boolean
 }
 
-export function LibraryClient({ categories, items, canCreate }: LibraryClientProps) {
+function readingTimeText(bodyLength: number): string {
+  const min = Math.max(1, Math.round(bodyLength / 1000))
+  return `~${min} min`
+}
+
+function pageEstimateText(bodyLength: number): string {
+  const pages = Math.max(1, Math.ceil(bodyLength / 1800))
+  return `~${pages} str.`
+}
+
+export function LibraryClient({ genres, topics, items, canCreate }: LibraryClientProps) {
   const t = useTranslations("library");
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedGenre, setSelectedGenre] = useState("all")
+  const [selectedTopic, setSelectedTopic] = useState("all")
+  const [selectedOrigin, setSelectedOrigin] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
 
   const filteredItems = items.filter(item => {
-    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory
+    const matchesGenre = selectedGenre === "all" || item.genre === selectedGenre
+    const matchesTopic = selectedTopic === "all" || item.topic === selectedTopic
+    const matchesOrigin = selectedOrigin === "all" ||
+      (selectedOrigin === "original" && !item.translator) ||
+      (selectedOrigin === "translated" && item.translator)
     const q = searchQuery.toLowerCase()
     const matchesSearch = !q || item.title.toLowerCase().includes(q) || item.author.toLowerCase().includes(q)
-    return matchesCategory && matchesSearch
+    return matchesGenre && matchesTopic && matchesOrigin && matchesSearch
   })
 
   return (
@@ -53,21 +77,70 @@ export function LibraryClient({ categories, items, canCreate }: LibraryClientPro
           <p className="text-[11px] text-muted-foreground">Biblioteka tekstov</p>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
-                selectedCategory === category.id
-                  ? "bg-muted text-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              }`}
-            >
-              <span className="text-sm">{category.icon}</span>
-              <span className="truncate">{category.title}</span>
-            </button>
-          ))}
+        <nav className="flex-1 overflow-y-auto p-2 space-y-3">
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground px-3 mb-1 uppercase tracking-wider">Žanry</p>
+            <div className="space-y-0.5">
+              {genres.map(genre => (
+                <button
+                  key={genre.id}
+                  onClick={() => setSelectedGenre(genre.id)}
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                    selectedGenre === genre.id
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="text-sm">{genre.icon}</span>
+                  <span className="truncate">{genre.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground px-3 mb-1 uppercase tracking-wider">Temy</p>
+            <div className="space-y-0.5">
+              {topics.map(topic => (
+                <button
+                  key={topic.id}
+                  onClick={() => setSelectedTopic(topic.id)}
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                    selectedTopic === topic.id
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="text-sm">{topic.icon}</span>
+                  <span className="truncate">{topic.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-[11px] font-medium text-muted-foreground px-3 mb-1 uppercase tracking-wider">Pohod</p>
+            <div className="space-y-0.5">
+              {[
+                { id: "all", title: t("originAll"), icon: "🌐" },
+                { id: "original", title: t("original"), icon: "✏️" },
+                { id: "translated", title: t("translated"), icon: "🔄" },
+              ].map(origin => (
+                <button
+                  key={origin.id}
+                  onClick={() => setSelectedOrigin(origin.id)}
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                    selectedOrigin === origin.id
+                      ? "bg-muted text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="text-sm">{origin.icon}</span>
+                  <span className="truncate">{origin.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </nav>
 
         <div className="p-4 border-t text-[11px] text-muted-foreground space-y-2">
@@ -120,12 +193,22 @@ export function LibraryClient({ categories, items, canCreate }: LibraryClientPro
                     href={`/library/${item.slug}`}
                     className="flex items-start gap-4 py-3 group -mx-2 px-2 rounded-md hover:bg-muted/30 transition-colors"
                   >
-                    <span className="text-base mt-0.5 shrink-0">{item.categoryMeta.icon}</span>
+                    {item.coverImage ? (
+                      <img
+                        src={item.coverImage}
+                        alt=""
+                        className="w-12 h-16 shrink-0 rounded object-cover border"
+                      />
+                    ) : (
+                      <span className="text-base mt-0.5 shrink-0">{item.genreMeta.icon}</span>
+                    )}
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="flex items-baseline gap-2">
                         <h3 className="font-medium text-sm group-hover:text-primary transition-colors truncate">
                           {item.title}
                         </h3>
+                        {item.isCollection && <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0">Sbornik</span>}
+                        {item.audioFile && <span className="text-xs shrink-0" title="Audio dostupny">🎧</span>}
                         <span className="text-[11px] text-muted-foreground/60 shrink-0 font-mono">{item.date}</span>
                       </div>
                       {item.summary && (
@@ -134,6 +217,8 @@ export function LibraryClient({ categories, items, canCreate }: LibraryClientPro
                       <div className="flex items-center gap-3 text-[11px] text-muted-foreground/70">
                         <span>{item.author}</span>
                         <span>{item.views} 👁</span>
+                        <span>{readingTimeText(item.bodyLength)}</span>
+                        <span>{pageEstimateText(item.bodyLength)}</span>
                       </div>
                     </div>
                   </Link>

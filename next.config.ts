@@ -6,6 +6,12 @@ const withNextIntl = createNextIntlPlugin(
 );
 
 const nextConfig: NextConfig = {
+    experimental: {
+        serverActions: {
+            bodySizeLimit: "50mb",
+        },
+    },
+    serverExternalPackages: ["epub-gen"],
     typescript: {
         ignoreBuildErrors: true,
     },

@@ -5,7 +5,7 @@ sshpass -f <(printf '%s\n' $PASSWORD) scp .env.production $USERNAME@$HOST:/var/w
 echo "env files exported"
 
 # sshpass -f <(printf '%s\n' $PASSWORD) scp interlex.db $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/interlex.db
-echo "interlex db exported"
+sshpass -f <(printf '%s\n' $PASSWORD) scp public/covers/ $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/public/covers/
 sshpass -f <(printf '%s\n' $PASSWORD) scp library.db $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/library.db
 #sshpass -f <(printf '%s\n' $PASSWORD) scp auth.db $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/auth.db
 echo "library db exported"

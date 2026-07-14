@@ -28,16 +28,20 @@ export type AggregateLibraryEntry = {
 
 export type LibraryEntryAvgAggregateOutputType = {
   id: number | null
+  bodyLength: number | null
   yearWritten: number | null
   yearTranslated: number | null
   views: number | null
+  parentId: number | null
 }
 
 export type LibraryEntrySumAggregateOutputType = {
   id: number | null
+  bodyLength: number | null
   yearWritten: number | null
   yearTranslated: number | null
   views: number | null
+  parentId: number | null
 }
 
 export type LibraryEntryMinAggregateOutputType = {
@@ -45,9 +49,11 @@ export type LibraryEntryMinAggregateOutputType = {
   slug: string | null
   title: string | null
   author: string | null
-  category: string | null
+  genre: string | null
+  topic: string | null
   flavor: string | null
   body: string | null
+  bodyLength: number | null
   source: string | null
   yearWritten: number | null
   yearTranslated: number | null
@@ -59,7 +65,10 @@ export type LibraryEntryMinAggregateOutputType = {
   corpusSlug: string | null
   summary: string | null
   coverImage: string | null
+  audioFile: string | null
   views: number | null
+  isPublic: boolean | null
+  parentId: number | null
   actionHistory: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -70,9 +79,11 @@ export type LibraryEntryMaxAggregateOutputType = {
   slug: string | null
   title: string | null
   author: string | null
-  category: string | null
+  genre: string | null
+  topic: string | null
   flavor: string | null
   body: string | null
+  bodyLength: number | null
   source: string | null
   yearWritten: number | null
   yearTranslated: number | null
@@ -84,7 +95,10 @@ export type LibraryEntryMaxAggregateOutputType = {
   corpusSlug: string | null
   summary: string | null
   coverImage: string | null
+  audioFile: string | null
   views: number | null
+  isPublic: boolean | null
+  parentId: number | null
   actionHistory: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -95,9 +109,11 @@ export type LibraryEntryCountAggregateOutputType = {
   slug: number
   title: number
   author: number
-  category: number
+  genre: number
+  topic: number
   flavor: number
   body: number
+  bodyLength: number
   source: number
   yearWritten: number
   yearTranslated: number
@@ -109,7 +125,10 @@ export type LibraryEntryCountAggregateOutputType = {
   corpusSlug: number
   summary: number
   coverImage: number
+  audioFile: number
   views: number
+  isPublic: number
+  parentId: number
   actionHistory: number
   createdAt: number
   updatedAt: number
@@ -119,16 +138,20 @@ export type LibraryEntryCountAggregateOutputType = {
 
 export type LibraryEntryAvgAggregateInputType = {
   id?: true
+  bodyLength?: true
   yearWritten?: true
   yearTranslated?: true
   views?: true
+  parentId?: true
 }
 
 export type LibraryEntrySumAggregateInputType = {
   id?: true
+  bodyLength?: true
   yearWritten?: true
   yearTranslated?: true
   views?: true
+  parentId?: true
 }
 
 export type LibraryEntryMinAggregateInputType = {
@@ -136,9 +159,11 @@ export type LibraryEntryMinAggregateInputType = {
   slug?: true
   title?: true
   author?: true
-  category?: true
+  genre?: true
+  topic?: true
   flavor?: true
   body?: true
+  bodyLength?: true
   source?: true
   yearWritten?: true
   yearTranslated?: true
@@ -150,7 +175,10 @@ export type LibraryEntryMinAggregateInputType = {
   corpusSlug?: true
   summary?: true
   coverImage?: true
+  audioFile?: true
   views?: true
+  isPublic?: true
+  parentId?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -161,9 +189,11 @@ export type LibraryEntryMaxAggregateInputType = {
   slug?: true
   title?: true
   author?: true
-  category?: true
+  genre?: true
+  topic?: true
   flavor?: true
   body?: true
+  bodyLength?: true
   source?: true
   yearWritten?: true
   yearTranslated?: true
@@ -175,7 +205,10 @@ export type LibraryEntryMaxAggregateInputType = {
   corpusSlug?: true
   summary?: true
   coverImage?: true
+  audioFile?: true
   views?: true
+  isPublic?: true
+  parentId?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -186,9 +219,11 @@ export type LibraryEntryCountAggregateInputType = {
   slug?: true
   title?: true
   author?: true
-  category?: true
+  genre?: true
+  topic?: true
   flavor?: true
   body?: true
+  bodyLength?: true
   source?: true
   yearWritten?: true
   yearTranslated?: true
@@ -200,7 +235,10 @@ export type LibraryEntryCountAggregateInputType = {
   corpusSlug?: true
   summary?: true
   coverImage?: true
+  audioFile?: true
   views?: true
+  isPublic?: true
+  parentId?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -298,9 +336,11 @@ export type LibraryEntryGroupByOutputType = {
   slug: string
   title: string
   author: string | null
-  category: string
+  genre: string
+  topic: string | null
   flavor: string
   body: string | null
+  bodyLength: number
   source: string | null
   yearWritten: number | null
   yearTranslated: number | null
@@ -312,7 +352,10 @@ export type LibraryEntryGroupByOutputType = {
   corpusSlug: string | null
   summary: string | null
   coverImage: string | null
+  audioFile: string | null
   views: number
+  isPublic: boolean
+  parentId: number | null
   actionHistory: string | null
   createdAt: Date
   updatedAt: Date
@@ -346,9 +389,11 @@ export type LibraryEntryWhereInput = {
   slug?: Prisma.StringFilter<"LibraryEntry"> | string
   title?: Prisma.StringFilter<"LibraryEntry"> | string
   author?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
-  category?: Prisma.StringFilter<"LibraryEntry"> | string
+  genre?: Prisma.StringFilter<"LibraryEntry"> | string
+  topic?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   flavor?: Prisma.StringFilter<"LibraryEntry"> | string
   body?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  bodyLength?: Prisma.IntFilter<"LibraryEntry"> | number
   source?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   yearWritten?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
   yearTranslated?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
@@ -360,10 +405,15 @@ export type LibraryEntryWhereInput = {
   corpusSlug?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntFilter<"LibraryEntry"> | number
+  isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
+  parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
+  parent?: Prisma.XOR<Prisma.LibraryEntryNullableScalarRelationFilter, Prisma.LibraryEntryWhereInput> | null
+  children?: Prisma.LibraryEntryListRelationFilter
 }
 
 export type LibraryEntryOrderByWithRelationInput = {
@@ -371,9 +421,11 @@ export type LibraryEntryOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   author?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrder
+  genre?: Prisma.SortOrder
+  topic?: Prisma.SortOrderInput | Prisma.SortOrder
   flavor?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   yearWritten?: Prisma.SortOrderInput | Prisma.SortOrder
   yearTranslated?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -385,10 +437,15 @@ export type LibraryEntryOrderByWithRelationInput = {
   corpusSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  audioFile?: Prisma.SortOrderInput | Prisma.SortOrder
   views?: Prisma.SortOrder
+  isPublic?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  parent?: Prisma.LibraryEntryOrderByWithRelationInput
+  children?: Prisma.LibraryEntryOrderByRelationAggregateInput
 }
 
 export type LibraryEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -399,9 +456,11 @@ export type LibraryEntryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.LibraryEntryWhereInput | Prisma.LibraryEntryWhereInput[]
   title?: Prisma.StringFilter<"LibraryEntry"> | string
   author?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
-  category?: Prisma.StringFilter<"LibraryEntry"> | string
+  genre?: Prisma.StringFilter<"LibraryEntry"> | string
+  topic?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   flavor?: Prisma.StringFilter<"LibraryEntry"> | string
   body?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  bodyLength?: Prisma.IntFilter<"LibraryEntry"> | number
   source?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   yearWritten?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
   yearTranslated?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
@@ -413,10 +472,15 @@ export type LibraryEntryWhereUniqueInput = Prisma.AtLeast<{
   corpusSlug?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntFilter<"LibraryEntry"> | number
+  isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
+  parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
+  parent?: Prisma.XOR<Prisma.LibraryEntryNullableScalarRelationFilter, Prisma.LibraryEntryWhereInput> | null
+  children?: Prisma.LibraryEntryListRelationFilter
 }, "id" | "slug">
 
 export type LibraryEntryOrderByWithAggregationInput = {
@@ -424,9 +488,11 @@ export type LibraryEntryOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   author?: Prisma.SortOrderInput | Prisma.SortOrder
-  category?: Prisma.SortOrder
+  genre?: Prisma.SortOrder
+  topic?: Prisma.SortOrderInput | Prisma.SortOrder
   flavor?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   yearWritten?: Prisma.SortOrderInput | Prisma.SortOrder
   yearTranslated?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -438,7 +504,10 @@ export type LibraryEntryOrderByWithAggregationInput = {
   corpusSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  audioFile?: Prisma.SortOrderInput | Prisma.SortOrder
   views?: Prisma.SortOrder
+  isPublic?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -457,9 +526,11 @@ export type LibraryEntryScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"LibraryEntry"> | string
   title?: Prisma.StringWithAggregatesFilter<"LibraryEntry"> | string
   author?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
-  category?: Prisma.StringWithAggregatesFilter<"LibraryEntry"> | string
+  genre?: Prisma.StringWithAggregatesFilter<"LibraryEntry"> | string
+  topic?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   flavor?: Prisma.StringWithAggregatesFilter<"LibraryEntry"> | string
   body?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
+  bodyLength?: Prisma.IntWithAggregatesFilter<"LibraryEntry"> | number
   source?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   yearWritten?: Prisma.IntNullableWithAggregatesFilter<"LibraryEntry"> | number | null
   yearTranslated?: Prisma.IntNullableWithAggregatesFilter<"LibraryEntry"> | number | null
@@ -471,7 +542,10 @@ export type LibraryEntryScalarWhereWithAggregatesInput = {
   corpusSlug?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   summary?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
+  audioFile?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntWithAggregatesFilter<"LibraryEntry"> | number
+  isPublic?: Prisma.BoolWithAggregatesFilter<"LibraryEntry"> | boolean
+  parentId?: Prisma.IntNullableWithAggregatesFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LibraryEntry"> | Date | string
@@ -481,9 +555,11 @@ export type LibraryEntryCreateInput = {
   slug: string
   title: string
   author?: string | null
-  category: string
+  genre?: string
+  topic?: string | null
   flavor?: string
   body?: string | null
+  bodyLength?: number
   source?: string | null
   yearWritten?: number | null
   yearTranslated?: number | null
@@ -495,10 +571,14 @@ export type LibraryEntryCreateInput = {
   corpusSlug?: string | null
   summary?: string | null
   coverImage?: string | null
+  audioFile?: string | null
   views?: number
+  isPublic?: boolean
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  parent?: Prisma.LibraryEntryCreateNestedOneWithoutChildrenInput
+  children?: Prisma.LibraryEntryCreateNestedManyWithoutParentInput
 }
 
 export type LibraryEntryUncheckedCreateInput = {
@@ -506,9 +586,11 @@ export type LibraryEntryUncheckedCreateInput = {
   slug: string
   title: string
   author?: string | null
-  category: string
+  genre?: string
+  topic?: string | null
   flavor?: string
   body?: string | null
+  bodyLength?: number
   source?: string | null
   yearWritten?: number | null
   yearTranslated?: number | null
@@ -520,19 +602,25 @@ export type LibraryEntryUncheckedCreateInput = {
   corpusSlug?: string | null
   summary?: string | null
   coverImage?: string | null
+  audioFile?: string | null
   views?: number
+  isPublic?: boolean
+  parentId?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.LibraryEntryUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type LibraryEntryUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flavor?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -544,10 +632,14 @@ export type LibraryEntryUpdateInput = {
   corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.LibraryEntryUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.LibraryEntryUpdateManyWithoutParentNestedInput
 }
 
 export type LibraryEntryUncheckedUpdateInput = {
@@ -555,9 +647,11 @@ export type LibraryEntryUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flavor?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -569,10 +663,14 @@ export type LibraryEntryUncheckedUpdateInput = {
   corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.LibraryEntryUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type LibraryEntryCreateManyInput = {
@@ -580,9 +678,11 @@ export type LibraryEntryCreateManyInput = {
   slug: string
   title: string
   author?: string | null
-  category: string
+  genre?: string
+  topic?: string | null
   flavor?: string
   body?: string | null
+  bodyLength?: number
   source?: string | null
   yearWritten?: number | null
   yearTranslated?: number | null
@@ -594,7 +694,10 @@ export type LibraryEntryCreateManyInput = {
   corpusSlug?: string | null
   summary?: string | null
   coverImage?: string | null
+  audioFile?: string | null
   views?: number
+  isPublic?: boolean
+  parentId?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -604,9 +707,11 @@ export type LibraryEntryUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flavor?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -618,7 +723,9 @@ export type LibraryEntryUpdateManyMutationInput = {
   corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -629,9 +736,11 @@ export type LibraryEntryUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  category?: Prisma.StringFieldUpdateOperationsInput | string
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   flavor?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -643,10 +752,28 @@ export type LibraryEntryUncheckedUpdateManyInput = {
   corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LibraryEntryNullableScalarRelationFilter = {
+  is?: Prisma.LibraryEntryWhereInput | null
+  isNot?: Prisma.LibraryEntryWhereInput | null
+}
+
+export type LibraryEntryListRelationFilter = {
+  every?: Prisma.LibraryEntryWhereInput
+  some?: Prisma.LibraryEntryWhereInput
+  none?: Prisma.LibraryEntryWhereInput
+}
+
+export type LibraryEntryOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type LibraryEntryCountOrderByAggregateInput = {
@@ -654,9 +781,11 @@ export type LibraryEntryCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  category?: Prisma.SortOrder
+  genre?: Prisma.SortOrder
+  topic?: Prisma.SortOrder
   flavor?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   source?: Prisma.SortOrder
   yearWritten?: Prisma.SortOrder
   yearTranslated?: Prisma.SortOrder
@@ -668,7 +797,10 @@ export type LibraryEntryCountOrderByAggregateInput = {
   corpusSlug?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
+  audioFile?: Prisma.SortOrder
   views?: Prisma.SortOrder
+  isPublic?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -676,9 +808,11 @@ export type LibraryEntryCountOrderByAggregateInput = {
 
 export type LibraryEntryAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   yearWritten?: Prisma.SortOrder
   yearTranslated?: Prisma.SortOrder
   views?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
 }
 
 export type LibraryEntryMaxOrderByAggregateInput = {
@@ -686,9 +820,11 @@ export type LibraryEntryMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  category?: Prisma.SortOrder
+  genre?: Prisma.SortOrder
+  topic?: Prisma.SortOrder
   flavor?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   source?: Prisma.SortOrder
   yearWritten?: Prisma.SortOrder
   yearTranslated?: Prisma.SortOrder
@@ -700,7 +836,10 @@ export type LibraryEntryMaxOrderByAggregateInput = {
   corpusSlug?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
+  audioFile?: Prisma.SortOrder
   views?: Prisma.SortOrder
+  isPublic?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -711,9 +850,11 @@ export type LibraryEntryMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   author?: Prisma.SortOrder
-  category?: Prisma.SortOrder
+  genre?: Prisma.SortOrder
+  topic?: Prisma.SortOrder
   flavor?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   source?: Prisma.SortOrder
   yearWritten?: Prisma.SortOrder
   yearTranslated?: Prisma.SortOrder
@@ -725,7 +866,10 @@ export type LibraryEntryMinOrderByAggregateInput = {
   corpusSlug?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
+  audioFile?: Prisma.SortOrder
   views?: Prisma.SortOrder
+  isPublic?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -733,9 +877,31 @@ export type LibraryEntryMinOrderByAggregateInput = {
 
 export type LibraryEntrySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  bodyLength?: Prisma.SortOrder
   yearWritten?: Prisma.SortOrder
   yearTranslated?: Prisma.SortOrder
   views?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+}
+
+export type LibraryEntryCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutChildrenInput, Prisma.LibraryEntryUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.LibraryEntryWhereUniqueInput
+}
+
+export type LibraryEntryCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput> | Prisma.LibraryEntryCreateWithoutParentInput[] | Prisma.LibraryEntryUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutParentInput | Prisma.LibraryEntryCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.LibraryEntryCreateManyParentInputEnvelope
+  connect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+}
+
+export type LibraryEntryUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput> | Prisma.LibraryEntryCreateWithoutParentInput[] | Prisma.LibraryEntryUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutParentInput | Prisma.LibraryEntryCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.LibraryEntryCreateManyParentInputEnvelope
+  connect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -744,6 +910,14 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -758,18 +932,445 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type LibraryEntryUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutChildrenInput, Prisma.LibraryEntryUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.LibraryEntryUpsertWithoutChildrenInput
+  disconnect?: Prisma.LibraryEntryWhereInput | boolean
+  delete?: Prisma.LibraryEntryWhereInput | boolean
+  connect?: Prisma.LibraryEntryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryEntryUpdateToOneWithWhereWithoutChildrenInput, Prisma.LibraryEntryUpdateWithoutChildrenInput>, Prisma.LibraryEntryUncheckedUpdateWithoutChildrenInput>
+}
+
+export type LibraryEntryUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput> | Prisma.LibraryEntryCreateWithoutParentInput[] | Prisma.LibraryEntryUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutParentInput | Prisma.LibraryEntryCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.LibraryEntryUpsertWithWhereUniqueWithoutParentInput | Prisma.LibraryEntryUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.LibraryEntryCreateManyParentInputEnvelope
+  set?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  disconnect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  delete?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  connect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  update?: Prisma.LibraryEntryUpdateWithWhereUniqueWithoutParentInput | Prisma.LibraryEntryUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.LibraryEntryUpdateManyWithWhereWithoutParentInput | Prisma.LibraryEntryUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.LibraryEntryScalarWhereInput | Prisma.LibraryEntryScalarWhereInput[]
+}
+
+export type LibraryEntryUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput> | Prisma.LibraryEntryCreateWithoutParentInput[] | Prisma.LibraryEntryUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.LibraryEntryCreateOrConnectWithoutParentInput | Prisma.LibraryEntryCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.LibraryEntryUpsertWithWhereUniqueWithoutParentInput | Prisma.LibraryEntryUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.LibraryEntryCreateManyParentInputEnvelope
+  set?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  disconnect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  delete?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  connect?: Prisma.LibraryEntryWhereUniqueInput | Prisma.LibraryEntryWhereUniqueInput[]
+  update?: Prisma.LibraryEntryUpdateWithWhereUniqueWithoutParentInput | Prisma.LibraryEntryUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.LibraryEntryUpdateManyWithWhereWithoutParentInput | Prisma.LibraryEntryUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.LibraryEntryScalarWhereInput | Prisma.LibraryEntryScalarWhereInput[]
+}
+
+export type LibraryEntryCreateWithoutChildrenInput = {
+  slug: string
+  title: string
+  author?: string | null
+  genre?: string
+  topic?: string | null
+  flavor?: string
+  body?: string | null
+  bodyLength?: number
+  source?: string | null
+  yearWritten?: number | null
+  yearTranslated?: number | null
+  translator?: string | null
+  addedById?: string | null
+  addedBy?: string | null
+  verified?: boolean
+  verifiedBy?: string | null
+  corpusSlug?: string | null
+  summary?: string | null
+  coverImage?: string | null
+  audioFile?: string | null
+  views?: number
+  isPublic?: boolean
+  actionHistory?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.LibraryEntryCreateNestedOneWithoutChildrenInput
+}
+
+export type LibraryEntryUncheckedCreateWithoutChildrenInput = {
+  id?: number
+  slug: string
+  title: string
+  author?: string | null
+  genre?: string
+  topic?: string | null
+  flavor?: string
+  body?: string | null
+  bodyLength?: number
+  source?: string | null
+  yearWritten?: number | null
+  yearTranslated?: number | null
+  translator?: string | null
+  addedById?: string | null
+  addedBy?: string | null
+  verified?: boolean
+  verifiedBy?: string | null
+  corpusSlug?: string | null
+  summary?: string | null
+  coverImage?: string | null
+  audioFile?: string | null
+  views?: number
+  isPublic?: boolean
+  parentId?: number | null
+  actionHistory?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LibraryEntryCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.LibraryEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibraryEntryCreateWithoutChildrenInput, Prisma.LibraryEntryUncheckedCreateWithoutChildrenInput>
+}
+
+export type LibraryEntryCreateWithoutParentInput = {
+  slug: string
+  title: string
+  author?: string | null
+  genre?: string
+  topic?: string | null
+  flavor?: string
+  body?: string | null
+  bodyLength?: number
+  source?: string | null
+  yearWritten?: number | null
+  yearTranslated?: number | null
+  translator?: string | null
+  addedById?: string | null
+  addedBy?: string | null
+  verified?: boolean
+  verifiedBy?: string | null
+  corpusSlug?: string | null
+  summary?: string | null
+  coverImage?: string | null
+  audioFile?: string | null
+  views?: number
+  isPublic?: boolean
+  actionHistory?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.LibraryEntryCreateNestedManyWithoutParentInput
+}
+
+export type LibraryEntryUncheckedCreateWithoutParentInput = {
+  id?: number
+  slug: string
+  title: string
+  author?: string | null
+  genre?: string
+  topic?: string | null
+  flavor?: string
+  body?: string | null
+  bodyLength?: number
+  source?: string | null
+  yearWritten?: number | null
+  yearTranslated?: number | null
+  translator?: string | null
+  addedById?: string | null
+  addedBy?: string | null
+  verified?: boolean
+  verifiedBy?: string | null
+  corpusSlug?: string | null
+  summary?: string | null
+  coverImage?: string | null
+  audioFile?: string | null
+  views?: number
+  isPublic?: boolean
+  actionHistory?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.LibraryEntryUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type LibraryEntryCreateOrConnectWithoutParentInput = {
+  where: Prisma.LibraryEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput>
+}
+
+export type LibraryEntryCreateManyParentInputEnvelope = {
+  data: Prisma.LibraryEntryCreateManyParentInput | Prisma.LibraryEntryCreateManyParentInput[]
+}
+
+export type LibraryEntryUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.LibraryEntryUpdateWithoutChildrenInput, Prisma.LibraryEntryUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.LibraryEntryCreateWithoutChildrenInput, Prisma.LibraryEntryUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.LibraryEntryWhereInput
+}
+
+export type LibraryEntryUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.LibraryEntryWhereInput
+  data: Prisma.XOR<Prisma.LibraryEntryUpdateWithoutChildrenInput, Prisma.LibraryEntryUncheckedUpdateWithoutChildrenInput>
+}
+
+export type LibraryEntryUpdateWithoutChildrenInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  flavor?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  translator?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.LibraryEntryUpdateOneWithoutChildrenNestedInput
+}
+
+export type LibraryEntryUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  flavor?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  translator?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LibraryEntryUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.LibraryEntryWhereUniqueInput
+  update: Prisma.XOR<Prisma.LibraryEntryUpdateWithoutParentInput, Prisma.LibraryEntryUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.LibraryEntryCreateWithoutParentInput, Prisma.LibraryEntryUncheckedCreateWithoutParentInput>
+}
+
+export type LibraryEntryUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.LibraryEntryWhereUniqueInput
+  data: Prisma.XOR<Prisma.LibraryEntryUpdateWithoutParentInput, Prisma.LibraryEntryUncheckedUpdateWithoutParentInput>
+}
+
+export type LibraryEntryUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.LibraryEntryScalarWhereInput
+  data: Prisma.XOR<Prisma.LibraryEntryUpdateManyMutationInput, Prisma.LibraryEntryUncheckedUpdateManyWithoutParentInput>
+}
+
+export type LibraryEntryScalarWhereInput = {
+  AND?: Prisma.LibraryEntryScalarWhereInput | Prisma.LibraryEntryScalarWhereInput[]
+  OR?: Prisma.LibraryEntryScalarWhereInput[]
+  NOT?: Prisma.LibraryEntryScalarWhereInput | Prisma.LibraryEntryScalarWhereInput[]
+  id?: Prisma.IntFilter<"LibraryEntry"> | number
+  slug?: Prisma.StringFilter<"LibraryEntry"> | string
+  title?: Prisma.StringFilter<"LibraryEntry"> | string
+  author?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  genre?: Prisma.StringFilter<"LibraryEntry"> | string
+  topic?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  flavor?: Prisma.StringFilter<"LibraryEntry"> | string
+  body?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  bodyLength?: Prisma.IntFilter<"LibraryEntry"> | number
+  source?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  yearWritten?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  yearTranslated?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  translator?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  addedById?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  addedBy?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  verified?: Prisma.BoolFilter<"LibraryEntry"> | boolean
+  verifiedBy?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  corpusSlug?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  views?: Prisma.IntFilter<"LibraryEntry"> | number
+  isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
+  parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
+}
+
+export type LibraryEntryCreateManyParentInput = {
+  id?: number
+  slug: string
+  title: string
+  author?: string | null
+  genre?: string
+  topic?: string | null
+  flavor?: string
+  body?: string | null
+  bodyLength?: number
+  source?: string | null
+  yearWritten?: number | null
+  yearTranslated?: number | null
+  translator?: string | null
+  addedById?: string | null
+  addedBy?: string | null
+  verified?: boolean
+  verifiedBy?: string | null
+  corpusSlug?: string | null
+  summary?: string | null
+  coverImage?: string | null
+  audioFile?: string | null
+  views?: number
+  isPublic?: boolean
+  actionHistory?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LibraryEntryUpdateWithoutParentInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  flavor?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  translator?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.LibraryEntryUpdateManyWithoutParentNestedInput
+}
+
+export type LibraryEntryUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  flavor?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  translator?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.LibraryEntryUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type LibraryEntryUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genre?: Prisma.StringFieldUpdateOperationsInput | string
+  topic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  flavor?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bodyLength?: Prisma.IntFieldUpdateOperationsInput | number
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  yearWritten?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  yearTranslated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  translator?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  corpusSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type LibraryEntryCountOutputType
+ */
+
+export type LibraryEntryCountOutputType = {
+  children: number
+}
+
+export type LibraryEntryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | LibraryEntryCountOutputTypeCountChildrenArgs
+}
+
+/**
+ * LibraryEntryCountOutputType without action
+ */
+export type LibraryEntryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibraryEntryCountOutputType
+   */
+  select?: Prisma.LibraryEntryCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LibraryEntryCountOutputType without action
+ */
+export type LibraryEntryCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LibraryEntryWhereInput
+}
 
 
 export type LibraryEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -777,9 +1378,11 @@ export type LibraryEntrySelect<ExtArgs extends runtime.Types.Extensions.Internal
   slug?: boolean
   title?: boolean
   author?: boolean
-  category?: boolean
+  genre?: boolean
+  topic?: boolean
   flavor?: boolean
   body?: boolean
+  bodyLength?: boolean
   source?: boolean
   yearWritten?: boolean
   yearTranslated?: boolean
@@ -791,10 +1394,16 @@ export type LibraryEntrySelect<ExtArgs extends runtime.Types.Extensions.Internal
   corpusSlug?: boolean
   summary?: boolean
   coverImage?: boolean
+  audioFile?: boolean
   views?: boolean
+  isPublic?: boolean
+  parentId?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
+  children?: boolean | Prisma.LibraryEntry$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.LibraryEntryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["libraryEntry"]>
 
 export type LibraryEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -802,9 +1411,11 @@ export type LibraryEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   author?: boolean
-  category?: boolean
+  genre?: boolean
+  topic?: boolean
   flavor?: boolean
   body?: boolean
+  bodyLength?: boolean
   source?: boolean
   yearWritten?: boolean
   yearTranslated?: boolean
@@ -816,10 +1427,14 @@ export type LibraryEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   corpusSlug?: boolean
   summary?: boolean
   coverImage?: boolean
+  audioFile?: boolean
   views?: boolean
+  isPublic?: boolean
+  parentId?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
 }, ExtArgs["result"]["libraryEntry"]>
 
 export type LibraryEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -827,9 +1442,11 @@ export type LibraryEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   slug?: boolean
   title?: boolean
   author?: boolean
-  category?: boolean
+  genre?: boolean
+  topic?: boolean
   flavor?: boolean
   body?: boolean
+  bodyLength?: boolean
   source?: boolean
   yearWritten?: boolean
   yearTranslated?: boolean
@@ -841,10 +1458,14 @@ export type LibraryEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   corpusSlug?: boolean
   summary?: boolean
   coverImage?: boolean
+  audioFile?: boolean
   views?: boolean
+  isPublic?: boolean
+  parentId?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
 }, ExtArgs["result"]["libraryEntry"]>
 
 export type LibraryEntrySelectScalar = {
@@ -852,9 +1473,11 @@ export type LibraryEntrySelectScalar = {
   slug?: boolean
   title?: boolean
   author?: boolean
-  category?: boolean
+  genre?: boolean
+  topic?: boolean
   flavor?: boolean
   body?: boolean
+  bodyLength?: boolean
   source?: boolean
   yearWritten?: boolean
   yearTranslated?: boolean
@@ -866,25 +1489,44 @@ export type LibraryEntrySelectScalar = {
   corpusSlug?: boolean
   summary?: boolean
   coverImage?: boolean
+  audioFile?: boolean
   views?: boolean
+  isPublic?: boolean
+  parentId?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "category" | "flavor" | "body" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "views" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
+export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "genre" | "topic" | "flavor" | "body" | "bodyLength" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "audioFile" | "views" | "isPublic" | "parentId" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
+export type LibraryEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
+  children?: boolean | Prisma.LibraryEntry$childrenArgs<ExtArgs>
+  _count?: boolean | Prisma.LibraryEntryCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type LibraryEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
+}
+export type LibraryEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
+}
 
 export type $LibraryEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LibraryEntry"
-  objects: {}
+  objects: {
+    parent: Prisma.$LibraryEntryPayload<ExtArgs> | null
+    children: Prisma.$LibraryEntryPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     slug: string
     title: string
     author: string | null
-    category: string
+    genre: string
+    topic: string | null
     flavor: string
     body: string | null
+    bodyLength: number
     source: string | null
     yearWritten: number | null
     yearTranslated: number | null
@@ -896,7 +1538,10 @@ export type $LibraryEntryPayload<ExtArgs extends runtime.Types.Extensions.Intern
     corpusSlug: string | null
     summary: string | null
     coverImage: string | null
+    audioFile: string | null
     views: number
+    isPublic: boolean
+    parentId: number | null
     actionHistory: string | null
     createdAt: Date
     updatedAt: Date
@@ -1294,6 +1939,8 @@ readonly fields: LibraryEntryFieldRefs;
  */
 export interface Prisma__LibraryEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  parent<T extends Prisma.LibraryEntry$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryEntry$parentArgs<ExtArgs>>): Prisma.Prisma__LibraryEntryClient<runtime.Types.Result.GetResult<Prisma.$LibraryEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.LibraryEntry$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryEntry$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LibraryEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1327,9 +1974,11 @@ export interface LibraryEntryFieldRefs {
   readonly slug: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly title: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly author: Prisma.FieldRef<"LibraryEntry", 'String'>
-  readonly category: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly genre: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly topic: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly flavor: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly body: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly bodyLength: Prisma.FieldRef<"LibraryEntry", 'Int'>
   readonly source: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly yearWritten: Prisma.FieldRef<"LibraryEntry", 'Int'>
   readonly yearTranslated: Prisma.FieldRef<"LibraryEntry", 'Int'>
@@ -1341,7 +1990,10 @@ export interface LibraryEntryFieldRefs {
   readonly corpusSlug: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly summary: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly coverImage: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly audioFile: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly views: Prisma.FieldRef<"LibraryEntry", 'Int'>
+  readonly isPublic: Prisma.FieldRef<"LibraryEntry", 'Boolean'>
+  readonly parentId: Prisma.FieldRef<"LibraryEntry", 'Int'>
   readonly actionHistory: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly createdAt: Prisma.FieldRef<"LibraryEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LibraryEntry", 'DateTime'>
@@ -1362,6 +2014,10 @@ export type LibraryEntryFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  /**
    * Filter, which LibraryEntry to fetch.
    */
   where: Prisma.LibraryEntryWhereUniqueInput
@@ -1380,6 +2036,10 @@ export type LibraryEntryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  /**
    * Filter, which LibraryEntry to fetch.
    */
   where: Prisma.LibraryEntryWhereUniqueInput
@@ -1397,6 +2057,10 @@ export type LibraryEntryFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the LibraryEntry
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
   /**
    * Filter, which LibraryEntry to fetch.
    */
@@ -1446,6 +2110,10 @@ export type LibraryEntryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  /**
    * Filter, which LibraryEntry to fetch.
    */
   where?: Prisma.LibraryEntryWhereInput
@@ -1493,6 +2161,10 @@ export type LibraryEntryFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the LibraryEntry
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
   /**
    * Filter, which LibraryEntries to fetch.
    */
@@ -1542,6 +2214,10 @@ export type LibraryEntryCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  /**
    * The data needed to create a LibraryEntry.
    */
   data: Prisma.XOR<Prisma.LibraryEntryCreateInput, Prisma.LibraryEntryUncheckedCreateInput>
@@ -1573,6 +2249,10 @@ export type LibraryEntryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many LibraryEntries.
    */
   data: Prisma.LibraryEntryCreateManyInput | Prisma.LibraryEntryCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1587,6 +2267,10 @@ export type LibraryEntryUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the LibraryEntry
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
   /**
    * The data needed to update a LibraryEntry.
    */
@@ -1639,6 +2323,10 @@ export type LibraryEntryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many LibraryEntries to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1653,6 +2341,10 @@ export type LibraryEntryUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the LibraryEntry
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
   /**
    * The filter to search for the LibraryEntry to update in case it exists.
    */
@@ -1680,6 +2372,10 @@ export type LibraryEntryDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  /**
    * Filter which LibraryEntry to delete.
    */
   where: Prisma.LibraryEntryWhereUniqueInput
@@ -1700,6 +2396,49 @@ export type LibraryEntryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * LibraryEntry.parent
+ */
+export type LibraryEntry$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibraryEntry
+   */
+  select?: Prisma.LibraryEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LibraryEntry
+   */
+  omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  where?: Prisma.LibraryEntryWhereInput
+}
+
+/**
+ * LibraryEntry.children
+ */
+export type LibraryEntry$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibraryEntry
+   */
+  select?: Prisma.LibraryEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LibraryEntry
+   */
+  omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
+  where?: Prisma.LibraryEntryWhereInput
+  orderBy?: Prisma.LibraryEntryOrderByWithRelationInput | Prisma.LibraryEntryOrderByWithRelationInput[]
+  cursor?: Prisma.LibraryEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LibraryEntryScalarFieldEnum | Prisma.LibraryEntryScalarFieldEnum[]
+}
+
+/**
  * LibraryEntry without action
  */
 export type LibraryEntryDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1711,4 +2450,8 @@ export type LibraryEntryDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the LibraryEntry
    */
   omit?: Prisma.LibraryEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryEntryInclude<ExtArgs> | null
 }

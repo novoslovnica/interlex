@@ -6,8 +6,11 @@ import { requirePermission } from "@/lib/permissions"
 import AdminNav from "@/components/AdminNav"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { buildEntry, append } from "@/lib/action-history"
+import { compressBody } from "@/lib/body"
 import { LibraryForm } from "./form"
 import type { Metadata } from "next"
+import { writeFile, mkdir } from "fs/promises"
+import path from "path"
 
 export const metadata: Metadata = {
   title: "Новый текст — библиотека",
@@ -35,7 +38,8 @@ export default async function NewLibraryPage() {
     const title = formData.get("title") as string
     const slug = formData.get("slug") as string
     const author = (formData.get("author") as string) || null
-    const category = formData.get("category") as string
+    const genre = formData.get("genre") as string
+    const topic = (formData.get("topic") as string) || null
     const flavor = (formData.get("flavor") as string) || "CORE"
     const source = (formData.get("source") as string) || null
     const yearRaw = formData.get("yearWritten") as string
@@ -43,10 +47,35 @@ export default async function NewLibraryPage() {
     const yearTransRaw = formData.get("yearTranslated") as string
     const yearTranslated = yearTransRaw ? parseInt(yearTransRaw, 10) : null
     const translator = (formData.get("translator") as string) || null
+    const coverImageRaw = formData.get("coverImage")
+    let coverImage: string | null = null
+    if (coverImageRaw instanceof File && coverImageRaw.size > 0) {
+      const ext = coverImageRaw.name.split(".").pop() || "jpg"
+      const filename = `${slug}-${Date.now()}.${ext}`
+      const dir = path.join(process.cwd(), "public", "covers")
+      await mkdir(dir, { recursive: true })
+      await writeFile(path.join(dir, filename), Buffer.from(await coverImageRaw.arrayBuffer()))
+      coverImage = `/covers/${filename}`
+    }
+    const audioFileRaw = formData.get("audioFile")
+    let audioFile: string | null = null
+    if (audioFileRaw instanceof File && audioFileRaw.size > 0) {
+      const ext = audioFileRaw.name.split(".").pop() || "mp3"
+      const filename = `${slug}-${Date.now()}.${ext}`
+      const dir = path.join(process.cwd(), "public", "audio")
+      await mkdir(dir, { recursive: true })
+      await writeFile(path.join(dir, filename), Buffer.from(await audioFileRaw.arrayBuffer()))
+      audioFile = `/audio/${filename}`
+    }
     const body = (formData.get("body") as string) || null
     const summary = (formData.get("summary") as string) || null
     const corpusSlug = (formData.get("corpusSlug") as string) || null
     const verified = formData.get("verified") === "on"
+    const isPublic = formData.get("isPublic") === "on"
+    const parentIdRaw = formData.get("parentId") as string
+    const parentId = parentIdRaw ? parseInt(parentIdRaw, 10) : null
+    const childIdsRaw = formData.getAll("childIds") as string[]
+    const childIds = childIdsRaw.map(Number).filter(Boolean)
     const userEmail = s.user.email || "unknown"
     const userId = s.user.id
 
@@ -54,45 +83,67 @@ export default async function NewLibraryPage() {
       title: { old: null, new: title },
       slug: { old: null, new: slug },
       author: { old: null, new: author },
-      category: { old: null, new: category },
+      genre: { old: null, new: genre },
+      topic: { old: null, new: topic },
       flavor: { old: null, new: flavor },
       source: { old: null, new: source },
       yearWritten: { old: null, new: yearWritten },
       yearTranslated: { old: null, new: yearTranslated },
       translator: { old: null, new: translator },
+      coverImage: { old: null, new: coverImage },
+      audioFile: { old: null, new: audioFile },
       verified: { old: null, new: verified },
+      isPublic: { old: null, new: isPublic },
+      parentId: { old: null, new: parentId },
     }))
 
-    await db.libraryEntry.create({
+    const created = await db.libraryEntry.create({
       data: {
         slug,
         title,
         author,
-        category,
+        genre,
+        topic,
         flavor,
         source,
         yearWritten,
         yearTranslated,
         translator,
-        body,
+        audioFile,
+        body: body ? compressBody(body) : null,
+        bodyLength: body ? body.length : 0,
         summary,
         corpusSlug,
         verified,
+        isPublic,
+        parentId,
         verifiedBy: verified ? userEmail : null,
         addedById: userId,
         addedBy: userEmail,
         actionHistory,
       },
     })
+
+    if (childIds.length > 0) {
+      await db.$transaction(
+        childIds.map(id => db.libraryEntry.update({ where: { id }, data: { parentId: created.id } }))
+      )
+    }
+
     redirect("/admin/library")
   }
+
+  const allEntries = await db.libraryEntry.findMany({
+    select: { id: true, title: true, slug: true },
+    orderBy: { title: "asc" },
+  })
 
   return (
     <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-      <div className="flex-1 min-h-0 overflow-auto p-6 max-w-3xl mx-auto w-full">
+      <div className="flex-1 min-h-0 overflow-auto p-6 w-full">
         <h1 className="text-xl font-bold mb-6">Новый текст</h1>
-        <LibraryForm action={save} />
+        <LibraryForm action={save} entries={allEntries} />
       </div>
     </div>
   )

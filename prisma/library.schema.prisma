@@ -12,10 +12,12 @@ model LibraryEntry {
   slug        String   @unique
   title       String
   author      String?
-  category    String
+  genre       String   @default("article")
+  topic       String?
   flavor      String   @default("CORE")
 
-  body        String?
+body       String?
+  bodyLength Int      @default(0)
 
   source          String?
   yearWritten     Int?
@@ -32,7 +34,13 @@ model LibraryEntry {
 
   summary     String?
   coverImage  String?
+  audioFile   String?
   views       Int      @default(0)
+
+  isPublic    Boolean  @default(true)
+  parentId    Int?
+  parent      LibraryEntry?  @relation("CollectionChildren", fields: [parentId], references: [id])
+  children    LibraryEntry[] @relation("CollectionChildren")
 
   actionHistory String?
 
