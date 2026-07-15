@@ -42,7 +42,7 @@ export const getDictItems = async (search: string, offset: number, limit: number
 
         if (grouped) {
             data = db.prepare(`
-                SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
+                SELECT l.id, о.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
                        l.declension, l.conjugation, l.transcription,
                        l.aspect, l.transitivity, l.animacy, l.degree,
                        l.pronType, l.numType, l.frequency, l.intelligibility,

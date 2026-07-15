@@ -11,9 +11,18 @@ export async function GET(request: NextRequest) {
     const usageType = params.get('usageType') || '';
     const filterLang = params.get('filterLang') || '';
     const unverified = params.get('unverified') || '';
-    const grouped = params.get('grouped') || '';
+    const grouped = params.get('grouped') || '1'; // По умолчанию с аллофонами
 
-    const dicts = await getDictItems(query, Number(offset), Number(limit), mainCategory, usageType, filterLang, unverified === '1', grouped === '1');
+    const dicts = await getDictItems(
+        query,
+        Number(offset),
+        Number(limit),
+        mainCategory,
+        usageType,
+        filterLang,
+        unverified === '1',
+        grouped === '1'
+    );
 
     return NextResponse.json(dicts, {
         status: 200,

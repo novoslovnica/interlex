@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+`# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .idea/
 slovnik*
@@ -7,6 +7,7 @@ NOTES.md
 drafts/
 scripts/python/pdf/
 public/covers/
+public/audio/
 interlex.db-shm
 interlex.db-wal
 

@@ -9,7 +9,7 @@ import { buildEntry, append } from "@/lib/action-history"
 import { compressBody, decompressBody } from "@/lib/body"
 import { LibraryForm } from "../../new/form"
 import type { Metadata } from "next"
-import { writeFile, mkdir, unlink } from "fs/promises"
+import { unlink } from "fs/promises"
 import path from "path"
 
 export const metadata: Metadata = {
@@ -22,9 +22,19 @@ function getCoversDir(): string {
   return path.isAbsolute(dir) ? dir : path.resolve(process.cwd(), dir)
 }
 
+function getAudioDir(): string {
+  const dir = process.env.AUDIO_DIR || "public/audio"
+  return path.isAbsolute(dir) ? dir : path.resolve(process.cwd(), dir)
+}
+
 function coverFilename(coverPath: string | null): string | null {
   if (!coverPath) return null
   return coverPath.replace(/^\/api\/covers\//, "").replace(/^\/covers\//, "") || null
+}
+
+function audioFilename(audioPath: string | null): string | null {
+  if (!audioPath) return null
+  return audioPath.replace(/^\/api\/audio\//, "").replace(/^\/audio\//, "") || null
 }
 
 async function safeUnlink(filepath: string) {
@@ -115,8 +125,9 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
     const deleteAudioFile = formData.get("deleteAudioFile") === "on"
     let audioFile = currentEntry.audioFile
     if (deleteAudioFile) {
-      if (currentEntry.audioFile) {
-        await safeUnlink(path.join(process.cwd(), "public", currentEntry.audioFile))
+      const oldFilename = audioFilename(currentEntry.audioFile)
+      if (oldFilename) {
+        await safeUnlink(path.join(getAudioDir(), oldFilename))
       }
       audioFile = null
     } else if (typeof audioFileRaw === "string" && audioFileRaw.length > 0) {

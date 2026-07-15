@@ -5,9 +5,17 @@ import { requirePermission } from "@/lib/permissions"
 import { writeFile, mkdir } from "fs/promises"
 import path from "path"
 
-function getCoversDir(): string {
-  const dir = process.env.COVERS_DIR || "public/covers"
+function resolveDir(envVar: string | undefined, fallback: string): string {
+  const dir = envVar || fallback
   return path.isAbsolute(dir) ? dir : path.resolve(process.cwd(), dir)
+}
+
+function getCoversDir(): string {
+  return resolveDir(process.env.COVERS_DIR, "public/covers")
+}
+
+function getAudioDir(): string {
+  return resolveDir(process.env.AUDIO_DIR, "public/audio")
 }
 
 export async function POST(request: NextRequest) {
@@ -34,8 +42,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ path: `/api/covers/${filename}` })
   }
 
-  const dir = path.join(process.cwd(), "public", "audio")
+  const dir = getAudioDir()
   await mkdir(dir, { recursive: true })
   await writeFile(path.join(dir, filename), Buffer.from(await file.arrayBuffer()))
-  return NextResponse.json({ path: `/audio/${filename}` })
+  return NextResponse.json({ path: `/api/audio/${filename}` })
 }
