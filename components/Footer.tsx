@@ -4,6 +4,7 @@ import {getTranslations} from "next-intl/server";
 
 export default async function Footer() {
     const t = await getTranslations("common.footer")
+
     return (
         <footer className="w-full bg-[#1e293b] text-white flex-shrink-0">
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">

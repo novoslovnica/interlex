@@ -25,14 +25,32 @@ export const getLangDataAll = (db, lang: string, meaningIds: number[]): Record<n
     return grouped;
 };
 
-export const getDictItems = async (search: string, offset: number, limit: number, mainCategory?: string, usageType?: string, filterLang?: string, unverified?: boolean, grouped?: boolean) => {
+export const getDictItems = async (
+    search: string,
+    offset: number,
+    limit: number,
+    mainCategory?: string,
+    usageType?: string,
+    filterLang?: string,
+    unverified?: boolean,
+) => {
     const db = await init();
 
     let data: any[] = [];
 
     if (search) {
         const lexemeIds = db.prepare(`
-            SELECT id FROM lexemes WHERE ROWID IN (SELECT ROWID FROM lexemes_text WHERE value LIKE '%${search}%' ORDER BY rank)
+            SELECT DISTINCT l.id FROM lexemes l
+            WHERE (
+                l.id IN (SELECT ROWID FROM lexemes_text WHERE value LIKE '%${search}%')
+                OR EXISTS (
+                    SELECT 1 FROM lexeme_allophones la
+                    WHERE la.lexemeId = l.id
+                    AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
+                    AND la.type = 'standard'
+                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value LIKE '%${search}%')
+                )
+            )
         `).all() as { id: number }[];
 
         const ids = lexemeIds.map(r => r.id);
@@ -40,113 +58,50 @@ export const getDictItems = async (search: string, offset: number, limit: number
 
         const placeholders = ids.map(() => '?').join(',');
 
-        if (grouped) {
-            data = db.prepare(`
-                SELECT l.id, о.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                       l.declension, l.conjugation, l.transcription,
-                       l.aspect, l.transitivity, l.animacy, l.degree,
-                       l.pronType, l.numType, l.frequency, l.intelligibility,
-                       l.addition, l.sameInLanguages, l.etymology, l.proto,
-                       l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                       l.secondaryStem, l.tertiaryStem, l.governsCase,
-                       l.hasAnomalies, l.mainCategory, l.usageType
-                FROM lexemes l
-                LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-                LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-                WHERE l.id IN (${placeholders})
-                GROUP BY l.id
-            `).all(...ids) as any[];
-        } else {
-            let filterClause = '';
-            const filterParams: any[] = [];
-            if (mainCategory) {
-                filterClause += ' AND l.mainCategory = ?';
-                filterParams.push(mainCategory);
-            }
-            if (usageType) {
-                filterClause += ' AND l.usageType = ?';
-                filterParams.push(usageType);
-            }
-
-            data = db.prepare(`
-                SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
-                       l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                       l.declension, l.conjugation, l.transcription,
-                       l.aspect, l.transitivity, l.animacy, l.degree,
-                       l.pronType, l.numType, l.frequency, l.intelligibility,
-                       l.addition, l.sameInLanguages, l.etymology, l.proto,
-                       l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                       l.secondaryStem, l.tertiaryStem, l.governsCase,
-                       l.hasAnomalies, l.mainCategory, l.usageType
-                FROM meanings m
-                JOIN lexemes l ON m.lexemeId = l.id
-                LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-                LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-                WHERE m.lexemeId IN (${placeholders})${filterClause}
-                ORDER BY l.id ASC, m.id ASC
-            `).all(...ids, ...filterParams);
-        }
+        data = db.prepare(`
+            SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
+                   l.declension, l.conjugation, l.transcription,
+                   l.aspect, l.transitivity, l.animacy, l.degree,
+                   l.pronType, l.numType, l.frequency, l.intelligibility,
+                   l.addition, l.sameInLanguages, l.etymology, l.proto,
+                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
+                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.hasAnomalies, l.mainCategory, l.usageType
+            FROM lexemes l
+            LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
+            LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
+            WHERE l.id IN (${placeholders})
+            GROUP BY l.id
+        `).all(...ids) as any[];
     } else {
-        if (grouped) {
-            let filterClause = '';
-            const filterParams: any[] = [];
-            if (mainCategory) {
-                filterClause += ' WHERE l.mainCategory = ?';
-                filterParams.push(mainCategory);
-            }
-            if (usageType) {
-                filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
-                filterParams.push(usageType);
-            }
-
-            data = db.prepare(`
-                SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                       l.declension, l.conjugation, l.transcription,
-                       l.aspect, l.transitivity, l.animacy, l.degree,
-                       l.pronType, l.numType, l.frequency, l.intelligibility,
-                       l.addition, l.sameInLanguages, l.etymology, l.proto,
-                       l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                       l.secondaryStem, l.tertiaryStem, l.governsCase,
-                       l.hasAnomalies, l.mainCategory, l.usageType
-                FROM lexemes l
-                LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-                LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-                ${filterClause}
-                GROUP BY l.id
-                ORDER BY l.id ASC
-                LIMIT ${limit} OFFSET ${offset}
-            `).all(...filterParams);
-        } else {
-            let filterClause = '';
-            const filterParams: any[] = [];
-            if (mainCategory) {
-                filterClause += ' WHERE l.mainCategory = ?';
-                filterParams.push(mainCategory);
-            }
-            if (usageType) {
-                filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
-                filterParams.push(usageType);
-            }
-
-            data = db.prepare(`
-                SELECT m.id AS meaningId, m.lexemeId, m.meaning AS meaningText, m.examples,
-                       l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                       l.declension, l.conjugation, l.transcription,
-                       l.aspect, l.transitivity, l.animacy, l.degree,
-                       l.pronType, l.numType, l.frequency, l.intelligibility,
-                       l.addition, l.sameInLanguages, l.etymology, l.proto,
-                       l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                       l.secondaryStem, l.tertiaryStem, l.governsCase,
-                       l.hasAnomalies, l.mainCategory, l.usageType
-                FROM meanings m
-                JOIN lexemes l ON m.lexemeId = l.id
-                LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-                LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-                ${filterClause}
-                ORDER BY l.id ASC, m.id ASC
-                LIMIT ${limit} OFFSET ${offset}
-            `).all(...filterParams);
+        let filterClause = '';
+        const filterParams: any[] = [];
+        if (mainCategory) {
+            filterClause += ' WHERE l.mainCategory = ?';
+            filterParams.push(mainCategory);
         }
+        if (usageType) {
+            filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
+            filterParams.push(usageType);
+        }
+
+        data = db.prepare(`
+            SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
+                   l.declension, l.conjugation, l.transcription,
+                   l.aspect, l.transitivity, l.animacy, l.degree,
+                   l.pronType, l.numType, l.frequency, l.intelligibility,
+                   l.addition, l.sameInLanguages, l.etymology, l.proto,
+                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
+                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.hasAnomalies, l.mainCategory, l.usageType
+            FROM lexemes l
+            LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
+            LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
+            ${filterClause}
+            GROUP BY l.id
+            ORDER BY l.id ASC
+            LIMIT ${limit} OFFSET ${offset}
+        `).all(...filterParams);
     }
 
     const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "hsb", "dsb", "cu", "nl", "eo"];
@@ -154,54 +109,38 @@ export const getDictItems = async (search: string, offset: number, limit: number
     let allLangData: Record<string, Record<number, LangRecord[]>> = {};
     let res: any[];
 
-    if (grouped) {
-        const lexemeIds = data.map(item => item.id).filter(Boolean);
-        let allMeaningIds: number[] = [];
-        const lexemeToMeanings: Record<number, number[]> = {};
-        if (lexemeIds.length > 0) {
-            const idPlaceholders = lexemeIds.map(() => '?').join(',');
-            const meaningRows = db.prepare(`
-                SELECT id, lexemeId FROM meanings WHERE lexemeId IN (${idPlaceholders})
-            `).all(...lexemeIds) as { id: number; lexemeId: number }[];
-            for (const row of meaningRows) {
-                allMeaningIds.push(row.id);
-                if (!lexemeToMeanings[row.lexemeId]) lexemeToMeanings[row.lexemeId] = [];
-                lexemeToMeanings[row.lexemeId].push(row.id);
-            }
+    const lexemeIds = data.map(item => item.id).filter(Boolean);
+    let allMeaningIds: number[] = [];
+    const lexemeToMeanings: Record<number, number[]> = {};
+    if (lexemeIds.length > 0) {
+        const idPlaceholders = lexemeIds.map(() => '?').join(',');
+        const meaningRows = db.prepare(`
+            SELECT id, lexemeId FROM meanings WHERE lexemeId IN (${idPlaceholders})
+        `).all(...lexemeIds) as { id: number; lexemeId: number }[];
+        for (const row of meaningRows) {
+            allMeaningIds.push(row.id);
+            if (!lexemeToMeanings[row.lexemeId]) lexemeToMeanings[row.lexemeId] = [];
+            lexemeToMeanings[row.lexemeId].push(row.id);
         }
-
-        for (const lang of langCodes) {
-            allLangData[lang] = getLangDataAll(db, lang, allMeaningIds);
-        }
-
-        res = data.map(item => {
-            const result: any = { ...item };
-            for (const lang of langCodes) {
-                const langEntries: LangRecord[] = [];
-                const meaningIds = lexemeToMeanings[item.id] || [];
-                for (const mid of meaningIds) {
-                    const entries = allLangData[lang][mid];
-                    if (entries) langEntries.push(...entries);
-                }
-                result[lang] = langEntries;
-            }
-            return result;
-        });
-    } else {
-        const meaningIds: number[] = data.map((item: any) => item.meaningId).filter(Boolean);
-
-        for (const lang of langCodes) {
-            allLangData[lang] = getLangDataAll(db, lang, meaningIds);
-        }
-
-        res = data.map((item: any) => {
-            const result: any = { ...item };
-            for (const lang of langCodes) {
-                result[lang] = allLangData[lang][item.meaningId] || [];
-            }
-            return result;
-        });
     }
+
+    for (const lang of langCodes) {
+        allLangData[lang] = getLangDataAll(db, lang, allMeaningIds);
+    }
+
+    res = data.map(item => {
+        const result: any = { ...item };
+        for (const lang of langCodes) {
+            const langEntries: LangRecord[] = [];
+            const meaningIds = lexemeToMeanings[item.id] || [];
+            for (const mid of meaningIds) {
+                const entries = allLangData[lang][mid];
+                if (entries) langEntries.push(...entries);
+            }
+            result[lang] = langEntries;
+        }
+        return result;
+    });
 
     if (filterLang && unverified && langCodes.includes(filterLang)) {
         res = res.filter(item => {

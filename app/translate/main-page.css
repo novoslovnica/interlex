@@ -107,6 +107,30 @@
     outline: none;
 }
 
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+        max-height: 200px;
+    }
+
+    .filter-row--collapsed {
+        max-height: 0;
+        opacity: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .select-group .select-field {
+        width: 50%;
+    }
+
+    .select-group .swap-btn {
+        flex: 1;
+    }
+}
+
 .script-switcher {
     flex-shrink: 0;
     padding: 8px 14px;
@@ -124,6 +148,16 @@
 .script-switcher:hover {
     background: #f0f0f0;
     border-color: #999;
+}
+
+@media (max-width: 768px) {
+    .filter-select {
+        width: 100%;
+    }
+
+    .script-switcher {
+        width: 100%;
+    }
 }
 
 .dark .filter-select {

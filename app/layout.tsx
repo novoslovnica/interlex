@@ -7,6 +7,7 @@ import React from "react";
 import { auth } from "@/auth";
 import HeaderNav from "@/components/HeaderNav";
 import Footer from "@/components/Footer";
+import FooterWrapper from "@/components/FooterWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import {NextIntlClientProvider} from "next-intl";
@@ -78,7 +79,9 @@ export default async function RootLayout({
                       <div className="flex flex-col flex-1 min-h-0">
                           {children}
                       </div>
-                      <Footer />
+                      <FooterWrapper>
+                        <Footer />
+                    </FooterWrapper>
                   </NextIntlClientProvider>
                   </SessionProviderWrapper>
               </ThemeProvider>

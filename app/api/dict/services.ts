@@ -17,16 +17,26 @@ export const getDictItems = async (search: string, from: string, to: string, mai
             from_table = "words";
     }
 
-    const data = await db.prepare(`
-        SELECT *
-        FROM ${from_table}
-        WHERE ROWID IN (SELECT ROWID FROM ${from_table}_text WHERE value LIKE '%${search}%' ORDER BY rank)`)
-        .all();
-
     let res = [];
 
     if (from_table === "words") {
-        const foreignKeysArray = data.map(item => item.id);
+        const lexemeIds = db.prepare(`
+            SELECT DISTINCT l.id FROM lexemes l
+            WHERE (
+                l.id IN (SELECT ROWID FROM lexemes_text WHERE value LIKE '%${search}%')
+                OR EXISTS (
+                    SELECT 1 FROM lexeme_allophones la
+                    WHERE la.lexemeId = l.id
+                    AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
+                    AND la.type = 'standard'
+                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value LIKE '%${search}%')
+                )
+            )
+        `).all() as { id: number }[];
+
+        const foreignKeysArray = lexemeIds.map(r => r.id);
+        if (foreignKeysArray.length === 0) return [];
+
         const placeholders = foreignKeysArray.map(() => '?').join(', ');
 
         let filterClause = '';
@@ -44,15 +54,21 @@ export const getDictItems = async (search: string, from: string, to: string, mai
             SELECT l.* FROM lexemes l WHERE l.id IN (${placeholders})${filterClause}
         `).all(...foreignKeysArray, ...filterParams) as any[];
 
-        res = db.prepare(`
+        const translations = db.prepare(`
             SELECT * FROM ${to_table} WHERE wordId IN (${placeholders})
-        `).all(...foreignKeysArray);
+        `).all(...foreignKeysArray) as any[];
 
-        res = res.map(item => ({
+        res = translations.map(item => ({
             ...item,
             target: lexemes.find(el => el.id === item.wordId),
         })).filter(item => item.target);
     } else {
+        const data = db.prepare(`
+            SELECT *
+            FROM ${from_table}
+            WHERE ROWID IN (SELECT ROWID FROM ${from_table}_text WHERE value LIKE '%${search}%' ORDER BY rank)`)
+            .all() as any[];
+
         const foreignKeysArray = data.map(item => item.wordId);
         const placeholders = foreignKeysArray.map(() => '?').join(', ');
 
@@ -67,11 +83,11 @@ export const getDictItems = async (search: string, from: string, to: string, mai
             filterParams.push(usageType);
         }
 
-        res = db.prepare(`
+        const lexemeRows = db.prepare(`
             SELECT * FROM lexemes WHERE id IN (${placeholders})${filterClause}
-        `).all(...foreignKeysArray, ...filterParams);
+        `).all(...foreignKeysArray, ...filterParams) as any[];
 
-        res = res.map(item => ({
+        res = lexemeRows.map(item => ({
             ...item,
             target: data.find(el => el.wordId === item.id),
         }));
@@ -110,4 +126,4 @@ export const getDictItems = async (search: string, from: string, to: string, mai
     }
 
     return res;
-}
+};

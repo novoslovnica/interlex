@@ -87,6 +87,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const [formScript, setFormScript] = useState<ScriptMode>(currentScript);
     const [items, setItems] = useState<Array<any>>([]);
     const [hasFetched, setHasFetched] = useState(false);
+    const [filtersVisible, setFiltersVisible] = useState(true);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -119,6 +120,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
         if (mainCategory) params.set('mainCategory', mainCategory);
         if (usageType) params.set('usageType', usageType);
         router.replace(`/translate?${params}`);
+        setFiltersVisible(false);
     }, [searchValue, fromValue, toValue, mainCategory, usageType, performSearch, router]);
 
     useEffect(() => {
@@ -180,6 +182,10 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
         });
     }, [isGuest]);
 
+    const toggleFilters = useCallback(() => {
+        setFiltersVisible(prev => !prev);
+    }, []);
+
     return (
         <>
             <div className="search-container">
@@ -229,7 +235,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                     </select>
                 </div>
 
-                <div className="filter-row">
+                <div className={`filter-row${filtersVisible ? '' : ' filter-row--collapsed'}`}>
                     <select
                         className="filter-select"
                         value={mainCategory}
@@ -268,6 +274,15 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         onChange={onChangeSearch}
                         ref={searchInputRef}
                     />
+                    <button
+                        className="search-btn"
+                        onClick={toggleFilters}
+                        title={filtersVisible ? "Сховати филтры" : "Показати филтры"}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                            <path fillRule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z" clipRule="evenodd" />
+                        </svg>
+                    </button>
                     <button
                         className="search-btn"
                         onClick={executeSearch}
