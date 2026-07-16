@@ -36,8 +36,8 @@ def import_hsb():
     batch = []
 
     for i, row in enumerate(rows, 1):
-        meaning_id = int(row[0]) if row[0].strip() else None
-        word_id = int(row[1]) if row[1].strip() else None
+        word_id = int(row[0]) if row[0].strip() else None
+        meaning_id = int(row[1]) if row[1].strip() else None
         value = row[2].strip() if len(row) > 2 and row[2].strip() else None
 
         batch.append((NOW, NOW, value, word_id, meaning_id))
