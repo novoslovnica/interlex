@@ -64,7 +64,7 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
     }
 }
 
-export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string) => {
+export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string, meaningId?: number) => {
     console.log(wordId, field, newValue, veryfied);
     const session = await auth()
     const author = session?.user?.email || "unknown"
@@ -160,8 +160,23 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                 where: { wordId: parseInt(wordId) }
             });
         }
-        if (!entityOne) return null;
-        console.log(entityOne);
+        if (!entityOne) {
+            if (meaningId) {
+                const createData: Record<string, unknown> = {
+                    wordId: parseInt(wordId),
+                    meaningId: meaningId,
+                };
+                if (veryfied !== undefined) createData.veryfied = veryfied;
+                if (newValue) createData.value = newValue;
+                if (message !== undefined) createData.message = message;
+                if (newValue || veryfied !== undefined || message !== undefined) {
+                    createData.actionHistory = buildEntry(author, { created: { old: null, new: "new translation" } });
+                }
+                const created = await langModel.create({ data: createData });
+                return created;
+            }
+            return null;
+        }
 
         const updateData: Record<string, unknown> = {};
 

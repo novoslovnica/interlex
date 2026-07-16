@@ -31,6 +31,7 @@ function getFeature(entry: NavEntry): string | undefined {
 
 const navItems: NavEntry[] = [
     { href: "/admin", label: "Переводы", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
+    { href: "/admin/translation-cards", label: "Переводы (карточки)", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
     { href: "/admin/synonyms", label: "Синонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SynonymsEdit },
     { href: "/admin/antonyms", label: "Антонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.AntonymsEdit },
     {
