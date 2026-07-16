@@ -170,7 +170,7 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                 if (newValue) createData.value = newValue;
                 if (message !== undefined) createData.message = message;
                 if (newValue || veryfied !== undefined || message !== undefined) {
-                    createData.actionHistory = buildEntry(author, { created: { old: null, new: "new translation" } });
+                    createData.actionHistory = append(null, buildEntry(author, { created: { old: null, new: "new translation" } }));
                 }
                 const created = await langModel.create({ data: createData });
                 return created;

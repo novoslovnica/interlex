@@ -540,7 +540,7 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                         <>
                     {virtualItems.map((virtualRow) => {
                         const row = rows[virtualRow.index];
-                        return (
+                          return (
                             <tr
                                 key={row.id}
                                 className="absolute left-0 w-full hover:bg-muted/10 border-b flex items-center"
