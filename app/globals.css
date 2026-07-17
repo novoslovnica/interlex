@@ -143,7 +143,7 @@ body {
 }
 
 /* Desktop submenu dropdown */
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
   .submenu {
     position: absolute;
     top: 100%;
@@ -192,13 +192,17 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Мобильные стили (до 768px) */
-@media (max-width: 768px) {
+/* Backdrop overlay for mobile drawer */
+.mobile-overlay {
+  display: none;
+}
+
+/* Мобильные стили (до 1023px) */
+@media (max-width: 1023px) {
   .hamburger {
-    display: flex; /* Показываем гамбургер */
+    display: flex;
   }
 
-  /* Анимация превращения гамбургера в крестик при открытии */
   .hamburger.active span:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
   }
@@ -209,58 +213,92 @@ body {
     transform: translateY(-8px) rotate(-45deg);
   }
 
-  /* Мобильное выпадающее меню */
-  .header-nav {
-    display: none; /* Скрыто по умолчанию */
-    position: absolute;
-    top: 100%; /* Открывается ровно под шапкой */
-    right: 0;
-    width: 200px; /* Ширина выпадающего блока */
-    background-color: #1e293b; /* Задайте фоновый цвет вашей шапки */
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-    z-index: 99; /* Чтобы было поверх контента */
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 98;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
-  /* Класс для открытия меню */
+  .mobile-overlay.open {
+    display: block;
+    opacity: 1;
+  }
+
+  .header-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    background-color: #1e293b;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 72px 24px 24px;
+    list-style: none;
+    margin: 0;
+    overflow-y: auto;
+    z-index: 99;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
   .header-nav.open {
     display: flex;
+    transform: translateX(0);
+  }
+
+  .header-nav > li {
+    width: 100%;
   }
 
   .nav-link {
     width: 100%;
-    padding: 4px 0;
+    padding: 10px 0;
+    font-size: 15px;
   }
 
   .nav-item-submenu {
     width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .submenu-toggle {
     width: 100%;
     justify-content: space-between;
-    padding: 4px 0;
+    padding: 10px 0;
+    pointer-events: none;
   }
 
-  .submenu {
-    padding-left: 16px;
-    border-left: 2px solid #334155;
-    margin-left: 8px;
-    margin-top: 8px;
-  }
-
-  .submenu.open {
-    display: flex;
+  .header-nav .submenu {
+    display: flex !important;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+    position: static;
+    padding: 8px 0 8px 16px;
+    margin: 4px 0 0 8px;
+    border-left: 2px solid #334155;
+    box-shadow: none;
+    background: none;
+    border-radius: 0;
+    min-width: auto;
+  }
+
+  .submenu-arrow {
+    display: none;
   }
 
   .submenu .nav-link {
     font-size: 14px;
+    padding: 6px 0;
+    white-space: normal;
   }
 }
 

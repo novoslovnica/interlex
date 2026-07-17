@@ -18,6 +18,12 @@ export default function HeaderNav({ session }: HeaderNavProps) {
 
     const user = session?.user
 
+    const closeAll = () => {
+        setIsOpen(false)
+        setToolsOpen(false)
+        setUserMenuOpen(false)
+    }
+
     return (
         <nav className="header-nav-container">
             <button
@@ -30,49 +36,35 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 <span></span>
             </button>
 
+            <div className={`mobile-overlay ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(false)} />
+
             <ul className={`header-nav ${isOpen ? 'open' : ''}`}>
 
-                <li><Link href="/lexicon" className="nav-link" onClick={() => setIsOpen(false)}>{t("lexicon")}</Link></li>
-                <li><Link href="/translate" className="nav-link" onClick={() => setIsOpen(false)}>{t("translate")}</Link></li>
-                <li><Link href="/library" className="nav-link" onClick={() => setIsOpen(false)}>{t("library")}</Link></li>
-                <li style={{ position: "relative" }}>
+                <li><Link href="/lexicon" className="nav-link" onClick={closeAll}>{t("lexicon")}</Link></li>
+                <li><Link href="/translate" className="nav-link" onClick={closeAll}>{t("translate")}</Link></li>
+                <li><Link href="/library" className="nav-link" onClick={closeAll}>{t("library")}</Link></li>
+                <li className="nav-item-submenu">
                     <button
                         className="nav-link submenu-toggle"
-                        style={{
-                            fontSize: '15px',
-                            color: 'rgb(203, 213, 225)',
-                            width: '100%',
-                            textAlign: 'left',
-                            border: 'none',
-                            background: 'none',
-                            font: 'inherit',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '8px 16px',
-                            cursor: 'pointer',
-                        }}
                         onClick={() => setToolsOpen(!toolsOpen)}
                     >
                         {t("tools")}
                         <span className="submenu-arrow">{toolsOpen ? '▲' : '▼'}</span>
                     </button>
-                    {toolsOpen && (
-                        <ul className="submenu open" style={{ paddingLeft: 0 }}>
-                            <li>
-                                <Link href="/transliteration" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false); setToolsOpen(false) }}>
-                                    {t("transliterator")}
-                                </Link>
-                            </li>
-                        </ul>
-                    )}
+                    <ul className={`submenu ${toolsOpen ? 'open' : ''}`}>
+                        <li>
+                            <Link href="/transliteration" className="nav-link" onClick={closeAll}>
+                                {t("transliterator")}
+                            </Link>
+                        </li>
+                    </ul>
                 </li>
 
-                <LanguageSwitcher />
+                <li className="nav-item-submenu"><LanguageSwitcher /></li>
                 {user ? (
-                    <li className="nav-item-submenu" style={{ position: 'relative' }}>
+                    <li className="nav-item-submenu">
                         <button
-                            className="nav-link flex items-center gap-2 hover:opacity-80 transition-opacity submenu-toggle"
+                            className="nav-link submenu-toggle"
                             onClick={() => setUserMenuOpen(!userMenuOpen)}
                         >
                             {user.image && (
@@ -85,22 +77,20 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                             <span className="text-sm font-medium">{user.name}</span>
                             <span className="submenu-arrow">{userMenuOpen ? '▲' : '▼'}</span>
                         </button>
-                        <ul className={`submenu ${userMenuOpen ? 'open' : ''}`}
-                            style={{ right: 0, left: 'auto' }}
-                        >
+                        <ul className={`submenu ${userMenuOpen ? 'open' : ''}`}>
                             <li>
-                                <Link href="/profile" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
+                                <Link href="/profile" className="nav-link" onClick={closeAll}>
                                     Profile
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/settings" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
+                                <Link href="/settings" className="nav-link" onClick={closeAll}>
                                     {t("settings")}
                                 </Link>
                             </li>
                             {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
                                 <li>
-                                    <Link href="/admin" className="nav-link" onClick={() => { setIsOpen(false); setUserMenuOpen(false) }}>
+                                    <Link href="/admin" className="nav-link" onClick={closeAll}>
                                         {t("admin")}
                                     </Link>
                                 </li>
@@ -127,7 +117,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                     </li>
                 ) : (
                     <li>
-                        <Link href="/login" className="nav-link" onClick={() => setIsOpen(false)}>
+                        <Link href="/login" className="nav-link" onClick={closeAll}>
                             {t("login")}
                         </Link>
                     </li>
