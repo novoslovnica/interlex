@@ -1,4 +1,4 @@
-export const APP_VERSION = "4.2"
+export const APP_VERSION = "4.3"
 
 export interface ChangelogEntry {
   version: string
@@ -49,6 +49,23 @@ export const CHANGELOG: ChangelogEntry[] = [
       { isv: "Slug-sistema i čitablnyje URL", ru: "Slug-система и читаемые URL" },
       { isv: "Učet vkladow (kto dobavil tekst) i istorija izměnenij", ru: "Учет вкладов (кто добавил текст) и история изменений" },
       { isv: "Metadannyje: istočnik, god napisanja, prevod, flavorizacija (CORE/NSL/EAST/WEST/SOUTH)", ru: "Метаданные: источник, год написания, перевод, флаворизация (CORE/NSL/EAST/WEST/SOUTH)" },
+      { isv: "Obkladky i audio fajly dlja tekstov biblioteky", ru: "Обложки и аудиофайлы для текстов библиотеки" },
+      { isv: "Sredneje vreme čtenja i količestvo stránic tekstov", ru: "Среднее время чтения и количество страниц текстов" },
+      { isv: "Vypravlenje sklonenij slov (věrifikacija paradigm)", ru: "Выверка склонений слов (верификация парадигм)" },
+      { isv: "Pohod po kategorijam slov (časti reči, rod, číslo)", ru: "Поиск по категориям слов (части речи, род, число)" },
+    ],
+  },
+  {
+    version: "4.3",
+    date: "2026-07",
+    title: "Korpus i gramatičesky parser / Корпус и грамматический парсер",
+    titleIsv: "Sozdanije korpusa i POS-tagging",
+    features: [
+      { isv: "Gramatičesky parser s POS-tagging (razměčanje častej reči)", ru: "Грамматический парсер POS-tagging (разметка частей речи)" },
+      { isv: "Sozdanije bazy dannyh korpusa", ru: "Создание базы данных корпуса" },
+      { isv: "Načalo napolnjenja korpusa tekstami", ru: "Начало наполнения корпуса текстами" },
+      { isv: "Video (YouTube) v tekstah biblioteky", ru: "Отображение видео (YouTube) в текстах библиотеки" },
+      { isv: "Vlastny imena s velikoj bukvy (kapitalizacija)", ru: "Отображение собственных имён с большой буквы" },
     ],
   },
 ]
