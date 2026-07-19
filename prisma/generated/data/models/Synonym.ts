@@ -440,14 +440,6 @@ export type SynonymUncheckedUpdateManyWithoutTargetNestedInput = {
   deleteMany?: Prisma.SynonymScalarWhereInput | Prisma.SynonymScalarWhereInput[]
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type SynonymCreateWithoutSourceInput = {
   proximity?: number | null
   target?: Prisma.MeaningCreateNestedOneWithoutSynonymsTargetInput

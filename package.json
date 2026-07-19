@@ -15,6 +15,7 @@
     "db:gen-data": "cross-env DB_TYPE=data prisma generate",
     "db:gen-library": "cross-env DB_TYPE=library prisma generate",
     "db:gen-corpus": "cross-env DB_TYPE=corpus prisma generate",
+    "compute:frequency": "npx tsx scripts/compute-lexicon-frequency.ts",
     "upload:synonyms-antonyms": "npx tsx scripts/db/upload-synonyms-antonyms.ts",
     "upload:synset-relations": "npx tsx scripts/db/upload-synset-relations.ts",
     "db:migrate-auth": "cross-env DB_TYPE=auth prisma migrate dev",

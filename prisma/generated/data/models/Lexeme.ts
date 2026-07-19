@@ -33,6 +33,9 @@ export type LexemeAvgAggregateOutputType = {
   declension: number | null
   conjugation: number | null
   stressPosition: number | null
+  corpusFrequency: number | null
+  corpusFrequencyPerMln: number | null
+  corpusRank: number | null
 }
 
 export type LexemeSumAggregateOutputType = {
@@ -42,6 +45,9 @@ export type LexemeSumAggregateOutputType = {
   declension: number | null
   conjugation: number | null
   stressPosition: number | null
+  corpusFrequency: number | null
+  corpusFrequencyPerMln: number | null
+  corpusRank: number | null
 }
 
 export type LexemeMinAggregateOutputType = {
@@ -81,6 +87,10 @@ export type LexemeMinAggregateOutputType = {
   stressPosition: number | null
   properNoun: boolean | null
   hasAnomalies: boolean | null
+  corpusFrequency: number | null
+  corpusFrequencyPerMln: number | null
+  corpusRank: number | null
+  corpusHapax: boolean | null
   actionHistory: string | null
 }
 
@@ -121,6 +131,10 @@ export type LexemeMaxAggregateOutputType = {
   stressPosition: number | null
   properNoun: boolean | null
   hasAnomalies: boolean | null
+  corpusFrequency: number | null
+  corpusFrequencyPerMln: number | null
+  corpusRank: number | null
+  corpusHapax: boolean | null
   actionHistory: string | null
 }
 
@@ -161,6 +175,10 @@ export type LexemeCountAggregateOutputType = {
   stressPosition: number
   properNoun: number
   hasAnomalies: number
+  corpusFrequency: number
+  corpusFrequencyPerMln: number
+  corpusRank: number
+  corpusHapax: number
   actionHistory: number
   _all: number
 }
@@ -173,6 +191,9 @@ export type LexemeAvgAggregateInputType = {
   declension?: true
   conjugation?: true
   stressPosition?: true
+  corpusFrequency?: true
+  corpusFrequencyPerMln?: true
+  corpusRank?: true
 }
 
 export type LexemeSumAggregateInputType = {
@@ -182,6 +203,9 @@ export type LexemeSumAggregateInputType = {
   declension?: true
   conjugation?: true
   stressPosition?: true
+  corpusFrequency?: true
+  corpusFrequencyPerMln?: true
+  corpusRank?: true
 }
 
 export type LexemeMinAggregateInputType = {
@@ -221,6 +245,10 @@ export type LexemeMinAggregateInputType = {
   stressPosition?: true
   properNoun?: true
   hasAnomalies?: true
+  corpusFrequency?: true
+  corpusFrequencyPerMln?: true
+  corpusRank?: true
+  corpusHapax?: true
   actionHistory?: true
 }
 
@@ -261,6 +289,10 @@ export type LexemeMaxAggregateInputType = {
   stressPosition?: true
   properNoun?: true
   hasAnomalies?: true
+  corpusFrequency?: true
+  corpusFrequencyPerMln?: true
+  corpusRank?: true
+  corpusHapax?: true
   actionHistory?: true
 }
 
@@ -301,6 +333,10 @@ export type LexemeCountAggregateInputType = {
   stressPosition?: true
   properNoun?: true
   hasAnomalies?: true
+  corpusFrequency?: true
+  corpusFrequencyPerMln?: true
+  corpusRank?: true
+  corpusHapax?: true
   actionHistory?: true
   _all?: true
 }
@@ -428,6 +464,10 @@ export type LexemeGroupByOutputType = {
   stressPosition: number | null
   properNoun: boolean
   hasAnomalies: boolean
+  corpusFrequency: number | null
+  corpusFrequencyPerMln: number | null
+  corpusRank: number | null
+  corpusHapax: boolean | null
   actionHistory: string | null
   _count: LexemeCountAggregateOutputType | null
   _avg: LexemeAvgAggregateOutputType | null
@@ -491,6 +531,10 @@ export type LexemeWhereInput = {
   stressPosition?: Prisma.IntNullableFilter<"Lexeme"> | number | null
   properNoun?: Prisma.BoolFilter<"Lexeme"> | boolean
   hasAnomalies?: Prisma.BoolFilter<"Lexeme"> | boolean
+  corpusFrequency?: Prisma.IntNullableFilter<"Lexeme"> | number | null
+  corpusFrequencyPerMln?: Prisma.FloatNullableFilter<"Lexeme"> | number | null
+  corpusRank?: Prisma.IntNullableFilter<"Lexeme"> | number | null
+  corpusHapax?: Prisma.BoolNullableFilter<"Lexeme"> | boolean | null
   actionHistory?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   meanings?: Prisma.MeaningListRelationFilter
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
@@ -535,6 +579,10 @@ export type LexemeOrderByWithRelationInput = {
   stressPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   properNoun?: Prisma.SortOrder
   hasAnomalies?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusRank?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusHapax?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   meanings?: Prisma.MeaningOrderByRelationAggregateInput
   lexemes_morphemes?: Prisma.LexemeMorphemeOrderByRelationAggregateInput
@@ -582,6 +630,10 @@ export type LexemeWhereUniqueInput = Prisma.AtLeast<{
   stressPosition?: Prisma.IntNullableFilter<"Lexeme"> | number | null
   properNoun?: Prisma.BoolFilter<"Lexeme"> | boolean
   hasAnomalies?: Prisma.BoolFilter<"Lexeme"> | boolean
+  corpusFrequency?: Prisma.IntNullableFilter<"Lexeme"> | number | null
+  corpusFrequencyPerMln?: Prisma.FloatNullableFilter<"Lexeme"> | number | null
+  corpusRank?: Prisma.IntNullableFilter<"Lexeme"> | number | null
+  corpusHapax?: Prisma.BoolNullableFilter<"Lexeme"> | boolean | null
   actionHistory?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   meanings?: Prisma.MeaningListRelationFilter
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
@@ -626,6 +678,10 @@ export type LexemeOrderByWithAggregationInput = {
   stressPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   properNoun?: Prisma.SortOrder
   hasAnomalies?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusRank?: Prisma.SortOrderInput | Prisma.SortOrder
+  corpusHapax?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LexemeCountOrderByAggregateInput
   _avg?: Prisma.LexemeAvgOrderByAggregateInput
@@ -674,6 +730,10 @@ export type LexemeScalarWhereWithAggregatesInput = {
   stressPosition?: Prisma.IntNullableWithAggregatesFilter<"Lexeme"> | number | null
   properNoun?: Prisma.BoolWithAggregatesFilter<"Lexeme"> | boolean
   hasAnomalies?: Prisma.BoolWithAggregatesFilter<"Lexeme"> | boolean
+  corpusFrequency?: Prisma.IntNullableWithAggregatesFilter<"Lexeme"> | number | null
+  corpusFrequencyPerMln?: Prisma.FloatNullableWithAggregatesFilter<"Lexeme"> | number | null
+  corpusRank?: Prisma.IntNullableWithAggregatesFilter<"Lexeme"> | number | null
+  corpusHapax?: Prisma.BoolNullableWithAggregatesFilter<"Lexeme"> | boolean | null
   actionHistory?: Prisma.StringNullableWithAggregatesFilter<"Lexeme"> | string | null
 }
 
@@ -713,6 +773,10 @@ export type LexemeCreateInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
@@ -757,6 +821,10 @@ export type LexemeUncheckedCreateInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
@@ -800,6 +868,10 @@ export type LexemeUpdateInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
@@ -844,6 +916,10 @@ export type LexemeUncheckedUpdateInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
@@ -888,6 +964,10 @@ export type LexemeCreateManyInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
 }
 
@@ -927,6 +1007,10 @@ export type LexemeUpdateManyMutationInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -967,6 +1051,10 @@ export type LexemeUncheckedUpdateManyInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -1007,6 +1095,10 @@ export type LexemeCountOrderByAggregateInput = {
   stressPosition?: Prisma.SortOrder
   properNoun?: Prisma.SortOrder
   hasAnomalies?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrder
+  corpusRank?: Prisma.SortOrder
+  corpusHapax?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
 }
 
@@ -1017,6 +1109,9 @@ export type LexemeAvgOrderByAggregateInput = {
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrder
+  corpusRank?: Prisma.SortOrder
 }
 
 export type LexemeMaxOrderByAggregateInput = {
@@ -1056,6 +1151,10 @@ export type LexemeMaxOrderByAggregateInput = {
   stressPosition?: Prisma.SortOrder
   properNoun?: Prisma.SortOrder
   hasAnomalies?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrder
+  corpusRank?: Prisma.SortOrder
+  corpusHapax?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
 }
 
@@ -1096,6 +1195,10 @@ export type LexemeMinOrderByAggregateInput = {
   stressPosition?: Prisma.SortOrder
   properNoun?: Prisma.SortOrder
   hasAnomalies?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrder
+  corpusRank?: Prisma.SortOrder
+  corpusHapax?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
 }
 
@@ -1106,6 +1209,9 @@ export type LexemeSumOrderByAggregateInput = {
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  corpusFrequency?: Prisma.SortOrder
+  corpusFrequencyPerMln?: Prisma.SortOrder
+  corpusRank?: Prisma.SortOrder
 }
 
 export type LexemeScalarRelationFilter = {
@@ -1140,6 +1246,18 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -1244,6 +1362,10 @@ export type LexemeCreateWithoutMeaningsInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -1287,6 +1409,10 @@ export type LexemeUncheckedCreateWithoutMeaningsInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -1345,6 +1471,10 @@ export type LexemeUpdateWithoutMeaningsInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -1388,6 +1518,10 @@ export type LexemeUncheckedUpdateWithoutMeaningsInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1430,6 +1564,10 @@ export type LexemeCreateWithoutLexemes_morphemesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -1473,6 +1611,10 @@ export type LexemeUncheckedCreateWithoutLexemes_morphemesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -1531,6 +1673,10 @@ export type LexemeUpdateWithoutLexemes_morphemesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -1574,6 +1720,10 @@ export type LexemeUncheckedUpdateWithoutLexemes_morphemesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1616,6 +1766,10 @@ export type LexemeCreateWithoutLexemeAllophonesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
@@ -1659,6 +1813,10 @@ export type LexemeUncheckedCreateWithoutLexemeAllophonesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
@@ -1717,6 +1875,10 @@ export type LexemeUpdateWithoutLexemeAllophonesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
@@ -1760,6 +1922,10 @@ export type LexemeUncheckedUpdateWithoutLexemeAllophonesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1802,6 +1968,10 @@ export type LexemeCreateWithoutAnomaliesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
@@ -1845,6 +2015,10 @@ export type LexemeUncheckedCreateWithoutAnomaliesInput = {
   stressPosition?: number | null
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
   actionHistory?: string | null
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
@@ -1903,6 +2077,10 @@ export type LexemeUpdateWithoutAnomaliesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
@@ -1946,6 +2124,10 @@ export type LexemeUncheckedUpdateWithoutAnomaliesInput = {
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
@@ -2047,6 +2229,10 @@ export type LexemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   stressPosition?: boolean
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: boolean
+  corpusFrequencyPerMln?: boolean
+  corpusRank?: boolean
+  corpusHapax?: boolean
   actionHistory?: boolean
   meanings?: boolean | Prisma.Lexeme$meaningsArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>
@@ -2092,6 +2278,10 @@ export type LexemeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   stressPosition?: boolean
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: boolean
+  corpusFrequencyPerMln?: boolean
+  corpusRank?: boolean
+  corpusHapax?: boolean
   actionHistory?: boolean
 }, ExtArgs["result"]["lexeme"]>
 
@@ -2132,6 +2322,10 @@ export type LexemeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   stressPosition?: boolean
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: boolean
+  corpusFrequencyPerMln?: boolean
+  corpusRank?: boolean
+  corpusHapax?: boolean
   actionHistory?: boolean
 }, ExtArgs["result"]["lexeme"]>
 
@@ -2172,10 +2366,14 @@ export type LexemeSelectScalar = {
   stressPosition?: boolean
   properNoun?: boolean
   hasAnomalies?: boolean
+  corpusFrequency?: boolean
+  corpusFrequencyPerMln?: boolean
+  corpusRank?: boolean
+  corpusHapax?: boolean
   actionHistory?: boolean
 }
 
-export type LexemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "slug" | "external_id" | "value" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "stressPosition" | "properNoun" | "hasAnomalies" | "actionHistory", ExtArgs["result"]["lexeme"]>
+export type LexemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "slug" | "external_id" | "value" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "stressPosition" | "properNoun" | "hasAnomalies" | "corpusFrequency" | "corpusFrequencyPerMln" | "corpusRank" | "corpusHapax" | "actionHistory", ExtArgs["result"]["lexeme"]>
 export type LexemeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meanings?: boolean | Prisma.Lexeme$meaningsArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>
@@ -2231,6 +2429,10 @@ export type $LexemePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     stressPosition: number | null
     properNoun: boolean
     hasAnomalies: boolean
+    corpusFrequency: number | null
+    corpusFrequencyPerMln: number | null
+    corpusRank: number | null
+    corpusHapax: boolean | null
     actionHistory: string | null
   }, ExtArgs["result"]["lexeme"]>
   composites: {}
@@ -2695,6 +2897,10 @@ export interface LexemeFieldRefs {
   readonly stressPosition: Prisma.FieldRef<"Lexeme", 'Int'>
   readonly properNoun: Prisma.FieldRef<"Lexeme", 'Boolean'>
   readonly hasAnomalies: Prisma.FieldRef<"Lexeme", 'Boolean'>
+  readonly corpusFrequency: Prisma.FieldRef<"Lexeme", 'Int'>
+  readonly corpusFrequencyPerMln: Prisma.FieldRef<"Lexeme", 'Float'>
+  readonly corpusRank: Prisma.FieldRef<"Lexeme", 'Int'>
+  readonly corpusHapax: Prisma.FieldRef<"Lexeme", 'Boolean'>
   readonly actionHistory: Prisma.FieldRef<"Lexeme", 'String'>
 }
     

@@ -54,7 +54,8 @@ export const ModelName = {
   CorpusDocument: 'CorpusDocument',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
-  WordFormPriority: 'WordFormPriority'
+  WordFormPriority: 'WordFormPriority',
+  CorpusConfig: 'CorpusConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -119,6 +120,15 @@ export const WordFormPriorityScalarFieldEnum = {
 } as const
 
 export type WordFormPriorityScalarFieldEnum = (typeof WordFormPriorityScalarFieldEnum)[keyof typeof WordFormPriorityScalarFieldEnum]
+
+
+export const CorpusConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+} as const
+
+export type CorpusConfigScalarFieldEnum = (typeof CorpusConfigScalarFieldEnum)[keyof typeof CorpusConfigScalarFieldEnum]
 
 
 export const SortOrder = {

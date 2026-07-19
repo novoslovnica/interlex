@@ -52,6 +52,12 @@ model Lexeme {
   // Маркер аномалий флексий
   hasAnomalies    Boolean          @default(false)
 
+  // Частотность на основе корпусных данных
+  corpusFrequency       Int?
+  corpusFrequencyPerMln Float?
+  corpusRank            Int?
+  corpusHapax           Boolean?
+
   // Обратные связи Prisma
   meanings        Meaning[]
   lexemes_morphemes LexemeMorpheme[]

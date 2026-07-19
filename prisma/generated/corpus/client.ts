@@ -61,3 +61,8 @@ export type CorpusToken = Prisma.CorpusTokenModel
  * 
  */
 export type WordFormPriority = Prisma.WordFormPriorityModel
+/**
+ * Model CorpusConfig
+ * 
+ */
+export type CorpusConfig = Prisma.CorpusConfigModel

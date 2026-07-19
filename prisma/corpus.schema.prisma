@@ -83,3 +83,11 @@ model WordFormPriority {
   /// Индекс для форсирования мгновенной выборки текстовых ключей
   @@index([surfaceForm])
 }
+
+model CorpusConfig {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+
+  @@map("corpus_config")
+}

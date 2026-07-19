@@ -146,6 +146,10 @@ export const LexemeScalarFieldEnum = {
   stressPosition: 'stressPosition',
   properNoun: 'properNoun',
   hasAnomalies: 'hasAnomalies',
+  corpusFrequency: 'corpusFrequency',
+  corpusFrequencyPerMln: 'corpusFrequencyPerMln',
+  corpusRank: 'corpusRank',
+  corpusHapax: 'corpusHapax',
   actionHistory: 'actionHistory'
 } as const
 

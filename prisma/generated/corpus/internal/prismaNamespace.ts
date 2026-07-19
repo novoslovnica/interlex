@@ -387,7 +387,8 @@ export const ModelName = {
   CorpusDocument: 'CorpusDocument',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
-  WordFormPriority: 'WordFormPriority'
+  WordFormPriority: 'WordFormPriority',
+  CorpusConfig: 'CorpusConfig'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSentence" | "corpusToken" | "wordFormPriority"
+    modelProps: "corpusDocument" | "corpusSentence" | "corpusToken" | "wordFormPriority" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CorpusConfig: {
+      payload: Prisma.$CorpusConfigPayload<ExtArgs>
+      fields: Prisma.CorpusConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        findMany: {
+          args: Prisma.CorpusConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>[]
+        }
+        create: {
+          args: Prisma.CorpusConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        createMany: {
+          args: Prisma.CorpusConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        update: {
+          args: Prisma.CorpusConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusConfig>
+        }
+        groupBy: {
+          args: Prisma.CorpusConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusConfigCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -788,6 +863,15 @@ export const WordFormPriorityScalarFieldEnum = {
 } as const
 
 export type WordFormPriorityScalarFieldEnum = (typeof WordFormPriorityScalarFieldEnum)[keyof typeof WordFormPriorityScalarFieldEnum]
+
+
+export const CorpusConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value'
+} as const
+
+export type CorpusConfigScalarFieldEnum = (typeof CorpusConfigScalarFieldEnum)[keyof typeof CorpusConfigScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1013,6 +1097,7 @@ export type GlobalOmitConfig = {
   corpusSentence?: Prisma.CorpusSentenceOmit
   corpusToken?: Prisma.CorpusTokenOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit
+  corpusConfig?: Prisma.CorpusConfigOmit
 }
 
 /* Types for Logging */

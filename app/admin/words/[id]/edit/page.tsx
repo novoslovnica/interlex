@@ -11,6 +11,7 @@ import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 import { init } from "@/lib/sqlite"
 import AdminNav from "@/components/AdminNav"
 import { RelationsTab } from "./_components/relations-tab"
+import { generateUniqueSlug } from "@/lib/slug"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -334,6 +335,12 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       grammarData[f] = newVal
     }
 
+    const newPos = grammarData.pos as string | null | undefined
+    let newSlug: string | undefined
+    if (currentWord?.value !== formData.word || currentWord?.pos !== newPos) {
+      newSlug = await generateUniqueSlug(formData.word, newPos ?? "", wordId)
+    }
+
     await db.lexeme.update({
       where: { id: wordId },
       data: {
@@ -342,6 +349,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
         hasAnomalies: formData.hasAnomalies === true,
         properNoun: formData.properNoun === true,
         ...grammarData,
+        ...(newSlug ? { slug: newSlug } : {}),
         ...(Object.keys(wordChanges).length > 0
           ? { actionHistory: append(currentWordWithHistory?.actionHistory, buildEntry(author, wordChanges)) }
           : {}),

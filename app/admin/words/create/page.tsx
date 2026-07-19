@@ -7,6 +7,7 @@ import { auth } from "@/auth"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { buildEntry, append } from "@/lib/action-history"
+import { generateUniqueSlug } from "@/lib/slug"
 
 export const metadata: Metadata = {
   title: "Создание статьи",
@@ -51,7 +52,7 @@ export default async function CreateArticlePage() {
         const author = session?.user?.email || "unknown"
         const stemValue = formData.stem?.trim() || null
         const posValue = formData.pos?.trim() || "unknown"
-        const slug = `${formData.word?.toLowerCase()}-${posValue}`
+        const slug = await generateUniqueSlug(formData.word?.toLowerCase() || "", posValue)
 
         const newWord = await db.lexeme.create({
             data: {
