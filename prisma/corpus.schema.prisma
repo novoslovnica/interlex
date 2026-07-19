@@ -20,15 +20,30 @@ model CorpusDocument {
   // Связи
   tokens        CorpusToken[]
   sentences     CorpusSentence[]
+  segments      CorpusSegment[]
+}
+
+model CorpusSegment {
+  id            String         @id @default(uuid())
+  documentSlug  String
+  position      Int            // Порядковый номер абзаца в документе
+  rawText       String         // Полный текст абзаца
+
+  document      CorpusDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  sentences     CorpusSentence[]
+
+  @@index([documentSlug, position])
 }
 
 model CorpusSentence {
   id            String         @id @default(uuid())
   documentSlug  String
+  segmentId     String         // Ссылка на родительский абзац
   position      Int            // Порядковый номер предложения в документе
   rawText       String         // Текст конкретного предложения для KWIC
 
   document      CorpusDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  segment       CorpusSegment  @relation(fields: [segmentId], references: [id], onDelete: Cascade)
   tokens        CorpusToken[]
 
   @@index([documentSlug, position])

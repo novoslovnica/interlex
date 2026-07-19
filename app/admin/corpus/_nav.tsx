@@ -8,6 +8,7 @@ export default function CorpusAdminNav() {
 
   const isBuilder = pathname.startsWith("/admin/corpus/builder")
   const isDocuments = pathname.startsWith("/admin/corpus/documents")
+  const isImport = pathname.startsWith("/admin/corpus/import")
 
   const linkClass = (active: boolean) =>
     `inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80 ${
@@ -25,6 +26,9 @@ export default function CorpusAdminNav() {
           </Link>
           <Link href="/admin/corpus/documents" className={linkClass(isDocuments)}>
             Документы
+          </Link>
+          <Link href="/admin/corpus/import" className={linkClass(isImport)}>
+            Импорт
           </Link>
         </nav>
       </div>

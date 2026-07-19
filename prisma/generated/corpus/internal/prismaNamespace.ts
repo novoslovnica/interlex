@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   CorpusDocument: 'CorpusDocument',
+  CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
   WordFormPriority: 'WordFormPriority',
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSentence" | "corpusToken" | "wordFormPriority" | "corpusConfig"
+    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "wordFormPriority" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -479,6 +480,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CorpusDocumentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CorpusDocumentCountAggregateOutputType> | number
+        }
+      }
+    }
+    CorpusSegment: {
+      payload: Prisma.$CorpusSegmentPayload<ExtArgs>
+      fields: Prisma.CorpusSegmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusSegmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusSegmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusSegmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusSegmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        findMany: {
+          args: Prisma.CorpusSegmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>[]
+        }
+        create: {
+          args: Prisma.CorpusSegmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        createMany: {
+          args: Prisma.CorpusSegmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusSegmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusSegmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        update: {
+          args: Prisma.CorpusSegmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusSegmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusSegmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusSegmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusSegmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusSegmentPayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusSegmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusSegment>
+        }
+        groupBy: {
+          args: Prisma.CorpusSegmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusSegmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusSegmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusSegmentCountAggregateOutputType> | number
         }
       }
     }
@@ -828,9 +903,20 @@ export const CorpusDocumentScalarFieldEnum = {
 export type CorpusDocumentScalarFieldEnum = (typeof CorpusDocumentScalarFieldEnum)[keyof typeof CorpusDocumentScalarFieldEnum]
 
 
+export const CorpusSegmentScalarFieldEnum = {
+  id: 'id',
+  documentSlug: 'documentSlug',
+  position: 'position',
+  rawText: 'rawText'
+} as const
+
+export type CorpusSegmentScalarFieldEnum = (typeof CorpusSegmentScalarFieldEnum)[keyof typeof CorpusSegmentScalarFieldEnum]
+
+
 export const CorpusSentenceScalarFieldEnum = {
   id: 'id',
   documentSlug: 'documentSlug',
+  segmentId: 'segmentId',
   position: 'position',
   rawText: 'rawText'
 } as const
@@ -1094,6 +1180,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   corpusDocument?: Prisma.CorpusDocumentOmit
+  corpusSegment?: Prisma.CorpusSegmentOmit
   corpusSentence?: Prisma.CorpusSentenceOmit
   corpusToken?: Prisma.CorpusTokenOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit

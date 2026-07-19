@@ -14,6 +14,7 @@ export default function FooterWrapper({children}: { children: ReactNode }) {
         return () => window.removeEventListener("resize", check);
     }, []);
 
+    if (pathname.startsWith("/admin")) return null;
     if (pathname !== "/" && !isWide) return null;
 
     return <>{children}</>;

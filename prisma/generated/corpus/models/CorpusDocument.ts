@@ -208,6 +208,7 @@ export type CorpusDocumentWhereInput = {
   candidatesProcessed?: Prisma.BoolFilter<"CorpusDocument"> | boolean
   tokens?: Prisma.CorpusTokenListRelationFilter
   sentences?: Prisma.CorpusSentenceListRelationFilter
+  segments?: Prisma.CorpusSegmentListRelationFilter
 }
 
 export type CorpusDocumentOrderByWithRelationInput = {
@@ -221,6 +222,7 @@ export type CorpusDocumentOrderByWithRelationInput = {
   candidatesProcessed?: Prisma.SortOrder
   tokens?: Prisma.CorpusTokenOrderByRelationAggregateInput
   sentences?: Prisma.CorpusSentenceOrderByRelationAggregateInput
+  segments?: Prisma.CorpusSegmentOrderByRelationAggregateInput
 }
 
 export type CorpusDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -237,6 +239,7 @@ export type CorpusDocumentWhereUniqueInput = Prisma.AtLeast<{
   candidatesProcessed?: Prisma.BoolFilter<"CorpusDocument"> | boolean
   tokens?: Prisma.CorpusTokenListRelationFilter
   sentences?: Prisma.CorpusSentenceListRelationFilter
+  segments?: Prisma.CorpusSegmentListRelationFilter
 }, "id" | "slug">
 
 export type CorpusDocumentOrderByWithAggregationInput = {
@@ -278,6 +281,7 @@ export type CorpusDocumentCreateInput = {
   candidatesProcessed?: boolean
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentUncheckedCreateInput = {
@@ -291,6 +295,7 @@ export type CorpusDocumentUncheckedCreateInput = {
   candidatesProcessed?: boolean
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentUpdateInput = {
@@ -304,6 +309,7 @@ export type CorpusDocumentUpdateInput = {
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type CorpusDocumentUncheckedUpdateInput = {
@@ -317,6 +323,7 @@ export type CorpusDocumentUncheckedUpdateInput = {
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type CorpusDocumentCreateManyInput = {
@@ -406,6 +413,20 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type CorpusDocumentCreateNestedOneWithoutSegmentsInput = {
+  create?: Prisma.XOR<Prisma.CorpusDocumentCreateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedCreateWithoutSegmentsInput>
+  connectOrCreate?: Prisma.CorpusDocumentCreateOrConnectWithoutSegmentsInput
+  connect?: Prisma.CorpusDocumentWhereUniqueInput
+}
+
+export type CorpusDocumentUpdateOneRequiredWithoutSegmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CorpusDocumentCreateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedCreateWithoutSegmentsInput>
+  connectOrCreate?: Prisma.CorpusDocumentCreateOrConnectWithoutSegmentsInput
+  upsert?: Prisma.CorpusDocumentUpsertWithoutSegmentsInput
+  connect?: Prisma.CorpusDocumentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CorpusDocumentUpdateToOneWithWhereWithoutSegmentsInput, Prisma.CorpusDocumentUpdateWithoutSegmentsInput>, Prisma.CorpusDocumentUncheckedUpdateWithoutSegmentsInput>
+}
+
 export type CorpusDocumentCreateNestedOneWithoutSentencesInput = {
   create?: Prisma.XOR<Prisma.CorpusDocumentCreateWithoutSentencesInput, Prisma.CorpusDocumentUncheckedCreateWithoutSentencesInput>
   connectOrCreate?: Prisma.CorpusDocumentCreateOrConnectWithoutSentencesInput
@@ -434,6 +455,74 @@ export type CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CorpusDocumentUpdateToOneWithWhereWithoutTokensInput, Prisma.CorpusDocumentUpdateWithoutTokensInput>, Prisma.CorpusDocumentUncheckedUpdateWithoutTokensInput>
 }
 
+export type CorpusDocumentCreateWithoutSegmentsInput = {
+  id?: string
+  slug: string
+  title: string
+  author?: string | null
+  rawText: string
+  language?: string
+  createdAt?: Date | string
+  candidatesProcessed?: boolean
+  tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
+  sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
+}
+
+export type CorpusDocumentUncheckedCreateWithoutSegmentsInput = {
+  id?: string
+  slug: string
+  title: string
+  author?: string | null
+  rawText: string
+  language?: string
+  createdAt?: Date | string
+  candidatesProcessed?: boolean
+  tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
+  sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
+}
+
+export type CorpusDocumentCreateOrConnectWithoutSegmentsInput = {
+  where: Prisma.CorpusDocumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.CorpusDocumentCreateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedCreateWithoutSegmentsInput>
+}
+
+export type CorpusDocumentUpsertWithoutSegmentsInput = {
+  update: Prisma.XOR<Prisma.CorpusDocumentUpdateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedUpdateWithoutSegmentsInput>
+  create: Prisma.XOR<Prisma.CorpusDocumentCreateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedCreateWithoutSegmentsInput>
+  where?: Prisma.CorpusDocumentWhereInput
+}
+
+export type CorpusDocumentUpdateToOneWithWhereWithoutSegmentsInput = {
+  where?: Prisma.CorpusDocumentWhereInput
+  data: Prisma.XOR<Prisma.CorpusDocumentUpdateWithoutSegmentsInput, Prisma.CorpusDocumentUncheckedUpdateWithoutSegmentsInput>
+}
+
+export type CorpusDocumentUpdateWithoutSegmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
+  sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
+}
+
+export type CorpusDocumentUncheckedUpdateWithoutSegmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
+  sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
+}
+
 export type CorpusDocumentCreateWithoutSentencesInput = {
   id?: string
   slug: string
@@ -444,6 +533,7 @@ export type CorpusDocumentCreateWithoutSentencesInput = {
   createdAt?: Date | string
   candidatesProcessed?: boolean
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentUncheckedCreateWithoutSentencesInput = {
@@ -456,6 +546,7 @@ export type CorpusDocumentUncheckedCreateWithoutSentencesInput = {
   createdAt?: Date | string
   candidatesProcessed?: boolean
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentCreateOrConnectWithoutSentencesInput = {
@@ -484,6 +575,7 @@ export type CorpusDocumentUpdateWithoutSentencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type CorpusDocumentUncheckedUpdateWithoutSentencesInput = {
@@ -496,6 +588,7 @@ export type CorpusDocumentUncheckedUpdateWithoutSentencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 export type CorpusDocumentCreateWithoutTokensInput = {
@@ -508,6 +601,7 @@ export type CorpusDocumentCreateWithoutTokensInput = {
   createdAt?: Date | string
   candidatesProcessed?: boolean
   sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentUncheckedCreateWithoutTokensInput = {
@@ -520,6 +614,7 @@ export type CorpusDocumentUncheckedCreateWithoutTokensInput = {
   createdAt?: Date | string
   candidatesProcessed?: boolean
   sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
+  segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
 }
 
 export type CorpusDocumentCreateOrConnectWithoutTokensInput = {
@@ -548,6 +643,7 @@ export type CorpusDocumentUpdateWithoutTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
 }
 
 export type CorpusDocumentUncheckedUpdateWithoutTokensInput = {
@@ -560,6 +656,7 @@ export type CorpusDocumentUncheckedUpdateWithoutTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
+  segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
 
@@ -570,11 +667,13 @@ export type CorpusDocumentUncheckedUpdateWithoutTokensInput = {
 export type CorpusDocumentCountOutputType = {
   tokens: number
   sentences: number
+  segments: number
 }
 
 export type CorpusDocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tokens?: boolean | CorpusDocumentCountOutputTypeCountTokensArgs
   sentences?: boolean | CorpusDocumentCountOutputTypeCountSentencesArgs
+  segments?: boolean | CorpusDocumentCountOutputTypeCountSegmentsArgs
 }
 
 /**
@@ -601,6 +700,13 @@ export type CorpusDocumentCountOutputTypeCountSentencesArgs<ExtArgs extends runt
   where?: Prisma.CorpusSentenceWhereInput
 }
 
+/**
+ * CorpusDocumentCountOutputType without action
+ */
+export type CorpusDocumentCountOutputTypeCountSegmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CorpusSegmentWhereInput
+}
+
 
 export type CorpusDocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -613,6 +719,7 @@ export type CorpusDocumentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   candidatesProcessed?: boolean
   tokens?: boolean | Prisma.CorpusDocument$tokensArgs<ExtArgs>
   sentences?: boolean | Prisma.CorpusDocument$sentencesArgs<ExtArgs>
+  segments?: boolean | Prisma.CorpusDocument$segmentsArgs<ExtArgs>
   _count?: boolean | Prisma.CorpusDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["corpusDocument"]>
 
@@ -653,6 +760,7 @@ export type CorpusDocumentOmit<ExtArgs extends runtime.Types.Extensions.Internal
 export type CorpusDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tokens?: boolean | Prisma.CorpusDocument$tokensArgs<ExtArgs>
   sentences?: boolean | Prisma.CorpusDocument$sentencesArgs<ExtArgs>
+  segments?: boolean | Prisma.CorpusDocument$segmentsArgs<ExtArgs>
   _count?: boolean | Prisma.CorpusDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CorpusDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -663,6 +771,7 @@ export type $CorpusDocumentPayload<ExtArgs extends runtime.Types.Extensions.Inte
   objects: {
     tokens: Prisma.$CorpusTokenPayload<ExtArgs>[]
     sentences: Prisma.$CorpusSentencePayload<ExtArgs>[]
+    segments: Prisma.$CorpusSegmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1069,6 +1178,7 @@ export interface Prisma__CorpusDocumentClient<T, Null = never, ExtArgs extends r
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tokens<T extends Prisma.CorpusDocument$tokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusDocument$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CorpusTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentences<T extends Prisma.CorpusDocument$sentencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusDocument$sentencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CorpusSentencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  segments<T extends Prisma.CorpusDocument$segmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusDocument$segmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CorpusSegmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1542,6 +1652,30 @@ export type CorpusDocument$sentencesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.CorpusSentenceScalarFieldEnum | Prisma.CorpusSentenceScalarFieldEnum[]
+}
+
+/**
+ * CorpusDocument.segments
+ */
+export type CorpusDocument$segmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CorpusSegment
+   */
+  select?: Prisma.CorpusSegmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CorpusSegment
+   */
+  omit?: Prisma.CorpusSegmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CorpusSegmentInclude<ExtArgs> | null
+  where?: Prisma.CorpusSegmentWhereInput
+  orderBy?: Prisma.CorpusSegmentOrderByWithRelationInput | Prisma.CorpusSegmentOrderByWithRelationInput[]
+  cursor?: Prisma.CorpusSegmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CorpusSegmentScalarFieldEnum | Prisma.CorpusSegmentScalarFieldEnum[]
 }
 
 /**

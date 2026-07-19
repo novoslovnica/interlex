@@ -89,8 +89,8 @@ export async function computeLexiconFrequencies(): Promise<FrequencyResult> {
     const batch = updates.slice(i, i + BATCH_SIZE)
     await prismaData.$transaction(
       batch.map((u) =>
-        prismaData.lexeme.update({
-          where: { slug: u.slug },
+prismaData.lexeme.updateMany({
+        where: { slug: u.slug },
           data: {
             corpusFrequency: u.corpusFrequency,
             corpusFrequencyPerMln: u.corpusFrequencyPerMln,

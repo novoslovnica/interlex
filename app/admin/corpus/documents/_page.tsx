@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 interface Document {
   id: string
@@ -70,7 +71,14 @@ export default function CorpusDocumentsPage({ documents }: { documents: Document
           <tbody>
             {documents.map((doc) => (
               <tr key={doc.id} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium">{doc.title}</td>
+                <td className="px-4 py-3 font-medium">
+                  <Link
+                    href={`/admin/corpus/documents/${doc.slug}`}
+                    className="text-primary hover:underline"
+                  >
+                    {doc.title}
+                  </Link>
+                </td>
                 <td className="px-4 py-3 text-muted-foreground">{doc.author || "—"}</td>
                 <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                   {new Date(doc.createdAt).toLocaleDateString("ru-RU", {

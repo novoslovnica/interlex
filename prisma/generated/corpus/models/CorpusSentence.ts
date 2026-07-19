@@ -37,6 +37,7 @@ export type CorpusSentenceSumAggregateOutputType = {
 export type CorpusSentenceMinAggregateOutputType = {
   id: string | null
   documentSlug: string | null
+  segmentId: string | null
   position: number | null
   rawText: string | null
 }
@@ -44,6 +45,7 @@ export type CorpusSentenceMinAggregateOutputType = {
 export type CorpusSentenceMaxAggregateOutputType = {
   id: string | null
   documentSlug: string | null
+  segmentId: string | null
   position: number | null
   rawText: string | null
 }
@@ -51,6 +53,7 @@ export type CorpusSentenceMaxAggregateOutputType = {
 export type CorpusSentenceCountAggregateOutputType = {
   id: number
   documentSlug: number
+  segmentId: number
   position: number
   rawText: number
   _all: number
@@ -68,6 +71,7 @@ export type CorpusSentenceSumAggregateInputType = {
 export type CorpusSentenceMinAggregateInputType = {
   id?: true
   documentSlug?: true
+  segmentId?: true
   position?: true
   rawText?: true
 }
@@ -75,6 +79,7 @@ export type CorpusSentenceMinAggregateInputType = {
 export type CorpusSentenceMaxAggregateInputType = {
   id?: true
   documentSlug?: true
+  segmentId?: true
   position?: true
   rawText?: true
 }
@@ -82,6 +87,7 @@ export type CorpusSentenceMaxAggregateInputType = {
 export type CorpusSentenceCountAggregateInputType = {
   id?: true
   documentSlug?: true
+  segmentId?: true
   position?: true
   rawText?: true
   _all?: true
@@ -176,6 +182,7 @@ export type CorpusSentenceGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type CorpusSentenceGroupByOutputType = {
   id: string
   documentSlug: string
+  segmentId: string
   position: number
   rawText: string
   _count: CorpusSentenceCountAggregateOutputType | null
@@ -206,18 +213,22 @@ export type CorpusSentenceWhereInput = {
   NOT?: Prisma.CorpusSentenceWhereInput | Prisma.CorpusSentenceWhereInput[]
   id?: Prisma.StringFilter<"CorpusSentence"> | string
   documentSlug?: Prisma.StringFilter<"CorpusSentence"> | string
+  segmentId?: Prisma.StringFilter<"CorpusSentence"> | string
   position?: Prisma.IntFilter<"CorpusSentence"> | number
   rawText?: Prisma.StringFilter<"CorpusSentence"> | string
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
+  segment?: Prisma.XOR<Prisma.CorpusSegmentScalarRelationFilter, Prisma.CorpusSegmentWhereInput>
   tokens?: Prisma.CorpusTokenListRelationFilter
 }
 
 export type CorpusSentenceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   documentSlug?: Prisma.SortOrder
+  segmentId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
   document?: Prisma.CorpusDocumentOrderByWithRelationInput
+  segment?: Prisma.CorpusSegmentOrderByWithRelationInput
   tokens?: Prisma.CorpusTokenOrderByRelationAggregateInput
 }
 
@@ -227,15 +238,18 @@ export type CorpusSentenceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CorpusSentenceWhereInput[]
   NOT?: Prisma.CorpusSentenceWhereInput | Prisma.CorpusSentenceWhereInput[]
   documentSlug?: Prisma.StringFilter<"CorpusSentence"> | string
+  segmentId?: Prisma.StringFilter<"CorpusSentence"> | string
   position?: Prisma.IntFilter<"CorpusSentence"> | number
   rawText?: Prisma.StringFilter<"CorpusSentence"> | string
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
+  segment?: Prisma.XOR<Prisma.CorpusSegmentScalarRelationFilter, Prisma.CorpusSegmentWhereInput>
   tokens?: Prisma.CorpusTokenListRelationFilter
 }, "id">
 
 export type CorpusSentenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   documentSlug?: Prisma.SortOrder
+  segmentId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
   _count?: Prisma.CorpusSentenceCountOrderByAggregateInput
@@ -251,6 +265,7 @@ export type CorpusSentenceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CorpusSentenceScalarWhereWithAggregatesInput | Prisma.CorpusSentenceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CorpusSentence"> | string
   documentSlug?: Prisma.StringWithAggregatesFilter<"CorpusSentence"> | string
+  segmentId?: Prisma.StringWithAggregatesFilter<"CorpusSentence"> | string
   position?: Prisma.IntWithAggregatesFilter<"CorpusSentence"> | number
   rawText?: Prisma.StringWithAggregatesFilter<"CorpusSentence"> | string
 }
@@ -260,12 +275,14 @@ export type CorpusSentenceCreateInput = {
   position: number
   rawText: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutSentencesInput
+  segment: Prisma.CorpusSegmentCreateNestedOneWithoutSentencesInput
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutSentenceInput
 }
 
 export type CorpusSentenceUncheckedCreateInput = {
   id?: string
   documentSlug: string
+  segmentId: string
   position: number
   rawText: string
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutSentenceInput
@@ -276,12 +293,14 @@ export type CorpusSentenceUpdateInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutSentencesNestedInput
+  segment?: Prisma.CorpusSegmentUpdateOneRequiredWithoutSentencesNestedInput
   tokens?: Prisma.CorpusTokenUpdateManyWithoutSentenceNestedInput
 }
 
 export type CorpusSentenceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  segmentId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutSentenceNestedInput
@@ -290,6 +309,7 @@ export type CorpusSentenceUncheckedUpdateInput = {
 export type CorpusSentenceCreateManyInput = {
   id?: string
   documentSlug: string
+  segmentId: string
   position: number
   rawText: string
 }
@@ -303,6 +323,7 @@ export type CorpusSentenceUpdateManyMutationInput = {
 export type CorpusSentenceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  segmentId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -320,6 +341,7 @@ export type CorpusSentenceOrderByRelationAggregateInput = {
 export type CorpusSentenceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentSlug?: Prisma.SortOrder
+  segmentId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
 }
@@ -331,6 +353,7 @@ export type CorpusSentenceAvgOrderByAggregateInput = {
 export type CorpusSentenceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentSlug?: Prisma.SortOrder
+  segmentId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
 }
@@ -338,6 +361,7 @@ export type CorpusSentenceMaxOrderByAggregateInput = {
 export type CorpusSentenceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentSlug?: Prisma.SortOrder
+  segmentId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   rawText?: Prisma.SortOrder
 }
@@ -393,12 +417,46 @@ export type CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput = {
   deleteMany?: Prisma.CorpusSentenceScalarWhereInput | Prisma.CorpusSentenceScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type CorpusSentenceCreateNestedManyWithoutSegmentInput = {
+  create?: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput> | Prisma.CorpusSentenceCreateWithoutSegmentInput[] | Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput[]
+  connectOrCreate?: Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput | Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput[]
+  createMany?: Prisma.CorpusSentenceCreateManySegmentInputEnvelope
+  connect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+}
+
+export type CorpusSentenceUncheckedCreateNestedManyWithoutSegmentInput = {
+  create?: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput> | Prisma.CorpusSentenceCreateWithoutSegmentInput[] | Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput[]
+  connectOrCreate?: Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput | Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput[]
+  createMany?: Prisma.CorpusSentenceCreateManySegmentInputEnvelope
+  connect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+}
+
+export type CorpusSentenceUpdateManyWithoutSegmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput> | Prisma.CorpusSentenceCreateWithoutSegmentInput[] | Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput[]
+  connectOrCreate?: Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput | Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput[]
+  upsert?: Prisma.CorpusSentenceUpsertWithWhereUniqueWithoutSegmentInput | Prisma.CorpusSentenceUpsertWithWhereUniqueWithoutSegmentInput[]
+  createMany?: Prisma.CorpusSentenceCreateManySegmentInputEnvelope
+  set?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  disconnect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  delete?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  connect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  update?: Prisma.CorpusSentenceUpdateWithWhereUniqueWithoutSegmentInput | Prisma.CorpusSentenceUpdateWithWhereUniqueWithoutSegmentInput[]
+  updateMany?: Prisma.CorpusSentenceUpdateManyWithWhereWithoutSegmentInput | Prisma.CorpusSentenceUpdateManyWithWhereWithoutSegmentInput[]
+  deleteMany?: Prisma.CorpusSentenceScalarWhereInput | Prisma.CorpusSentenceScalarWhereInput[]
+}
+
+export type CorpusSentenceUncheckedUpdateManyWithoutSegmentNestedInput = {
+  create?: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput> | Prisma.CorpusSentenceCreateWithoutSegmentInput[] | Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput[]
+  connectOrCreate?: Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput | Prisma.CorpusSentenceCreateOrConnectWithoutSegmentInput[]
+  upsert?: Prisma.CorpusSentenceUpsertWithWhereUniqueWithoutSegmentInput | Prisma.CorpusSentenceUpsertWithWhereUniqueWithoutSegmentInput[]
+  createMany?: Prisma.CorpusSentenceCreateManySegmentInputEnvelope
+  set?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  disconnect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  delete?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  connect?: Prisma.CorpusSentenceWhereUniqueInput | Prisma.CorpusSentenceWhereUniqueInput[]
+  update?: Prisma.CorpusSentenceUpdateWithWhereUniqueWithoutSegmentInput | Prisma.CorpusSentenceUpdateWithWhereUniqueWithoutSegmentInput[]
+  updateMany?: Prisma.CorpusSentenceUpdateManyWithWhereWithoutSegmentInput | Prisma.CorpusSentenceUpdateManyWithWhereWithoutSegmentInput[]
+  deleteMany?: Prisma.CorpusSentenceScalarWhereInput | Prisma.CorpusSentenceScalarWhereInput[]
 }
 
 export type CorpusSentenceCreateNestedOneWithoutTokensInput = {
@@ -419,11 +477,13 @@ export type CorpusSentenceCreateWithoutDocumentInput = {
   id?: string
   position: number
   rawText: string
+  segment: Prisma.CorpusSegmentCreateNestedOneWithoutSentencesInput
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutSentenceInput
 }
 
 export type CorpusSentenceUncheckedCreateWithoutDocumentInput = {
   id?: string
+  segmentId: string
   position: number
   rawText: string
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutSentenceInput
@@ -460,8 +520,50 @@ export type CorpusSentenceScalarWhereInput = {
   NOT?: Prisma.CorpusSentenceScalarWhereInput | Prisma.CorpusSentenceScalarWhereInput[]
   id?: Prisma.StringFilter<"CorpusSentence"> | string
   documentSlug?: Prisma.StringFilter<"CorpusSentence"> | string
+  segmentId?: Prisma.StringFilter<"CorpusSentence"> | string
   position?: Prisma.IntFilter<"CorpusSentence"> | number
   rawText?: Prisma.StringFilter<"CorpusSentence"> | string
+}
+
+export type CorpusSentenceCreateWithoutSegmentInput = {
+  id?: string
+  position: number
+  rawText: string
+  document: Prisma.CorpusDocumentCreateNestedOneWithoutSentencesInput
+  tokens?: Prisma.CorpusTokenCreateNestedManyWithoutSentenceInput
+}
+
+export type CorpusSentenceUncheckedCreateWithoutSegmentInput = {
+  id?: string
+  documentSlug: string
+  position: number
+  rawText: string
+  tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutSentenceInput
+}
+
+export type CorpusSentenceCreateOrConnectWithoutSegmentInput = {
+  where: Prisma.CorpusSentenceWhereUniqueInput
+  create: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput>
+}
+
+export type CorpusSentenceCreateManySegmentInputEnvelope = {
+  data: Prisma.CorpusSentenceCreateManySegmentInput | Prisma.CorpusSentenceCreateManySegmentInput[]
+}
+
+export type CorpusSentenceUpsertWithWhereUniqueWithoutSegmentInput = {
+  where: Prisma.CorpusSentenceWhereUniqueInput
+  update: Prisma.XOR<Prisma.CorpusSentenceUpdateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedUpdateWithoutSegmentInput>
+  create: Prisma.XOR<Prisma.CorpusSentenceCreateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedCreateWithoutSegmentInput>
+}
+
+export type CorpusSentenceUpdateWithWhereUniqueWithoutSegmentInput = {
+  where: Prisma.CorpusSentenceWhereUniqueInput
+  data: Prisma.XOR<Prisma.CorpusSentenceUpdateWithoutSegmentInput, Prisma.CorpusSentenceUncheckedUpdateWithoutSegmentInput>
+}
+
+export type CorpusSentenceUpdateManyWithWhereWithoutSegmentInput = {
+  where: Prisma.CorpusSentenceScalarWhereInput
+  data: Prisma.XOR<Prisma.CorpusSentenceUpdateManyMutationInput, Prisma.CorpusSentenceUncheckedUpdateManyWithoutSegmentInput>
 }
 
 export type CorpusSentenceCreateWithoutTokensInput = {
@@ -469,11 +571,13 @@ export type CorpusSentenceCreateWithoutTokensInput = {
   position: number
   rawText: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutSentencesInput
+  segment: Prisma.CorpusSegmentCreateNestedOneWithoutSentencesInput
 }
 
 export type CorpusSentenceUncheckedCreateWithoutTokensInput = {
   id?: string
   documentSlug: string
+  segmentId: string
   position: number
   rawText: string
 }
@@ -499,17 +603,20 @@ export type CorpusSentenceUpdateWithoutTokensInput = {
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutSentencesNestedInput
+  segment?: Prisma.CorpusSegmentUpdateOneRequiredWithoutSentencesNestedInput
 }
 
 export type CorpusSentenceUncheckedUpdateWithoutTokensInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  segmentId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type CorpusSentenceCreateManyDocumentInput = {
   id?: string
+  segmentId: string
   position: number
   rawText: string
 }
@@ -518,11 +625,13 @@ export type CorpusSentenceUpdateWithoutDocumentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  segment?: Prisma.CorpusSegmentUpdateOneRequiredWithoutSentencesNestedInput
   tokens?: Prisma.CorpusTokenUpdateManyWithoutSentenceNestedInput
 }
 
 export type CorpusSentenceUncheckedUpdateWithoutDocumentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  segmentId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutSentenceNestedInput
@@ -530,6 +639,37 @@ export type CorpusSentenceUncheckedUpdateWithoutDocumentInput = {
 
 export type CorpusSentenceUncheckedUpdateManyWithoutDocumentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  segmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type CorpusSentenceCreateManySegmentInput = {
+  id?: string
+  documentSlug: string
+  position: number
+  rawText: string
+}
+
+export type CorpusSentenceUpdateWithoutSegmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutSentencesNestedInput
+  tokens?: Prisma.CorpusTokenUpdateManyWithoutSentenceNestedInput
+}
+
+export type CorpusSentenceUncheckedUpdateWithoutSegmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutSentenceNestedInput
+}
+
+export type CorpusSentenceUncheckedUpdateManyWithoutSegmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   rawText?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -568,9 +708,11 @@ export type CorpusSentenceCountOutputTypeCountTokensArgs<ExtArgs extends runtime
 export type CorpusSentenceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentSlug?: boolean
+  segmentId?: boolean
   position?: boolean
   rawText?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
   tokens?: boolean | Prisma.CorpusSentence$tokensArgs<ExtArgs>
   _count?: boolean | Prisma.CorpusSentenceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["corpusSentence"]>
@@ -578,48 +720,58 @@ export type CorpusSentenceSelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type CorpusSentenceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentSlug?: boolean
+  segmentId?: boolean
   position?: boolean
   rawText?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["corpusSentence"]>
 
 export type CorpusSentenceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentSlug?: boolean
+  segmentId?: boolean
   position?: boolean
   rawText?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["corpusSentence"]>
 
 export type CorpusSentenceSelectScalar = {
   id?: boolean
   documentSlug?: boolean
+  segmentId?: boolean
   position?: boolean
   rawText?: boolean
 }
 
-export type CorpusSentenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentSlug" | "position" | "rawText", ExtArgs["result"]["corpusSentence"]>
+export type CorpusSentenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentSlug" | "segmentId" | "position" | "rawText", ExtArgs["result"]["corpusSentence"]>
 export type CorpusSentenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
   tokens?: boolean | Prisma.CorpusSentence$tokensArgs<ExtArgs>
   _count?: boolean | Prisma.CorpusSentenceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CorpusSentenceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
 }
 export type CorpusSentenceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
+  segment?: boolean | Prisma.CorpusSegmentDefaultArgs<ExtArgs>
 }
 
 export type $CorpusSentencePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CorpusSentence"
   objects: {
     document: Prisma.$CorpusDocumentPayload<ExtArgs>
+    segment: Prisma.$CorpusSegmentPayload<ExtArgs>
     tokens: Prisma.$CorpusTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     documentSlug: string
+    segmentId: string
     position: number
     rawText: string
   }, ExtArgs["result"]["corpusSentence"]>
@@ -1017,6 +1169,7 @@ readonly fields: CorpusSentenceFieldRefs;
 export interface Prisma__CorpusSentenceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   document<T extends Prisma.CorpusDocumentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusDocumentDefaultArgs<ExtArgs>>): Prisma.Prisma__CorpusDocumentClient<runtime.Types.Result.GetResult<Prisma.$CorpusDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  segment<T extends Prisma.CorpusSegmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusSegmentDefaultArgs<ExtArgs>>): Prisma.Prisma__CorpusSegmentClient<runtime.Types.Result.GetResult<Prisma.$CorpusSegmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tokens<T extends Prisma.CorpusSentence$tokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusSentence$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CorpusTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1049,6 +1202,7 @@ export interface Prisma__CorpusSentenceClient<T, Null = never, ExtArgs extends r
 export interface CorpusSentenceFieldRefs {
   readonly id: Prisma.FieldRef<"CorpusSentence", 'String'>
   readonly documentSlug: Prisma.FieldRef<"CorpusSentence", 'String'>
+  readonly segmentId: Prisma.FieldRef<"CorpusSentence", 'String'>
   readonly position: Prisma.FieldRef<"CorpusSentence", 'Int'>
   readonly rawText: Prisma.FieldRef<"CorpusSentence", 'String'>
 }

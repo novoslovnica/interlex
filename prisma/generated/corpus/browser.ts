@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type CorpusDocument = Prisma.CorpusDocumentModel
 /**
+ * Model CorpusSegment
+ * 
+ */
+export type CorpusSegment = Prisma.CorpusSegmentModel
+/**
  * Model CorpusSentence
  * 
  */

@@ -16,13 +16,22 @@ export interface TokenPayload {
 }
 
 export interface TokenizerResult {
+    segments: SegmentPayload[];
     sentences: SentencePayload[];
     tokens: TokenPayload[];
+}
+
+export interface SegmentPayload {
+    id: string;
+    documentSlug: string;
+    position: number;
+    rawText: string;
 }
 
 export interface SentencePayload {
     id: string;
     documentSlug: string;
+    segmentId: string;
     position: number;
     rawText: string;
 }

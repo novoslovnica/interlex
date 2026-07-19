@@ -36,11 +36,19 @@ export class CorpusInjector {
     }): Promise<{ success: boolean; tokensProcessed: number }> {
         const { title, slug, rawText, author, language = 'is' } = payload;
 
-        const { sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, uuidv4, analyzer);
+        const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, uuidv4, analyzer);
+
+        const segmentsToDb: Prisma.CorpusSegmentCreateManyInput[] = segments.map(s => ({
+            id: s.id,
+            documentSlug: slug,
+            position: s.position,
+            rawText: s.rawText,
+        }));
 
         const sentencesToDb: Prisma.CorpusSentenceCreateManyInput[] = sentences.map(s => ({
             id: s.id,
             documentSlug: slug,
+            segmentId: s.segmentId,
             position: s.position,
             rawText: s.rawText,
         }));
@@ -61,6 +69,10 @@ export class CorpusInjector {
             await prisma.$transaction(async (tx) => {
                 await tx.corpusDocument.create({
                     data: { title, slug, rawText, author, language },
+                });
+
+                await tx.corpusSegment.createMany({
+                    data: segmentsToDb,
                 });
 
                 await tx.corpusSentence.createMany({

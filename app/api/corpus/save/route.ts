@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Document with this slug already exists" }, { status: 409 })
     }
 
-    const { sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer)
+    const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer)
 
     const maxIdResult = await prismaCorpus.corpusToken.findFirst({ orderBy: { id: "desc" }, select: { id: true } })
     let nextTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1
@@ -77,10 +77,20 @@ export async function POST(request: NextRequest) {
                 data: { title, slug, rawText, author, language: "is" },
             })
 
+            await tx.corpusSegment.createMany({
+                data: segments.map((s) => ({
+                    id: s.id,
+                    documentSlug: slug,
+                    position: s.position,
+                    rawText: s.rawText,
+                })),
+            })
+
             await tx.corpusSentence.createMany({
                 data: sentences.map((s) => ({
                     id: s.id,
                     documentSlug: slug,
+                    segmentId: s.segmentId,
                     position: s.position,
                     rawText: s.rawText,
                 })),

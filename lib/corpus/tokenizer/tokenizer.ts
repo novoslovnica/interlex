@@ -1,13 +1,21 @@
 import { PosType } from '@/lib/grammar/common';
-import { TokenPayload, TokenizerResult, SentencePayload, CorpusTokenInput } from './types';
+import { TokenPayload, TokenizerResult, SentencePayload, CorpusTokenInput, SegmentPayload } from './types';
 import { analyzeWord } from './morphology';
 import { DbAnalyzer } from './dbAnalyzer';
 
+const SEGMENT_SPLIT = /\n\s*\n/;
 const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
 const TOKEN_PATTERN = /[\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+|[^\s\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+/gi;
 const PUNCTUATION_TEST = /^[^\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+$/;
 
 export class Tokenizer {
+    public static splitIntoSegments(rawText: string): string[] {
+        return rawText
+            .split(SEGMENT_SPLIT)
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+    }
+
     public static splitSentences(rawText: string): string[] {
         return rawText
             .split(SENTENCE_SPLIT)
@@ -50,48 +58,65 @@ export class Tokenizer {
         rawText: string,
         idGenerator: () => string,
         analyzer?: DbAnalyzer
-    ): Promise<{ sentences: SentencePayload[]; tokenInputs: CorpusTokenInput[] }> {
-        const rawSentences = this.splitSentences(rawText);
+    ): Promise<{ segments: SegmentPayload[]; sentences: SentencePayload[]; tokenInputs: CorpusTokenInput[] }> {
+        const rawSegments = this.splitIntoSegments(rawText);
 
+        const segments: SegmentPayload[] = [];
         const sentences: SentencePayload[] = [];
         const tokenInputs: CorpusTokenInput[] = [];
 
         let globalTokenIndex = 0;
         let globalWordIndex = 0;
+        let globalSentenceIdx = 0;
 
-        for (let sIdx = 0; sIdx < rawSentences.length; sIdx++) {
-            const sentenceText = rawSentences[sIdx];
-            const sentenceId = idGenerator();
+        for (let segIdx = 0; segIdx < rawSegments.length; segIdx++) {
+            const segmentText = rawSegments[segIdx];
+            const segmentId = idGenerator();
 
-            sentences.push({
-                id: sentenceId,
+            segments.push({
+                id: segmentId,
                 documentSlug,
-                position: sIdx,
-                rawText: sentenceText,
+                position: segIdx,
+                rawText: segmentText,
             });
 
-            const sentenceTokens = await this.tokenizeSentence(sentenceText, analyzer);
+            const rawSentences = this.splitSentences(segmentText);
 
-            for (const t of sentenceTokens) {
-                tokenInputs.push({
+            for (const sentenceText of rawSentences) {
+                const sentenceId = idGenerator();
+
+                sentences.push({
+                    id: sentenceId,
                     documentSlug,
-                    sentenceId,
-                    tokenIndex: globalTokenIndex,
-                    wordIndex: t.isPunctuation ? -1 : globalWordIndex,
-                    surfaceForm: t.surfaceForm,
-                    lemma: t.analysis.lemma,
-                    pos: t.analysis.pos,
-                    wordSlug: t.analysis.wordSlug,
-                    feats: t.analysis.feats,
+                    segmentId,
+                    position: globalSentenceIdx,
+                    rawText: sentenceText,
                 });
+                globalSentenceIdx++;
 
-                globalTokenIndex++;
-                if (!t.isPunctuation) {
-                    globalWordIndex++;
+                const sentenceTokens = await this.tokenizeSentence(sentenceText, analyzer);
+
+                for (const t of sentenceTokens) {
+                    tokenInputs.push({
+                        documentSlug,
+                        sentenceId,
+                        tokenIndex: globalTokenIndex,
+                        wordIndex: t.isPunctuation ? -1 : globalWordIndex,
+                        surfaceForm: t.surfaceForm,
+                        lemma: t.analysis.lemma,
+                        pos: t.analysis.pos,
+                        wordSlug: t.analysis.wordSlug,
+                        feats: t.analysis.feats,
+                    });
+
+                    globalTokenIndex++;
+                    if (!t.isPunctuation) {
+                        globalWordIndex++;
+                    }
                 }
             }
         }
 
-        return { sentences, tokenInputs };
+        return { segments, sentences, tokenInputs };
     }
 }

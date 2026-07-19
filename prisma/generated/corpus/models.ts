@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/CorpusDocument'
+export type * from './models/CorpusSegment'
 export type * from './models/CorpusSentence'
 export type * from './models/CorpusToken'
 export type * from './models/WordFormPriority'

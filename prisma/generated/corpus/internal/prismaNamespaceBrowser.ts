@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   CorpusDocument: 'CorpusDocument',
+  CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
   WordFormPriority: 'WordFormPriority',
@@ -85,9 +86,20 @@ export const CorpusDocumentScalarFieldEnum = {
 export type CorpusDocumentScalarFieldEnum = (typeof CorpusDocumentScalarFieldEnum)[keyof typeof CorpusDocumentScalarFieldEnum]
 
 
+export const CorpusSegmentScalarFieldEnum = {
+  id: 'id',
+  documentSlug: 'documentSlug',
+  position: 'position',
+  rawText: 'rawText'
+} as const
+
+export type CorpusSegmentScalarFieldEnum = (typeof CorpusSegmentScalarFieldEnum)[keyof typeof CorpusSegmentScalarFieldEnum]
+
+
 export const CorpusSentenceScalarFieldEnum = {
   id: 'id',
   documentSlug: 'documentSlug',
+  segmentId: 'segmentId',
   position: 'position',
   rawText: 'rawText'
 } as const
