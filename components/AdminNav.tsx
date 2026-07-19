@@ -55,9 +55,6 @@ const navItems: NavEntry[] = [
     { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },
     { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"], feature: Feature.DeduplicationManage },
-    { href: "/admin/library", label: "Библиотека", roles: ["ADMIN", "MODERATOR"], feature: Feature.LibraryManage },
-    { href: "/admin/corpus-builder", label: "Конструктор корпуса", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
-    { href: "/admin/users", label: "Пользователи", roles: ["ADMIN"], feature: undefined },
 ]
 
 interface AdminNavProps {

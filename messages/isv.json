@@ -10,7 +10,9 @@
       "transliterator": "Transliterator",
       "avatar": "Avatar",
       "settings": "Nastajenja",
-      "admin": "Administracija",
+      "admin": "Administracija (tezaurus)",
+      "adminPlatform": "Administracija (platforma)",
+      "adminCorpus": "Administracija (korpus)",
       "logout": "Vyjti",
       "login": "Vniti"
     },

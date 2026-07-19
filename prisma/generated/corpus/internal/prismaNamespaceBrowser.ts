@@ -77,7 +77,8 @@ export const CorpusDocumentScalarFieldEnum = {
   author: 'author',
   rawText: 'rawText',
   language: 'language',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  candidatesProcessed: 'candidatesProcessed'
 } as const
 
 export type CorpusDocumentScalarFieldEnum = (typeof CorpusDocumentScalarFieldEnum)[keyof typeof CorpusDocumentScalarFieldEnum]

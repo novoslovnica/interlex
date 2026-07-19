@@ -15,6 +15,7 @@ model CorpusDocument {
   rawText       String         // Полный текст для быстрого чтения/отображения
   language      String         @default("is") // Межславянский диалект/версия
   createdAt     DateTime       @default(now())
+  candidatesProcessed Boolean  @default(false) // Собраны ли слова-кандидаты
 
   // Связи
   tokens        CorpusToken[]

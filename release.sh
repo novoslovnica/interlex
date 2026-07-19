@@ -10,4 +10,7 @@ echo "env files exported"
 # sshpass -f <(printf '%s\n' $PASSWORD) scp auth.db $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/auth.db
 echo "library db exported"
 
+ sshpass -f <(printf '%s\n' $PASSWORD) scp auth.db $USERNAME@$HOST:/var/www/interslavic-lexicon.com/interlex/corpus.db
+echo "corpus exported"
+
 sshpass -f <(printf '%s\n' $PASSWORD) ssh $USERNAME@$HOST 'bash -s' < rebuild-remote.sh

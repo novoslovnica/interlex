@@ -89,11 +89,23 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                 </Link>
                             </li>
                             {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
-                                <li>
-                                    <Link href="/admin" className="nav-link" onClick={closeAll}>
-                                        {t("admin")}
-                                    </Link>
-                                </li>
+                                <>
+                                    <li>
+                                        <Link href="/admin" className="nav-link" onClick={closeAll}>
+                                            {t("admin")}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/admin/platform" className="nav-link" onClick={closeAll}>
+                                            {t("adminPlatform")}
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/admin/corpus" className="nav-link" onClick={closeAll}>
+                                            {t("adminCorpus")}
+                                        </Link>
+                                    </li>
+                                </>
                             )}
                             <li>
                                 <button

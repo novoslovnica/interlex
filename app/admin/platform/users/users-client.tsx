@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react"
 import { Feature } from "@/config/features"
 import {Role} from "@/prisma/generated/auth/enums";
-import { type UserWithPermissions } from "../platform/users/page"
+import { type UserWithPermissions } from "./page"
 
 interface UsersManagementClientProps {
     initialUsers: UserWithPermissions[]

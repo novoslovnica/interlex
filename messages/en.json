@@ -10,7 +10,9 @@
       "transliterator": "Transliterator",
       "avatar": "Avatar",
       "settings": "Settings",
-      "admin": "Admin",
+      "admin": "Admin (Thesaurus)",
+      "adminPlatform": "Admin (Platform)",
+      "adminCorpus": "Admin (Corpus)",
       "logout": "Log out",
       "login": "Log in"
     },

@@ -141,7 +141,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
   jsonLd.publisher = { "@type": "Organization", name: "Interslavic Lexicon" }
 
   return (
-    <div className="h-full overflow-y-auto bg-background text-foreground">
+    <div className="flex-1 overflow-y-auto bg-background text-foreground">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -68,6 +68,9 @@ export async function POST(request: NextRequest) {
 
     const { sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer)
 
+    const maxIdResult = await prismaCorpus.corpusToken.findFirst({ orderBy: { id: "desc" }, select: { id: true } })
+    let nextTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1
+
     try {
         await prismaCorpus.$transaction(async (tx) => {
             await tx.corpusDocument.create({
@@ -85,8 +88,10 @@ export async function POST(request: NextRequest) {
 
             const chunkSize = 5000
             for (let i = 0; i < tokenInputs.length; i += chunkSize) {
+                const chunk = tokenInputs.slice(i, i + chunkSize)
                 await tx.corpusToken.createMany({
-                    data: tokenInputs.slice(i, i + chunkSize).map((t: CorpusTokenInput) => ({
+                    data: chunk.map((t: CorpusTokenInput) => ({
+                        id: BigInt(nextTokenId++),
                         documentSlug: slug,
                         sentenceId: t.sentenceId,
                         tokenIndex: t.tokenIndex,

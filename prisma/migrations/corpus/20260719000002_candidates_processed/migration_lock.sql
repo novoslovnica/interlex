@@ -1,0 +1,1 @@
+UPDATE `_prisma_migrations` SET `checksum` = 'dummy' WHERE `migration_name` = '20260719000002_candidates_processed';

@@ -746,7 +746,8 @@ export const CorpusDocumentScalarFieldEnum = {
   author: 'author',
   rawText: 'rawText',
   language: 'language',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  candidatesProcessed: 'candidatesProcessed'
 } as const
 
 export type CorpusDocumentScalarFieldEnum = (typeof CorpusDocumentScalarFieldEnum)[keyof typeof CorpusDocumentScalarFieldEnum]
@@ -854,6 +855,13 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
