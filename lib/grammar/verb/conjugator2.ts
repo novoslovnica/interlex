@@ -1,5 +1,6 @@
-import {VerbModel, ConjugationResult, FullParadigm, LParticiple, IndicativeMood} from './types/conjugator';
+import {VerbModel, ConjugationResult, FullParadigm, LParticiple, IndicativeMood, Participles, ParticipleSet} from './types/conjugator';
 import {applyIotation} from "@/lib/grammar/morphonology";
+import {applyFirstPalatalization} from "@/lib/grammar/verb/index";
 import {bytiFuture, bytiImperfect, bytiPresent, conditionalParticles} from "@/lib/grammar/verb/auxiliary";
 import {applySpecificAccent} from "@/lib/grammar/accentUtils";
 
@@ -19,6 +20,78 @@ function accentSyllable(word: string, position: number | 'first', tone: 'acute' 
 
     // Если передан обычный индекс с конца (0, 1), пробрасываем напрямую
     return applySpecificAccent(word, position, tone);
+}
+
+function generateParticiples(verb: VerbModel): Participles {
+    const { infinitive, infStem, presentStem, verbClass } = verb;
+    const hasThematicE = presentStem.endsWith('e');
+    const baseForVowels = hasThematicE ? presentStem.slice(0, -1) : presentStem;
+
+    // --- Present Active Participle (-ǫšti / -ęťi) ---
+    let paBase: string;
+    let paMasc: string;
+    let paFem: string;
+    let paNeut: string;
+    let paPl: string;
+    if (verbClass === 'IV') {
+        const iotated = applyIotation(presentStem.slice(0, -1));
+        paBase = iotated;
+        paMasc = iotated + 'ęťi';
+        paFem = iotated + 'ęťa';
+        paNeut = iotated + 'ęťe';
+        paPl = iotated + 'ęťi';
+    } else {
+        paMasc = baseForVowels + 'ǫšti';
+        paFem = baseForVowels + 'ǫťa';
+        paNeut = baseForVowels + 'ǫťe';
+        paPl = baseForVowels + 'ǫťi';
+    }
+
+    // --- Present Passive Participle (-omyj / -imyj) ---
+    let ppm: string;
+    let ppf: string;
+    let ppn: string;
+    let ppp: string;
+    if (verbClass === 'IV') {
+        const root = presentStem.slice(0, -1);
+        ppm = root + 'imyj';
+        ppf = root + 'ima';
+        ppn = root + 'imo';
+        ppp = root + 'ime';
+    } else {
+        const suffix = baseForVowels.endsWith('j') ? 'emyj' : 'omyj';
+        ppm = baseForVowels + suffix;
+        ppf = baseForVowels + suffix.replace('yj', 'a');
+        ppn = baseForVowels + suffix.replace('yj', 'o');
+        ppp = baseForVowels + suffix.replace('yj', 'e');
+    }
+
+    // --- Past Passive Participle (-enyj / -tyj / -nyj) ---
+    let ppaMasc: string;
+    if (verbClass === 'IV') {
+        const root = infStem.slice(0, -1);
+        ppaMasc = applyFirstPalatalization(root) + 'enyj';
+    } else if (verbClass === 'III') {
+        ppaMasc = infStem + 'nyj';
+    } else if (verbClass === 'II') {
+        ppaMasc = infStem.slice(0, -1) + 'enyj';
+    } else {
+        const lastChar = infStem.slice(-1);
+        if ('aeiouyěęǫ'.includes(lastChar)) {
+            ppaMasc = infStem + 'tyj';
+        } else {
+            ppaMasc = applyFirstPalatalization(infStem) + 'enyj';
+        }
+    }
+    const ppaFem = ppaMasc.replace('yj', 'a');
+    const ppaNeut = ppaMasc.replace('yj', 'o');
+    const ppaPl = ppaMasc.replace('yj', 'e');
+
+    return {
+        presentActive: { masculine: paMasc, feminine: paFem, neuter: paNeut, plural: paPl },
+        presentPassive: { masculine: ppm, feminine: ppf, neuter: ppn, plural: ppp },
+        pastPassive: { masculine: ppaMasc, feminine: ppaFem, neuter: ppaNeut, plural: ppaPl },
+    };
 }
 
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
@@ -220,6 +293,8 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         '2pl': accentImperative(`${impBaseForm}te`),
     };
 
+    const participles = generateParticiples(verb);
+
     const conditional = {
         masculine: buildAnalytical(conditionalParticles, lParticiple.masculine),
         feminine: buildAnalytical(conditionalParticles, lParticiple.feminine),
@@ -240,5 +315,6 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         },
         imperative,
         conditional,
+        participles,
     };
 }

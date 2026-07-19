@@ -133,6 +133,8 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
     } else if (typeof audioFileRaw === "string" && audioFileRaw.length > 0) {
       audioFile = audioFileRaw
     }
+    const videoUrlsRaw = formData.get("videoUrls") as string
+    const videoUrls = videoUrlsRaw && videoUrlsRaw !== "[]" ? videoUrlsRaw : null
     const body = (formData.get("body") as string) || null
     const decompressedBody = currentEntry.body ? decompressBody(currentEntry.body) : ""
     const summary = (formData.get("summary") as string) || null
@@ -158,6 +160,7 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
     if (translator !== currentEntry.translator) changes.translator = { old: currentEntry.translator, new: translator }
     if (coverImage !== currentEntry.coverImage) changes.coverImage = { old: currentEntry.coverImage, new: coverImage }
     if (audioFile !== currentEntry.audioFile) changes.audioFile = { old: currentEntry.audioFile, new: audioFile }
+    if (videoUrls !== currentEntry.videoUrls) changes.videoUrls = { old: currentEntry.videoUrls, new: videoUrls }
     if (body !== decompressedBody) changes.body = { old: decompressedBody, new: body }
     if (summary !== currentEntry.summary) changes.summary = { old: currentEntry.summary, new: summary }
     if (corpusSlug !== currentEntry.corpusSlug) changes.corpusSlug = { old: currentEntry.corpusSlug, new: corpusSlug }
@@ -180,6 +183,7 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
         translator,
         coverImage,
         audioFile,
+        videoUrls,
         body: body ? compressBody(body) : null,
         bodyLength: body ? body.length : 0,
         summary,
@@ -232,6 +236,7 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
             corpusSlug: currentEntry.corpusSlug || "",
             coverImage: currentEntry.coverImage || "",
             audioFile: currentEntry.audioFile || "",
+            videoUrls: currentEntry.videoUrls || "",
             verified: currentEntry.verified,
             source: currentEntry.source || "",
             yearWritten: currentEntry.yearWritten,

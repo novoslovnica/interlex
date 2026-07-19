@@ -79,6 +79,7 @@ interface LibraryFormProps {
     parentId: number | null
     coverImage: string
     audioFile: string
+    videoUrls: string
   }
   initialChildren?: EntryBrief[]
 }
@@ -379,6 +380,55 @@ function AudioBlock({ initial }: { initial?: string }) {
   )
 }
 
+function VideoLinksBlock({ initial }: { initial?: string }) {
+  const [urls, setUrls] = useState<string[]>(() => {
+    if (!initial) return []
+    try { return JSON.parse(initial) } catch { return [] }
+  })
+
+  const addUrl = () => setUrls(prev => [...prev, ""])
+
+  const updateUrl = (index: number, value: string) => {
+    setUrls(prev => prev.map((u, i) => (i === index ? value : u)))
+  }
+
+  const removeUrl = (index: number) => {
+    setUrls(prev => prev.filter((_, i) => i !== index))
+  }
+
+  return (
+    <div className="space-y-2">
+      <label className="text-xs font-medium text-muted-foreground">Video (YouTube)</label>
+      <input type="hidden" name="videoUrls" value={JSON.stringify(urls.filter(Boolean))} />
+      {urls.map((url, i) => (
+        <div key={i} className="flex items-center gap-1">
+          <input
+            type="text"
+            value={url}
+            onChange={e => updateUrl(i, e.target.value)}
+            className="flex-1 px-2 py-1 text-xs border rounded bg-background focus:ring-1 focus:ring-primary outline-none"
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+          <button
+            type="button"
+            onClick={() => removeUrl(i)}
+            className="text-xs text-muted-foreground hover:text-red-500 transition-colors shrink-0"
+          >
+            ✕
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={addUrl}
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        + Dobaviti video
+      </button>
+    </div>
+  )
+}
+
 export function LibraryForm({
   action,
   entries,
@@ -512,6 +562,7 @@ export function LibraryForm({
         <div className="row-span-5 space-y-2">
           <CoverImageBlock initial={initial?.coverImage} />
           <AudioBlock initial={initial?.audioFile} />
+          <VideoLinksBlock initial={initial?.videoUrls} />
         </div>
 
         <div className="space-y-1">

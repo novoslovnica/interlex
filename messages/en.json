@@ -73,7 +73,9 @@
     "description": "Search the Interslavic dictionary. Meanings, translations, grammatical forms, etymology and cognate words.",
     "searchPlaceholder": "Enter text to search...",
     "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "loading": "Loading...",
+    "loadMore": "Show more"
   },
   "translate": {
     "title": "Translate",
@@ -82,6 +84,8 @@
     "swapTooltip": "Swap languages",
     "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
     "noResults": "No results found",
+    "loading": "Loading...",
+    "loadMore": "Show more",
     "languages": {
       "ru": "Russian",
       "uk": "Ukrainian",
@@ -426,11 +430,16 @@
     },
     "verb": {
       "person": "Person",
+      "form": "Form",
       "firstPerson": "1st person",
       "secondPerson": "2nd person",
       "thirdPerson": "3rd person",
       "indicative": "Indicative (Indicativus)",
       "imperativeSubjunctive": "Imperative and Subjunctive",
+      "participles": "Participles",
+      "participlesPresentActive": "Present active participle (-ǫšti/-ęťi)",
+      "participlesPresentPassive": "Present passive participle (-omyj/-imyj)",
+      "participlesPastPassive": "Past passive participle (-enyj/-tyj)",
       "tenses": {
         "present": "Present tense (Praesens)",
         "futureSimple": "Simple future (Futurum Rectum)",

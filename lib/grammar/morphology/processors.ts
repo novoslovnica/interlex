@@ -53,7 +53,8 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
             const form = declineWordAutomatically({
                 dbItem,
                 targetCase: cas,
-                targetNumber: num
+                targetNumber: num,
+                flavor: word.flavor
             });
 
             // Мапим внутренние строгие типы на формат выдачи корпуса GeneratedForm
@@ -190,6 +191,33 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         { surfaceForm: lp.plural_feminine_neuter, feats: { verbForm: 'part', gender: 'fem', number: 'pl', tense: 'past' } },
         { surfaceForm: lp.dual_masculine, feats: { verbForm: 'part', gender: 'masc', number: 'du', tense: 'past' } },
         { surfaceForm: lp.dual_feminine_neuter, feats: { verbForm: 'part', gender: 'fem', number: 'du', tense: 'past' } }
+    );
+
+    // Е. Причастия: активные настоящего времени (-ǫšti/-ęťi)
+    const pa = conj.participles.presentActive;
+    results.push(
+        { surfaceForm: pa.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'pres', voice: 'act' } },
+    );
+
+    // Ж. Причастия: пассивные настоящего времени (-omyj/-imyj)
+    const pp = conj.participles.presentPassive;
+    results.push(
+        { surfaceForm: pp.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'pres', voice: 'pass' } },
+    );
+
+    // З. Причастия: пассивные прошедшего времени (-enyj/-tyj/-nyj)
+    const ppa = conj.participles.pastPassive;
+    results.push(
+        { surfaceForm: ppa.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'past', voice: 'pass' } },
     );
 
     return results;
@@ -590,7 +618,7 @@ export function processAdverb(word: EngineWordInput): GeneratedForm[] {
     const lemma = word.isv.toLowerCase().trim();
 
     const results: GeneratedForm[] = [];
-    const { applyFourTonesMark, getAcuteToneType } = require('./numeralCardinal');
+    const { applyFourTonesMark, getAcuteToneType } = require('../numerals/cardinal');
 
     // Шаг A: Положительная степень (Базовая форма: medlenno, dobro)
     // Наречия на -o/-e получают регулярный акут/гравис на корне основы
@@ -638,7 +666,7 @@ export function processAuxiliary(word: EngineWordInput): GeneratedForm[] {
 
     if (lemma === 'byti') {
         // Извлекаем готовые праславянские парадигмы, зафиксированные в verbEngine
-        const { bytiPresent, bytiImperfect, bytiFuture, conditionalParticles } = require('./verbEngine');
+        const { bytiPresent, bytiImperfect, bytiFuture, conditionalParticles } = require('../verb/index');
 
         const pushAux = (paradigm: any, tense: string, mood: string) => {
             Object.keys(paradigm).forEach((key) => {

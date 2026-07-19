@@ -7,6 +7,18 @@ import { getFlavorLabel } from "@/config/flavor"
 import type { Metadata } from "next"
 import {getTranslations} from "next-intl/server"
 
+function getYouTubeEmbedUrl(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/,
+  ]
+  for (const p of patterns) {
+    const m = url.match(p)
+    if (m?.[1]) return `https://www.youtube.com/embed/${m[1]}`
+  }
+  return null
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -173,6 +185,27 @@ export default async function LibraryReadingPage({ params }: PageProps) {
             </audio>
           </div>
         )}
+
+        {entry.videoUrls && (() => {
+          try {
+            const urls: string[] = JSON.parse(entry.videoUrls)
+            return urls.filter(Boolean).map((url, i) => {
+              const embedUrl = getYouTubeEmbedUrl(url)
+              if (!embedUrl) return null
+              return (
+                <div key={i} className="mb-4 aspect-video rounded-lg overflow-hidden">
+                  <iframe
+                    src={embedUrl}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                    title={`YouTube video ${i + 1}`}
+                  />
+                </div>
+              )
+            })
+          } catch { return null }
+        })()}
 
         <article className="space-y-6">
           <header className="space-y-3">

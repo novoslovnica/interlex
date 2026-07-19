@@ -7,11 +7,14 @@ import { GrammaticalGender } from '@/lib/grammar/common/gender';
 import { AccentParadigm } from '@/lib/grammar/common/paradigm';
 import { ProtoStemClass } from '@/lib/grammar/common/stem';
 
+import {capitalize} from "@/lib/script-mode";
+
 interface AdjectiveDeclensionTablesProps {
     isv: string;
     paradigm: string;
     protoStemClass: string;
     isQualitative?: boolean;
+    properNoun?: boolean;
 }
 
 export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps> = ({
@@ -19,8 +22,10 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
     paradigm,
     protoStemClass,
     isQualitative = false,
+    properNoun = false,
 }) => {
     const t = useTranslations("word");
+    const cap = (s: string) => properNoun ? capitalize(s) : s;
     const [activeGender, setActiveGender] = useState<GrammaticalGender>(GrammaticalGender.MASC);
     const [activeDegree, setActiveDegree] = useState<'pos' | 'comp' | 'sup'>('pos');
 
@@ -151,7 +156,7 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
                                                 {t(`cases.${c.lookup}Short`)}
                                             </span>
                                             <span className="text-blue-700 font-semibold text-right break-all">
-                                                {formValue}
+                                                {cap(formValue)}
                                             </span>
                                         </div>
                                     );

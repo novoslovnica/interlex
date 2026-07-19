@@ -66,6 +66,7 @@ export type LibraryEntryMinAggregateOutputType = {
   summary: string | null
   coverImage: string | null
   audioFile: string | null
+  videoUrls: string | null
   views: number | null
   isPublic: boolean | null
   parentId: number | null
@@ -96,6 +97,7 @@ export type LibraryEntryMaxAggregateOutputType = {
   summary: string | null
   coverImage: string | null
   audioFile: string | null
+  videoUrls: string | null
   views: number | null
   isPublic: boolean | null
   parentId: number | null
@@ -126,6 +128,7 @@ export type LibraryEntryCountAggregateOutputType = {
   summary: number
   coverImage: number
   audioFile: number
+  videoUrls: number
   views: number
   isPublic: number
   parentId: number
@@ -176,6 +179,7 @@ export type LibraryEntryMinAggregateInputType = {
   summary?: true
   coverImage?: true
   audioFile?: true
+  videoUrls?: true
   views?: true
   isPublic?: true
   parentId?: true
@@ -206,6 +210,7 @@ export type LibraryEntryMaxAggregateInputType = {
   summary?: true
   coverImage?: true
   audioFile?: true
+  videoUrls?: true
   views?: true
   isPublic?: true
   parentId?: true
@@ -236,6 +241,7 @@ export type LibraryEntryCountAggregateInputType = {
   summary?: true
   coverImage?: true
   audioFile?: true
+  videoUrls?: true
   views?: true
   isPublic?: true
   parentId?: true
@@ -353,6 +359,7 @@ export type LibraryEntryGroupByOutputType = {
   summary: string | null
   coverImage: string | null
   audioFile: string | null
+  videoUrls: string | null
   views: number
   isPublic: boolean
   parentId: number | null
@@ -406,6 +413,7 @@ export type LibraryEntryWhereInput = {
   summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  videoUrls?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
@@ -438,6 +446,7 @@ export type LibraryEntryOrderByWithRelationInput = {
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   audioFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  videoUrls?: Prisma.SortOrderInput | Prisma.SortOrder
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -473,6 +482,7 @@ export type LibraryEntryWhereUniqueInput = Prisma.AtLeast<{
   summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  videoUrls?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
@@ -505,6 +515,7 @@ export type LibraryEntryOrderByWithAggregationInput = {
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   coverImage?: Prisma.SortOrderInput | Prisma.SortOrder
   audioFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  videoUrls?: Prisma.SortOrderInput | Prisma.SortOrder
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -543,6 +554,7 @@ export type LibraryEntryScalarWhereWithAggregatesInput = {
   summary?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   audioFile?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
+  videoUrls?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntWithAggregatesFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolWithAggregatesFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableWithAggregatesFilter<"LibraryEntry"> | number | null
@@ -572,6 +584,7 @@ export type LibraryEntryCreateInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   actionHistory?: string | null
@@ -603,6 +616,7 @@ export type LibraryEntryUncheckedCreateInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   parentId?: number | null
@@ -633,6 +647,7 @@ export type LibraryEntryUpdateInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -664,6 +679,7 @@ export type LibraryEntryUncheckedUpdateInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -695,6 +711,7 @@ export type LibraryEntryCreateManyInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   parentId?: number | null
@@ -724,6 +741,7 @@ export type LibraryEntryUpdateManyMutationInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -753,6 +771,7 @@ export type LibraryEntryUncheckedUpdateManyInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -798,6 +817,7 @@ export type LibraryEntryCountOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   audioFile?: Prisma.SortOrder
+  videoUrls?: Prisma.SortOrder
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -837,6 +857,7 @@ export type LibraryEntryMaxOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   audioFile?: Prisma.SortOrder
+  videoUrls?: Prisma.SortOrder
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -867,6 +888,7 @@ export type LibraryEntryMinOrderByAggregateInput = {
   summary?: Prisma.SortOrder
   coverImage?: Prisma.SortOrder
   audioFile?: Prisma.SortOrder
+  videoUrls?: Prisma.SortOrder
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -995,6 +1017,7 @@ export type LibraryEntryCreateWithoutChildrenInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   actionHistory?: string | null
@@ -1025,6 +1048,7 @@ export type LibraryEntryUncheckedCreateWithoutChildrenInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   parentId?: number | null
@@ -1059,6 +1083,7 @@ export type LibraryEntryCreateWithoutParentInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   actionHistory?: string | null
@@ -1089,6 +1114,7 @@ export type LibraryEntryUncheckedCreateWithoutParentInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   actionHistory?: string | null
@@ -1138,6 +1164,7 @@ export type LibraryEntryUpdateWithoutChildrenInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1168,6 +1195,7 @@ export type LibraryEntryUncheckedUpdateWithoutChildrenInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1217,6 +1245,7 @@ export type LibraryEntryScalarWhereInput = {
   summary?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   coverImage?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   audioFile?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  videoUrls?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
@@ -1247,6 +1276,7 @@ export type LibraryEntryCreateManyParentInput = {
   summary?: string | null
   coverImage?: string | null
   audioFile?: string | null
+  videoUrls?: string | null
   views?: number
   isPublic?: boolean
   actionHistory?: string | null
@@ -1275,6 +1305,7 @@ export type LibraryEntryUpdateWithoutParentInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1305,6 +1336,7 @@ export type LibraryEntryUncheckedUpdateWithoutParentInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1335,6 +1367,7 @@ export type LibraryEntryUncheckedUpdateManyWithoutParentInput = {
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   audioFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1395,6 +1428,7 @@ export type LibraryEntrySelect<ExtArgs extends runtime.Types.Extensions.Internal
   summary?: boolean
   coverImage?: boolean
   audioFile?: boolean
+  videoUrls?: boolean
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
@@ -1428,6 +1462,7 @@ export type LibraryEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   summary?: boolean
   coverImage?: boolean
   audioFile?: boolean
+  videoUrls?: boolean
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
@@ -1459,6 +1494,7 @@ export type LibraryEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   summary?: boolean
   coverImage?: boolean
   audioFile?: boolean
+  videoUrls?: boolean
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
@@ -1490,6 +1526,7 @@ export type LibraryEntrySelectScalar = {
   summary?: boolean
   coverImage?: boolean
   audioFile?: boolean
+  videoUrls?: boolean
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
@@ -1498,7 +1535,7 @@ export type LibraryEntrySelectScalar = {
   updatedAt?: boolean
 }
 
-export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "genre" | "topic" | "flavor" | "body" | "bodyLength" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "audioFile" | "views" | "isPublic" | "parentId" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
+export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "genre" | "topic" | "flavor" | "body" | "bodyLength" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "audioFile" | "videoUrls" | "views" | "isPublic" | "parentId" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
 export type LibraryEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
   children?: boolean | Prisma.LibraryEntry$childrenArgs<ExtArgs>
@@ -1539,6 +1576,7 @@ export type $LibraryEntryPayload<ExtArgs extends runtime.Types.Extensions.Intern
     summary: string | null
     coverImage: string | null
     audioFile: string | null
+    videoUrls: string | null
     views: number
     isPublic: boolean
     parentId: number | null
@@ -1991,6 +2029,7 @@ export interface LibraryEntryFieldRefs {
   readonly summary: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly coverImage: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly audioFile: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly videoUrls: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly views: Prisma.FieldRef<"LibraryEntry", 'Int'>
   readonly isPublic: Prisma.FieldRef<"LibraryEntry", 'Boolean'>
   readonly parentId: Prisma.FieldRef<"LibraryEntry", 'Int'>

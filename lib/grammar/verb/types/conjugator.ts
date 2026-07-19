@@ -59,6 +59,20 @@ export interface ConjugationResult {
         masculine: FullParadigm;
         feminine: FullParadigm;
     };
+    participles: Participles;
+}
+
+export interface Participles {
+    presentActive: ParticipleSet;
+    presentPassive: ParticipleSet;
+    pastPassive: ParticipleSet;
+}
+
+export interface ParticipleSet {
+    masculine: string;
+    feminine: string;
+    neuter: string;
+    plural: string;
 }
 
 export interface VerbModel {
@@ -69,4 +83,5 @@ export interface VerbModel {
     tertiaryStem?: string;    // Основа l-причастия ("š-", "by-")
     verbClass: ProtoSlavicClass;
     aspect: InterslavicAspect;
+    paradigm?: string;        // Accent paradigm: 'A' | 'B' | 'C'
 }

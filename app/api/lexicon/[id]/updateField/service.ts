@@ -31,37 +31,73 @@ export const modelsMap: Record<LanguageCode | string, any> = {
 };
 
 async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: string | null) {
-    if (oldBase) {
-        const oldEntry = await prisma.baseHomonym.findUnique({ where: { base: oldBase } })
-        if (oldEntry) {
-            const ids: number[] = JSON.parse(oldEntry.wordIds).filter((id: number) => id !== wordId)
-            if (ids.length > 0) {
-                await prisma.baseHomonym.update({
-                    where: { base: oldBase },
-                    data: { wordIds: JSON.stringify(ids) },
-                })
-            } else {
-                await prisma.baseHomonym.delete({ where: { base: oldBase } })
-            }
+    async function getFlavorsForLexeme(lexemeId: number): Promise<string[]> {
+        const allophones = await prisma.lexemeAllophone.findMany({
+            where: { lexemeId },
+            include: { flavor: true },
+        })
+        const flavors = allophones.map(a => a.flavor.code)
+        return [...new Set(flavors)]
+    }
+
+    async function removeFromOldBase(base: string, id: number) {
+        const entry = await prisma.baseHomonym.findUnique({ where: { base } })
+        if (!entry) return
+
+        const parsed = JSON.parse(entry.wordIds) as Array<{ id: number; flavors: string[] }> | number[]
+        let filtered: Array<{ id: number; flavors: string[] }>
+        if (typeof parsed[0] === 'number') {
+            filtered = (parsed as number[]).filter((fid: number) => fid !== id).map(fid => ({ id: fid, flavors: [] }))
+        } else {
+            filtered = (parsed as Array<{ id: number; flavors: string[] }>).filter(item => item.id !== id)
+        }
+
+        if (filtered.length > 0) {
+            await prisma.baseHomonym.update({
+                where: { base },
+                data: { wordIds: JSON.stringify(filtered) },
+            })
+        } else {
+            await prisma.baseHomonym.delete({ where: { base } })
         }
     }
-    if (newBase) {
-        const existing = await prisma.baseHomonym.findUnique({ where: { base: newBase } })
+
+    async function addToNewBase(base: string, id: number) {
+        const existing = await prisma.baseHomonym.findUnique({ where: { base } })
+        const flavors = await getFlavorsForLexeme(id)
+
         if (existing) {
-            const ids: number[] = JSON.parse(existing.wordIds)
-            if (!ids.includes(wordId)) {
-                ids.push(wordId)
-                await prisma.baseHomonym.update({
-                    where: { base: newBase },
-                    data: { wordIds: JSON.stringify(ids) },
-                })
+            const parsed = JSON.parse(existing.wordIds) as Array<{ id: number; flavors: string[] }> | number[]
+            let items: Array<{ id: number; flavors: string[] }>
+            if (typeof parsed[0] === 'number') {
+                items = (parsed as number[]).map(fid => ({
+                    id: fid,
+                    flavors: fid === id ? flavors : [],
+                }))
+            } else {
+                items = parsed as Array<{ id: number; flavors: string[] }>
             }
+
+            const existingIdx = items.findIndex(item => item.id === id)
+            if (existingIdx >= 0) {
+                items[existingIdx].flavors = flavors
+            } else {
+                items.push({ id, flavors })
+            }
+
+            await prisma.baseHomonym.update({
+                where: { base },
+                data: { wordIds: JSON.stringify(items) },
+            })
         } else {
             await prisma.baseHomonym.create({
-                data: { base: newBase, wordIds: JSON.stringify([wordId]) },
+                data: { base, wordIds: JSON.stringify([{ id, flavors }]) },
             })
         }
     }
+
+    if (oldBase) await removeFromOldBase(oldBase, wordId)
+    if (newBase) await addToNewBase(newBase, wordId)
 }
 
 export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string, meaningId?: number) => {

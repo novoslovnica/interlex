@@ -536,6 +536,7 @@ export const LibraryEntryScalarFieldEnum = {
   summary: 'summary',
   coverImage: 'coverImage',
   audioFile: 'audioFile',
+  videoUrls: 'videoUrls',
   views: 'views',
   isPublic: 'isPublic',
   parentId: 'parentId',

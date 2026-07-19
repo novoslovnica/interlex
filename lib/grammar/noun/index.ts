@@ -11,6 +11,7 @@ import {
 import {
     GrammaticalGender
 } from "@/lib/grammar/common/gender";
+import { getEnding } from '@/lib/grammar/endingLoader';
 
 // =========================================================================
 // 1. СТРОГИЕ СИСТЕМНЫЕ ТИПЫ И КАТЕГОРИИ
@@ -60,6 +61,7 @@ export interface FinalUserRequest {
     targetCase: Case;
     targetNumber: NumberType;
     preposition?: string;
+    flavor?: string;
 }
 
 export interface EncliticFourTonesRequest {
@@ -238,9 +240,10 @@ export function generateBaseNounFormWithFourTones(
     paradigm: AccentParadigm,
     stemType: StemType,
     targetCase: Case,
-    targetNumber: NumberType
+    targetNumber: NumberType,
+    flavor: string = 'CORE'
 ): string {
-    const ending = SLAVIC_ENDINGS_REGISTRY[stemType][targetNumber][targetCase];
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor);
     const fullForm = interslavicWord + ending;
 
     // ПАРАДИГМА A: Стабильно-восходящее ударение на корне (Долгий/Краткий Акут)
@@ -345,7 +348,7 @@ export function applyPrepositionEncliticWithFourTones(request: EncliticFourTones
 // =========================================================================
 
 export function declineWordAutomatically(request: FinalUserRequest): string {
-    const { dbItem, targetCase, targetNumber, preposition } = request;
+    const { dbItem, targetCase, targetNumber, preposition, flavor } = request;
 
     // Шаг 1: Идентификация флексийного класса
     const stemType = identifyStemTypeByDb(dbItem);
@@ -356,7 +359,8 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
         dbItem.paradigm,
         stemType,
         targetCase,
-        targetNumber
+        targetNumber,
+        flavor
     );
 
     // Шаг 3: Если предлог опущен — отдаем форму как есть

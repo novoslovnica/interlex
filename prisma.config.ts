@@ -28,6 +28,12 @@ if (dbType === "auth") {
         migrations: { path: "prisma/migrations/library" },
         datasource: { url: resolveFileUrl(env("LIBRARY_DATABASE_URL") ?? "file:./library.db") },
     });
+} else if (dbType === "corpus") {
+    config = defineConfig({
+        schema: "prisma/corpus.schema.prisma",
+        migrations: { path: "prisma/migrations/corpus" },
+        datasource: { url: resolveFileUrl(env("CORPUS_DATABASE_URL") ?? "file:./corpus.db") },
+    });
 } else {
     config = defineConfig({
         schema: "prisma/data.schema.prisma",

@@ -41,6 +41,8 @@ const USAGE_TYPE_LABELS: Record<string, string> = {
     neologism: 'Неологизам',
 };
 
+const PAGE_SIZE = 20
+
 const WordCard = ({ item, onClickCard, currentScript, toValue}: { item: any; onClickCard: any; currentScript: ScriptMode; toValue: string }) => {
     const lexeme = item;
     const wordValue = lexeme?.word?.value || lexeme?.value;
@@ -87,6 +89,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const [formScript, setFormScript] = useState<ScriptMode>(currentScript);
     const [items, setItems] = useState<Array<any>>([]);
     const [hasFetched, setHasFetched] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const [filtersVisible, setFiltersVisible] = useState(true);
 
     const router = useRouter();
@@ -95,6 +99,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const performSearch = useCallback((query: string, from: string, to: string, mc: string, ut: string) => {
+        setIsLoading(true);
+        setVisibleCount(PAGE_SIZE);
         const sValue = from === "is" && /[а-яА-ЯёЁ]/.test(query)
             ? standardToSimple(mapNslToEtymologized(query))
             : query;
@@ -107,7 +113,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
             .then((data) => {
                 setItems(data);
                 setHasFetched(true);
-            });
+            })
+            .finally(() => setIsLoading(false));
     }, []);
 
     const executeSearch = useCallback(() => {
@@ -148,10 +155,10 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     }, [fromValue, toValue]);
 
     const onKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && searchValue.trim()) {
             executeSearch();
         }
-    }, [executeSearch]);
+    }, [executeSearch, searchValue]);
 
     const onClickCard = useCallback((item) => () => {
         router.push(`/words/${item.id}`);
@@ -312,21 +319,39 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
             </div>
 
             <div className="scroll-container">
-                {items.length > 0 && (
-                    <ul id="cardGrid" className="card-grid">
-                        {items.map((item) => (
-                            <WordCard
-                                key={item.id}
-                                item={item}
-                                onClickCard={onClickCard}
-                                currentScript={formScript}
-                                toValue={toValue}
-                            />
-                        ))}
-                    </ul>
+                {isLoading && (
+                    <div className="flex justify-center py-12">
+                        <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                    </div>
                 )}
 
-                {hasFetched && !items.length && (
+                {!isLoading && items.length > 0 && (
+                    <>
+                        <ul id="cardGrid" className="card-grid">
+                            {items.slice(0, visibleCount).map((item) => (
+                                <WordCard
+                                    key={item.id}
+                                    item={item}
+                                    onClickCard={onClickCard}
+                                    currentScript={formScript}
+                                    toValue={toValue}
+                                />
+                            ))}
+                        </ul>
+                        {visibleCount < items.length && (
+                            <div className="flex justify-center py-6">
+                                <button
+                                    onClick={() => setVisibleCount(prev => prev + PAGE_SIZE)}
+                                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all shadow-sm text-sm"
+                                >
+                                    {t("loadMore")} ({items.length - visibleCount})
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {!isLoading && hasFetched && !items.length && (
                     <div id="noResults" className="no-results">{t("noResults")}</div>
                 )}
             </div>

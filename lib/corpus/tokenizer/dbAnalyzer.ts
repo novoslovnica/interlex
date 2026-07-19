@@ -2,9 +2,9 @@ import { generateWordForms } from '@/lib/grammar/morphology/engine';
 import { EngineWordInput, GeneratedForm } from '@/lib/grammar/morphology';
 import { PosType, isValidPos, MorphoGrammarFeats } from '@/lib/grammar/common';
 import { MorphoAnalysis } from './types';
-import { analyzeWord as heuristicAnalyze } from './morphology';
+import { etymCyrToEtymLat } from '@/lib/transliteration';
 
-interface WordBaseRecord {
+export interface WordBaseRecord {
     id: number;
     slug: string;
     isv: string | null;
@@ -12,6 +12,7 @@ interface WordBaseRecord {
     protoStemClass: string | null;
     stemExtension: string | null;
     paradigm: string | null;
+    stem: string | null;
     base: string | null;
     gender: string | null;
     alternationType: string | null;
@@ -20,53 +21,67 @@ interface WordBaseRecord {
 
 type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;
 
-const BASE_EXTRACTION_RULES: Array<{ suffix: string; minLen: number }> = [
-    { suffix: 'ogo', minLen: 4 },
-    { suffix: 'omu', minLen: 4 },
-    { suffix: 'ymi', minLen: 4 },
-    { suffix: 'imi', minLen: 4 },
-    { suffix: 'yla', minLen: 5 },
-    { suffix: 'ila', minLen: 5 },
-    { suffix: 'ala', minLen: 5 },
-    { suffix: 'yla', minLen: 5 },
-    { suffix: 'la',  minLen: 4 },
-    { suffix: 'om',  minLen: 4 },
-    { suffix: 'em',  minLen: 4 },
-    { suffix: 'm',   minLen: 4 },
-    { suffix: 'a',   minLen: 3 },
-    { suffix: 'u',   minLen: 4 },
-    { suffix: 'y',   minLen: 3 },
-    { suffix: 'i',   minLen: 3 },
-    { suffix: 'o',   minLen: 3 },
-    { suffix: 'e',   minLen: 3 },
-];
+const MIN_STEM_LEN = 2;
 
 export class DbAnalyzer {
     constructor(private queryWordsByBase: WordQueryFn) {}
 
     async analyzeWord(surfaceForm: string): Promise<MorphoAnalysis | null> {
-        const clean = surfaceForm.toLowerCase().trim();
+        let clean = surfaceForm.toLowerCase().trim();
         if (!clean) return null;
 
-        const baseCandidates = this.extractBaseCandidates(clean);
-        const words = await this.queryWordsByBase(baseCandidates);
+        if (/[а-яѢѣѦѧѪѫ]/i.test(clean)) {
+            clean = etymCyrToEtymLat(clean);
+        }
+
+        const hypotheticalBases = this.generateHypotheticalBases(clean);
+        const words = await this.queryWordsByBase(hypotheticalBases);
         if (words.length === 0) return null;
 
-        const matches = this.matchForms(clean, words);
-        if (matches.length === 0) return null;
+        const bestWords = this.filterLongestStem(words);
+        if (bestWords.length === 0) return null;
 
-        return this.pickBest(clean, matches);
+        const matches = this.matchForms(clean, bestWords);
+
+        if (matches.length === 1) {
+            const result = this.toAnalysis(matches[0].word, matches[0].form);
+            result.matchCount = 1;
+            return result;
+        }
+
+        if (matches.length > 1) {
+            const result = this.toAnalysis(matches[0].word, matches[0].form);
+            result.matchCount = matches.length;
+            return result;
+        }
+
+        return {
+            lemma: bestWords[0].slug,
+            pos: PosType.X,
+            wordSlug: bestWords[0].slug,
+            feats: {},
+            matchCount: 0,
+            isPartialMatch: true,
+        };
     }
 
-    private extractBaseCandidates(surfaceForm: string): string[] {
-        const candidates = new Set<string>();
-        candidates.add(surfaceForm);
-        for (const { suffix, minLen } of BASE_EXTRACTION_RULES) {
-            if (surfaceForm.endsWith(suffix) && surfaceForm.length > minLen) {
-                candidates.add(surfaceForm.slice(0, -suffix.length));
-            }
+    private generateHypotheticalBases(clean: string): string[] {
+        const bases = new Set<string>();
+        for (let len = clean.length; len >= MIN_STEM_LEN; len--) {
+            bases.add(clean.slice(0, len));
         }
-        return Array.from(candidates);
+        return Array.from(bases);
+    }
+
+    private filterLongestStem(words: WordBaseRecord[]): WordBaseRecord[] {
+        const stems = words.map(w => w.stem).filter(Boolean) as string[];
+        if (stems.length === 0) return [];
+        const longestLen = Math.max(...stems.map(s => s.length));
+        return words.filter(w => w.stem && w.stem.length === longestLen);
+    }
+
+    private normalizeForm(form: string): string {
+        return form.replace(/[\u044A\u044C]/g, '');
     }
 
     private matchForms(
@@ -93,31 +108,14 @@ export class DbAnalyzer {
                 fleetingVowelAt: word.fleetingVowelAt,
             };
 
-            const forms = generateWordForms(engineInput);
+            const forms = generateWordForms(engineInput, true);
             for (const form of forms) {
-                if (form.surfaceForm.toLowerCase() === clean) {
+                if (this.normalizeForm(form.surfaceForm.toLowerCase()) === clean) {
                     matches.push({ word, form });
                 }
             }
         }
         return matches;
-    }
-
-    private pickBest(
-        _clean: string,
-        matches: Array<{ word: WordBaseRecord; form: GeneratedForm }>
-    ): MorphoAnalysis {
-        if (matches.length === 1) {
-            return this.toAnalysis(matches[0].word, matches[0].form);
-        }
-
-        const known = knownForms.get(_clean);
-        if (known) {
-            const match = matches.find(m => m.word.slug === known.slug);
-            if (match) return this.toAnalysis(match.word, match.form);
-        }
-
-        return this.toAnalysis(matches[0].word, matches[0].form);
     }
 
     private toAnalysis(word: WordBaseRecord, form: GeneratedForm): MorphoAnalysis {
@@ -166,5 +164,3 @@ export async function analyzeWithDb(
     const analyzer = new DbAnalyzer(queryWordsByBase);
     return analyzer.analyzeWord(surfaceForm);
 }
-
-const knownForms = new Map<string, { slug: string }>();

@@ -57,7 +57,7 @@ export const ADJECTIVE_ENDINGS_REGISTRY: Record<AdjStemType, Record<NumberType, 
     }
 };
 
-const { applyFourTonesMark, getAcuteToneType, getCircumflexToneType } = require('./numeralCardinal');
+const { applyFourTonesMark, getAcuteToneType, getCircumflexToneType } = require('../numerals/cardinal');
 
 export function identifyAdjStemType(item: EnhancedAdjDbItem): AdjStemType {
     return item.protoStemClass === ProtoStemClass.JO_SHORT ? 'adj_soft' : 'adj_hard';

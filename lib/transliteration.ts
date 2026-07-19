@@ -41,7 +41,7 @@ export function detectScript(text: string): Script | null {
   return "std_lat"
 }
 
-function etymCyrToEtymLat(text: string): string {
+export function etymCyrToEtymLat(text: string): string {
   if (!text) return ""
 
   const processed = text

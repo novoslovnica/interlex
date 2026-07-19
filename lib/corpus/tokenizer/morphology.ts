@@ -91,7 +91,7 @@ export function analyzeWord(word: string): MorphoAnalysis {
     return {
         lemma: clean,
         pos: PosType.X,
-        wordSlug: `${clean}-x`,
+        wordSlug: null,
         feats: {},
     };
 }

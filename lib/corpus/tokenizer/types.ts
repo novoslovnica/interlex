@@ -5,6 +5,8 @@ export interface MorphoAnalysis {
     pos: PosType;
     wordSlug: string | null;
     feats: MorphoGrammarFeats;
+    matchCount?: number;
+    isPartialMatch?: boolean;
 }
 
 export interface TokenPayload {

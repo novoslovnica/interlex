@@ -73,7 +73,9 @@
     "description": "Iskanje po slovniku medžuslovjanskogo jezyka. Značenja, prěvody, gramatične formy, etimologija i jednokorenne slova.",
     "searchPlaceholder": "Vvedite tekst dlja iskanja...",
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
-    "noResults": "Ničego ne najdeno"
+    "noResults": "Ničego ne najdeno",
+    "loading": "Načitanje...",
+    "loadMore": "Pokazati veče"
   },
   "translate": {
     "title": "Prěvod",
@@ -82,6 +84,8 @@
     "swapTooltip": "Poměniti jezyky mjestami",
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
     "noResults": "Ničego ne najdeno",
+    "loading": "Načitanje...",
+    "loadMore": "Pokazati veče",
     "languages": {
       "ru": "Rusky",
       "uk": "Ukrajinsky",
@@ -426,11 +430,16 @@
     },
     "verb": {
       "person": "Lice",
+      "form": "Forma",
       "firstPerson": "1-je lice",
       "secondPerson": "2-je lice",
       "thirdPerson": "3-je lice",
       "indicative": "Izjavitelno (Indicativus)",
       "imperativeSubjunctive": "Imperativ i Soslagatelno",
+      "participles": "Pričastja",
+      "participlesPresentActive": "Pričastje nast. vrem. akt. (-ǫšti/-ęťi)",
+      "participlesPresentPassive": "Pričastje nast. vrem. pas. (-omyj/-imyj)",
+      "participlesPastPassive": "Pričastje proš. vrem. pas. (-enyj/-tyj)",
       "tenses": {
         "present": "Nastojnoje vremja (Praesens)",
         "futureSimple": "Budučeje prostoje (Futurum Rectum)",

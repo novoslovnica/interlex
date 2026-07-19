@@ -55,6 +55,8 @@ export default async function NewLibraryPage() {
     if (typeof audioFileRaw === "string" && audioFileRaw.length > 0) {
       audioFile = audioFileRaw
     }
+    const videoUrlsRaw = formData.get("videoUrls") as string
+    const videoUrls = videoUrlsRaw && videoUrlsRaw !== "[]" ? videoUrlsRaw : null
     const body = (formData.get("body") as string) || null
     const summary = (formData.get("summary") as string) || null
     const corpusSlug = (formData.get("corpusSlug") as string) || null
@@ -80,6 +82,7 @@ export default async function NewLibraryPage() {
       translator: { old: null, new: translator },
       coverImage: { old: null, new: coverImage },
       audioFile: { old: null, new: audioFile },
+      videoUrls: { old: null, new: videoUrls },
       verified: { old: null, new: verified },
       isPublic: { old: null, new: isPublic },
       parentId: { old: null, new: parentId },
@@ -98,6 +101,7 @@ export default async function NewLibraryPage() {
         yearTranslated,
         translator,
         audioFile,
+        videoUrls,
         body: body ? compressBody(body) : null,
         bodyLength: body ? body.length : 0,
         summary,

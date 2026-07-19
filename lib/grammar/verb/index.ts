@@ -66,6 +66,20 @@ export interface ConjugationResult {
         masculine: FullParadigm;
         feminine: FullParadigm;
     };
+    participles: Participles;
+}
+
+export interface Participles {
+    presentActive: ParticipleSet;
+    presentPassive: ParticipleSet;
+    pastPassive: ParticipleSet;
+}
+
+export interface ParticipleSet {
+    masculine: string;
+    feminine: string;
+    neuter: string;
+    plural: string;
 }
 
 export interface VerbModel {
@@ -215,7 +229,78 @@ export function extractProtoStems(infinitive: string): ExtractedStems {
 }
 
 // =========================================================================
-// 5. МАТРИЧНЫЙ ГЕНЕРАТОР ПОЛНОГО СПРЯЖЕНИЯ С ЧЕТЫРЕХТОНОВОЙ СИСТЕМОЙ
+// 5. ГЕНЕРАТОР ПРИЧАСТИЙ
+// =========================================================================
+
+export function generateParticiples(verb: VerbModel): Participles {
+    const { infinitive, infStem, presentStem, verbClass } = verb;
+    const hasThematicE = presentStem.endsWith('e');
+    const baseForVowels = hasThematicE ? presentStem.slice(0, -1) : presentStem;
+
+    let paMasc: string;
+    let paFem: string;
+    let paNeut: string;
+    let paPl: string;
+    if (verbClass === 'IV') {
+        const iotated = applyIotation(presentStem.slice(0, -1));
+        paMasc = iotated + 'ęťi';
+        paFem = iotated + 'ęťa';
+        paNeut = iotated + 'ęťe';
+        paPl = iotated + 'ęťi';
+    } else {
+        paMasc = baseForVowels + 'ǫšti';
+        paFem = baseForVowels + 'ǫťa';
+        paNeut = baseForVowels + 'ǫťe';
+        paPl = baseForVowels + 'ǫťi';
+    }
+
+    let ppm: string;
+    let ppf: string;
+    let ppn: string;
+    let pppl: string;
+    if (verbClass === 'IV') {
+        const root = presentStem.slice(0, -1);
+        ppm = root + 'imyj';
+        ppf = root + 'ima';
+        ppn = root + 'imo';
+        pppl = root + 'ime';
+    } else {
+        const suffix = baseForVowels.endsWith('j') ? 'emyj' : 'omyj';
+        ppm = baseForVowels + suffix;
+        ppf = baseForVowels + suffix.replace('yj', 'a');
+        ppn = baseForVowels + suffix.replace('yj', 'o');
+        pppl = baseForVowels + suffix.replace('yj', 'e');
+    }
+
+    let ppaMasc: string;
+    if (verbClass === 'IV') {
+        const root = infStem.slice(0, -1);
+        ppaMasc = applyFirstPalatalization(root) + 'enyj';
+    } else if (verbClass === 'III') {
+        ppaMasc = infStem + 'nyj';
+    } else if (verbClass === 'II') {
+        ppaMasc = infStem.slice(0, -1) + 'enyj';
+    } else {
+        const lastChar = infStem.slice(-1);
+        if ('aeiouyěęǫ'.includes(lastChar)) {
+            ppaMasc = infStem + 'tyj';
+        } else {
+            ppaMasc = applyFirstPalatalization(infStem) + 'enyj';
+        }
+    }
+    const ppaFem = ppaMasc.replace('yj', 'a');
+    const ppaNeut = ppaMasc.replace('yj', 'o');
+    const ppaPl = ppaMasc.replace('yj', 'e');
+
+    return {
+        presentActive: { masculine: paMasc, feminine: paFem, neuter: paNeut, plural: paPl },
+        presentPassive: { masculine: ppm, feminine: ppf, neuter: ppn, plural: pppl },
+        pastPassive: { masculine: ppaMasc, feminine: ppaFem, neuter: ppaNeut, plural: ppaPl },
+    };
+}
+
+// =========================================================================
+// 6. МАТРИЧНЫЙ ГЕНЕРАТОР ПОЛНОГО СПРЯЖЕНИЯ С ЧЕТЫРЕХТОНОВОЙ СИСТЕМОЙ
 // =========================================================================
 
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
@@ -349,7 +434,10 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         };
     }
 
-    // --- Е. ИМПЕРАТИВ ---
+    // --- Е. ПРИЧАСТИЯ ---
+    const participles = generateParticiples(verb);
+
+    // --- Ж. ИМПЕРАТИВ ---
     let impBaseForm = '';
     if (verbClass === 'IV') {
         impBaseForm = `${presentStem}`;
@@ -391,5 +479,6 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         },
         imperative,
         conditional,
+        participles,
     };
 }

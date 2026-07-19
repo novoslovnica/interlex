@@ -31,4 +31,5 @@ export interface EngineWordInput {
     gender?: string | null;
     alternationType?: string | null;
     fleetingVowelAt?: number | null;
+    flavor?: string;
 }

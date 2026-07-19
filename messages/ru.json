@@ -73,7 +73,9 @@
     "description": "Поиск по словарю межславянского языка. Значения, переводы, грамматические формы, этимология и однокоренные слова.",
     "searchPlaceholder": "Введите текст для поиска...",
     "guestBanner": "При переводе с междуславянского локаль автоматически подстроена под локаль вашего браузера.",
-    "noResults": "Ничего не найдено"
+    "noResults": "Ничего не найдено",
+    "loading": "Загрузка...",
+    "loadMore": "Показать ещё"
   },
   "translate": {
     "title": "Перевод",
@@ -82,6 +84,8 @@
     "swapTooltip": "Поменять языки местами",
     "guestBanner": "При переводе с междуславянского локаль автоматически подстроена под локаль вашего браузера.",
     "noResults": "Ничего не найдено",
+    "loading": "Загрузка...",
+    "loadMore": "Показать ещё",
     "languages": {
       "ru": "Русский",
       "uk": "Украинский",
@@ -436,11 +440,16 @@
     },
     "verb": {
       "person": "Лицо",
+      "form": "Форма",
       "firstPerson": "1-е лицо",
       "secondPerson": "2-е лицо",
       "thirdPerson": "3-е лицо",
       "indicative": "Изъявительное (Indicativus)",
       "imperativeSubjunctive": "Императив и Сослагательное",
+      "participles": "Причастия",
+      "participlesPresentActive": "Причастие наст. вр. активное (-ǫšti/-ęťi)",
+      "participlesPresentPassive": "Причастие наст. вр. пассивное (-omyj/-imyj)",
+      "participlesPastPassive": "Причастие прош. вр. пассивное (-enyj/-tyj)",
       "tenses": {
         "present": "Настоящее время (Praesens)",
         "futureSimple": "Будущее простое (Futurum Rectum)",

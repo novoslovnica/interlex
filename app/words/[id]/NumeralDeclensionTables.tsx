@@ -5,13 +5,17 @@ import { generateNumeralForm, EnhancedNumDbItem } from '@/lib/grammar/numerals/c
 import { Case, NumberType } from '@/lib/grammar/noun/index';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
 
+import {capitalize} from "@/lib/script-mode";
+
 interface NumeralDeclensionTablesProps {
     isv: string;
     paradigm: string;
+    properNoun?: boolean;
 }
 
-export const NumeralDeclensionTables: React.FC<NumeralDeclensionTablesProps> = ({ isv, paradigm }) => {
+export const NumeralDeclensionTables: React.FC<NumeralDeclensionTablesProps> = ({ isv, paradigm, properNoun = false }) => {
     const t = useTranslations("word");
+    const cap = (s: string) => properNoun ? capitalize(s) : s;
     const numClass = detectNumClass(isv);
     const dbItem: EnhancedNumDbItem = {
         interslavic: isv,
@@ -59,7 +63,7 @@ export const NumeralDeclensionTables: React.FC<NumeralDeclensionTablesProps> = (
                                                 return (
                                                     <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                                         <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
-                                                        <span className="text-blue-700 font-semibold text-right break-all">{form}</span>
+                                                        <span className="text-blue-700 font-semibold text-right break-all">{cap(form)}</span>
                                                     </div>
                                                 );
                                             })}
@@ -94,7 +98,7 @@ export const NumeralDeclensionTables: React.FC<NumeralDeclensionTablesProps> = (
                                         return (
                                             <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                                 <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
-                                                <span className="text-blue-700 font-semibold text-right break-all">{form}</span>
+                                                <span className="text-blue-700 font-semibold text-right break-all">{cap(form)}</span>
                                             </div>
                                         );
                                     })}
@@ -119,7 +123,7 @@ export const NumeralDeclensionTables: React.FC<NumeralDeclensionTablesProps> = (
                         return (
                             <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                 <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
-                                <span className="text-blue-700 font-semibold text-right break-all">{form}</span>
+                                <span className="text-blue-700 font-semibold text-right break-all">{cap(form)}</span>
                             </div>
                         );
                     })}

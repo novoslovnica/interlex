@@ -6,13 +6,17 @@ import { Case, NumberType } from '@/lib/grammar/noun/index';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
 import { AccentParadigm } from '@/lib/grammar/common/paradigm';
 
+import {capitalize} from "@/lib/script-mode";
+
 interface PronounDeclensionTablesProps {
     isv: string;
     paradigm: string;
+    properNoun?: boolean;
 }
 
-export const PronounDeclensionTables: React.FC<PronounDeclensionTablesProps> = ({ isv, paradigm }) => {
+export const PronounDeclensionTables: React.FC<PronounDeclensionTablesProps> = ({ isv, paradigm, properNoun = false }) => {
     const t = useTranslations("word");
+    const cap = (s: string) => properNoun ? capitalize(s) : s;
     const lemma = isv.toLowerCase().trim();
     const isPersonal = ['ja', 'ty'].includes(lemma);
     const isAnaphoric = lemma === 'on';
@@ -57,9 +61,9 @@ export const PronounDeclensionTables: React.FC<PronounDeclensionTablesProps> = (
                                         <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                             <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
                                             <span className="text-blue-700 font-semibold text-right break-all">
-                                                {fullForm}
+                                                {cap(fullForm)}
                                                 {shortForm !== fullForm && (
-                                                    <span className="text-slate-400 font-normal text-xs ml-1">({shortForm})</span>
+                                                    <span className="text-slate-400 font-normal text-xs ml-1">({cap(shortForm)})</span>
                                                 )}
                                             </span>
                                         </div>
@@ -98,7 +102,7 @@ export const PronounDeclensionTables: React.FC<PronounDeclensionTablesProps> = (
                                     {CASES.map((c) => (
                                         <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                             <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
-                                            <span className="text-blue-700 font-semibold text-right break-all">{forms[c.key]}</span>
+                                            <span className="text-blue-700 font-semibold text-right break-all">{cap(forms[c.key])}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -121,7 +125,7 @@ export const PronounDeclensionTables: React.FC<PronounDeclensionTablesProps> = (
                         return (
                             <div key={c.key} className="flex justify-between items-baseline gap-2 text-sm">
                                 <span className="text-slate-400 font-medium shrink-0">{t(`cases.${c.lookup}Short`)}</span>
-                                <span className="text-blue-700 font-semibold text-right break-all">{form}</span>
+                                <span className="text-blue-700 font-semibold text-right break-all">{cap(form)}</span>
                             </div>
                         );
                     })}

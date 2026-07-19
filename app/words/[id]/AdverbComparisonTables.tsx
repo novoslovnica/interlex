@@ -1,9 +1,11 @@
 'use client';
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import {capitalize} from "@/lib/script-mode";
 
 interface AdverbComparisonTablesProps {
     isv: string;
+    properNoun?: boolean;
 }
 
 function generateAdverbDegrees(lemma: string): { positive: string; comparative: string | null; superlative: string | null } {
@@ -21,7 +23,7 @@ function generateAdverbDegrees(lemma: string): { positive: string; comparative: 
     return { positive, comparative, superlative };
 }
 
-export const AdverbComparisonTables: React.FC<AdverbComparisonTablesProps> = ({ isv }) => {
+export const AdverbComparisonTables: React.FC<AdverbComparisonTablesProps> = ({ isv, properNoun = false }) => {
     const t = useTranslations("word");
     const { positive, comparative, superlative } = generateAdverbDegrees(isv);
 
@@ -44,7 +46,7 @@ export const AdverbComparisonTables: React.FC<AdverbComparisonTablesProps> = ({ 
                     {rows.map((row) => (
                         <div key={row.key} className="flex justify-between items-baseline gap-2 text-sm">
                             <span className="text-slate-400 font-medium">{LABELS[row.key]}</span>
-                            <span className="text-blue-700 font-semibold text-right break-all">{row.value}</span>
+                            <span className="text-blue-700 font-semibold text-right break-all">{properNoun ? capitalize(row.value) : row.value}</span>
                         </div>
                     ))}
                 </div>

@@ -50,7 +50,7 @@ function isShortVowel(char: string): boolean {
     return /[oe]/i.test(char);
 }
 
-function applyFourTonesMark(word: string, syllableIndex: number, tone: FourSlavicTones): string {
+export function applyFourTonesMark(word: string, syllableIndex: number, tone: FourSlavicTones): string {
     const vowels = /[aeiouyěęǫọų]/gi;
     const matches = Array.from(word.matchAll(vowels));
     if (matches.length === 0) return word;
@@ -71,7 +71,7 @@ function applyFourTonesMark(word: string, syllableIndex: number, tone: FourSlavi
     return word.substring(0, targetIndex) + char + unicodeMark + word.substring(targetIndex + 1);
 }
 
-function getAcuteToneType(word: string, syllableIndex: number): 'long_acute' | 'short_acute' {
+export function getAcuteToneType(word: string, syllableIndex: number): 'long_acute' | 'short_acute' {
     const vowels = /[aeiouyěęǫọų]/gi;
     const matches = Array.from(word.matchAll(vowels));
     if (matches.length === 0) return 'long_acute';
@@ -80,7 +80,7 @@ function getAcuteToneType(word: string, syllableIndex: number): 'long_acute' | '
     return isShortVowel(word[targetIndex]) ? 'short_acute' : 'long_acute';
 }
 
-function getCircumflexToneType(word: string, syllableIndex: number): 'long_circumflex' | 'short_circumflex' {
+export function getCircumflexToneType(word: string, syllableIndex: number): 'long_circumflex' | 'short_circumflex' {
     const vowels = /[aeiouyěęǫọų]/gi;
     const matches = Array.from(word.matchAll(vowels));
     if (matches.length === 0) return 'long_circumflex';

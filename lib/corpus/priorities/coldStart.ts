@@ -65,7 +65,7 @@ export async function runColdStart(): Promise<{ created: number; updated: number
             fleetingVowelAt: word.fleetingVowelAt,
         };
 
-        const generatedForms = generateWordForms(engineInput);
+        const generatedForms = generateWordForms(engineInput, true);
         const baseWordFrequency = 1000;
 
         for (const form of generatedForms) {

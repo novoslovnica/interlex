@@ -46,6 +46,7 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
         aspect: item.aspect,
         transitivity: item.transitivity,
         animacy: item.animacy,
+        properNoun: item.properNoun ?? false,
     };
 
     const [showParadigm, setShowParadigm] = useState<boolean>(false);
@@ -328,11 +329,13 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                                 <VerbConjugationTables
                                     data={verbData}
                                     currentScript={currentScript}
+                                    properNoun={meta.properNoun}
                                 />
                             ) : isNoun && nounData ? (
                                 <NounDeclensionTables
                                     data={nounData}
                                     currentScript={currentScript}
+                                    properNoun={meta.properNoun}
                                 />
                             ) : isAdj ? (
                                 <AdjectiveDeclensionTables
@@ -340,19 +343,22 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                                     paradigm={item.paradigm || 'A'}
                                     protoStemClass={item.protoStemClass || 'o'}
                                     isQualitative={!item.value.endsWith('ovy') && !item.value.endsWith('evy') && !item.value.endsWith('sky')}
+                                    properNoun={meta.properNoun}
                                 />
                             ) : isNum ? (
                                 <NumeralDeclensionTables
                                     isv={item.value}
                                     paradigm={item.paradigm || 'A'}
+                                    properNoun={meta.properNoun}
                                 />
                             ) : isPron ? (
                                 <PronounDeclensionTables
                                     isv={item.value}
                                     paradigm={item.paradigm || 'A'}
+                                    properNoun={meta.properNoun}
                                 />
                             ) : isAdv ? (
-                                <AdverbComparisonTables isv={item.value} />
+                                <AdverbComparisonTables isv={item.value} properNoun={meta.properNoun} />
                             ) : (
                                 <div className="p-4 text-sm text-slate-500 italic text-center">
                                     {t("paradigmError")}

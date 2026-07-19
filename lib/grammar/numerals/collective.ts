@@ -36,7 +36,7 @@ export function declineCollectiveNumeral(request: {
     const fullForm = cleanBase + ending;
 
     // Хелперы Юникода (импортируем из базового тонового процессора)
-    const { applyFourTonesMark, getAcuteToneType, getCircumflexToneType } = require('./numeralCardinal');
+    const { applyFourTonesMark, getAcuteToneType, getCircumflexToneType } = require('../numerals/cardinal');
 
     // ПАРАДИГМА A: Неподвижное ударение
     if (paradigm === AccentParadigm.A) {
