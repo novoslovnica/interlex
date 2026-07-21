@@ -65,6 +65,7 @@ export async function getWordsByIds(ids: number[]) {
             etymology: word.etymology || '',
             usageType: word.usageType || '',
             addition: word.addition || '',
+            external_id: word.external_id || '',
             translations,
         };
     });
