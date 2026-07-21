@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition, useEffect, useCallback, useMemo, useRef } from "react"
+import { useState, useTransition, useEffect, useCallback } from "react"
 import { parseComprehensionString, SLAVIC_LANGUAGES_MAP } from "@/lib/types/lexicon"
 import { UsageType, ALL_USAGE_TYPES } from "@/lib/enums/UsageType"
 import { MainCategory, ALL_MAIN_CATEGORIES } from "@/lib/enums/MainCategory"
@@ -196,6 +196,7 @@ interface ArticleFormProps {
   title: string
   submitButtonText: string
   initialData?: {
+    wordId?: number
     word: string
     stem: string
     hasAnomalies: boolean
@@ -400,9 +401,7 @@ export default function ArticleForm({
     return () => clearTimeout(delayDebounceFn)
   }, [searchQuery, initialRoots])
 
-  // Recalculate homonym candidates when stem changes
-  const [initialStem] = useState(initialData?.stem || "")
-  useEffect(() => {
+  const handleStemBlur = () => {
     const s = stem.trim()
     if (!s) {
       setHomonymBases([])
@@ -410,10 +409,10 @@ export default function ArticleForm({
     }
     const candidates = generateStemCandidates({
       stem: s,
-      secondaryStem: null,
-      tertiaryStem: null,
-      pos: undefined,
-      isv: undefined,
+      secondaryStem: (grammar.secondaryStem as string) || null,
+      tertiaryStem: (grammar.tertiaryStem as string) || null,
+      pos: (grammar.pos as string) || undefined,
+      isv: word.trim() || undefined,
     })
     const oldBases = new Set(initialData?.homonymBases?.map((h) => h.base) || [])
     const newChanged = new Set<string>()
@@ -423,7 +422,7 @@ export default function ArticleForm({
     })
     setChangedHomonyms(newChanged)
     setHomonymBases(entries)
-  }, [stem])
+  }
 
   // Auto-fill east/west/south allophones when core changes
   useEffect(() => {
@@ -436,14 +435,8 @@ export default function ArticleForm({
     })
   }, [allophones.core])
 
-  // Add allophone values as homonym bases with corresponding flavors
-  const prevAllophonesRef = useRef("")
-  useEffect(() => {
-    const entries = Object.entries(allophones).filter(([, v]) => v.trim().length > 0) as Array<[string, string]>
-    const key = entries.map(([k, v]) => `${k}:${v}`).sort().join("|")
-    if (key === prevAllophonesRef.current) return
-    prevAllophonesRef.current = key
-
+  const handleAllophoneBlur = (key: string) => {
+    const value = allophones[key]?.trim()
     const FLAVOR_MAP: Record<string, string> = {
       core: "CORE",
       nsl: "NSL",
@@ -451,26 +444,16 @@ export default function ArticleForm({
       west: "WEST",
       south: "SOUTH",
     }
+    const flavor = FLAVOR_MAP[key] || "CORE"
 
-    const oldBases = new Set(initialData?.homonymBases?.map((h) => h.base) || [])
     setHomonymBases((prev) => {
-      const existing = new Set(prev.map((h) => h.base))
-      let changed = false
-      const next = [...prev]
-      for (const [allophoneKey, value] of entries) {
-        if (!existing.has(value)) {
-          const flavor = FLAVOR_MAP[allophoneKey] || "CORE"
-          next.push({ base: value, flavor })
-          existing.add(value)
-          if (!oldBases.has(value)) {
-            setChangedHomonyms((ch) => new Set(ch).add(value))
-          }
-          changed = true
-        }
+      const next = prev.filter((h) => h.flavor !== flavor)
+      if (value) {
+        next.push({ base: value, flavor })
       }
-      return changed ? next : prev
+      return next
     })
-  }, [allophones])
+  }
 
   const addHomonymBase = () => {
     setHomonymBases((prev) => [...prev, { base: "", flavor: "CORE" }])
@@ -600,6 +583,7 @@ export default function ArticleForm({
         .join(" ")
 
       await onSubmit({
+        wordId: initialData?.wordId,
         word,
         stem,
         allophones,
@@ -739,6 +723,7 @@ export default function ArticleForm({
                     type="text"
                     value={allophones[key] || ""}
                     onChange={(e) => setAllophones((prev) => ({ ...prev, [key]: e.target.value }))}
+                    onBlur={() => handleAllophoneBlur(key)}
                     className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
                     placeholder={label + "..."}
                   />
@@ -748,13 +733,14 @@ export default function ArticleForm({
 
             <div>
               <label className="block text-sm font-medium mb-1">Основа</label>
-              <input
-                type="text"
-                value={stem}
-                onChange={(e) => setStem(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
-                placeholder="Основа для поиска словоформ (н-р: vod)"
-              />
+<input
+                  type="text"
+                  value={stem}
+                  onChange={(e) => setStem(e.target.value)}
+                  onBlur={handleStemBlur}
+                  className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
+                  placeholder="Основа для поиска словоформ (н-р: vod)"
+                />
             </div>
 
             {homonymBases.length > 0 && (

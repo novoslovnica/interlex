@@ -6,8 +6,7 @@ import type { Metadata } from "next";
 import { auth } from "@/auth"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
-import { buildEntry, append } from "@/lib/action-history"
-import { generateUniqueSlug } from "@/lib/slug"
+import { createWord } from "@/lib/actions/word-actions"
 
 export const metadata: Metadata = {
   title: "Создание статьи",
@@ -46,146 +45,9 @@ export default async function CreateArticlePage() {
         take: pageSize,
     })) as MorphemeWithLexemes[]
 
-    async function createArticle(formData: any) {
+    async function handleCreate(formData: any) {
         "use server"
-        const session = await auth()
-        const author = session?.user?.email || "unknown"
-        const stemValue = formData.stem?.trim() || null
-        const posValue = formData.pos?.trim() || "unknown"
-        const slug = await generateUniqueSlug(formData.word?.toLowerCase() || "", posValue)
-
-        const newWord = await db.lexeme.create({
-            data: {
-                value: formData.word,
-                slug,
-                stem: stemValue,
-                hasAnomalies: formData.hasAnomalies === true,
-                external_id: formData.external_id ?? null,
-                actionHistory: append(null, buildEntry(author, {
-                    value: { old: null, new: formData.word },
-                    stem: { old: null, new: stemValue },
-                    hasAnomalies: { old: null, new: formData.hasAnomalies === true },
-                    external_id: { old: null, new: formData.external_id ?? null },
-                })),
-            },
-        })
-
-        const allophoneData = formData.allophones || {}
-        for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {
-            const strValue = (allophoneData[code.toLowerCase()] as string)?.trim()
-            if (!strValue) continue
-            const flavor = await db.allophoneFlavor.findUnique({ where: { code } })
-            if (!flavor) continue
-            await db.lexemeAllophone.create({
-                data: { lexemeId: newWord.id, flavorId: flavor.id, type: "standard", value: strValue },
-            })
-        }
-
-        const formHomonymBases: Array<{ base: string; flavor: string }> = formData.homonymBases || []
-        for (const { base, flavor } of formHomonymBases) {
-            if (!base.trim()) continue
-            const existing = await db.baseHomonym.findUnique({
-                where: { base },
-            })
-            if (existing) {
-                const parsed = JSON.parse(existing.wordIds)
-                let items: Array<{ id: number; flavor?: string }>
-                if (typeof parsed[0] === "number") {
-                    items = (parsed as number[]).map((id: number) => ({ id, flavor: id === newWord.id ? flavor : "CORE" }))
-                } else {
-                    items = parsed as Array<{ id: number; flavor?: string }>
-                    const existingIdx = items.findIndex((item) => item.id === newWord.id)
-                    if (existingIdx >= 0) {
-                        items[existingIdx].flavor = flavor
-                    } else {
-                        items.push({ id: newWord.id, flavor })
-                    }
-                }
-                await db.baseHomonym.update({
-                    where: { base },
-                    data: { wordIds: JSON.stringify(items) },
-                })
-            } else {
-                await db.baseHomonym.create({
-                    data: {
-                        base,
-                        wordIds: JSON.stringify([{ id: newWord.id, flavor }]),
-                    },
-                })
-            }
-        }
-
-        const anomalies = formData.inflectionAnomalies || []
-        if (anomalies.length > 0) {
-            await db.inflectionAnomaly.createMany({
-                data: anomalies.map((a: { inflection: string; grammeme: string }) => ({
-                    lexemeId: newWord.id,
-                    inflection: a.inflection,
-                    grammeme: a.grammeme,
-                })),
-            })
-        }
-
-        const newMeaning = await db.meaning.create({
-            data: {
-                lexemeId: newWord.id,
-                meaning: "Основное значение",
-            },
-        })
-
-        await db.en.create({
-            data: {
-                meaningId: newMeaning.id,
-                value: formData.translationEn,
-                veryfied: formData.isEnVerified ? 1 : 0,
-                actionHistory: append(null, buildEntry(author, {
-                    value: { old: null, new: formData.translationEn },
-                    veryfied: { old: null, new: formData.isEnVerified ? 1 : 0 },
-                })),
-            },
-        })
-
-        await db.ru.create({
-            data: {
-                meaningId: newMeaning.id,
-                value: formData.translationRu,
-                veryfied: formData.isRuVerified ? 1 : 0,
-                actionHistory: append(null, buildEntry(author, {
-                    value: { old: null, new: formData.translationRu },
-                    veryfied: { old: null, new: formData.isRuVerified ? 1 : 0 },
-                })),
-            },
-        })
-
-        const createdRootIds: number[] = []
-        if (formData.newRootValues && formData.newRootValues.length > 0) {
-            for (const val of formData.newRootValues) {
-                const newRoot = await db.morpheme.create({
-                    data: {
-                        value: val,
-                        type: 0,
-                        actionHistory: append(null, buildEntry(author, {
-                            value: { old: null, new: val },
-                            type: { old: null, new: 0 },
-                        })),
-                    },
-                })
-                createdRootIds.push(newRoot.id)
-            }
-        }
-
-        const finalRootIds = [...(formData.rootIds || []), ...createdRootIds]
-
-        if (finalRootIds.length > 0) {
-            await db.lexemeMorpheme.createMany({
-                data: finalRootIds.map((rId) => ({
-                    lexemeId: newWord.id,
-                    morphemeId: rId,
-                })),
-            })
-        }
-
-        redirect("/admin/dictionary")
+        return createWord(formData)
     }
 
     return (
@@ -194,7 +56,7 @@ export default async function CreateArticlePage() {
                 title="Создание новой словарной статьи"
                 submitButtonText="Создать статью"
                 initialRoots={initialRoots}
-                onSubmit={createArticle}
+                onSubmit={handleCreate}
             />
         </div>
     )
