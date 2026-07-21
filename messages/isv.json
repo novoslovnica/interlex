@@ -55,7 +55,10 @@
       "translationLanguages": "Językov prěvoda",
       "uniqueRoots": "Unikalnyh korenjev",
       "meanings": "Smyslovyh značenij",
-      "flavorizations": "Flavorizacij"
+      "flavorizations": "Flavorizacij",
+      "corpusTokens": "Tokenov v korpusu",
+      "zipfAlpha": "Zipf Alpha",
+      "lexiconCoverage": "Pokrytije leksikona"
     },
     "cta": {
       "title": "Hočete vnesti vklad v razvitije leksikona?",

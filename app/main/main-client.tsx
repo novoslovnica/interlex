@@ -14,6 +14,12 @@ interface RandomWordResult {
     }[];
 }
 
+interface SubStat {
+    id: number;
+    label: string;
+    value: string;
+}
+
 interface StatsProps {
     stats: {
         words: number;
@@ -22,7 +28,7 @@ interface StatsProps {
         meanings: number;
     };
     randomWord: RandomWordResult;
-    subStats: any[];
+    subStats: SubStat[];
 }
 
 export default function MainClient({ stats, subStats, randomWord }: StatsProps) {

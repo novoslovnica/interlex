@@ -21,7 +21,7 @@ function isConsonant(ch: string): boolean {
 }
 
 /** Removes a fleeting vowel (e, ь, ъ) from the penultimate position of a stem if followed by a consonant. */
-function removeFleetingVowel(stem: string): string | null {
+export function removeFleetingVowel(stem: string): string | null {
   if (stem.length < 2) return null;
   const last = stem[stem.length - 1];
   const secondLast = stem[stem.length - 2];

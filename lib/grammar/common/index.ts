@@ -12,7 +12,7 @@ export { heuristicStem } from './heuristicStem';
 export { parseAddition } from './addition-parser';
 export type { AdditionParseResult, AdditionAnomaly } from './addition-parser';
 export { generateStemCandidates } from './stem-candidates';
-export { MorphemeType } from './morpheme';
+export { MorphemeType, generateMorphemeCandidates } from './morpheme';
 export type { MorphemePart } from './morpheme';
 
 export function isEnumMatch<T extends Record<string, string>>(

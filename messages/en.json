@@ -55,7 +55,10 @@
       "translationLanguages": "Translation languages",
       "uniqueRoots": "Unique roots",
       "meanings": "Meanings",
-      "flavorizations": "Flavorizations"
+      "flavorizations": "Flavorizations",
+      "corpusTokens": "Tokens in corpus",
+      "zipfAlpha": "Zipf Alpha",
+      "lexiconCoverage": "Lexicon coverage"
     },
     "cta": {
       "title": "Want to contribute to the lexicon?",

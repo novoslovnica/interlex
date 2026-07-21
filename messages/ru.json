@@ -55,7 +55,10 @@
       "translationLanguages": "Языков перевода",
       "uniqueRoots": "Уникальных корней",
       "meanings": "Смысловых значений",
-      "flavorizations": "Флаворизаций"
+      "flavorizations": "Флаворизаций",
+      "corpusTokens": "Токенов в корпусе",
+      "zipfAlpha": "Альфа Ципфа",
+      "lexiconCoverage": "Покрытие лексикона"
     },
     "cta": {
       "title": "Хотите внести вклад в развитие лексикона?",
