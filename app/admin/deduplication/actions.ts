@@ -44,7 +44,7 @@ function transformLexemeResults(results: any[]) {
         return {
             id: word.id,
             value: word.value || '',
-            externalId: word.external_id ?? null,
+            external_id: word.external_id ?? null,
             isv,
             nsl,
             stem: word.stem || '',
@@ -160,7 +160,8 @@ export async function mergeWordsAction(
         value: string; isv: string; nsl: string; usageType: string; addition: string;
         stem?: string; pos?: string; gender?: string; declension?: number | null;
         conjugation?: number | null; transcription?: string; mainCategory?: string;
-        etymology?: string; externalId?: number | null;
+        etymology?: string;
+        external_id?: number | null;
     }
 ) {
     try {
@@ -200,7 +201,7 @@ export async function mergeWordsAction(
             if (String(targetLexeme?.transcription ?? '') !== String(updatedFields.transcription ?? '')) changes.transcription = { old: targetLexeme?.transcription ?? null, new: updatedFields.transcription ?? null };
             if (String(targetLexeme?.mainCategory ?? '') !== String(updatedFields.mainCategory ?? '')) changes.mainCategory = { old: targetLexeme?.mainCategory ?? null, new: updatedFields.mainCategory ?? null };
             if (String(targetLexeme?.etymology ?? '') !== String(updatedFields.etymology ?? '')) changes.etymology = { old: targetLexeme?.etymology ?? null, new: updatedFields.etymology ?? null };
-            if (Number(targetLexeme?.external_id ?? null) !== Number(updatedFields.externalId ?? null)) changes.externalId = { old: targetLexeme?.external_id ?? null, new: updatedFields.externalId ?? null };
+            if (Number(targetLexeme?.external_id ?? null) !== Number(updatedFields.external_id ?? null)) changes.externalId = { old: targetLexeme?.external_id ?? null, new: updatedFields.external_id ?? null };
             changes.mergedFrom = { old: null, new: sourceId };
 
             const currentHistory = (targetLexeme?.actionHistory as string) || null;
@@ -217,7 +218,7 @@ export async function mergeWordsAction(
                 updatedFields.stem ?? null, updatedFields.pos ?? null, updatedFields.gender ?? null,
                 updatedFields.declension ?? null, updatedFields.conjugation ?? null,
                 updatedFields.transcription ?? null, updatedFields.mainCategory ?? null,
-                updatedFields.etymology ?? null, updatedFields.externalId ?? null, newHistory, targetId
+                updatedFields.etymology ?? null, updatedFields.external_id ?? null, newHistory, targetId
             );
 
             if (updatedFields.isv && coreFlavorId) {

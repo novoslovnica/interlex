@@ -333,7 +333,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       "mainCategory", "usageType", "intelligibility", "addition",
       "sameInLanguages", "etymology", "proto", "paradigm", "protoStemClass",
       "stemExtension", "stressPosition", "genesis", "secondaryStem", "tertiaryStem",
-      "externalId",
+      "external_id",
     ]
 
     const grammarData: Record<string, unknown> = {}
@@ -667,7 +667,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
                   genesis: wordData.genesis,
                   secondaryStem: wordData.secondaryStem,
                   tertiaryStem: wordData.tertiaryStem,
-                  externalId: wordData.external_id,
+                  external_id: wordData.external_id,
                 }}
               />
             </div>

@@ -101,11 +101,10 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
 }
 
 export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string, meaningId?: number) => {
-    console.log(wordId, field, newValue, veryfied);
     const session = await auth()
     const author = session?.user?.email || "unknown"
 
-    if (["stem", "nsl", "isv", "value", "externalId"].includes(field)) {
+    if (["stem", "nsl", "isv", "value", "external_id"].includes(field)) {
         const parsedId = parseInt(wordId)
 
         if (field === "stem") {

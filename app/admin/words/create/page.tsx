@@ -60,12 +60,12 @@ export default async function CreateArticlePage() {
                 slug,
                 stem: stemValue,
                 hasAnomalies: formData.hasAnomalies === true,
-                external_id: formData.externalId ?? null,
+                external_id: formData.external_id ?? null,
                 actionHistory: append(null, buildEntry(author, {
                     value: { old: null, new: formData.word },
                     stem: { old: null, new: stemValue },
                     hasAnomalies: { old: null, new: formData.hasAnomalies === true },
-                    externalId: { old: null, new: formData.externalId ?? null },
+                    external_id: { old: null, new: formData.external_id ?? null },
                 })),
             },
         })
