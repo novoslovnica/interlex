@@ -105,7 +105,7 @@ export const updateField = async (wordId: string, field: string, newValue: strin
     const session = await auth()
     const author = session?.user?.email || "unknown"
 
-    if (["stem", "nsl", "isv", "value"].includes(field)) {
+    if (["stem", "nsl", "isv", "value", "externalId"].includes(field)) {
         const parsedId = parseInt(wordId)
 
         if (field === "stem") {

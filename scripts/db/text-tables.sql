@@ -193,6 +193,6 @@ CREATE VIRTUAL TABLE IF NOT EXISTS "eo_text" USING FTS5(value, content=eo);
 
 CREATE TRIGGER IF NOT EXISTS eo_text_insert AFTER INSERT ON eo BEGIN INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;
 
-CREATE TRIGGER IF NOT EXISTS eo_text_delete AFTER DELETE ON eo BEGIN INSERT INTO eo_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
+CREATE TRIGGER IF NOT EXISTS eo_text_delete AFTER DELETE ON eo BEGIN INSERT INTO eo_text (eo_text, rowid, value) VALUES ('delete', old.rowid, old.value); END;
 
-CREATE TRIGGER IF NOT EXISTS eo_text_update AFTER UPDATE ON eo BEGIN INSERT INTO eo_text (de_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;
+CREATE TRIGGER IF NOT EXISTS eo_text_update AFTER UPDATE ON eo BEGIN INSERT INTO eo_text (eo_text, rowid, value) VALUES ('delete', old.rowid, old.value); INSERT INTO eo_text (rowid, value) VALUES (new.rowid, new.value); END;

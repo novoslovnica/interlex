@@ -13,14 +13,14 @@
 import { applyFirstPalatalization, applyIotation } from '../morphonology';
 import { PosType } from './pos';
 
-const FLEETING_VOWELS = new Set(['e', 'ě', 'ь', 'ъ']);
+const FLEETING_VOWELS = new Set(['e', 'ь', 'ъ']);
 const VOWELS = new Set(['a', 'e', 'i', 'o', 'u', 'y', 'ě', 'ę', 'ǫ', 'ų', 'å', 'ȯ']);
 
 function isConsonant(ch: string): boolean {
   return ch.length === 1 && !VOWELS.has(ch) && /[a-zčšžćđńljǯ]/i.test(ch);
 }
 
-/** Removes a fleeting vowel (e, ě, ь, ъ) from the penultimate position of a stem if followed by a consonant. */
+/** Removes a fleeting vowel (e, ь, ъ) from the penultimate position of a stem if followed by a consonant. */
 function removeFleetingVowel(stem: string): string | null {
   if (stem.length < 2) return null;
   const last = stem[stem.length - 1];

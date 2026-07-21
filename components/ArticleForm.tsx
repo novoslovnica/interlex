@@ -123,6 +123,14 @@ const PROPER_NOUN_OPTIONS = [
   { value: "no", label: "Нет" },
 ]
 
+const FLAVOR_OPTIONS = [
+  { value: "CORE", label: "CORE" },
+  { value: "NSL", label: "NSL" },
+  { value: "EAST", label: "EAST" },
+  { value: "WEST", label: "WEST" },
+  { value: "SOUTH", label: "SOUTH" },
+]
+
 const USAGE_TYPE_OPTIONS = [
   { value: UsageType.GENERAL, label: "Общеупотребительное" },
   { value: UsageType.COLLOQUIAL, label: "Разговорное" },
@@ -195,7 +203,7 @@ interface ArticleFormProps {
     attachedRoots: SelectedRootItem[]
     meanings: MeaningData[]
     allophones?: Record<string, string>
-    homonymBases?: string[]
+    homonymBases?: Array<{ base: string; flavor: string }>
     pos?: string | null
     gender?: string | null
     aspect?: string | null
@@ -223,6 +231,7 @@ interface ArticleFormProps {
     secondaryStem?: string | null
     tertiaryStem?: string | null
     properNoun?: boolean
+    externalId?: number | null
   }
   initialRoots: RootOption[]
   onSubmit: (data: any) => Promise<void>
@@ -252,7 +261,7 @@ export default function ArticleForm({
   const [allophones, setAllophones] = useState<Record<string, string>>(
     initialData?.allophones || { core: "", nsl: "", east: "", west: "", south: "" }
   )
-  const [homonymBases, setHomonymBases] = useState<string[]>(
+  const [homonymBases, setHomonymBases] = useState<Array<{ base: string; flavor: string }>>(
     initialData?.homonymBases || []
   )
   const [changedHomonyms, setChangedHomonyms] = useState<Set<string>>(new Set())
@@ -285,6 +294,7 @@ export default function ArticleForm({
     stressPosition: initialData?.stressPosition ?? null,
     secondaryStem: initialData?.secondaryStem ?? "",
     tertiaryStem: initialData?.tertiaryStem ?? "",
+    externalId: initialData?.externalId ?? null,
   })
 
   const [etymology, setEtymology] = useState(initialData?.etymology || "")
@@ -405,13 +415,14 @@ export default function ArticleForm({
       pos: undefined,
       isv: undefined,
     })
-    const oldSet = new Set(initialData?.homonymBases || [])
+    const oldBases = new Set(initialData?.homonymBases?.map((h) => h.base) || [])
     const newChanged = new Set<string>()
-    for (const c of candidates) {
-      if (!oldSet.has(c)) newChanged.add(c)
-    }
+    const entries = candidates.map((c) => {
+      if (!oldBases.has(c)) newChanged.add(c)
+      return { base: c, flavor: "CORE" }
+    })
     setChangedHomonyms(newChanged)
-    setHomonymBases(candidates)
+    setHomonymBases(entries)
   }, [stem])
 
   // Auto-fill east/west/south allophones when core changes
@@ -425,25 +436,34 @@ export default function ArticleForm({
     })
   }, [allophones.core])
 
-  // Add allophone values as homonym bases
+  // Add allophone values as homonym bases with corresponding flavors
   const prevAllophonesRef = useRef("")
   useEffect(() => {
-    const values = Object.values(allophones).filter((v) => v.trim().length > 0)
-    const key = values.sort().join("|")
+    const entries = Object.entries(allophones).filter(([, v]) => v.trim().length > 0) as Array<[string, string]>
+    const key = entries.map(([k, v]) => `${k}:${v}`).sort().join("|")
     if (key === prevAllophonesRef.current) return
     prevAllophonesRef.current = key
 
-    const oldSet = new Set(initialData?.homonymBases || [])
+    const FLAVOR_MAP: Record<string, string> = {
+      core: "CORE",
+      nsl: "NSL",
+      east: "EAST",
+      west: "WEST",
+      south: "SOUTH",
+    }
+
+    const oldBases = new Set(initialData?.homonymBases?.map((h) => h.base) || [])
     setHomonymBases((prev) => {
-      const existing = new Set(prev)
+      const existing = new Set(prev.map((h) => h.base))
       let changed = false
       const next = [...prev]
-      for (const v of values) {
-        if (!existing.has(v)) {
-          next.push(v)
-          existing.add(v)
-          if (!oldSet.has(v)) {
-            setChangedHomonyms((ch) => new Set(ch).add(v))
+      for (const [allophoneKey, value] of entries) {
+        if (!existing.has(value)) {
+          const flavor = FLAVOR_MAP[allophoneKey] || "CORE"
+          next.push({ base: value, flavor })
+          existing.add(value)
+          if (!oldBases.has(value)) {
+            setChangedHomonyms((ch) => new Set(ch).add(value))
           }
           changed = true
         }
@@ -453,7 +473,7 @@ export default function ArticleForm({
   }, [allophones])
 
   const addHomonymBase = () => {
-    setHomonymBases((prev) => [...prev, ""])
+    setHomonymBases((prev) => [...prev, { base: "", flavor: "CORE" }])
     setChangedHomonyms((prev) => new Set(prev).add(""))
   }
 
@@ -464,10 +484,18 @@ export default function ArticleForm({
   const updateHomonymBase = (idx: number, value: string) => {
     setHomonymBases((prev) => {
       const next = [...prev]
-      next[idx] = value
+      next[idx] = { ...next[idx], base: value }
       return next
     })
     setChangedHomonyms((prev) => new Set(prev).add(value))
+  }
+
+  const updateHomonymFlavor = (idx: number, flavor: string) => {
+    setHomonymBases((prev) => {
+      const next = [...prev]
+      next[idx] = { ...next[idx], flavor }
+      return next
+    })
   }
 
   const handleToggleRoot = useCallback((root: RootOption) => {
@@ -736,19 +764,28 @@ export default function ArticleForm({
                   <button type="button" onClick={addHomonymBase} className="text-xs px-2 py-1 border border-dashed rounded text-primary hover:bg-primary/5">+ Добавить</button>
                 </div>
                 <div className="space-y-2">
-                  {homonymBases.map((base, idx) => {
-                    const isChanged = changedHomonyms.has(base) && (!initialData?.homonymBases || !initialData.homonymBases.includes(base))
+                  {homonymBases.map((entry, idx) => {
+                    const isChanged = changedHomonyms.has(entry.base) && (!initialData?.homonymBases || !initialData.homonymBases.some((h) => h.base === entry.base))
                     return (
                       <div key={idx} className="flex gap-2 items-center">
                         <input
                           type="text"
-                          value={base}
+                          value={entry.base}
                           onChange={(e) => updateHomonymBase(idx, e.target.value)}
                           className={`flex-1 px-2 py-1 border rounded bg-background text-xs ${
                             isChanged ? "border-amber-400 bg-amber-50 dark:bg-amber-950/20 ring-1 ring-amber-400/50" : ""
                           }`}
                           placeholder="Основа омонима..."
                         />
+                        <select
+                          value={entry.flavor}
+                          onChange={(e) => updateHomonymFlavor(idx, e.target.value)}
+                          className="px-1 py-1 border rounded bg-background text-xs w-20"
+                        >
+                          {FLAVOR_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
                         <button type="button" onClick={() => removeHomonymBase(idx)} className="text-xs text-destructive hover:text-destructive/80 px-1">✕</button>
                       </div>
                     )
@@ -919,6 +956,7 @@ export default function ArticleForm({
                     <TextField label="Класс прото-основы" value={grammar.protoStemClass} onChange={(v) => setGram("protoStemClass", v)} />
                     <TextField label="Расширение основы" value={grammar.stemExtension} onChange={(v) => setGram("stemExtension", v)} />
                     <NumberField label="Ударный слог (0=первый)" value={grammar.stressPosition} onChange={(v) => setGram("stressPosition", v)} placeholder="0–" />
+                    <NumberField label="Внешний ID (externalId)" value={grammar.externalId} onChange={(v) => setGram("externalId", v)} placeholder="напр. 12345" />
                     <TextField label="Дополнение" value={grammar.addition} onChange={(v) => setGram("addition", v)} />
                     <TextField label="Те же в языках" value={grammar.sameInLanguages} onChange={(v) => setGram("sameInLanguages", v)} />
                     <TextField label="Праславянский" value={grammar.proto} onChange={(v) => setGram("proto", v)} />

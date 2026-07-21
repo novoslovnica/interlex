@@ -1,5 +1,6 @@
 'use server';
 
+import Database from 'better-sqlite3';
 import { prismaData as prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
@@ -8,6 +9,13 @@ import { Feature } from '@/config/features';
 import { buildEntry, append } from '@/lib/action-history';
 
 const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
+
+function getDbPath(): string {
+    return process.env.SQLITE_DB || (() => {
+        const url = process.env.DATA_DATABASE_URL || "file:./prisma/interlex.db";
+        return url.replace(/^file:/, '');
+    })();
+}
 
 function extractAllophone(allophones: { value: string; flavor: { code: string }; type: string }[], code: string): string {
     return allophones.find(a => a.flavor.code === code && a.type === 'standard')?.value ?? '';
@@ -36,10 +44,19 @@ function transformLexemeResults(results: any[]) {
         return {
             id: word.id,
             value: word.value || '',
+            externalId: word.external_id ?? null,
             isv,
             nsl,
+            stem: word.stem || '',
+            pos: word.pos || '',
+            gender: word.gender || '',
+            declension: word.declension ?? null,
+            conjugation: word.conjugation ?? null,
+            transcription: word.transcription || '',
+            mainCategory: word.mainCategory || '',
+            etymology: word.etymology || '',
             usageType: word.usageType || '',
-            addition: word.addition || 'Источник не указан',
+            addition: word.addition || '',
             translations,
         };
     });
@@ -139,7 +156,12 @@ export async function searchDuplicateWords(query: string, showDuplicates?: boole
 export async function mergeWordsAction(
     targetId: number,
     sourceId: number,
-    updatedFields: { value: string; isv: string; nsl: string; usageType: string; addition: string }
+    updatedFields: {
+        value: string; isv: string; nsl: string; usageType: string; addition: string;
+        stem?: string; pos?: string; gender?: string; declension?: number | null;
+        conjugation?: number | null; transcription?: string; mainCategory?: string;
+        etymology?: string; externalId?: number | null;
+    }
 ) {
     try {
         const session = await auth()
@@ -148,164 +170,123 @@ export async function mergeWordsAction(
         }
         const author = session?.user?.email || "unknown"
 
-        await prisma.$transaction(async (tx) => {
-            const targetWord = await tx.lexeme.findUnique({
-                where: { id: targetId },
-                include: { lexemeAllophones: { include: { flavor: true } } }
-            }) as { actionHistory?: string | null; value?: string | null; usageType?: string | null; addition?: string | null; lexemeAllophones?: { value: string; flavor: { code: string }; type: string }[] } | null
+        const db = new Database(getDbPath());
 
-            const changes: Record<string, { old: unknown; new: unknown }> = {}
-            const oldIsv = targetWord ? extractAllophone(targetWord.lexemeAllophones || [], 'CORE') : ''
-            const oldNsl = targetWord ? extractAllophone(targetWord.lexemeAllophones || [], 'NSL') : ''
+        const result = db.transaction(() => {
+            const coreFlavorId = db.prepare(`SELECT id FROM allophone_flavors WHERE code = ?`).get('CORE') as { id: number } | undefined;
+            const nslFlavorId = db.prepare(`SELECT id FROM allophone_flavors WHERE code = ?`).get('NSL') as { id: number } | undefined;
 
-            if (String(oldIsv) !== String(updatedFields.isv)) {
-                changes.isv = { old: oldIsv || null, new: updatedFields.isv }
-            }
-            if (String(oldNsl) !== String(updatedFields.nsl)) {
-                changes.nsl = { old: oldNsl || null, new: updatedFields.nsl }
-            }
-            if (String(targetWord?.value ?? '') !== String(updatedFields.value)) {
-                changes.value = { old: targetWord?.value ?? null, new: updatedFields.value }
-            }
-            if (String(targetWord?.usageType ?? '') !== String(updatedFields.usageType)) {
-                changes.usageType = { old: targetWord?.usageType ?? null, new: updatedFields.usageType }
-            }
-            if (String(targetWord?.addition ?? '') !== String(updatedFields.addition)) {
-                changes.addition = { old: targetWord?.addition ?? null, new: updatedFields.addition }
-            }
-            changes.mergedFrom = { old: null, new: sourceId }
+            const targetLexeme = db.prepare(`SELECT * FROM lexemes WHERE id = ?`).get(targetId) as Record<string, unknown> | undefined;
+            if (!targetLexeme) throw new Error(`Target lexeme ${targetId} not found`);
 
-            await tx.lexeme.update({
-                where: { id: targetId },
-                data: {
-                    value: updatedFields.value,
-                    usageType: updatedFields.usageType,
-                    addition: updatedFields.addition,
-                    actionHistory: append(targetWord?.actionHistory, buildEntry(author, changes)),
-                },
-            });
+            const oldIsv = coreFlavorId
+                ? (db.prepare(`SELECT value FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, coreFlavorId.id) as { value: string } | undefined)?.value ?? ''
+                : '';
+            const oldNsl = nslFlavorId
+                ? (db.prepare(`SELECT value FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, nslFlavorId.id) as { value: string } | undefined)?.value ?? ''
+                : '';
 
-            if (updatedFields.isv) {
-                const coreFlavor = await tx.allophoneFlavor.findUnique({ where: { code: 'CORE' } });
-                if (coreFlavor) {
-                    const existingCore = await tx.lexemeAllophone.findUnique({
-                        where: { lexemeId_flavorId_type: { lexemeId: targetId, flavorId: coreFlavor.id, type: 'standard' } }
-                    });
-                    if (existingCore) {
-                        await tx.lexemeAllophone.update({
-                            where: { id: existingCore.id },
-                            data: { value: updatedFields.isv }
-                        });
-                    } else {
-                        await tx.lexemeAllophone.create({
-                            data: { lexemeId: targetId, flavorId: coreFlavor.id, value: updatedFields.isv, type: 'standard' }
-                        });
-                    }
+            const changes: Record<string, { old: unknown; new: unknown }> = {};
+            if (String(oldIsv) !== String(updatedFields.isv)) changes.isv = { old: oldIsv || null, new: updatedFields.isv };
+            if (String(oldNsl) !== String(updatedFields.nsl)) changes.nsl = { old: oldNsl || null, new: updatedFields.nsl };
+            if (String(targetLexeme?.value ?? '') !== String(updatedFields.value)) changes.value = { old: targetLexeme?.value ?? null, new: updatedFields.value };
+            if (String(targetLexeme?.usageType ?? '') !== String(updatedFields.usageType)) changes.usageType = { old: targetLexeme?.usageType ?? null, new: updatedFields.usageType };
+            if (String(targetLexeme?.addition ?? '') !== String(updatedFields.addition)) changes.addition = { old: targetLexeme?.addition ?? null, new: updatedFields.addition };
+            if (String(targetLexeme?.stem ?? '') !== String(updatedFields.stem ?? '')) changes.stem = { old: targetLexeme?.stem ?? null, new: updatedFields.stem ?? null };
+            if (String(targetLexeme?.pos ?? '') !== String(updatedFields.pos ?? '')) changes.pos = { old: targetLexeme?.pos ?? null, new: updatedFields.pos ?? null };
+            if (String(targetLexeme?.gender ?? '') !== String(updatedFields.gender ?? '')) changes.gender = { old: targetLexeme?.gender ?? null, new: updatedFields.gender ?? null };
+            if (Number(targetLexeme?.declension ?? null) !== Number(updatedFields.declension ?? null)) changes.declension = { old: targetLexeme?.declension ?? null, new: updatedFields.declension ?? null };
+            if (Number(targetLexeme?.conjugation ?? null) !== Number(updatedFields.conjugation ?? null)) changes.conjugation = { old: targetLexeme?.conjugation ?? null, new: updatedFields.conjugation ?? null };
+            if (String(targetLexeme?.transcription ?? '') !== String(updatedFields.transcription ?? '')) changes.transcription = { old: targetLexeme?.transcription ?? null, new: updatedFields.transcription ?? null };
+            if (String(targetLexeme?.mainCategory ?? '') !== String(updatedFields.mainCategory ?? '')) changes.mainCategory = { old: targetLexeme?.mainCategory ?? null, new: updatedFields.mainCategory ?? null };
+            if (String(targetLexeme?.etymology ?? '') !== String(updatedFields.etymology ?? '')) changes.etymology = { old: targetLexeme?.etymology ?? null, new: updatedFields.etymology ?? null };
+            if (Number(targetLexeme?.external_id ?? null) !== Number(updatedFields.externalId ?? null)) changes.externalId = { old: targetLexeme?.external_id ?? null, new: updatedFields.externalId ?? null };
+            changes.mergedFrom = { old: null, new: sourceId };
+
+            const currentHistory = (targetLexeme?.actionHistory as string) || null;
+            const newHistory = append(currentHistory, buildEntry(author, changes));
+
+            db.prepare(`
+                UPDATE lexemes SET
+                    value = ?, usageType = ?, addition = ?, stem = ?, pos = ?, gender = ?,
+                    declension = ?, conjugation = ?, transcription = ?, mainCategory = ?,
+                    etymology = ?, external_id = ?, actionHistory = ?
+                WHERE id = ?
+            `).run(
+                updatedFields.value, updatedFields.usageType, updatedFields.addition,
+                updatedFields.stem ?? null, updatedFields.pos ?? null, updatedFields.gender ?? null,
+                updatedFields.declension ?? null, updatedFields.conjugation ?? null,
+                updatedFields.transcription ?? null, updatedFields.mainCategory ?? null,
+                updatedFields.etymology ?? null, updatedFields.externalId ?? null, newHistory, targetId
+            );
+
+            if (updatedFields.isv && coreFlavorId) {
+                const existing = db.prepare(`SELECT id FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, coreFlavorId.id) as { id: number } | undefined;
+                if (existing) {
+                    db.prepare(`UPDATE lexeme_allophones SET value = ? WHERE id = ?`).run(updatedFields.isv, existing.id);
+                } else {
+                    db.prepare(`INSERT INTO lexeme_allophones (lexemeId, flavorId, value, type) VALUES (?, ?, ?, 'standard')`).run(targetId, coreFlavorId.id, updatedFields.isv);
                 }
             }
 
-            if (updatedFields.nsl) {
-                const nslFlavor = await tx.allophoneFlavor.findUnique({ where: { code: 'NSL' } });
-                if (nslFlavor) {
-                    const existingNsl = await tx.lexemeAllophone.findUnique({
-                        where: { lexemeId_flavorId_type: { lexemeId: targetId, flavorId: nslFlavor.id, type: 'standard' } }
-                    });
-                    if (existingNsl) {
-                        await tx.lexemeAllophone.update({
-                            where: { id: existingNsl.id },
-                            data: { value: updatedFields.nsl }
-                        });
-                    } else {
-                        await tx.lexemeAllophone.create({
-                            data: { lexemeId: targetId, flavorId: nslFlavor.id, value: updatedFields.nsl, type: 'standard' }
-                        });
-                    }
+            if (updatedFields.nsl && nslFlavorId) {
+                const existing = db.prepare(`SELECT id FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, nslFlavorId.id) as { id: number } | undefined;
+                if (existing) {
+                    db.prepare(`UPDATE lexeme_allophones SET value = ? WHERE id = ?`).run(updatedFields.nsl, existing.id);
+                } else {
+                    db.prepare(`INSERT INTO lexeme_allophones (lexemeId, flavorId, value, type) VALUES (?, ?, ?, 'standard')`).run(targetId, nslFlavorId.id, updatedFields.nsl);
                 }
             }
 
-            const targetMeanings = await tx.meaning.findMany({
-                where: { lexemeId: targetId },
-                take: 1,
-            });
+            const targetMeaning = db.prepare(`SELECT id FROM meanings WHERE lexemeId = ? LIMIT 1`).get(targetId) as { id: number } | undefined;
             let targetMeaningId: number;
-
-            if (targetMeanings.length > 0) {
-                targetMeaningId = targetMeanings[0].id;
+            if (targetMeaning) {
+                targetMeaningId = targetMeaning.id;
             } else {
-                const newMeaning = await tx.meaning.create({
-                    data: { lexemeId: targetId },
-                });
-                targetMeaningId = newMeaning.id;
+                const info = db.prepare(`INSERT INTO meanings (lexemeId) VALUES (?)`).run(targetId);
+                targetMeaningId = Number(info.lastInsertRowid);
             }
 
-            const sourceMeanings = await tx.meaning.findMany({
-                where: { lexemeId: sourceId },
-                select: { id: true },
-            });
+            const sourceMeanings = db.prepare(`SELECT id FROM meanings WHERE lexemeId = ?`).all(sourceId) as { id: number }[];
             const sourceMeaningIds = sourceMeanings.map(m => m.id);
 
             if (sourceMeaningIds.length > 0) {
+                const placeholders = sourceMeaningIds.map(() => '?').join(',');
+                const updateLangStmt = (lang: string) =>
+                    db.prepare(`UPDATE "${lang}" SET "meaningId" = ? WHERE "meaningId" IN (${placeholders})`).run(targetMeaningId, ...sourceMeaningIds);
+
                 const languageModels = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
                 for (const lang of languageModels) {
-                    await (tx as any)[lang].updateMany({
-                        where: { meaningId: { in: sourceMeaningIds } },
-                        data: { meaningId: targetMeaningId },
-                    });
+                    updateLangStmt(lang);
                 }
 
-                await tx.meaning.deleteMany({
-                    where: { id: { in: sourceMeaningIds } },
-                });
+                db.prepare(`DELETE FROM meanings WHERE id IN (${placeholders})`).run(...sourceMeaningIds);
             }
 
-            await tx.lexemeMorpheme.updateMany({
-                where: { lexemeId: sourceId },
-                data: { lexemeId: targetId },
-            });
+            db.prepare(`UPDATE lexemes_morphemes SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
+            db.prepare(`UPDATE inflection_anomalies SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
+            db.prepare(`UPDATE synonyms SET sourceId = ? WHERE sourceId = ?`).run(targetId, sourceId);
+            db.prepare(`UPDATE synonyms SET targetId = ? WHERE targetId = ?`).run(targetId, sourceId);
+            db.prepare(`UPDATE antonyms SET sourceId = ? WHERE sourceId = ?`).run(targetId, sourceId);
+            db.prepare(`UPDATE antonyms SET targetId = ? WHERE targetId = ?`).run(targetId, sourceId);
 
-            await tx.inflectionAnomaly.updateMany({
-                where: { lexemeId: sourceId },
-                data: { lexemeId: targetId },
-            });
+            db.prepare(`DELETE FROM lexemes WHERE id = ?`).run(sourceId);
 
-            await tx.synonym.updateMany({
-                where: { sourceId: sourceId },
-                data: { sourceId: targetId },
-            });
-            await tx.synonym.updateMany({
-                where: { targetId: sourceId },
-                data: { targetId: targetId },
-            });
-
-            await tx.antonym.updateMany({
-                where: { sourceId: sourceId },
-                data: { sourceId: targetId },
-            });
-            await tx.antonym.updateMany({
-                where: { targetId: sourceId },
-                data: { targetId: targetId },
-            });
-
-            await tx.lexeme.delete({
-                where: { id: sourceId },
-            });
-
-            const allHomonyms = await tx.baseHomonym.findMany();
+            const allHomonyms = db.prepare(`SELECT * FROM base_homonyms`).all() as { id: number; wordIds: string }[];
             for (const h of allHomonyms) {
                 const ids: number[] = JSON.parse(h.wordIds);
                 if (ids.includes(sourceId)) {
                     const filtered = ids.filter((id: number) => id !== sourceId);
                     if (filtered.length === 0) {
-                        await tx.baseHomonym.delete({ where: { id: h.id } });
+                        db.prepare(`DELETE FROM base_homonyms WHERE id = ?`).run(h.id);
                     } else {
-                        await tx.baseHomonym.update({
-                            where: { id: h.id },
-                            data: { wordIds: JSON.stringify(filtered) },
-                        });
+                        db.prepare(`UPDATE base_homonyms SET wordIds = ? WHERE id = ?`).run(JSON.stringify(filtered), h.id);
                     }
                 }
             }
         });
+
+        result();
 
         revalidatePath('/admin/deduplication');
         return { success: true };

@@ -60,10 +60,12 @@ export default async function CreateArticlePage() {
                 slug,
                 stem: stemValue,
                 hasAnomalies: formData.hasAnomalies === true,
+                external_id: formData.externalId ?? null,
                 actionHistory: append(null, buildEntry(author, {
                     value: { old: null, new: formData.word },
                     stem: { old: null, new: stemValue },
                     hasAnomalies: { old: null, new: formData.hasAnomalies === true },
+                    externalId: { old: null, new: formData.externalId ?? null },
                 })),
             },
         })
@@ -79,24 +81,35 @@ export default async function CreateArticlePage() {
             })
         }
 
-        if (stemValue) {
+        const formHomonymBases: Array<{ base: string; flavor: string }> = formData.homonymBases || []
+        for (const { base, flavor } of formHomonymBases) {
+            if (!base.trim()) continue
             const existing = await db.baseHomonym.findUnique({
-                where: { base: stemValue },
+                where: { base },
             })
             if (existing) {
-                const ids: number[] = JSON.parse(existing.wordIds)
-                if (!ids.includes(newWord.id)) {
-                    ids.push(newWord.id)
-                    await db.baseHomonym.update({
-where: { base: stemValue },
-                        data: { wordIds: JSON.stringify(ids) },
-                    })
+                const parsed = JSON.parse(existing.wordIds)
+                let items: Array<{ id: number; flavor?: string }>
+                if (typeof parsed[0] === "number") {
+                    items = (parsed as number[]).map((id: number) => ({ id, flavor: id === newWord.id ? flavor : "CORE" }))
+                } else {
+                    items = parsed as Array<{ id: number; flavor?: string }>
+                    const existingIdx = items.findIndex((item) => item.id === newWord.id)
+                    if (existingIdx >= 0) {
+                        items[existingIdx].flavor = flavor
+                    } else {
+                        items.push({ id: newWord.id, flavor })
+                    }
                 }
+                await db.baseHomonym.update({
+                    where: { base },
+                    data: { wordIds: JSON.stringify(items) },
+                })
             } else {
                 await db.baseHomonym.create({
                     data: {
-                        base: stemValue,
-                        wordIds: JSON.stringify([newWord.id]),
+                        base,
+                        wordIds: JSON.stringify([{ id: newWord.id, flavor }]),
                     },
                 })
             }

@@ -38,6 +38,8 @@ const AdminPage = async () => {
                 <Table
                     initialColumnVisibility={userSettings?.columnVisibility ?? null}
                     onSaveColumnVisibility={saveColumnVisibilityPreference}
+                    userPermissions={userPermissions}
+                    userRole={session.user.role || ""}
                 />
             </div>
         </div>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query';
 import {
     useReactTable,
@@ -11,6 +11,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { EditableCell } from './EditableCell';
 import {EditableLanguageCell} from "@/app/admin/Table/EditableLanguageCell";
 import Link from "next/link";
+import DeduplicationModal from './DeduplicationModal';
+import { Feature } from '@/config/features';
 
 const DEFAULT_COLUMN_VISIBILITY: VisibilityState = {
     id: true,
@@ -53,7 +55,7 @@ export function useDebounce<T>(value: T, delay: number): T {
     return debouncedValue;
 }
 
-export default function InfiniteEditableTable({ initialColumnVisibility, onSaveColumnVisibility }: { initialColumnVisibility?: string | null, onSaveColumnVisibility: (json: string) => Promise<void> }) {
+export default function InfiniteEditableTable({ initialColumnVisibility, onSaveColumnVisibility, userPermissions, userRole }: { initialColumnVisibility?: string | null, onSaveColumnVisibility: (json: string) => Promise<void>, userPermissions?: string[], userRole?: string }) {
     const tableContainerRef = useRef<HTMLDivElement>(null);
 
     const queryClient = useQueryClient();
@@ -64,6 +66,14 @@ const [unverifiedOnly, setUnverifiedOnly] = useState(false);
 const [langFilterExpanded, setLangFilterExpanded] = useState(true);
 
     const debouncedSearch = useDebounce(searchQuery, 400);
+
+    const [dedupModalOpen, setDedupModalOpen] = useState(false);
+    const [dedupWord, setDedupWord] = useState<{ id: number; value: string; isv: string } | null>(null);
+    const [dedupDuplicateIds, setDedupDuplicateIds] = useState<number[]>([]);
+    const [dedupKey, setDedupKey] = useState(0);
+    const hasDedupPermission = useMemo(() => {
+        return userRole === "ADMIN" || userPermissions?.includes(Feature.DeduplicationManage) === true;
+    }, [userRole, userPermissions]);
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
         if (initialColumnVisibility) {
@@ -156,6 +166,10 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
         }, [data]
     );
 
+    const handleMergeComplete = useCallback(() => {
+        queryClient.invalidateQueries({ queryKey: ['lexicon-infinite'] });
+    }, [queryClient]);
+
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
             { accessorKey: 'id', header: 'ID', size: 50, cell: ({ getValue, row }) => (
@@ -170,13 +184,42 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 minSize: 200,
                 cell: ({ getValue, row }) => {
                     const meaning = getValue<string>();
-                    const examples = (row.original as any).examples as string | null;
+                    const verified = (row.original as any).verified as boolean;
                     const meaningId = (row.original as any).meaningId as number;
                     return (
-                        <div className="px-2 py-1 truncate" title={meaning || ''}>
-                            <span className="text-xs text-muted-foreground font-mono mr-1">#{meaningId}</span>
+                        <div className="px-2 py-1 truncate flex items-center gap-1.5" title={meaning || ''}>
+                            <span
+                                className={`shrink-0 text-xs ${verified ? 'text-green-500' : 'text-gray-400'}`}
+                                title={verified ? 'Верифицировано' : 'Не верифицировано'}
+                            >
+                                ●
+                            </span>
+                            <span className="text-xs text-muted-foreground font-mono">#{meaningId}</span>
                             <span>{meaning || <span className="text-gray-300 italic">—</span>}</span>
-                            {examples && <span className="text-[10px] text-gray-400 ml-1">📎</span>}
+                        </div>
+                    );
+                },
+            },
+            {
+                id: "examples",
+                accessorKey: 'examples',
+                header: 'Примеры',
+                size: 80,
+                cell: ({ getValue, row }) => {
+                    const examples = getValue<string | null>();
+                    const verified = (row.original as any).verified as boolean;
+                    if (!examples) {
+                        return (
+                            <div className="px-2 py-1 flex items-center gap-1 text-gray-300">
+                                <span className="text-xs">○</span>
+                                <span className="text-[10px]">нет</span>
+                            </div>
+                        );
+                    }
+                    return (
+                        <div className="px-2 py-1 flex items-center gap-1" title={examples}>
+                            <span className={`text-xs ${verified ? 'text-green-500' : 'text-amber-500'}`}>●</span>
+                            <span className="text-[10px] text-muted-foreground">{verified ? 'есть' : 'есть'}</span>
                         </div>
                     );
                 },
@@ -198,7 +241,37 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 id: "value",
                 accessorKey: 'value',
                 header: 'Ключ поиска',
-                cell: EditableCell,
+                minSize: 120,
+                cell: ({ getValue, row }) => {
+                    const val = getValue<string>();
+                    const disabled = (row.original as any)._disabledLexemeFields === true;
+                    const duplicateCount = (row.original as any).duplicateCount as number;
+                    const isDuplicate = duplicateCount > 1;
+
+                    if (disabled) {
+                        return (
+                            <span className={`block px-2 py-1 italic truncate ${isDuplicate ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
+                                {val || '—'}
+                            </span>
+                        );
+                    }
+
+                    return (
+                        <input
+                            defaultValue={val}
+                            onBlur={(e) => {
+                                (table.options.meta as any)?.updateData(row.index, 'value', e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    (table.options.meta as any)?.updateData(row.index, 'value', (e.target as HTMLInputElement).value);
+                                    (e.target as HTMLInputElement).blur();
+                                }
+                            }}
+                            className={`w-full bg-transparent px-2 py-1 border border-transparent hover:border-gray-300 focus:border-blue-500 focus:bg-white outline-none rounded transition ${isDuplicate ? 'text-red-600 font-medium' : ''}`}
+                        />
+                    );
+                },
             },
             {
                 id: "en",
@@ -302,8 +375,39 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 header: 'Эсперанто',
                 cell: EditableLanguageCell,
             },
+            {
+                id: "actions",
+                header: 'Действия',
+                size: 140,
+                cell: ({ row }) => {
+                    const duplicateCount = (row.original as any).duplicateCount as number;
+                    const duplicateIds = (row.original as any).duplicateIds as number[];
+                    const rowValue = (row.original as any).value as string;
+                    const rowIsv = (row.original as any).isv as string;
+                    const rowId = (row.original as any).id as number;
+                    const isDuplicate = duplicateCount > 1 && duplicateIds.length > 0;
+
+                    if (!hasDedupPermission || !isDuplicate) return null;
+
+                    return (
+                        <div className="px-2 py-1">
+                            <button
+                                onClick={() => {
+                                    setDedupWord({ id: rowId, value: rowValue || '', isv: rowIsv || '' });
+                                    setDedupDuplicateIds(duplicateIds);
+                                    setDedupKey(k => k + 1);
+                                    setDedupModalOpen(true);
+                                }}
+                                className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded hover:bg-amber-200 transition-colors border border-amber-300 whitespace-nowrap"
+                            >
+                                Дедуплицировать
+                            </button>
+                        </div>
+                    );
+                },
+            },
         ],
-        []
+        [hasDedupPermission, handleMergeComplete]
     );
 
     const table = useReactTable({
@@ -571,6 +675,17 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
             </div>
 
             {isFetching && <div className="text-center text-sm text-muted-foreground">Загрузка...</div>}
+
+            {dedupModalOpen && dedupWord && (
+                <DeduplicationModal
+                    key={dedupKey}
+                    isOpen={true}
+                    onClose={() => setDedupModalOpen(false)}
+                    currentWord={dedupWord}
+                    duplicateIds={dedupDuplicateIds}
+                    onMergeComplete={handleMergeComplete}
+                />
+            )}
         </div>
     );
 }

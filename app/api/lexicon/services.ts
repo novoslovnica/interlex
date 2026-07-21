@@ -181,5 +181,28 @@ export const getDictItems = async (
         }
     }
 
+    const allValues = res.map(item => item.value).filter(Boolean) as string[];
+    const duplicateMap: Record<string, { count: number; ids: number[] }> = {};
+    if (allValues.length > 0) {
+        const valuePlaceholders = allValues.map(() => '?').join(',');
+        const dupRows = db.prepare(`
+            SELECT id, value FROM lexemes WHERE value IN (${valuePlaceholders})
+        `).all(...allValues) as { id: number; value: string }[];
+        for (const row of dupRows) {
+            if (!duplicateMap[row.value]) duplicateMap[row.value] = { count: 0, ids: [] };
+            duplicateMap[row.value].count++;
+            duplicateMap[row.value].ids.push(row.id);
+        }
+    }
+
+    for (const item of res) {
+        const langEntries = langCodes.flatMap(lang => item[lang] as LangRecord[]);
+        item.verified = langEntries.some(entry => entry.veryfied === 1);
+
+        const dup = item.value ? duplicateMap[item.value] : undefined;
+        item.duplicateCount = dup ? dup.count : 1;
+        item.duplicateIds = dup ? dup.ids.filter((id: number) => id !== item.id) : [];
+    }
+
     return res;
 };

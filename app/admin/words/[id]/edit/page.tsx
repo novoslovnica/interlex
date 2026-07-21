@@ -198,7 +198,17 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       })
     : []
 
-  const initialHomonymBases = baseHomonyms.map((h) => h.base)
+  const initialHomonymBases = baseHomonyms.map((h) => {
+    let flavor = "CORE"
+    try {
+      const parsed = JSON.parse(h.wordIds)
+      if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "object" && parsed[0] !== null) {
+        const found = (parsed as Array<{ id: number; flavor?: string }>).find((item) => item.id === wordId)
+        if (found) flavor = found.flavor || "CORE"
+      }
+    } catch {}
+    return { base: h.base, flavor }
+  })
 
   const allophones = (wordData.lexemeAllophones || []).reduce<Record<string, string>>(
   (acc, a) => {
@@ -323,6 +333,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       "mainCategory", "usageType", "intelligibility", "addition",
       "sameInLanguages", "etymology", "proto", "paradigm", "protoStemClass",
       "stemExtension", "stressPosition", "genesis", "secondaryStem", "tertiaryStem",
+      "externalId",
     ]
 
     const grammarData: Record<string, unknown> = {}
@@ -392,17 +403,23 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
           pos: currentWord?.pos,
         })
       : []
-    const formHomonymBases: string[] = formData.homonymBases || []
-    const oldBases = new Set(oldCandidates)
-    const newBases = new Set(formHomonymBases)
+    const formHomonymBases: Array<{ base: string; flavor: string }> = formData.homonymBases || []
+    const newBaseSet = new Set(formHomonymBases.map((b: { base: string }) => b.base))
+    const oldBaseSet = new Set(oldCandidates)
 
     for (const base of oldCandidates) {
-      if (!newBases.has(base)) {
+      if (!newBaseSet.has(base)) {
         const entry = await db.baseHomonym.findUnique({ where: { base } })
         if (entry) {
-          const ids: number[] = JSON.parse(entry.wordIds).filter((id: number) => id !== wordId)
-          if (ids.length > 0) {
-            await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(ids) } })
+          const parsed = JSON.parse(entry.wordIds)
+          let items: Array<{ id: number; flavor?: string }>
+          if (typeof parsed[0] === "number") {
+            items = (parsed as number[]).filter((id: number) => id !== wordId).map((id: number) => ({ id, flavor: "CORE" }))
+          } else {
+            items = (parsed as Array<{ id: number; flavor?: string }>).filter((item) => item.id !== wordId)
+          }
+          if (items.length > 0) {
+            await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(items) } })
           } else {
             await db.baseHomonym.delete({ where: { base } })
           }
@@ -410,17 +427,26 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
       }
     }
 
-    for (const base of formHomonymBases) {
-      if (!oldBases.has(base)) {
+    for (const { base, flavor } of formHomonymBases) {
+      if (!oldBaseSet.has(base)) {
         const entry = await db.baseHomonym.findUnique({ where: { base } })
         if (entry) {
-          const ids: number[] = JSON.parse(entry.wordIds)
-          if (!ids.includes(wordId)) {
-            ids.push(wordId)
-            await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(ids) } })
+          const parsed = JSON.parse(entry.wordIds)
+          let items: Array<{ id: number; flavor?: string }>
+          if (typeof parsed[0] === "number") {
+            items = (parsed as number[]).map((id: number) => ({ id, flavor: id === wordId ? flavor : "CORE" }))
+          } else {
+            items = parsed as Array<{ id: number; flavor?: string }>
+            const existingIdx = items.findIndex((item) => item.id === wordId)
+            if (existingIdx >= 0) {
+              items[existingIdx].flavor = flavor
+            } else {
+              items.push({ id: wordId, flavor })
+            }
           }
+          await db.baseHomonym.update({ where: { base }, data: { wordIds: JSON.stringify(items) } })
         } else {
-          await db.baseHomonym.create({ data: { base, wordIds: JSON.stringify([wordId]) } })
+          await db.baseHomonym.create({ data: { base, wordIds: JSON.stringify([{ id: wordId, flavor }]) } })
         }
       }
     }
@@ -641,6 +667,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
                   genesis: wordData.genesis,
                   secondaryStem: wordData.secondaryStem,
                   tertiaryStem: wordData.tertiaryStem,
+                  externalId: wordData.external_id,
                 }}
               />
             </div>
