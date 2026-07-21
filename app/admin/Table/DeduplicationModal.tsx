@@ -7,7 +7,7 @@ import { getWordsByIds } from '../deduplication/getWordsByIds';
 interface WordItem {
     id: number;
     value: string;
-    externalId: number | null;
+    external_id: number | null;
     isv: string;
     nsl: string;
     stem: string;
@@ -97,7 +97,7 @@ export default function DeduplicationModal({ isOpen, onClose, currentWord, dupli
         setMergedUsageType(target.usageType || source.usageType);
         const sourcesCombined = Array.from(new Set([target.addition, source.addition].filter(Boolean)));
         setMergedAddition(sourcesCombined.join(', '));
-        setMergedExternalId(target.externalId != null ? String(target.externalId) : (source.externalId != null ? String(source.externalId) : ''));
+        setMergedExternalId(target.external_id != null ? String(target.external_id) : (source.external_id != null ? String(source.external_id) : ''));
     };
 
     const handleSelectDuplicate = (id: number) => {
@@ -136,7 +136,7 @@ export default function DeduplicationModal({ isOpen, onClose, currentWord, dupli
             etymology: mergedEtymology || undefined,
             usageType: mergedUsageType,
             addition: mergedAddition,
-            externalId: mergedExternalId ? Number(mergedExternalId) : null,
+            external_id: mergedExternalId ? Number(mergedExternalId) : null,
         });
         setIsLoading(false);
         if (result.success) {
@@ -263,7 +263,7 @@ export default function DeduplicationModal({ isOpen, onClose, currentWord, dupli
                                             <input type="text" className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500" value={mergedAddition} onChange={e => setMergedAddition(e.target.value)} />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-semibold mb-1">Внешний ID (externalId)</label>
+                                            <label className="block text-xs font-semibold mb-1">Внешний ID (external_id)</label>
                                             <input type="text" className="w-full px-3 py-1.5 border rounded-md bg-background" value={mergedExternalId} onChange={e => setMergedExternalId(e.target.value)} placeholder="напр. 12345" />
                                         </div>
                                     </div>
