@@ -426,7 +426,8 @@ export const ModelName = {
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
   Synset: 'Synset',
-  MeaningSynset: 'MeaningSynset'
+  MeaningSynset: 'MeaningSynset',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -442,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "synonym" | "antonym" | "hypernym" | "hyponym" | "meronym" | "holonym" | "relatedWord" | "cause" | "effect" | "premise" | "conclusion" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "synonym" | "antonym" | "hypernym" | "hyponym" | "meronym" | "holonym" | "relatedWord" | "cause" | "effect" | "premise" | "conclusion" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3628,6 +3629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AuditLog: {
+      payload: Prisma.$AuditLogPayload<ExtArgs>
+      fields: Prisma.AuditLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuditLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuditLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AuditLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuditLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        findMany: {
+          args: Prisma.AuditLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        create: {
+          args: Prisma.AuditLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        createMany: {
+          args: Prisma.AuditLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuditLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AuditLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        update: {
+          args: Prisma.AuditLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuditLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuditLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuditLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuditLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AuditLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuditLog>
+        }
+        groupBy: {
+          args: Prisma.AuditLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuditLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuditLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3707,8 +3782,7 @@ export const LexemeScalarFieldEnum = {
   corpusHapax: 'corpusHapax',
   distributionD: 'distributionD',
   usageScore: 'usageScore',
-  cefrLevel: 'cefrLevel',
-  actionHistory: 'actionHistory'
+  cefrLevel: 'cefrLevel'
 } as const
 
 export type LexemeScalarFieldEnum = (typeof LexemeScalarFieldEnum)[keyof typeof LexemeScalarFieldEnum]
@@ -3750,7 +3824,6 @@ export const CandidateScalarFieldEnum = {
   conjugation: 'conjugation',
   properNoun: 'properNoun',
   hasAnomalies: 'hasAnomalies',
-  actionHistory: 'actionHistory',
   promotedAt: 'promotedAt',
   promotedToLexemeId: 'promotedToLexemeId'
 } as const
@@ -3780,8 +3853,7 @@ export const MorphemeScalarFieldEnum = {
   updatedAt: 'updatedAt',
   value: 'value',
   type: 'type',
-  stressPosition: 'stressPosition',
-  actionHistory: 'actionHistory'
+  stressPosition: 'stressPosition'
 } as const
 
 export type MorphemeScalarFieldEnum = (typeof MorphemeScalarFieldEnum)[keyof typeof MorphemeScalarFieldEnum]
@@ -3956,7 +4028,6 @@ export const EnScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -3971,7 +4042,6 @@ export const RuScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -3986,7 +4056,6 @@ export const MkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4001,7 +4070,6 @@ export const SrScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4016,7 +4084,6 @@ export const UkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4031,7 +4098,6 @@ export const BgScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4046,7 +4112,6 @@ export const PlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4061,7 +4126,6 @@ export const BeScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4076,7 +4140,6 @@ export const CsScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4091,7 +4154,6 @@ export const SkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4106,7 +4168,6 @@ export const SlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4121,7 +4182,6 @@ export const HrScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4136,7 +4196,6 @@ export const CuScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4151,7 +4210,6 @@ export const DeScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4166,7 +4224,6 @@ export const NlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4181,7 +4238,6 @@ export const EoScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4196,7 +4252,6 @@ export const HsbScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4211,7 +4266,6 @@ export const DsbScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -4267,6 +4321,22 @@ export const MeaningSynsetScalarFieldEnum = {
 } as const
 
 export type MeaningSynsetScalarFieldEnum = (typeof MeaningSynsetScalarFieldEnum)[keyof typeof MeaningSynsetScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  actionId: 'actionId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  field: 'field',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -4478,6 +4548,7 @@ export type GlobalOmitConfig = {
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit
   synset?: Prisma.SynsetOmit
   meaningSynset?: Prisma.MeaningSynsetOmit
+  auditLog?: Prisma.AuditLogOmit
 }
 
 /* Types for Logging */

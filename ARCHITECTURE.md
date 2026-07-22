@@ -338,13 +338,31 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │  synset groups)   │  │ • synsetId       │
 └──────────────────┘  └──────────────────┘
 
+┌──────────────────────────────────────────────────────────────────────┐
+│  AuditLog (@@map audit_logs)                                          │
+│  • actionId (groups fields changed in one save into one action)      │
+│  • entityType ('Lexeme' | 'Morpheme' | 'Candidate' | ...), entityId  │
+│  • field, oldValue, newValue (all stored as strings; non-string      │
+│    values are JSON.stringify'd by lib/audit-log.ts)                  │
+│  • userId (nullable, no FK — auth.db is a separate database),        │
+│    userEmail (snapshot, always present)                              │
+│  Replaces the old per-row `actionHistory` JSON-blob column, which     │
+│  was removed from all 21 data.schema.prisma models. UI: see          │
+│  /admin/platform/audit-log, gated by Feature.LogsView.                │
+│  ⚠ Scoped to data.schema.prisma only — auth.db and corpus.db have no  │
+│    equivalent yet; library.schema.prisma's LibraryEntry.actionHistory │
+│    intentionally still uses the OLD lib/action-history.ts pattern.    │
+└──────────────────────────────────────────────────────────────────────┘
+
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    LIBRARY DATABASE (library.db)                            │
 └─────────────────────────────────────────────────────────────────────────────┘
 ┌──────────────────┐
 │  LibraryEntry    │   Texts/parallel readings for /library, managed via
 │ • title, slug    │   /admin/library and /admin/platform/library
-│ • content, cover │
+│ • content, cover │   • actionHistory: still the OLD JSON-blob pattern
+│                  │     (lib/action-history.ts) — NOT migrated to AuditLog,
+│                  │     see Database Schema Architecture notes above.
 └──────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -661,6 +679,8 @@ UI Update (Table refresh)
 10. **Grammar Engine (lib/grammar/)**: Generates full paradigms (noun/adjective/pronoun/numeral declension, verb conjugation) from ending registries that currently encode etymological Proto-Slavic forms rather than modern Interslavic ones — see "Known Issues" below and the detailed writeup in AGENTS.md
 
 11. **Type Safety**: Strict TypeScript with explicit interfaces, avoiding 'any' types (aspirational — see "Widespread `any` usage" in Known Issues below)
+
+12. **Shared AuditLog table for data.schema.prisma** (added 2026-07-25): all lexical-data write sites (`lib/actions/word-actions.ts`, `app/api/lexicon/[id]/updateField/service.ts`, `app/api/roots/*/route.ts`, `app/admin/synonyms|antonyms|relations/[type]|candidates|deduplication/*`) call `logAudit(user, entityType, entityId, changes)` from `lib/audit-log.ts`, which writes one row per changed field into a single shared `AuditLog` table instead of the old per-table `actionHistory` JSON blob. This replaced `actionHistory` on all 21 data.schema.prisma models (the column was dropped, existing history was not preserved — active thesaurus editing hadn't started yet, so there was nothing worth migrating). Scoped intentionally to `data.schema.prisma` only: `library.schema.prisma`'s `LibraryEntry.actionHistory` still uses the old `lib/action-history.ts` (`buildEntry`/`append`) pattern, and `auth.db`/`corpus.db` have no audit table at all yet. Minimal read UI at `/admin/platform/audit-log`, gated by the previously-unused `Feature.LogsView` permission.
 
 ## Known Issues & Technical Debt
 

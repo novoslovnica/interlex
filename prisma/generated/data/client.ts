@@ -256,3 +256,8 @@ export type Synset = Prisma.SynsetModel
  * 
  */
 export type MeaningSynset = Prisma.MeaningSynsetModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel

@@ -8,6 +8,7 @@ export default function PlatformAdminNav() {
 
   const isLibrary = pathname.startsWith("/admin/platform/library")
   const isUsers = pathname.startsWith("/admin/platform/users")
+  const isAuditLog = pathname.startsWith("/admin/platform/audit-log")
 
   const linkClass = (active: boolean) =>
     `inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80 ${
@@ -25,6 +26,9 @@ export default function PlatformAdminNav() {
           </Link>
           <Link href="/admin/platform/users" className={linkClass(isUsers)}>
             Пользователи
+          </Link>
+          <Link href="/admin/platform/audit-log" className={linkClass(isAuditLog)}>
+            Аудит
           </Link>
         </nav>
       </div>

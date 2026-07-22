@@ -40,7 +40,6 @@ interface Candidate {
   alternationType: string | null
   fleetingVowelAt: number | null
   hasAnomalies: boolean
-  actionHistory: string | null
   promotedAt: string | null
   promotedToLexemeId: number | null
 }

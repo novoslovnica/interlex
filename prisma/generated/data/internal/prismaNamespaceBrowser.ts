@@ -93,7 +93,8 @@ export const ModelName = {
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
   Synset: 'Synset',
-  MeaningSynset: 'MeaningSynset'
+  MeaningSynset: 'MeaningSynset',
+  AuditLog: 'AuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -152,8 +153,7 @@ export const LexemeScalarFieldEnum = {
   corpusHapax: 'corpusHapax',
   distributionD: 'distributionD',
   usageScore: 'usageScore',
-  cefrLevel: 'cefrLevel',
-  actionHistory: 'actionHistory'
+  cefrLevel: 'cefrLevel'
 } as const
 
 export type LexemeScalarFieldEnum = (typeof LexemeScalarFieldEnum)[keyof typeof LexemeScalarFieldEnum]
@@ -195,7 +195,6 @@ export const CandidateScalarFieldEnum = {
   conjugation: 'conjugation',
   properNoun: 'properNoun',
   hasAnomalies: 'hasAnomalies',
-  actionHistory: 'actionHistory',
   promotedAt: 'promotedAt',
   promotedToLexemeId: 'promotedToLexemeId'
 } as const
@@ -225,8 +224,7 @@ export const MorphemeScalarFieldEnum = {
   updatedAt: 'updatedAt',
   value: 'value',
   type: 'type',
-  stressPosition: 'stressPosition',
-  actionHistory: 'actionHistory'
+  stressPosition: 'stressPosition'
 } as const
 
 export type MorphemeScalarFieldEnum = (typeof MorphemeScalarFieldEnum)[keyof typeof MorphemeScalarFieldEnum]
@@ -401,7 +399,6 @@ export const EnScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -416,7 +413,6 @@ export const RuScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -431,7 +427,6 @@ export const MkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -446,7 +441,6 @@ export const SrScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -461,7 +455,6 @@ export const UkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -476,7 +469,6 @@ export const BgScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -491,7 +483,6 @@ export const PlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -506,7 +497,6 @@ export const BeScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -521,7 +511,6 @@ export const CsScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -536,7 +525,6 @@ export const SkScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -551,7 +539,6 @@ export const SlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -566,7 +553,6 @@ export const HrScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -581,7 +567,6 @@ export const CuScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -596,7 +581,6 @@ export const DeScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -611,7 +595,6 @@ export const NlScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -626,7 +609,6 @@ export const EoScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -641,7 +623,6 @@ export const HsbScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -656,7 +637,6 @@ export const DsbScalarFieldEnum = {
   veryfied: 'veryfied',
   wordId: 'wordId',
   meaningId: 'meaningId',
-  actionHistory: 'actionHistory',
   message: 'message'
 } as const
 
@@ -712,6 +692,22 @@ export const MeaningSynsetScalarFieldEnum = {
 } as const
 
 export type MeaningSynsetScalarFieldEnum = (typeof MeaningSynsetScalarFieldEnum)[keyof typeof MeaningSynsetScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  actionId: 'actionId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  field: 'field',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -5,7 +5,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 import { generateUniqueSlug } from "@/lib/slug"
-import { buildEntry, append } from "@/lib/action-history"
+import { logAudit, type FieldChange } from "@/lib/audit-log"
 
 const meaningLanguageInclude = {
   en_word: true, ru_word: true, mk_word: true, sr_word: true,
@@ -26,35 +26,35 @@ function getLangModel(lang: string) {
 }
 
 async function ensureTranslation(
-  lang: string, meaningId: number,
+  lang: string, wordId: number, meaningId: number,
   translation: { id: number; value: string; veryfied: number; message: string },
-  author: string
+  user: { id?: string; email?: string | null } | null | undefined
 ) {
   const model = getLangModel(lang) as any
   if (!model) return
   if (translation.id > 0) {
     const existing = await model.findUnique({ where: { id: translation.id } })
     if (!existing) return
-    const changes: Record<string, { old: unknown; new: unknown }> = {}
+    const changes: FieldChange[] = []
     if ((existing.value ?? "") !== translation.value) {
-      changes.value = { old: existing.value ?? null, new: translation.value }
+      changes.push({ field: `${lang}.value`, oldValue: existing.value ?? null, newValue: translation.value })
     }
     if ((existing.veryfied ?? 0) !== translation.veryfied) {
-      changes.veryfied = { old: existing.veryfied ?? 0, new: translation.veryfied }
+      changes.push({ field: `${lang}.veryfied`, oldValue: existing.veryfied ?? 0, newValue: translation.veryfied })
     }
     if ((existing.message ?? "") !== translation.message) {
-      changes.message = { old: existing.message ?? null, new: translation.message }
+      changes.push({ field: `${lang}.message`, oldValue: existing.message ?? null, newValue: translation.message })
     }
-    if (Object.keys(changes).length > 0) {
+    if (changes.length > 0) {
       await model.update({
         where: { id: translation.id },
         data: {
           value: translation.value || null,
           veryfied: translation.veryfied,
           message: translation.message || null,
-          actionHistory: append(existing.actionHistory, buildEntry(author, changes)),
         },
       })
+      await logAudit(user, "Lexeme", wordId, changes)
     }
   } else if (translation.value.trim()) {
     await model.create({
@@ -63,20 +63,20 @@ async function ensureTranslation(
         value: translation.value,
         veryfied: translation.veryfied,
         message: translation.message || null,
-        actionHistory: append(null, buildEntry(author, {
-          value: { old: null, new: translation.value },
-          veryfied: { old: null, new: translation.veryfied },
-          ...(translation.message ? { message: { old: null, new: translation.message } } : {}),
-        })),
       },
     })
+    await logAudit(user, "Lexeme", wordId, [
+      { field: `${lang}.value`, oldValue: null, newValue: translation.value },
+      { field: `${lang}.veryfied`, oldValue: null, newValue: translation.veryfied },
+      ...(translation.message ? [{ field: `${lang}.message`, oldValue: null, newValue: translation.message }] : []),
+    ])
   }
 }
 
 async function syncTranslations(
-  lang: string, meaningId: number,
+  lang: string, wordId: number, meaningId: number,
   translations: { id: number; value: string; veryfied: number; message: string }[],
-  author: string
+  user: { id?: string; email?: string | null } | null | undefined
 ) {
   const model = getLangModel(lang) as any
   if (!model) return
@@ -93,33 +93,31 @@ async function syncTranslations(
   }
 
   for (const t of translations) {
-    await ensureTranslation(lang, meaningId, t, author)
+    await ensureTranslation(lang, wordId, meaningId, t, user)
   }
 }
 
 export async function updateWord(formData: any) {
   const session = await auth()
-  const author = session?.user?.email || "unknown"
 
   const wordId = parseInt(formData.wordId, 10)
   if (isNaN(wordId)) throw new Error("Invalid wordId")
 
   const stemValue = formData.stem?.trim() || null
   const currentWord = await db.lexeme.findUnique({ where: { id: wordId } })
-  const currentWordWithHistory = currentWord as { actionHistory?: string | null } & typeof currentWord
 
-  const wordChanges: Record<string, { old: unknown; new: unknown }> = {}
+  const wordChanges: FieldChange[] = []
   if (currentWord?.value !== formData.word) {
-    wordChanges.value = { old: currentWord?.value ?? null, new: formData.word }
+    wordChanges.push({ field: "value", oldValue: currentWord?.value ?? null, newValue: formData.word })
   }
   if ((currentWord?.stem ?? null) !== stemValue) {
-    wordChanges.stem = { old: currentWord?.stem ?? null, new: stemValue }
+    wordChanges.push({ field: "stem", oldValue: currentWord?.stem ?? null, newValue: stemValue })
   }
   if (currentWord?.hasAnomalies !== (formData.hasAnomalies === true)) {
-    wordChanges.hasAnomalies = { old: currentWord?.hasAnomalies, new: formData.hasAnomalies === true }
+    wordChanges.push({ field: "hasAnomalies", oldValue: currentWord?.hasAnomalies, newValue: formData.hasAnomalies === true })
   }
   if (currentWord?.properNoun !== (formData.properNoun === true)) {
-    wordChanges.properNoun = { old: currentWord?.properNoun, new: formData.properNoun === true }
+    wordChanges.push({ field: "properNoun", oldValue: currentWord?.properNoun, newValue: formData.properNoun === true })
   }
 
   const grammarFields: string[] = [
@@ -136,7 +134,7 @@ export async function updateWord(formData: any) {
     const oldVal = (currentWord as Record<string, unknown>)[f] ?? null
     const newVal = formData[f] !== undefined && formData[f] !== "" ? formData[f] : null
     if (oldVal !== newVal) {
-      wordChanges[f] = { old: oldVal, new: newVal }
+      wordChanges.push({ field: f, oldValue: oldVal, newValue: newVal })
     }
     grammarData[f] = newVal
   }
@@ -156,11 +154,9 @@ export async function updateWord(formData: any) {
       properNoun: formData.properNoun === true,
       ...grammarData,
       ...(newSlug ? { slug: newSlug } : {}),
-      ...(Object.keys(wordChanges).length > 0
-        ? { actionHistory: append(currentWordWithHistory?.actionHistory, buildEntry(author, wordChanges)) }
-        : {}),
     },
   })
+  await logAudit(session?.user, "Lexeme", wordId, wordChanges)
 
   const allophoneData = formData.allophones || {}
   for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {
@@ -261,15 +257,12 @@ export async function updateWord(formData: any) {
   if (formData.newRootValues && formData.newRootValues.length > 0) {
     for (const val of formData.newRootValues) {
       const newRoot = await db.morpheme.create({
-        data: {
-          value: val,
-          type: 0,
-          actionHistory: append(null, buildEntry(author, {
-            value: { old: null, new: val },
-            type: { old: null, new: 0 },
-          })),
-        },
+        data: { value: val, type: 0 },
       })
+      await logAudit(session?.user, "Morpheme", newRoot.id, [
+        { field: "value", oldValue: null, newValue: val },
+        { field: "type", oldValue: null, newValue: 0 },
+      ])
       createdRootIds.push(newRoot.id)
     }
   }
@@ -330,7 +323,7 @@ export async function updateWord(formData: any) {
 
     if (m.translations) {
       for (const lang of Object.keys(m.translations)) {
-        await syncTranslations(lang as string, meaningId, m.translations[lang], author)
+        await syncTranslations(lang as string, wordId, meaningId, m.translations[lang], session?.user)
       }
     }
   }
@@ -340,7 +333,6 @@ export async function updateWord(formData: any) {
 
 export async function createWord(formData: any) {
   const session = await auth()
-  const author = session?.user?.email || "unknown"
   const stemValue = formData.stem?.trim() || null
   const posValue = formData.pos?.trim() || "unknown"
   const slug = await generateUniqueSlug(formData.word?.toLowerCase() || "", posValue)
@@ -352,14 +344,14 @@ export async function createWord(formData: any) {
       stem: stemValue,
       hasAnomalies: formData.hasAnomalies === true,
       external_id: formData.external_id ?? null,
-      actionHistory: append(null, buildEntry(author, {
-        value: { old: null, new: formData.word },
-        stem: { old: null, new: stemValue },
-        hasAnomalies: { old: null, new: formData.hasAnomalies === true },
-        external_id: { old: null, new: formData.external_id ?? null },
-      })),
     },
   })
+  await logAudit(session?.user, "Lexeme", newWord.id, [
+    { field: "value", oldValue: null, newValue: formData.word },
+    { field: "stem", oldValue: null, newValue: stemValue },
+    { field: "hasAnomalies", oldValue: null, newValue: formData.hasAnomalies === true },
+    { field: "external_id", oldValue: null, newValue: formData.external_id ?? null },
+  ])
 
   const allophoneData = formData.allophones || {}
   for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {
@@ -418,34 +410,35 @@ export async function createWord(formData: any) {
       meaningId: newMeaning.id,
       value: formData.translationEn,
       veryfied: formData.isEnVerified ? 1 : 0,
-      actionHistory: append(null, buildEntry(author, {
-        value: { old: null, new: formData.translationEn },
-        veryfied: { old: null, new: formData.isEnVerified ? 1 : 0 },
-      })),
     },
   })
+  await logAudit(session?.user, "Lexeme", newWord.id, [
+    { field: "en.value", oldValue: null, newValue: formData.translationEn },
+    { field: "en.veryfied", oldValue: null, newValue: formData.isEnVerified ? 1 : 0 },
+  ])
 
   await db.ru.create({
     data: {
       meaningId: newMeaning.id,
       value: formData.translationRu,
       veryfied: formData.isRuVerified ? 1 : 0,
-      actionHistory: append(null, buildEntry(author, {
-        value: { old: null, new: formData.translationRu },
-        veryfied: { old: null, new: formData.isRuVerified ? 1 : 0 },
-      })),
     },
   })
+  await logAudit(session?.user, "Lexeme", newWord.id, [
+    { field: "ru.value", oldValue: null, newValue: formData.translationRu },
+    { field: "ru.veryfied", oldValue: null, newValue: formData.isRuVerified ? 1 : 0 },
+  ])
 
   const createdRootIds: number[] = []
   if (formData.newRootValues && formData.newRootValues.length > 0) {
     for (const val of formData.newRootValues) {
       const newRoot = await db.morpheme.create({
-        data: { value: val, type: 0, actionHistory: append(null, buildEntry(author, {
-          value: { old: null, new: val },
-          type: { old: null, new: 0 },
-        })) },
+        data: { value: val, type: 0 },
       })
+      await logAudit(session?.user, "Morpheme", newRoot.id, [
+        { field: "value", oldValue: null, newValue: val },
+        { field: "type", oldValue: null, newValue: 0 },
+      ])
       createdRootIds.push(newRoot.id)
     }
   }

@@ -6,7 +6,7 @@ import { requirePermission } from "@/lib/permissions"
 import { SynonymsClient } from "./synonyms-client"
 import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
-import { buildEntry, append } from "@/lib/action-history"
+import { logAudit } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
 import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
 
@@ -83,31 +83,17 @@ export default async function AdminSynonymsPage() {
     async function updateSynonyms(sourceMeaningId: number, targetMeaningIds: number[]) {
         "use server"
 
-        const author = session?.user?.email || "unknown"
-
         saveSymmetricRelation(dbSimple, "synonyms", sourceMeaningId, targetMeaningIds, 1.0)
 
         const meaning = await db.meaning.findUnique({
             where: { id: sourceMeaningId },
-            select: {
-                lexeme: {
-                    select: { id: true, actionHistory: true }
-                }
-            }
+            select: { lexeme: { select: { id: true } } }
         })
         if (meaning?.lexeme) {
-            await db.lexeme.update({
-                where: { id: meaning.lexeme.id },
-                data: {
-                    actionHistory: append(
-                        meaning.lexeme.actionHistory,
-                        buildEntry(author, {
-                            synonymSourceMeaningId: { old: null, new: sourceMeaningId },
-                            synonymTargetMeaningIds: { old: null, new: targetMeaningIds },
-                        })
-                    )
-                }
-            })
+            await logAudit(session?.user, "Lexeme", meaning.lexeme.id, [
+                { field: "synonymSourceMeaningId", oldValue: null, newValue: sourceMeaningId },
+                { field: "synonymTargetMeaningIds", oldValue: null, newValue: targetMeaningIds },
+            ])
         }
     }
 

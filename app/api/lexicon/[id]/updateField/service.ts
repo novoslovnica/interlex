@@ -1,6 +1,6 @@
 import {prismaData as prisma} from "@/lib/prisma";
 import { auth } from "@/auth"
-import { buildEntry, append } from "@/lib/action-history"
+import { logAudit, type FieldChange } from "@/lib/audit-log"
 
 const ALLOWED_LANG_FIELDS = ["value", "veryfied", "wordId", "meaningId"] as const;
 
@@ -102,26 +102,22 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
 
 export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string, meaningId?: number) => {
     const session = await auth()
-    const author = session?.user?.email || "unknown"
 
     if (["stem", "nsl", "isv", "value", "external_id"].includes(field)) {
         const parsedId = parseInt(wordId)
 
         if (field === "stem") {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
-            const currentWithHistory = current as { stem?: string | null; actionHistory?: string | null } | null
             const oldStem = current?.stem?.trim() || null
             const newStem = newValue.trim() || null
 
             await prisma.lexeme.update({
                 where: { id: parsedId },
-                data: {
-                    stem: newStem,
-                    actionHistory: append(currentWithHistory?.actionHistory, buildEntry(author, {
-                        stem: { old: oldStem, new: newStem },
-                    })),
-                },
+                data: { stem: newStem },
             })
+            await logAudit(session?.user, "Lexeme", parsedId, [
+                { field: "stem", oldValue: oldStem, newValue: newStem },
+            ])
 
             await syncBaseHomonym(parsedId, newStem, oldStem)
         } else if (field === "isv" || field === "nsl") {
@@ -132,9 +128,6 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             const existing = await prisma.lexemeAllophone.findFirst({
                 where: { lexemeId: parsedId, flavorId: flavor.id, type: "standard" },
             })
-
-            const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
-            const currentWithHistory = current as { actionHistory?: string | null } | null
             const oldValue = existing?.value ?? null
 
             if (existing) {
@@ -155,28 +148,20 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                 })
             }
 
-            await prisma.lexeme.update({
-                where: { id: parsedId },
-                data: {
-                    actionHistory: append(currentWithHistory?.actionHistory, buildEntry(author, {
-                        [field]: { old: oldValue, new: newValue },
-                    })),
-                },
-            })
+            await logAudit(session?.user, "Lexeme", parsedId, [
+                { field, oldValue, newValue },
+            ])
         } else {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
-            const currentWithHistory = current as { [key: string]: unknown } | null
-            const oldValue = currentWithHistory?.[field] ?? null
+            const oldValue = (current as Record<string, unknown> | null)?.[field] ?? null
 
             await prisma.lexeme.update({
                 where: { id: parsedId },
-                data: {
-                    [field]: newValue,
-                    actionHistory: append(currentWithHistory?.actionHistory as string | null | undefined, buildEntry(author, {
-                        [field]: { old: oldValue, new: newValue },
-                    })),
-                },
+                data: { [field]: newValue },
             })
+            await logAudit(session?.user, "Lexeme", parsedId, [
+                { field, oldValue, newValue },
+            ])
         }
 
         return;
@@ -206,42 +191,40 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                 if (veryfied !== undefined) createData.veryfied = veryfied;
                 if (newValue) createData.value = newValue;
                 if (message !== undefined) createData.message = message;
-                if (newValue || veryfied !== undefined || message !== undefined) {
-                    createData.actionHistory = append(null, buildEntry(author, { created: { old: null, new: "new translation" } }));
-                }
                 const created = await langModel.create({ data: createData });
+                if (newValue || veryfied !== undefined || message !== undefined) {
+                    await logAudit(session?.user, "Lexeme", parseInt(wordId), [
+                        { field: `${field}.created`, oldValue: null, newValue: "new translation" },
+                    ])
+                }
                 return created;
             }
             return null;
         }
 
         const updateData: Record<string, unknown> = {};
-
-        const changes: Record<string, { old: unknown; new: unknown }> = {};
+        const changes: FieldChange[] = [];
 
         if (veryfied !== undefined) {
             updateData.veryfied = veryfied;
             if ((entityOne?.veryfied ?? 0) !== veryfied) {
-                changes.veryfied = { old: entityOne?.veryfied ?? 0, new: veryfied };
+                changes.push({ field: `${field}.veryfied`, oldValue: entityOne?.veryfied ?? 0, newValue: veryfied });
             }
         }
         if (newValue !== undefined) {
             updateData.value = newValue;
-            changes.value = { old: entityOne?.value ?? null, new: newValue };
+            changes.push({ field: `${field}.value`, oldValue: entityOne?.value ?? null, newValue });
         }
         if (message !== undefined) {
             updateData.message = message;
-            changes.message = { old: entityOne?.message ?? null, new: message };
-        }
-
-        if (Object.keys(changes).length > 0) {
-            updateData.actionHistory = append(entityOne?.actionHistory, buildEntry(author, changes));
+            changes.push({ field: `${field}.message`, oldValue: entityOne?.message ?? null, newValue: message });
         }
 
         const updated = await langModel.update({
             where: { id: entityOne.id },
             data: updateData,
         });
+        await logAudit(session?.user, "Lexeme", parseInt(wordId), changes)
         return updated;
     }
     return null;

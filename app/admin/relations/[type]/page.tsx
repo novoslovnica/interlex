@@ -6,7 +6,7 @@ import { requirePermission } from "@/lib/permissions"
 import { RelationClient } from "./_components/relation-client"
 import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
-import { buildEntry, append } from "@/lib/action-history"
+import { logAudit } from "@/lib/audit-log"
 import { RELATION_CONFIG, isValidRelationType, type RelationType } from "../relation-config"
 import { init } from "@/lib/sqlite"
 import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
@@ -97,31 +97,17 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
   async function updateRelations(sourceMeaningId: number, targetMeaningIds: number[]) {
     "use server"
 
-    const author = session?.user?.email || "unknown"
-
     saveSymmetricRelation(dbSimple, cfg.tableName, sourceMeaningId, targetMeaningIds, 1.0)
 
     const meaning = await db.meaning.findUnique({
       where: { id: sourceMeaningId },
-      select: {
-        lexeme: {
-          select: { id: true, actionHistory: true }
-        }
-      }
+      select: { lexeme: { select: { id: true } } }
     })
     if (meaning?.lexeme) {
-      await db.lexeme.update({
-        where: { id: meaning.lexeme.id },
-        data: {
-          actionHistory: append(
-            meaning.lexeme.actionHistory,
-            buildEntry(author, {
-              [`${type}_sourceMeaningId`]: { old: null, new: sourceMeaningId },
-              [`${type}_targetMeaningIds`]: { old: null, new: targetMeaningIds },
-            })
-          )
-        }
-      })
+      await logAudit(session?.user, "Lexeme", meaning.lexeme.id, [
+        { field: `${type}_sourceMeaningId`, oldValue: null, newValue: sourceMeaningId },
+        { field: `${type}_targetMeaningIds`, oldValue: null, newValue: targetMeaningIds },
+      ])
     }
   }
 

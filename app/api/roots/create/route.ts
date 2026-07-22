@@ -3,6 +3,7 @@ import { prismaData as db } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { logAudit } from "@/lib/audit-log"
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { value, type, actionHistory, allophones, stressPosition } = body
+    const { value, type, allophones, stressPosition } = body
 
     if (!value || !value.trim()) {
       return NextResponse.json({ error: "value is required" }, { status: 400 })
@@ -22,10 +23,14 @@ export async function POST(request: Request) {
       data: {
         value,
         type: type !== undefined ? type : 0,
-        actionHistory: actionHistory || null,
         stressPosition: stressPosition ?? null,
       },
     })
+    await logAudit(session?.user, "Morpheme", root.id, [
+      { field: "value", oldValue: null, newValue: value },
+      { field: "type", oldValue: null, newValue: type !== undefined ? type : 0 },
+      ...(stressPosition != null ? [{ field: "stressPosition", oldValue: null, newValue: stressPosition }] : []),
+    ])
 
     if (allophones) {
       for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {

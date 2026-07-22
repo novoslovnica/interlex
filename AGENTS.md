@@ -67,6 +67,7 @@ Each word detail page displays:
 - **Interaction:** All mobile menu links must automatically close the drawer overlay on click (`setIsOpen(false)`).
 
 ### 2. Lexical Database Updates & Integrity
+- **Audit Logging:** Any write to `data.schema.prisma` models (Lexeme, Morpheme, translations, etc.) that changes a user-editable field must call `logAudit(user, entityType, entityId, changes)` from `lib/audit-log.ts` — see the dedicated "Audit Logging" section below. Do not resurrect the old per-table `actionHistory` JSON-blob pattern for new `data.schema.prisma` code.
 - **Bidirectional Relations:** Relations (Synonyms, Antonyms, Cognates, and the 9 other relation tables) must maintain relational integrity — linking Word A as a synonym to Word B must reflect bidirectionally. **Fixed 2026-07-22** via `lib/relations.ts` (`fetchSymmetricRelations`/`saveSymmetricRelation`), which treats each table's `sourceId`/`targetId` as an unordered edge: reads match either column and writes diff-and-update the edge set instead of only ever touching `sourceId`. **Always use these two helpers for any new code that reads or writes the 11 relation tables** (synonyms, antonyms, hypernyms, hyponyms, meronyms, holonyms, related_words, causes, effects, premises, conclusions) — do not write a new one-off `WHERE sourceId = ?` query, that is exactly the pattern that caused the original bug.
 - **Extensible Schema:** Keep data structures flexible to easily accommodate future frequency indexes, data arrays for etymology, dictionary URLs, and node/edge weights for visualization graphs.
 - **Script-Aware Rendering:** All word displays must support Cyrillic/Latin toggling via ISV conversion functions.
@@ -81,6 +82,27 @@ Each word detail page displays:
 - **Prevent UI Regressions:** Always double-check that mobile dropdown/hamburger updates do not break desktop alignments, and vice-versa.
 - **Maintain High Density:** Keep code scannable, structural styles semantic, and avoid redundant CSS overrides.
 - **Grammar Engine Awareness:** The project includes a sophisticated grammar engine (`lib/grammar/`) handling verb conjugation, noun/adjective/pronoun/numeral declension, adverb comparison, stem classification, morphonology, accent/tone generation, and enclitic processing. Changes to word display or admin editing must respect these grammatical structures.
+
+---
+
+## Audit Logging (2026-07-25, `data.schema.prisma` only)
+
+Replaced the old per-table `actionHistory` (a JSON-serialized array appended to a single `String?` column, duplicated across 21 models) with a shared `AuditLog` table — one row per changed field, grouped by a common `actionId`.
+
+- **Scope**: `data.schema.prisma` only. `library.schema.prisma`'s `LibraryEntry.actionHistory` intentionally still uses the old `lib/action-history.ts` (`buildEntry`/`append`) pattern — do not delete that file or migrate library.db as part of unrelated work. `auth.db`/`corpus.db` have no audit table at all yet; if one is needed there, build an equivalent separate table rather than trying to share `AuditLog` across databases (the four Prisma clients never join across DBs).
+- **How to log a change**: `await logAudit(session?.user, entityType, entityId, changes)` where `changes` is `{ field, oldValue, newValue }[]`. `logAudit` filters out no-op changes (old === new after serialization) and no-ops entirely if `changes` is empty after filtering — you can pass every candidate field unconditionally and let it filter. Non-string values are `JSON.stringify`'d automatically.
+- **Synchronous/raw-SQL contexts**: `app/admin/deduplication/actions.ts` uses `better-sqlite3` inside a synchronous `db.transaction(() => {...})` callback, which can't `await` — it inlines an equivalent raw `INSERT INTO audit_logs` (same shape, same `randomUUID()` actionId, same serialize-and-filter logic) inside the transaction instead of calling `logAudit`. Follow that pattern for any other synchronous-transaction call site.
+- **entityType convention**: string tags like `"Lexeme"`, `"Morpheme"`, `"Candidate"` — matched to the model actually mutated, not always the one visible in the URL (e.g. editing a translation logs under `"Lexeme"` with fields like `${lang}.value`/`${lang}.veryfied`/`${lang}.message`, since translations belong to a Lexeme).
+- **Migrated write sites**: `lib/actions/word-actions.ts` (`ensureTranslation`/`syncTranslations`, now threaded with `wordId`), `app/api/lexicon/[id]/updateField/service.ts`, `app/api/roots/[id]/route.ts` and `app/api/roots/create/route.ts` (both previously had dead-code `actionHistory` destructured from the request body but never sent by the client — replaced with real before/after diffing), `app/admin/synonyms/page.tsx`, `app/admin/antonyms/page.tsx`, `app/admin/relations/[type]/page.tsx`, `app/admin/candidates/actions.ts`, `app/admin/deduplication/actions.ts`.
+- **UI**: `/admin/platform/audit-log` (`app/admin/platform/audit-log/page.tsx`) — server component, GET-query-string filters (`entityType`/`entityId`/`userEmail`/`page`), paginated 50/page, gated by `requirePermission(session, Feature.LogsView)`. `Feature.LogsView` existed in `config/features.ts` since the original RBAC design but was unused anywhere until this page. Nav entry added in `app/admin/platform/_nav.tsx` ("Аудит") alongside "Библиотека"/"Пользователи".
+- **Data migration note**: the pre-existing `actionHistory` data was intentionally **not** migrated into `AuditLog` and the column was dropped outright — active thesaurus editing hadn't started yet, so there was nothing worth preserving. If this is ever needed again for a different table, do not assume the same is true — check first.
+
+### Key Files
+- `lib/audit-log.ts` — `logAudit()` helper, `FieldChange` type
+- `prisma/data.schema.prisma` — `AuditLog` model (`@@map("audit_logs")`)
+- `scripts/db/2026-07-25-add-audit-log.ts` — deployment script (creates `audit_logs` table + indexes, drops `actionHistory` column from the 21 tables that had it) — idempotent, safe to re-run
+- `app/admin/platform/audit-log/page.tsx` — read UI
+- `lib/action-history.ts` — **still used**, but only by `library.schema.prisma` call sites (`app/admin/platform/library/new/page.tsx`, `app/admin/platform/library/[id]/edit/page.tsx`) — do not delete
 
 ---
 

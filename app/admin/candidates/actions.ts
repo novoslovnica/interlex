@@ -4,6 +4,7 @@ import { prismaData as db } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { logAudit } from "@/lib/audit-log"
 
 interface PromoteCandidateInput {
   candidateId: number
@@ -66,9 +67,11 @@ export async function promoteCandidatesAction(
           declension: input.declension ?? candidate.declension,
           conjugation: input.conjugation ?? candidate.conjugation,
           hasAnomalies: candidate.hasAnomalies,
-          actionHistory: candidate.actionHistory,
         },
       })
+      await logAudit(session?.user, "Lexeme", word.id, [
+        { field: "promotedFromCandidateId", oldValue: null, newValue: input.candidateId },
+      ])
 
       const coreFlavor = await db.allophoneFlavor.findUnique({ where: { code: 'CORE' } })
       const nslFlavor = await db.allophoneFlavor.findUnique({ where: { code: 'NSL' } })

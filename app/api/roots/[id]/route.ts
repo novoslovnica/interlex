@@ -3,6 +3,7 @@ import { prismaData as db } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { logAudit, type FieldChange } from "@/lib/audit-log"
 
 export async function GET(
   _request: Request,
@@ -64,17 +65,30 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { value, type, actionHistory, allophones, stressPosition } = body
+    const { value, type, allophones, stressPosition } = body
+
+    const before = await db.morpheme.findUnique({ where: { id: rootId } })
 
     const root = await db.morpheme.update({
       where: { id: rootId },
       data: {
         ...(value !== undefined && { value }),
         ...(type !== undefined && { type }),
-        ...(actionHistory !== undefined && { actionHistory }),
         ...(stressPosition !== undefined && { stressPosition: stressPosition ?? null }),
       },
     })
+
+    const changes: FieldChange[] = []
+    if (value !== undefined && before?.value !== value) {
+      changes.push({ field: "value", oldValue: before?.value ?? null, newValue: value })
+    }
+    if (type !== undefined && before?.type !== type) {
+      changes.push({ field: "type", oldValue: before?.type ?? null, newValue: type })
+    }
+    if (stressPosition !== undefined && before?.stressPosition !== (stressPosition ?? null)) {
+      changes.push({ field: "stressPosition", oldValue: before?.stressPosition ?? null, newValue: stressPosition ?? null })
+    }
+    await logAudit(session?.user, "Morpheme", rootId, changes)
 
     if (allophones) {
       for (const code of ["CORE", "NSL", "EAST", "WEST", "SOUTH"] as const) {

@@ -1,12 +1,12 @@
 'use server';
 
 import Database from 'better-sqlite3';
+import { randomUUID } from 'crypto';
 import { prismaData as prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { checkPermission } from '@/lib/permissions';
 import { Feature } from '@/config/features';
-import { buildEntry, append } from '@/lib/action-history';
 
 const LANGUAGE_KEYS = ['en', 'ru', 'mk', 'sr', 'uk', 'bg', 'pl', 'be', 'cs', 'sk', 'sl', 'hr', 'hsb', 'dsb', 'cu', 'de', 'nl', 'eo'] as const;
 
@@ -187,39 +187,54 @@ export async function mergeWordsAction(
                 ? (db.prepare(`SELECT value FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, nslFlavorId.id) as { value: string } | undefined)?.value ?? ''
                 : '';
 
-            const changes: Record<string, { old: unknown; new: unknown }> = {};
-            if (String(oldIsv) !== String(updatedFields.isv)) changes.isv = { old: oldIsv || null, new: updatedFields.isv };
-            if (String(oldNsl) !== String(updatedFields.nsl)) changes.nsl = { old: oldNsl || null, new: updatedFields.nsl };
-            if (String(targetLexeme?.value ?? '') !== String(updatedFields.value)) changes.value = { old: targetLexeme?.value ?? null, new: updatedFields.value };
-            if (String(targetLexeme?.usageType ?? '') !== String(updatedFields.usageType)) changes.usageType = { old: targetLexeme?.usageType ?? null, new: updatedFields.usageType };
-            if (String(targetLexeme?.addition ?? '') !== String(updatedFields.addition)) changes.addition = { old: targetLexeme?.addition ?? null, new: updatedFields.addition };
-            if (String(targetLexeme?.stem ?? '') !== String(updatedFields.stem ?? '')) changes.stem = { old: targetLexeme?.stem ?? null, new: updatedFields.stem ?? null };
-            if (String(targetLexeme?.pos ?? '') !== String(updatedFields.pos ?? '')) changes.pos = { old: targetLexeme?.pos ?? null, new: updatedFields.pos ?? null };
-            if (String(targetLexeme?.gender ?? '') !== String(updatedFields.gender ?? '')) changes.gender = { old: targetLexeme?.gender ?? null, new: updatedFields.gender ?? null };
-            if (Number(targetLexeme?.declension ?? null) !== Number(updatedFields.declension ?? null)) changes.declension = { old: targetLexeme?.declension ?? null, new: updatedFields.declension ?? null };
-            if (Number(targetLexeme?.conjugation ?? null) !== Number(updatedFields.conjugation ?? null)) changes.conjugation = { old: targetLexeme?.conjugation ?? null, new: updatedFields.conjugation ?? null };
-            if (String(targetLexeme?.transcription ?? '') !== String(updatedFields.transcription ?? '')) changes.transcription = { old: targetLexeme?.transcription ?? null, new: updatedFields.transcription ?? null };
-            if (String(targetLexeme?.mainCategory ?? '') !== String(updatedFields.mainCategory ?? '')) changes.mainCategory = { old: targetLexeme?.mainCategory ?? null, new: updatedFields.mainCategory ?? null };
-            if (String(targetLexeme?.etymology ?? '') !== String(updatedFields.etymology ?? '')) changes.etymology = { old: targetLexeme?.etymology ?? null, new: updatedFields.etymology ?? null };
-            if (Number(targetLexeme?.external_id ?? null) !== Number(updatedFields.external_id ?? null)) changes.externalId = { old: targetLexeme?.external_id ?? null, new: updatedFields.external_id ?? null };
-            changes.mergedFrom = { old: null, new: sourceId };
-
-            const currentHistory = (targetLexeme?.actionHistory as string) || null;
-            const newHistory = append(currentHistory, buildEntry(author, changes));
+            const changes: { field: string; oldValue: unknown; newValue: unknown }[] = [];
+            const pushIfChanged = (field: string, oldValue: unknown, newValue: unknown, compareAs: 'string' | 'number' = 'string') => {
+                const changed = compareAs === 'number' ? Number(oldValue ?? null) !== Number(newValue ?? null) : String(oldValue ?? '') !== String(newValue ?? '');
+                if (changed) changes.push({ field, oldValue: oldValue ?? null, newValue: newValue ?? null });
+            };
+            pushIfChanged('isv', oldIsv || null, updatedFields.isv);
+            pushIfChanged('nsl', oldNsl || null, updatedFields.nsl);
+            pushIfChanged('value', targetLexeme?.value, updatedFields.value);
+            pushIfChanged('usageType', targetLexeme?.usageType, updatedFields.usageType);
+            pushIfChanged('addition', targetLexeme?.addition, updatedFields.addition);
+            pushIfChanged('stem', targetLexeme?.stem, updatedFields.stem ?? null);
+            pushIfChanged('pos', targetLexeme?.pos, updatedFields.pos ?? null);
+            pushIfChanged('gender', targetLexeme?.gender, updatedFields.gender ?? null);
+            pushIfChanged('declension', targetLexeme?.declension, updatedFields.declension ?? null, 'number');
+            pushIfChanged('conjugation', targetLexeme?.conjugation, updatedFields.conjugation ?? null, 'number');
+            pushIfChanged('transcription', targetLexeme?.transcription, updatedFields.transcription ?? null);
+            pushIfChanged('mainCategory', targetLexeme?.mainCategory, updatedFields.mainCategory ?? null);
+            pushIfChanged('etymology', targetLexeme?.etymology, updatedFields.etymology ?? null);
+            pushIfChanged('external_id', targetLexeme?.external_id, updatedFields.external_id ?? null, 'number');
+            changes.push({ field: 'mergedFrom', oldValue: null, newValue: sourceId });
 
             db.prepare(`
                 UPDATE lexemes SET
                     value = ?, usageType = ?, addition = ?, stem = ?, pos = ?, gender = ?,
                     declension = ?, conjugation = ?, transcription = ?, mainCategory = ?,
-                    etymology = ?, external_id = ?, actionHistory = ?
+                    etymology = ?, external_id = ?
                 WHERE id = ?
             `).run(
                 updatedFields.value, updatedFields.usageType, updatedFields.addition,
                 updatedFields.stem ?? null, updatedFields.pos ?? null, updatedFields.gender ?? null,
                 updatedFields.declension ?? null, updatedFields.conjugation ?? null,
                 updatedFields.transcription ?? null, updatedFields.mainCategory ?? null,
-                updatedFields.etymology ?? null, updatedFields.external_id ?? null, newHistory, targetId
+                updatedFields.etymology ?? null, updatedFields.external_id ?? null, targetId
             );
+
+            // Пишем аудит той же синхронной sqlite-транзакцией (better-sqlite3 не
+            // поддерживает await внутри db.transaction) — logAudit() тут не подходит.
+            if (changes.length > 0) {
+                const actionId = randomUUID();
+                const insertAudit = db.prepare(`
+                    INSERT INTO audit_logs (actionId, entityType, entityId, field, oldValue, newValue, userId, userEmail, createdAt)
+                    VALUES (?, 'Lexeme', ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                `);
+                for (const c of changes) {
+                    const serialize = (v: unknown) => v === null || v === undefined ? null : (typeof v === 'string' ? v : JSON.stringify(v));
+                    insertAudit.run(actionId, targetId, c.field, serialize(c.oldValue), serialize(c.newValue), session?.user?.id ?? null, author);
+                }
+            }
 
             if (updatedFields.isv && coreFlavorId) {
                 const existing = db.prepare(`SELECT id FROM lexeme_allophones WHERE lexemeId = ? AND flavorId = ? AND type = 'standard'`).get(targetId, coreFlavorId.id) as { id: number } | undefined;

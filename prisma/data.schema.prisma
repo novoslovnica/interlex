@@ -68,7 +68,6 @@ model Lexeme {
   lexemes_morphemes LexemeMorpheme[]
   anomalies       InflectionAnomaly[]
   lexemeAllophones   LexemeAllophone[]
-  actionHistory   String?
 
   @@map("lexemes")
   @@index([slug])
@@ -111,7 +110,6 @@ model Candidate {
   conjugation     Int?
   properNoun      Boolean          @default(false)
   hasAnomalies    Boolean          @default(false)
-  actionHistory   String?
   promotedAt      DateTime?
   promotedToLexemeId Int?
 
@@ -216,7 +214,6 @@ model Morpheme {
 
   lexemes_morphemes LexemeMorpheme[]
   morphemeAllophones  MorphemeAllophone[]
-  actionHistory String?
 
   @@map("morphemes")
 }
@@ -451,7 +448,6 @@ model En {
   word      Meaning? @relation("EnWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("EnMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("en")
@@ -471,7 +467,6 @@ model Ru {
   word      Meaning? @relation("RuWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("RuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("ru")
@@ -490,7 +485,6 @@ model Mk {
   word      Meaning? @relation("MkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("MkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("mk")
@@ -509,7 +503,6 @@ model Sr {
   word      Meaning? @relation("SrWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("sr")
@@ -528,7 +521,6 @@ model Uk {
   word      Meaning? @relation("UkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("UkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("uk")
@@ -547,7 +539,6 @@ model Bg {
   word      Meaning? @relation("BgWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("BgMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("bg")
@@ -566,7 +557,6 @@ model Pl {
   word      Meaning? @relation("PlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("PlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("pl")
@@ -585,7 +575,6 @@ model Be {
   word      Meaning? @relation("BeWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("BeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("be")
@@ -604,7 +593,6 @@ model Cs {
   word      Meaning? @relation("CsWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("CsMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("cs")
@@ -623,7 +611,6 @@ model Sk {
   word      Meaning? @relation("SkWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("sk")
@@ -642,7 +629,6 @@ model Sl {
   word      Meaning? @relation("SlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("SlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("sl")
@@ -661,7 +647,6 @@ model Hr {
   word      Meaning? @relation("HrWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("HrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("hr")
@@ -680,7 +665,6 @@ model Cu {
   word      Meaning? @relation("CuWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("CuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("cu")
@@ -699,7 +683,6 @@ model De {
   word      Meaning? @relation("DeWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("DeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("de")
@@ -718,7 +701,6 @@ model Nl {
   word      Meaning? @relation("NlWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("NlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("nl")
@@ -737,7 +719,6 @@ model Eo {
   word      Meaning? @relation("EoWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("EoMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("eo")
@@ -756,7 +737,6 @@ model Hsb {
   word      Meaning? @relation("HsbWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("HsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("hsb")
@@ -775,7 +755,6 @@ model Dsb {
   word      Meaning? @relation("DsbWord", fields: [wordId], references: [id], onDelete: Cascade)
   meaning   Meaning? @relation("DsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
-  actionHistory String?
   message       String?
 
   @@map("dsb")
@@ -847,4 +826,28 @@ model MeaningSynset {
 
   @@id([meaningId, synsetId])
   @@map("meanings_synsets")
+}
+
+// Журнал изменений тезауруса (2026-07-25). Заменяет собой поле actionHistory,
+// которое раньше дублировалось построчно в Lexeme/Candidate/Morpheme и во всех
+// 18 языковых таблицах (в последних оно даже никогда не писалось — мёртвый вес).
+// userId/userEmail хранятся как снимок, а не внешний ключ: User живёт в auth.db,
+// в другой базе, а кросс-базовые связи в этом проекте намеренно не делаются —
+// тот же принцип, что уже применялся к полю author в старом actionHistory.
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  actionId   String   // группирует несколько изменённых полей одного сохранения в одно действие
+  entityType String   // 'Lexeme' | 'Morpheme' | 'Candidate' | ...
+  entityId   Int
+  field      String
+  oldValue   String?
+  newValue   String?
+  userId     String?
+  userEmail  String
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@index([userId, createdAt])
+  @@index([actionId])
+  @@map("audit_logs")
 }
