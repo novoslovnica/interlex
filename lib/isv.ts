@@ -1,8 +1,29 @@
-export const isvToCyr = (text: string) => {
+export function normalizeSoftConsonants(text: string): string {
+  if (!text) return ""
+  return text
+    .replace(/[Ľľ](?=[ieęě])/g, (m) => m === 'Ľ' ? 'L' : 'l')
+    .replace(/[Ťť](?=[ieęě])/g, (m) => m === 'Ť' ? 'T' : 't')
+    .replace(/[Ďď](?=[ieęě])/g, (m) => m === 'Ď' ? 'D' : 'd')
+    .replace(/[Ňň](?=[ieęě])/g, (m) => m === 'Ň' ? 'N' : 'n')
+    .replace(/[Śś](?=[ieęě])/g, (m) => m === 'Ś' ? 'S' : 's')
+    .replace(/[Źź](?=[ieęě])/g, (m) => m === 'Ź' ? 'Z' : 'z')
+    .replace(/[Ćć](?=[ieęě])/g, (m) => m === 'Ć' ? 'Č' : 'č')
+    .replace(/[Đđ](?=[ieęě])/g, (m) => m === 'Đ' ? 'D' : 'd')
+}
+
+export function collapseDoubleJ(text: string): string {
+  if (!text) return ""
+  return text.replace(/jj/g, 'j').replace(/JJ/g, 'J')
+}
+
+export const isvToCyrOld = (text: string) => {
     if (!text) return "";
 
+    // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
+    const normalized = normalizeSoftConsonants(text);
+
     // Шаг 1: Замена лигатур и диграфов (Dž, Št, Ks)
-    const processed = text
+    const processed = normalized
         .replace(/Dž/g, 'Џ').replace(/dž/g, 'џ')
         .replace(/Št/g, 'Щ').replace(/št/g, 'щ');
         // .replace(/Ks/g, 'Ќ').replace(/ks/g, 'ќ')
@@ -20,13 +41,13 @@ export const isvToCyr = (text: string) => {
         'Z': 'З', 'z': 'з',
         'P': 'П', 'p': 'п',
         'F': 'Ф', 'f': 'ф',
-        'H': 'Х', 'h': 'х', // Исправлено 'h'
-        'K': 'К', 'k': 'к', // Исправлено 'k'
-        'T': 'Т', 't': 'т', // Исправлено 't' (теперь слово tělo обработается верно)
+        'H': 'Х', 'h': 'х',
+        'K': 'К', 'k': 'к',
+        'T': 'Т', 't': 'т',
         'Č': 'Ч', 'č': 'ч',
         'Š': 'Ш', 'š': 'ш',
-        'S': 'С', 's': 'с', // Исправлено 's'
-        'C': 'Ц', 'c': 'ц', // Исправлено 'c'
+        'S': 'С', 's': 'с',
+        'C': 'Ц', 'c': 'ц',
         'L': 'Л', 'l': 'л',
         'M': 'М', 'm': 'м',
         'N': 'Н', 'n': 'н',
@@ -44,9 +65,88 @@ export const isvToCyr = (text: string) => {
         'Y': 'Ы', 'y': 'ы',
 
         // Исторические и этимологические соответствия
-        'Ě': 'Ѣ', 'ě': 'ѣ', // Ять
-        'Ę': 'Ѧ', 'ę': 'ѧ', // Малый юс
-        'Ų': 'Ѫ', 'ų': 'ѫ', // Большой юс
+        'Ě': 'Ѣ', 'ě': 'ѣ',
+        'Ę': 'Ѧ', 'ę': 'ѧ',
+        'Ų': 'Ѫ', 'ų': 'ѫ',
+    };
+
+    let result = "";
+
+    // Шаг 3 (старый): Посимвольная сборка текста
+    for (let i = 0; i < processed.length; i++) {
+        let char = processed[i];
+
+        if (rules.hasOwnProperty(char)) {
+            result += rules[char];
+        } else {
+            result += char;
+        }
+    }
+
+    // Шаг 4 (старый): Пост-процессинг мягких согласных с ерь (ь)
+    result = result
+        .replace(/Ľ/g, 'ЛЬ').replace(/ľ/g, 'ль')
+        .replace(/Ť/g, 'ТЬ').replace(/ť/g, 'ть')
+        .replace(/Ď/g, 'ДЬ').replace(/ď/g, 'дь')
+        .replace(/Ň/g, 'НЬ').replace(/ň/g, 'нь')
+        .replace(/Ś/g, 'СЬ').replace(/ś/g, 'сь')
+        .replace(/Ź/g, 'ЗЬ').replace(/ź/g, 'зь')
+        .replace(/Ć/g, 'Ћ').replace(/ć/g, 'ћ')
+        .replace(/Đ/g, 'ДЬ').replace(/đ/g, 'дь');
+
+    return result;
+}
+
+export const isvToCyrNew = (text: string) => {
+    if (!text) return "";
+
+    // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
+    const normalized = normalizeSoftConsonants(text);
+
+    // Шаг 1: Замена лигатур и диграфов (Dž, Št, Ks)
+    const processed = normalized
+        .replace(/Dž/g, 'Џ').replace(/dž/g, 'џ')
+        .replace(/Št/g, 'Щ').replace(/št/g, 'щ');
+        // .replace(/Ks/g, 'Ќ').replace(/ks/g, 'ќ')
+        // .replace(/Ps/g, 'Ѱ').replace(/ps/g, 'ѱ');
+
+    // Шаг 2: Посимвольный маппинг всех букв.
+    const rules = {
+        'B': 'Б', 'b': 'б',
+        'V': 'В', 'v': 'в',
+        'G': 'Г', 'g': 'г',
+        'D': 'Д', 'd': 'д',
+        'Ž': 'Ж', 'ž': 'ж',
+        'Z': 'З', 'z': 'з',
+        'P': 'П', 'p': 'п',
+        'F': 'Ф', 'f': 'ф',
+        'H': 'Х', 'h': 'х',
+        'K': 'К', 'k': 'к',
+        'T': 'Т', 't': 'т',
+        'Č': 'Ч', 'č': 'ч',
+        'Š': 'Ш', 'š': 'ш',
+        'S': 'С', 's': 'с',
+        'C': 'Ц', 'c': 'ц',
+        'L': 'Л', 'l': 'л',
+        'M': 'М', 'm': 'м',
+        'N': 'Н', 'n': 'н',
+        'R': 'Р', 'r': 'р',
+
+        // Переход латинского j в кириллический йот і
+        'J': 'І', 'j': 'і',
+
+        // Базовые гласные
+        'A': 'А', 'a': 'а',
+        'E': 'Е', 'e': 'е',
+        'I': 'И', 'i': 'и',
+        'O': 'О', 'o': 'о',
+        'U': 'У', 'u': 'у',
+        'Y': 'Ы', 'y': 'ы',
+
+        // Исторические и этимологические соответствия
+        'Ě': 'Ѣ', 'ě': 'ѣ',
+        'Ę': 'Ѧ', 'ę': 'ѧ',
+        'Ų': 'Ѫ', 'ų': 'ѫ',
     };
 
     let result = "";
@@ -62,9 +162,21 @@ export const isvToCyr = (text: string) => {
         }
     }
 
-    // Возвращаем полностью готовую кириллицу новословницы
+    // Шаг 4: Пост-процессинг мягких согласных с йотом (і) вместо ерь (ь)
+    result = result
+        .replace(/Ľ/g, 'ЛІ').replace(/ľ/g, 'лі')
+        .replace(/Ť/g, 'ТІ').replace(/ť/g, 'ті')
+        .replace(/Ď/g, 'ДІ').replace(/ď/g, 'ді')
+        .replace(/Ň/g, 'НІ').replace(/ň/g, 'ні')
+        .replace(/Ś/g, 'СІ').replace(/ś/g, 'сі')
+        .replace(/Ź/g, 'ЗІ').replace(/ź/g, 'зі')
+        .replace(/Ć/g, 'Ћ').replace(/ć/g, 'ћ')
+        .replace(/Đ/g, 'ДІ').replace(/đ/g, 'ді');
+
     return result;
 }
+
+export const isvToCyr = isvToCyrOld;
 
 export const isvToTranscription = (etymologicalWord: string) => {
     if (!etymologicalWord) return "[]";
@@ -72,12 +184,24 @@ export const isvToTranscription = (etymologicalWord: string) => {
     // Приводим к нижнему регистру для упрощения разбора
     let str = etymologicalWord.toLowerCase().trim();
 
-    // 1. Предварительная замена сложных аффрикат и лигатур
+    // Нормализация мягких согласных перед i, e, ę, ě
+    str = normalizeSoftConsonants(str);
+
+    // 1. Предварительная замена сложных аффрикат, лигатур и мягких согласных
     str = str
         .replace(/dž/g, 'd͡ʒ')  // аффриката џ
         .replace(/št/g, 'ʃt')  // лигатура щ
         .replace(/č/g, 't͡ʃ')   // ч
-        .replace(/c/g, 't͡s');   // ц
+        .replace(/c/g, 't͡s')   // ц
+        // Мягкие согласные (оставшиеся после нормализации: перед a/o/u/ǫ и в конце слов)
+        .replace(/ľ/g, 'lʲ')
+        .replace(/ť/g, 'tʲ')
+        .replace(/ď/g, 'dʲ')
+        .replace(/ň/g, 'nʲ')
+        .replace(/ś/g, 'sʲ')
+        .replace(/ź/g, 'zʲ')
+        .replace(/ć/g, 'tɕ')
+        .replace(/đ/g, 'dʑ');
 
     // 2. Обработка простых шипящих
     str = str
@@ -135,8 +259,11 @@ export const isvToTranscription = (etymologicalWord: string) => {
 export const standardToSimple = (text: string) => {
     if (!text) return "";
 
+    // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
+    let normalized = normalizeSoftConsonants(text);
+
     // Шаг 1: Сжатие этимологических окончаний прилагательных на границах слов (-yj/-ij -> -y/-i)
-    let processed = text
+    let processed = normalized
         .replace(/yj(?![▲\p{L}])/gu, 'y')
         .replace(/ij(?![▲\p{L}])/gu, 'i')
         .replace(/YJ(?![▲\p{L}])/gu, 'Y')
@@ -180,6 +307,17 @@ export const standardToSimple = (text: string) => {
             result += char;
         }
     }
+
+    // Шаг 4: Упрощение оставшихся мягких согласных (перед a/o/u/ǫ, в конце слова, перед согласными)
+    result = result
+        .replace(/[Ľľ]/g, (m) => m === 'Ľ' ? 'L' : 'l')
+        .replace(/[Ťť]/g, (m) => m === 'Ť' ? 'T' : 't')
+        .replace(/[Ďď]/g, (m) => m === 'Ď' ? 'D' : 'd')
+        .replace(/[Ňň]/g, (m) => m === 'Ň' ? 'N' : 'n')
+        .replace(/[Śś]/g, (m) => m === 'Ś' ? 'S' : 's')
+        .replace(/[Źź]/g, (m) => m === 'Ź' ? 'Z' : 'z')
+        .replace(/[Ćć]/g, (m) => m === 'Ć' ? 'C' : 'c')
+        .replace(/[Đđ]/g, (m) => m === 'Đ' ? 'D' : 'd');
 
     return result;
 }
@@ -261,8 +399,11 @@ export const isvToGlagolitic = (text: string): string => {
 export const standardToSimpleCyr = (text: string) => {
     if (!text) return "";
 
+    // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
+    let normalized = normalizeSoftConsonants(text);
+
     // Шаг 1: Сжатие этимологических окончаний прилагательных на границах слов (-yj/-ij -> -ы/-и)
-    let processed = text
+    let processed = normalized
         .replace(/yj(?![▲\p{L}])/gu, 'ы')
         .replace(/ij(?![▲\p{L}])/gu, 'и')
         .replace(/YJ(?![▲\p{L}])/gu, 'Ы')
@@ -324,6 +465,17 @@ export const standardToSimpleCyr = (text: string) => {
             result += char;
         }
     }
+
+    // Шаг 5: Пост-процессинг оставшихся мягких согласных (ć→ч, đ→д, остальные →ль/ть/дь/нь/сь/зь)
+    result = result
+        .replace(/Ľ/g, 'ЛЬ').replace(/ľ/g, 'ль')
+        .replace(/Ť/g, 'ТЬ').replace(/ť/g, 'ть')
+        .replace(/Ď/g, 'ДЬ').replace(/ď/g, 'дь')
+        .replace(/Ň/g, 'НЬ').replace(/ň/g, 'нь')
+        .replace(/Ś/g, 'СЬ').replace(/ś/g, 'сь')
+        .replace(/Ź/g, 'ЗЬ').replace(/ź/g, 'зь')
+        .replace(/Ć/g, 'Ч').replace(/ć/g, 'ч')
+        .replace(/Đ/g, 'Д').replace(/đ/g, 'д');
 
     return result;
 }

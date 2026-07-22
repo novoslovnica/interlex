@@ -1,5 +1,6 @@
 import { PosType, isValidPos } from '@/lib/grammar/common';
 import { EngineWordInput, GeneratedForm } from '@/lib/grammar/morphology';
+import { normalizeSoftConsonants, collapseDoubleJ } from '@/lib/isv';
 import * as p from './processors';
 
 const ACCENT_CHARS = /[\u0300\u0301\u0302\u0311]/g;
@@ -43,9 +44,16 @@ export function generateWordForms(word: EngineWordInput, stripAccents?: boolean)
     };
 
     const forms = dispatch();
-    if (!stripAccents) return forms;
 
-    return forms.map(f => ({
+    // Нормализация мягких согласных перед i, e, ę, ě и схлопывание jj
+    const normalized = forms.map(f => ({
+        ...f,
+        surfaceForm: collapseDoubleJ(normalizeSoftConsonants(f.surfaceForm)),
+    }));
+
+    if (!stripAccents) return normalized;
+
+    return normalized.map(f => ({
         ...f,
         surfaceForm: stripCombiningAccents(f.surfaceForm),
     }));

@@ -10,6 +10,7 @@
       "transliterator": "Transliterator",
       "avatar": "Avatar",
       "settings": "Settings",
+      "profile": "Profile",
       "admin": "Admin (Thesaurus)",
       "adminPlatform": "Admin (Platform)",
       "adminCorpus": "Admin (Corpus)",

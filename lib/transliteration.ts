@@ -1,4 +1,4 @@
-import { isvToCyr, standardToSimple, standardToSimpleCyr } from "./isv"
+import { isvToCyrOld, standardToSimple, standardToSimpleCyr } from "./isv"
 import { mapNslToEtymologized, mapNslToStandard } from "./nsl"
 
 export type Script =
@@ -19,7 +19,7 @@ export const SCRIPT_LABELS: Record<Script, string> = {
 }
 
 function isCyrillic(text: string): boolean {
-  return /[а-яѢѣѦѧѪѫ]/i.test(text)
+  return /[а-яѢѣѦѧѪѫћЋ]/i.test(text)
 }
 
 export function detectScript(text: string): Script | null {
@@ -105,7 +105,7 @@ function etymLatToStdLat(text: string): string {
 
 function etymLatToStdCyr(text: string): string {
   if (!text) return ""
-  const cyr = isvToCyr(text)
+  const cyr = isvToCyrOld(text)
   return cyr
     .replace(/[ѢѦ]/g, 'Е').replace(/[ѣѧ]/g, 'е')
     .replace(/[Ѫ]/g, 'У').replace(/[ѫ]/g, 'у')
@@ -165,7 +165,7 @@ const TO_HUB: Record<Script, (text: string) => string> = {
 
 const FROM_HUB: Record<Script, (text: string) => string> = {
   etym_lat: (t) => t.toLowerCase(),
-  etym_cyr: isvToCyr,
+  etym_cyr: isvToCyrOld,
   std_lat: etymLatToStdLat,
   std_cyr: etymLatToStdCyr,
   simple_lat: standardToSimple,

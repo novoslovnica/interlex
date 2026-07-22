@@ -80,7 +80,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                         <ul className={`submenu ${userMenuOpen ? 'open' : ''}`}>
                             <li>
                                 <Link href="/profile" className="nav-link" onClick={closeAll}>
-                                    Profile
+                                    {t('profile')}
                                 </Link>
                             </li>
                             <li>
