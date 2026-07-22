@@ -193,7 +193,7 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
 
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
-                <span className="font-mono text-slate-400 text-lg">{transcription}</span>
+                <span className="font-ipa text-slate-400 text-lg">{transcription}</span>
                 <div className="flex items-center gap-2 ml-auto">
                     {item.cefrLevel && (
                         <span className={`text-xs font-bold px-2 py-1 rounded-full ${

@@ -1,6 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import React from "react";
@@ -22,6 +22,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const notoSans = Noto_Sans({
+  variable: "--font-ipa",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -56,7 +62,7 @@ export default async function RootLayout({
     return (
       <html
           lang={locale}
-          className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${notoSans.variable} h-full antialiased`}
           suppressHydrationWarning
       >
       <head>
