@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
+import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
 
 export async function POST(_request: NextRequest) {
   const session = await auth()
@@ -10,8 +11,16 @@ export async function POST(_request: NextRequest) {
   }
 
   try {
-    const result = await computeLexiconFrequencies()
-    return NextResponse.json({ ok: true, ...result })
+    const freqResult = await computeLexiconFrequencies()
+    const cefrResult = await computeCefrLevels()
+    return NextResponse.json({
+      ok: true,
+      updated: freqResult.updated,
+      totalTokens: freqResult.totalTokens,
+      zipfAlpha: freqResult.zipfAlpha,
+      cefrUpdated: cefrResult.updated,
+      cefrTotalLexemes: cefrResult.totalLexemes,
+    })
   } catch (error) {
     console.error("Frequency recomputation failed:", error)
     return NextResponse.json(

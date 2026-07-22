@@ -3705,6 +3705,9 @@ export const LexemeScalarFieldEnum = {
   corpusFrequencyPerMln: 'corpusFrequencyPerMln',
   corpusRank: 'corpusRank',
   corpusHapax: 'corpusHapax',
+  distributionD: 'distributionD',
+  usageScore: 'usageScore',
+  cefrLevel: 'cefrLevel',
   actionHistory: 'actionHistory'
 } as const
 

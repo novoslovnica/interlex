@@ -58,6 +58,11 @@ model Lexeme {
   corpusRank            Int?
   corpusHapax           Boolean?
 
+  // CEFR уровень и метрики распределения
+  distributionD         Float?    // Juilland's D coefficient (0.01–1.0)
+  usageScore            Float?    // usage_score = f_ipm × D × k_slav
+  cefrLevel             String?   // 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'
+
   // Обратные связи Prisma
   meanings        Meaning[]
   lexemes_morphemes LexemeMorpheme[]

@@ -194,7 +194,28 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
                 <span className="font-mono text-slate-400 text-lg">{transcription}</span>
-                <BookmarkButton wordId={item.id} className="ml-auto" />
+                <div className="flex items-center gap-2 ml-auto">
+                    {item.cefrLevel && (
+                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                            item.cefrLevel === 'A1' ? 'bg-green-100 text-green-700' :
+                            item.cefrLevel === 'A2' ? 'bg-emerald-100 text-emerald-700' :
+                            item.cefrLevel === 'B1' ? 'bg-blue-100 text-blue-700' :
+                            item.cefrLevel === 'B2' ? 'bg-indigo-100 text-indigo-700' :
+                            item.cefrLevel === 'C1' ? 'bg-purple-100 text-purple-700' :
+                            'bg-gray-100 text-gray-600'
+                        }`}>
+                            {item.cefrLevel}
+                        </span>
+                    )}
+                    {(item.corpusFrequency ?? 0) > 0 && (
+                        <span className="text-xs text-slate-500 font-mono whitespace-nowrap" title={`В корпусе: ${item.corpusFrequency} раз(а), ${item.corpusFrequencyPerMln?.toFixed(2)} ipm`}>
+                            {item.corpusFrequencyPerMln != null && item.corpusFrequencyPerMln > 0 && (
+                                `${(Math.log10(item.corpusFrequencyPerMln) + 3).toFixed(1)} Zipf`
+                            )}
+                        </span>
+                    )}
+                    <BookmarkButton wordId={item.id} />
+                </div>
             </header>
 
             <div className="bg-slate-50 p-4 rounded-lg mb-6 text-sm text-slate-700 space-y-2">

@@ -7,6 +7,8 @@ import { randomUUID } from "crypto"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 import { DbAnalyzer, WordBaseRecord } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
+import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
+import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
 
 async function buildValidEndings(): Promise<Set<string>> {
     const rows = await prismaData.endingAllophone.findMany({
@@ -142,9 +144,20 @@ export async function POST(request: NextRequest) {
             }
         })
 
+        triggerRecomputation()
+
         return NextResponse.json({ success: true, tokensProcessed: tokenInputs.length })
     } catch (error) {
         console.error("Failed to save corpus document:", error)
         return NextResponse.json({ error: "Failed to save document" }, { status: 500 })
+    }
+}
+
+async function triggerRecomputation(): Promise<void> {
+    try {
+        await computeLexiconFrequencies()
+        await computeCefrLevels()
+    } catch (e) {
+        console.error("Background recomputation after save failed:", e)
     }
 }

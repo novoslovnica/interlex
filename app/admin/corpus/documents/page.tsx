@@ -37,6 +37,13 @@ const CorpusDocumentsPageWrapper = async () => {
     ? new Date(freqConfig.value)
     : null
 
+  const cefrConfig = await prismaCorpus.corpusConfig.findUnique({
+    where: { key: "cefr_last_recalculated" },
+  })
+  const cefrLastRecalculated = cefrConfig?.value
+    ? new Date(cefrConfig.value)
+    : null
+
   const latestUpdatedAt = documents.reduce<Date | null>((latest, doc) => {
     if (!latest) return doc.updatedAt
     return doc.updatedAt > latest ? doc.updatedAt : latest
@@ -46,6 +53,7 @@ const CorpusDocumentsPageWrapper = async () => {
     <CorpusDocumentsPage
       documents={documents}
       freqLastRecalculated={freqLastRecalculated?.toISOString() ?? null}
+      cefrLastRecalculated={cefrLastRecalculated?.toISOString() ?? null}
       latestDocUpdatedAt={latestUpdatedAt?.toISOString() ?? null}
     />
   )

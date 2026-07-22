@@ -896,6 +896,7 @@ export const CorpusDocumentScalarFieldEnum = {
   author: 'author',
   rawText: 'rawText',
   language: 'language',
+  genre: 'genre',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   candidatesProcessed: 'candidatesProcessed'
