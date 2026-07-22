@@ -7,6 +7,8 @@ import { SynonymsClient } from "./synonyms-client"
 import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 import { buildEntry, append } from "@/lib/action-history"
+import { init } from "@/lib/sqlite"
+import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
 
 export const metadata: Metadata = {
   title: "Синонимы",
@@ -44,54 +46,46 @@ export default async function AdminSynonymsPage() {
           })).map(p => p.featureKey)
         : []
 
-    const initialWords = (await db.lexeme.findMany({
+    const rawWords = await db.lexeme.findMany({
         select: {
             id: true,
             value: true,
             meanings: {
-                select: {
-                    id: true,
-                    meaning: true,
-                    synonymsSource: {
-                        select: {
-                            id: true,
-                            proximity: true,
-                            target: {
-                                select: {
-                                    id: true,
-                                    meaning: true,
-                                    lexeme: {
-                                        select: { id: true, value: true }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+                select: { id: true, meaning: true },
+            },
         },
         orderBy: { value: "asc" },
         take: 30,
-    })) as WordItem[]
+    })
+
+    const dbSimple = await init()
+    const allMeaningIds = rawWords.flatMap((w) => w.meanings.map((m) => m.id))
+    const relationsByMeaning = fetchSymmetricRelations(dbSimple, "synonyms", allMeaningIds)
+
+    const initialWords: WordItem[] = rawWords.map((w) => ({
+        id: w.id,
+        value: w.value,
+        meanings: w.meanings.map((m) => ({
+            id: m.id,
+            meaning: m.meaning,
+            synonymsSource: (relationsByMeaning.get(m.id) || []).map((r) => ({
+                id: r.relationId,
+                proximity: r.proximity,
+                target: {
+                    id: r.otherMeaningId,
+                    meaning: r.otherMeaning,
+                    lexeme: { id: r.otherWordId ?? 0, value: r.otherWord },
+                },
+            })),
+        })),
+    }))
 
     async function updateSynonyms(sourceMeaningId: number, targetMeaningIds: number[]) {
         "use server"
 
         const author = session?.user?.email || "unknown"
 
-        await db.synonym.deleteMany({
-            where: { sourceId: sourceMeaningId }
-        })
-
-        if (targetMeaningIds.length > 0) {
-            await db.synonym.createMany({
-                data: targetMeaningIds.map((tId) => ({
-                    sourceId: sourceMeaningId,
-                    targetId: tId,
-                    proximity: 1.0,
-                }))
-            })
-        }
+        saveSymmetricRelation(dbSimple, "synonyms", sourceMeaningId, targetMeaningIds, 1.0)
 
         const meaning = await db.meaning.findUnique({
             where: { id: sourceMeaningId },

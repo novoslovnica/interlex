@@ -3,6 +3,7 @@
 .idea/
 slovnik*
 *.db
+*.db.*
 NOTES.md
 drafts/
 scripts/python/pdf/

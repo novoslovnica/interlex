@@ -1,4 +1,5 @@
 import {init} from "@/lib/sqlite";
+import {fetchSymmetricRelations} from "@/lib/relations";
 
 const getLang = async (lang: string, wordId: string) => {
   const db = await init();
@@ -36,34 +37,26 @@ export const getItem = async (id: string) => {
   let antonymsByMeaning: Record<number, any[]> = {};
 
   if (meaningIds.length > 0) {
-    const placeholders = meaningIds.map(() => '?').join(',');
-
-    const synonymRows = db.prepare(`
-      SELECT s.sourceId as sourceMeaningId, s.targetId as targetMeaningId,
-             m.meaning as targetMeaning, w.value as targetWord, w.id as targetWordId
-      FROM synonyms s
-      JOIN meanings m ON m.id = s.targetId
-      JOIN lexemes w ON w.id = m.lexemeId
-      WHERE s.sourceId IN (${placeholders})
-    `).all(...meaningIds) as any[];
-
-    for (const row of synonymRows) {
-      if (!synonymsByMeaning[row.sourceMeaningId]) synonymsByMeaning[row.sourceMeaningId] = [];
-      synonymsByMeaning[row.sourceMeaningId].push(row);
+    const synonymMap = fetchSymmetricRelations(db, 'synonyms', meaningIds);
+    for (const [meaningId, related] of synonymMap) {
+      synonymsByMeaning[meaningId] = related.map((r) => ({
+        sourceMeaningId: meaningId,
+        targetMeaningId: r.otherMeaningId,
+        targetMeaning: r.otherMeaning,
+        targetWord: r.otherWord,
+        targetWordId: r.otherWordId,
+      }));
     }
 
-    const antonymRows = db.prepare(`
-      SELECT a.sourceId as sourceMeaningId, a.targetId as targetMeaningId,
-             m.meaning as targetMeaning, w.value as targetWord, w.id as targetWordId
-      FROM antonyms a
-      JOIN meanings m ON m.id = a.targetId
-      JOIN lexemes w ON w.id = m.lexemeId
-      WHERE a.sourceId IN (${placeholders})
-    `).all(...meaningIds) as any[];
-
-    for (const row of antonymRows) {
-      if (!antonymsByMeaning[row.sourceMeaningId]) antonymsByMeaning[row.sourceMeaningId] = [];
-      antonymsByMeaning[row.sourceMeaningId].push(row);
+    const antonymMap = fetchSymmetricRelations(db, 'antonyms', meaningIds);
+    for (const [meaningId, related] of antonymMap) {
+      antonymsByMeaning[meaningId] = related.map((r) => ({
+        sourceMeaningId: meaningId,
+        targetMeaningId: r.otherMeaningId,
+        targetMeaning: r.otherMeaning,
+        targetWord: r.otherWord,
+        targetWordId: r.otherWordId,
+      }));
     }
   }
 

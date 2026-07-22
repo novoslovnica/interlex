@@ -11,6 +11,7 @@ import { init } from "@/lib/sqlite"
 import AdminNav from "@/components/AdminNav"
 import { RelationsTab } from "./_components/relations-tab"
 import { updateWord } from "@/lib/actions/word-actions"
+import { fetchSymmetricRelations } from "@/lib/relations"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -254,33 +255,22 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     { key: "premises", table: "premises" },
     { key: "conclusions", table: "conclusions" },
   ]
+  const meaningIds = (wordData.meanings || []).map((m) => m.id)
   const relationsByMeaning: Record<number, Record<string, any[]>> = {}
   for (const meaning of wordData.meanings || []) {
     relationsByMeaning[meaning.id] = {}
-    for (const t of ALL_TABLES) {
-      relationsByMeaning[meaning.id][t.key] = []
-    }
   }
   for (const { key, table } of ALL_TABLES) {
-    const rows = dbSimple.prepare(`
-      SELECT m.id AS meaningId, r.id AS relationId, r.targetId AS targetMeaningId, r.proximity,
-             t.meaning AS targetMeaning, tl.value AS targetWord, tl.id AS targetWordId
-      FROM meanings m
-      LEFT JOIN ${table} r ON r.sourceId = m.id
-      LEFT JOIN meanings t ON t.id = r.targetId
-      LEFT JOIN lexemes tl ON tl.id = t.lexemeId
-      WHERE m.lexemeId = ?
-    `).all(wordId) as any[]
-    for (const row of rows) {
-      if (row.relationId && relationsByMeaning[row.meaningId]) {
-        relationsByMeaning[row.meaningId][key].push({
-          id: row.relationId,
-          targetMeaningId: row.targetMeaningId,
-          targetMeaning: row.targetMeaning,
-          targetWordId: row.targetWordId,
-          targetWord: row.targetWord,
-        })
-      }
+    const relMap = fetchSymmetricRelations(dbSimple, table, meaningIds)
+    for (const meaning of wordData.meanings || []) {
+      const related = relMap.get(meaning.id) || []
+      relationsByMeaning[meaning.id][key] = related.map((r) => ({
+        id: r.relationId,
+        targetMeaningId: r.otherMeaningId,
+        targetMeaning: r.otherMeaning,
+        targetWordId: r.otherWordId,
+        targetWord: r.otherWord,
+      }))
     }
   }
 

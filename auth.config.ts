@@ -24,8 +24,11 @@ function verifyTelegramAuth(data: Record<string, any>, botToken: string): boolea
         .update(dataCheckString)
         .digest("hex");
 
-    // Хэш должен строго совпадать с тем, что прислал Telegram
-    return hmac === hash;
+    // Хэш должен строго совпадать с тем, что прислал Telegram (constant-time сравнение)
+    const hmacBuf = Buffer.from(hmac, "hex");
+    const hashBuf = Buffer.from(hash, "hex");
+    if (hmacBuf.length !== hashBuf.length) return false;
+    return crypto.timingSafeEqual(hmacBuf, hashBuf);
 }
 
 export default {

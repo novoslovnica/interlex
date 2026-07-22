@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@/auth"
 import { prismaData } from "@/lib/prisma"
+import { checkPermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 import { DbAnalyzer, WordBaseRecord } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 
@@ -107,6 +110,11 @@ async function getAnalyzer(): Promise<DbAnalyzer> {
 }
 
 export async function POST(request: NextRequest) {
+    const session = await auth()
+    if (!session || !(await checkPermission(session, Feature.CorpusBuilder))) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
     const { text } = await request.json()
     if (!text || typeof text !== "string") {
         return NextResponse.json({ error: "Text is required" }, { status: 400 })

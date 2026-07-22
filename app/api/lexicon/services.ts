@@ -39,19 +39,27 @@ export const getDictItems = async (
     let data: any[] = [];
 
     if (search) {
+        // lexemes_text/lexeme_allophones_text are FTS5 tables with a trigram tokenizer,
+        // which supports substring MATCH only for patterns of 3+ characters. Shorter
+        // queries fall back to a plain (parameterized) LIKE scan.
+        const useFts = search.length >= 3;
+        const searchOp = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
+        const searchParam = useFts
+            ? `"${search.replace(/"/g, '""')}"`
+            : `%${search.replace(/[%_]/g, '\\$&')}%`;
         const lexemeIds = db.prepare(`
             SELECT DISTINCT l.id FROM lexemes l
             WHERE (
-                l.id IN (SELECT ROWID FROM lexemes_text WHERE value LIKE '%${search}%')
+                l.id IN (SELECT ROWID FROM lexemes_text WHERE value ${searchOp})
                 OR EXISTS (
                     SELECT 1 FROM lexeme_allophones la
                     WHERE la.lexemeId = l.id
                     AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
                     AND la.type = 'standard'
-                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value LIKE '%${search}%')
+                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value ${searchOp})
                 )
             )
-        `).all() as { id: number }[];
+        `).all(searchParam, searchParam) as { id: number }[];
 
         const ids = lexemeIds.map(r => r.id);
         if (ids.length === 0) return [];

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { init } from "@/lib/sqlite"
+import { checkPermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
+import { saveSymmetricRelation } from "@/lib/relations"
 
 const TABLE_MAP: Record<string, string> = {
   synonyms: "synonyms",
@@ -16,9 +19,22 @@ const TABLE_MAP: Record<string, string> = {
   conclusions: "conclusions",
 }
 
+const FEATURE_MAP: Record<string, Feature> = {
+  synonyms: Feature.SynonymsEdit,
+  antonyms: Feature.AntonymsEdit,
+  hypernyms: Feature.HypernymsEdit,
+  hyponyms: Feature.HyponymsEdit,
+  meronyms: Feature.MeronymsEdit,
+  holonyms: Feature.HolonymsEdit,
+  "related-words": Feature.RelatedWordsEdit,
+  causes: Feature.CausesEdit,
+  effects: Feature.EffectsEdit,
+  premises: Feature.PremisesEdit,
+  conclusions: Feature.ConclusionsEdit,
+}
+
 export async function POST(request: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
   const body = await request.json()
   const { type, sourceMeaningId, targetMeaningIds } = body as {
@@ -28,21 +44,17 @@ export async function POST(request: Request) {
   }
 
   const tableName = TABLE_MAP[type]
-  if (!tableName) return NextResponse.json({ error: "Unknown type" }, { status: 400 })
+  const requiredFeature = FEATURE_MAP[type]
+  if (!tableName || !requiredFeature) return NextResponse.json({ error: "Unknown type" }, { status: 400 })
+
+  const allowed = (await checkPermission(session, requiredFeature)) || (await checkPermission(session, Feature.RelationsManage))
+  if (!allowed) return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+
   if (!sourceMeaningId) return NextResponse.json({ error: "Missing sourceMeaningId" }, { status: 400 })
 
   const db = await init()
 
-  const tx = db.transaction(() => {
-    db.prepare(`DELETE FROM ${tableName} WHERE sourceId = ?`).run(sourceMeaningId)
-    if (targetMeaningIds.length > 0) {
-      const insert = db.prepare(`INSERT INTO ${tableName} (sourceId, targetId) VALUES (?, ?)`)
-      for (const tId of targetMeaningIds) {
-        insert.run(sourceMeaningId, tId)
-      }
-    }
-  })
-  tx()
+  saveSymmetricRelation(db, tableName, sourceMeaningId, targetMeaningIds ?? [])
 
   return NextResponse.json({ success: true })
 }

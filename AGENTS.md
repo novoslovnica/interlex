@@ -36,18 +36,21 @@ Each word detail page displays:
 - **Cognate/word family** radar chart visualization
 - **Etymology links** to Wiktionary and Proto-Slavic ESSJa pages
 
+### Already Shipped (previously listed as roadmap — do not re-propose as new work)
+- **Word Frequency (Частотность):** `Lexeme.corpusFrequency`, `corpusFrequencyPerMln`, `corpusRank`, `corpusHapax`, plus `distributionD` (Juilland's D) and `cefrLevel` (A1–C2) already exist on the `Lexeme` model (`prisma/data.schema.prisma`) and are computed by `scripts/compute-lexicon-frequency.ts` / `lib/corpus/frequencies/`. Recomputation is exposed via `POST /api/admin/recompute-frequencies`.
+
 ### Future Roadmap & Upcoming Features (Keep in Mind During Dev)
 - **Data Visualization Graphs:** Engineering interactive UI elements such as **synonym clouds** and relational connection graphs to visually map semantic and structural word proximity.
 - **Semantic & Structural Similarity:** Introduction of vector embeddings or algorithmic scoring to determine similarity weights between words.
-- **Word Frequency (Частотность):** Integration of usage frequency metrics (corpus frequency counts from the library texts) to rank search results and prioritize learning modules.
 
 ---
 
 ## Tech Stack & Code Quality
 - **Framework:** Next.js 16 (App Router architecture).
 - **Language:** TypeScript 5 (strict mode). **Strict Rule:** Avoid `any` type completely. Use explicit interfaces or models (e.g., `Session | null` from `next-auth`).
-- **Authentication & Security:** NextAuth.js v5 (beta). Telegram (Credentials provider with HMAC-SHA256) + Yandex OAuth2 providers. Protect all `/admin` routes, API endpoints, and Server Actions with session verification checking specific user permission flags (RBAC).
-- **Database:** Dual SQLite databases — `auth.db` (authentication: User, Session, FeaturePermission, UserSettings) and `interlex.db` (lexical data: Lexeme, Meaning, Morpheme, relations, 16 language tables). Prisma 7 ORM with separate generated clients.
+- **Authentication & Security:** NextAuth.js v5 (beta). Telegram (Credentials provider with HMAC-SHA256, `crypto.timingSafeEqual` for constant-time comparison) + Yandex OAuth2 + Google OAuth2 providers (`auth.config.ts`). Protect all `/admin` routes, API endpoints, and Server Actions with session verification checking **the specific `Feature` permission flag for the action being performed** — checking session/role alone is not sufficient (`lib/permissions.ts`: `requireRole`/`requirePermission` for Server Components, `checkPermission` for API routes/Server Actions). There is no central `middleware.ts` — every route checks this by hand, so new routes must not skip it.
+- **Database:** Four SQLite databases, each with its own Prisma client and schema file — `auth.db` (`prisma/auth.schema.prisma`: User, Session, FeaturePermission, UserSettings), `interlex.db` (`prisma/data.schema.prisma`: Lexeme, Meaning, Morpheme, relations, 18 language tables, ProtoSlavicWord), `library.db` (`prisma/library.schema.prisma`: LibraryEntry), and `corpus.db` (`prisma/corpus.schema.prisma`: CorpusDocument/Segment/Sentence/Token). Prisma 7 ORM; clients exported as `prismaAuth`/`prismaData`/`prismaLibrary`/`prismaCorpus` from `lib/prisma.ts`. Never cross database boundaries in a single query/transaction.
+  - **⚠️ The actual `.db` files live at the project root** (`interlex.db`, `auth.db`, `library.db`, `corpus.db`), *not* inside `prisma/` — only the `*.schema.prisma` source files are under `prisma/`. Confirmed by `.env` (`DATA_DATABASE_URL="file:./interlex.db"`, etc.) and `.env.development`'s `SQLITE_DB`. Double-check `.env`/`.env.development` before writing any DB path in a script — don't assume `prisma/interlex.db` or similar.
 - **Styling:** Tailwind CSS 4 with CSS custom properties for theming (`@theme inline`), dark/light/system theme support via `next-themes`.
 - **Localization:** `next-intl` with cookie-based locale detection (isv/ru/en). Integrated `LanguageSwitcher` component.
 - **Data Fetching:** `@tanstack/react-query` for client-side data fetching.
@@ -64,13 +67,13 @@ Each word detail page displays:
 - **Interaction:** All mobile menu links must automatically close the drawer overlay on click (`setIsOpen(false)`).
 
 ### 2. Lexical Database Updates & Integrity
-- **Bidirectional Relations:** When creating or modifying lexemes in the Admin UI, updates to relations (Synonyms, Antonyms, Cognates) must maintain relational integrity in the database (e.g., linking Word A as a synonym to Word B should reflect bidirectionally if the schema requires it).
+- **Bidirectional Relations:** Relations (Synonyms, Antonyms, Cognates, and the 9 other relation tables) must maintain relational integrity — linking Word A as a synonym to Word B must reflect bidirectionally. **Fixed 2026-07-22** via `lib/relations.ts` (`fetchSymmetricRelations`/`saveSymmetricRelation`), which treats each table's `sourceId`/`targetId` as an unordered edge: reads match either column and writes diff-and-update the edge set instead of only ever touching `sourceId`. **Always use these two helpers for any new code that reads or writes the 11 relation tables** (synonyms, antonyms, hypernyms, hyponyms, meronyms, holonyms, related_words, causes, effects, premises, conclusions) — do not write a new one-off `WHERE sourceId = ?` query, that is exactly the pattern that caused the original bug.
 - **Extensible Schema:** Keep data structures flexible to easily accommodate future frequency indexes, data arrays for etymology, dictionary URLs, and node/edge weights for visualization graphs.
 - **Script-Aware Rendering:** All word displays must support Cyrillic/Latin toggling via ISV conversion functions.
 
 ### 3. Server/Client Component Architecture
 - **Pages** are server components that fetch session data; interactive features use `"use client"` components.
-- **Dual Database Access:** Auth queries use the `auth` Prisma client; lexical queries use the `data` Prisma client. Never cross database boundaries in a single query.
+- **Multi-Database Access:** Auth queries use the `prismaAuth` client; lexical queries use `prismaData`; library texts use `prismaLibrary`; corpus data uses `prismaCorpus`. Never cross database boundaries in a single query/transaction.
 
 ---
 
@@ -133,9 +136,21 @@ Populated from `ending_allophones` table (seeded by `scripts/db/seed-endings.ts`
 - `lib/corpus/tokenizer/types.ts` — `MorphoAnalysis` with `flavor` field
 - `lib/corpus/tokenizer/morphology.ts` — Static fallback analyzer (used when DbAnalyzer returns null)
 - `lib/corpus/tokenizer/index.ts` — Exports (does NOT export `createBaseQuery`)
-- `app/api/corpus/analyze/route.ts` — API endpoint with lazy `getAnalyzer()` singleton
-- `app/api/corpus/save/route.ts` — Save endpoint with lazy `analyzerPromise`
-- `scripts/db/seed-endings.ts` — Seed script for `ending_allophones` table
+- `app/api/corpus/analyze/route.ts` — API endpoint with lazy `getAnalyzer()` singleton; now requires `Feature.CorpusBuilder` (fixed 2026-07-22, was unauthenticated)
+- `app/api/corpus/save/route.ts` — Save endpoint with lazy `analyzerPromise`; requires `Feature.CorpusBuilder`
+- `scripts/db/seed-endings.ts` — Seed script for `ending_allophones` table. **Note:** currently copies values straight out of the hardcoded registries below, so it seeds the same Proto-Slavic forms rather than corrected ones — the "override" layer in `endingLoader.ts` gives full matrix coverage but zero content correction
 - `lib/grammar/morphology/engine.ts` — `generateWordForms()`, `stripCombiningAccents()`
 - `lib/grammar/endingsRegistry.ts` — Proto-Slavic noun endings registry
 - `lib/grammar/adjective/index.ts` — Adjective endings registry
+
+---
+
+## Security & Data-Integrity Audit (2026-07-22)
+
+A full audit found and fixed the following (Phase 1 — see [ARCHITECTURE.md](ARCHITECTURE.md) "Known Issues & Technical Debt" for the complete list including still-open items like the grammar engine ending bug, non-bidirectional relations, missing DB indexes, and lack of test coverage):
+- SQL injection in `app/api/lexicon/services.ts` search (was string-interpolated, now parameterized).
+- Missing permission check on `POST /api/word-relations/save` (was session-only; now checks the relation-specific `Feature`).
+- Unauthenticated `POST /api/synonyms/second-level` and `POST /api/corpus/analyze` (now require a session / `Feature.CorpusBuilder`).
+- Non-constant-time HMAC comparison in Telegram auth (`auth.config.ts`, now uses `crypto.timingSafeEqual`).
+
+When adding new API routes that mutate lexical or relation data, follow the pattern in `app/api/roots/[id]/route.ts` or `app/api/endings/route.ts`: `auth()` + `checkPermission(session, Feature.X)` returning `403`, not just a session-presence check.

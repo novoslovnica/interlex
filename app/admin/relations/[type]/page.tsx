@@ -9,6 +9,7 @@ import type { Metadata } from "next"
 import { buildEntry, append } from "@/lib/action-history"
 import { RELATION_CONFIG, isValidRelationType, type RelationType } from "../relation-config"
 import { init } from "@/lib/sqlite"
+import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }): Promise<Metadata> {
   const { type } = await params
@@ -58,45 +59,37 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
     : []
 
   const dbSimple = await init()
-  const rows = dbSimple.prepare(`
-    SELECT l.id AS wordId, l.value AS wordValue,
-           m.id AS meaningId, m.meaning AS meaningText,
-           r.id AS relationId, r.targetId AS targetMeaningId, r.proximity,
-           t.meaning AS targetMeaning, tl.value AS targetWord, tl.id AS targetWordId
+  const baseRows = dbSimple.prepare(`
+    SELECT l.id AS wordId, l.value AS wordValue, m.id AS meaningId, m.meaning AS meaningText
     FROM lexemes l
     JOIN meanings m ON m.lexemeId = l.id
-    LEFT JOIN ${cfg.tableName} r ON r.sourceId = m.id
-    LEFT JOIN meanings t ON t.id = r.targetId
-    LEFT JOIN lexemes tl ON tl.id = t.lexemeId
     ORDER BY l.value ASC
     LIMIT 30
-  `).all() as any[]
+  `).all() as { wordId: number; wordValue: string | null; meaningId: number; meaningText: string | null }[]
 
   const wordMap = new Map<number, WordItem>()
-  for (const row of rows) {
+  const meaningIds: number[] = []
+  for (const row of baseRows) {
     if (!wordMap.has(row.wordId)) {
-      wordMap.set(row.wordId, {
-        id: row.wordId,
-        value: row.wordValue,
-        meanings: [],
-      })
+      wordMap.set(row.wordId, { id: row.wordId, value: row.wordValue, meanings: [] })
     }
-    const word = wordMap.get(row.wordId)!
-    let meaning = word.meanings.find((m: any) => m.id === row.meaningId)
-    if (!meaning) {
-      meaning = { id: row.meaningId, meaning: row.meaningText, relations: [] }
-      word.meanings.push(meaning)
-    }
-    if (row.relationId) {
-      meaning.relations.push({
-        id: row.relationId,
-        proximity: row.proximity,
+    wordMap.get(row.wordId)!.meanings.push({ id: row.meaningId, meaning: row.meaningText, relations: [] })
+    meaningIds.push(row.meaningId)
+  }
+
+  const relationsByMeaning = fetchSymmetricRelations(dbSimple, cfg.tableName, meaningIds)
+  for (const word of wordMap.values()) {
+    for (const meaning of word.meanings) {
+      const related = relationsByMeaning.get(meaning.id) || []
+      meaning.relations = related.map((r) => ({
+        id: r.relationId,
+        proximity: r.proximity,
         target: {
-          id: row.targetMeaningId,
-          meaning: row.targetMeaning,
-          lexeme: { id: row.targetWordId, value: row.targetWord },
+          id: r.otherMeaningId,
+          meaning: r.otherMeaning,
+          lexeme: { id: r.otherWordId ?? 0, value: r.otherWord },
         },
-      })
+      }))
     }
   }
   const initialWords = Array.from(wordMap.values())
@@ -106,17 +99,7 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
 
     const author = session?.user?.email || "unknown"
 
-    dbSimple.prepare(`DELETE FROM ${cfg.tableName} WHERE sourceId = ?`).run(sourceMeaningId)
-
-    if (targetMeaningIds.length > 0) {
-      const insert = dbSimple.prepare(`INSERT INTO ${cfg.tableName} (sourceId, targetId, proximity) VALUES (?, ?, ?)`)
-      const insertMany = dbSimple.transaction((ids: number[]) => {
-        for (const tId of ids) {
-          insert.run(sourceMeaningId, tId, 1.0)
-        }
-      })
-      insertMany(targetMeaningIds)
-    }
+    saveSymmetricRelation(dbSimple, cfg.tableName, sourceMeaningId, targetMeaningIds, 1.0)
 
     const meaning = await db.meaning.findUnique({
       where: { id: sourceMeaningId },

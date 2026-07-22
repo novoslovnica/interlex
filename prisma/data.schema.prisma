@@ -72,6 +72,7 @@ model Lexeme {
 
   @@map("lexemes")
   @@index([slug])
+  @@index([value])
 }
 
 model Candidate {
@@ -202,6 +203,7 @@ model Meaning {
   synsets  MeaningSynset[]
 
   @@map("meanings")
+  @@index([lexemeId])
 }
 
 model Morpheme {
@@ -290,6 +292,8 @@ model Synonym {
   target    Meaning? @relation("SynonymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("synonyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Antonym {
@@ -302,6 +306,8 @@ model Antonym {
   target    Meaning? @relation("AntonymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("antonyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 // Семантические отношения из RuWordNet (гиперонимы, гипонимы, меронимы, холонимы, связанные, причинно-следственные)
@@ -316,6 +322,8 @@ model Hypernym {
   target    Meaning? @relation("HypernymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("hypernyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Hyponym {
@@ -328,6 +336,8 @@ model Hyponym {
   target    Meaning? @relation("HyponymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("hyponyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Meronym {
@@ -340,6 +350,8 @@ model Meronym {
   target    Meaning? @relation("MeronymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("meronyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Holonym {
@@ -352,6 +364,8 @@ model Holonym {
   target    Meaning? @relation("HolonymTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("holonyms")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model RelatedWord {
@@ -364,6 +378,8 @@ model RelatedWord {
   target    Meaning? @relation("RelatedWordTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("related_words")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Cause {
@@ -376,6 +392,8 @@ model Cause {
   target    Meaning? @relation("CauseTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("causes")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Effect {
@@ -388,6 +406,8 @@ model Effect {
   target    Meaning? @relation("EffectTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("effects")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Premise {
@@ -400,6 +420,8 @@ model Premise {
   target    Meaning? @relation("PremiseTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("premises")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 model Conclusion {
@@ -412,6 +434,8 @@ model Conclusion {
   target    Meaning? @relation("ConclusionTarget", fields: [targetId], references: [id], onDelete: Cascade)
 
   @@map("conclusions")
+  @@index([sourceId])
+  @@index([targetId])
 }
 
 // Динамические таблицы языков, преобразованные в схемы Prisma
@@ -431,6 +455,8 @@ model En {
   message       String?
 
   @@map("en")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Ru {
@@ -449,6 +475,8 @@ model Ru {
   message       String?
 
   @@map("ru")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Mk {
@@ -466,6 +494,8 @@ model Mk {
   message       String?
 
   @@map("mk")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Sr {
@@ -483,6 +513,8 @@ model Sr {
   message       String?
 
   @@map("sr")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Uk {
@@ -500,6 +532,8 @@ model Uk {
   message       String?
 
   @@map("uk")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Bg {
@@ -517,6 +551,8 @@ model Bg {
   message       String?
 
   @@map("bg")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Pl {
@@ -534,6 +570,8 @@ model Pl {
   message       String?
 
   @@map("pl")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Be {
@@ -551,6 +589,8 @@ model Be {
   message       String?
 
   @@map("be")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Cs {
@@ -568,6 +608,8 @@ model Cs {
   message       String?
 
   @@map("cs")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Sk {
@@ -585,6 +627,8 @@ model Sk {
   message       String?
 
   @@map("sk")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Sl {
@@ -602,6 +646,8 @@ model Sl {
   message       String?
 
   @@map("sl")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Hr {
@@ -619,6 +665,8 @@ model Hr {
   message       String?
 
   @@map("hr")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Cu {
@@ -636,6 +684,8 @@ model Cu {
   message       String?
 
   @@map("cu")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model De {
@@ -653,6 +703,8 @@ model De {
   message       String?
 
   @@map("de")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Nl {
@@ -670,6 +722,8 @@ model Nl {
   message       String?
 
   @@map("nl")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Eo {
@@ -687,6 +741,8 @@ model Eo {
   message       String?
 
   @@map("eo")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Hsb {
@@ -704,6 +760,8 @@ model Hsb {
   message       String?
 
   @@map("hsb")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 model Dsb {
@@ -721,6 +779,8 @@ model Dsb {
   message       String?
 
   @@map("dsb")
+  @@index([wordId])
+  @@index([meaningId])
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)
