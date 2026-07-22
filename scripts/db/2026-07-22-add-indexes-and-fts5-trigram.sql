@@ -1,3 +1,17 @@
+-- ⚠ SUPERSEDED for the FTS5 section — use 2026-07-22-add-indexes-and-fts5-trigram.ts
+-- instead (`npx tsx scripts/db/2026-07-22-add-indexes-and-fts5-trigram.ts`).
+-- On at least one production host, the system `sqlite3` CLI's bundled SQLite
+-- does not include the FTS5 trigram tokenizer (even though the Next.js app's
+-- own better-sqlite3 dependency does), so running this .sql file via
+-- `sqlite3 db < file.sql` fails partway through with "no such tokenizer:
+-- trigram" — and because DROP TABLE for lexemes_text/lexeme_allophones_text
+-- runs before the failing CREATE, it can leave those tables MISSING, breaking
+-- lexicon search until scripts/db/2026-07-22-emergency-restore-fts5.sql is run.
+-- The .ts version probes for trigram support before touching anything and
+-- uses the exact SQLite build the app itself runs on, so it doesn't have this
+-- failure mode. The indexes section of this file is unaffected and still
+-- safe to run via either this .sql file or the .ts script.
+--
 -- Additive, idempotent — safe to run multiple times against the live interlex.db.
 --
 -- Applies the Phase 2 lexicon audit work (2026-07-22):
