@@ -1,4 +1,4 @@
-export const APP_VERSION = "4.3"
+export const APP_VERSION = "4.4"
 
 export interface ChangelogEntry {
   version: string
@@ -66,6 +66,22 @@ export const CHANGELOG: ChangelogEntry[] = [
       { isv: "Načalo napolnjenja korpusa tekstami", ru: "Начало наполнения корпуса текстами" },
       { isv: "Video (YouTube) v tekstah biblioteky", ru: "Отображение видео (YouTube) в текстах библиотеки" },
       { isv: "Vlastny imena s velikoj bukvy (kapitalizacija)", ru: "Отображение собственных имён с большой буквы" },
+      { isv: "Korekcija pravopisanja i variativnyje formy", ru: "Коррекция правописания и вариативные формы" },
+      { isv: "CEFR-level i častotnost slov", ru: "Уровень CEFR и частотность слов" },
+      { isv: "Gramatičeskoje razměčanje korpusnyh tekstov (POS-tagging, lemmatizacija)", ru: "Грамматическая разметка корпусных текстов (POS-теггинг, лемматизация)" },
+      { isv: "Eksport korpusnyh tekstov v standardě TEI", ru: "Экспорт корпусных текстов в стандарте TEI" },
+      { isv: "Flavorizacija pri generaciji fleksij i morfem", ru: "Поддержка флаворизации при генерации флексий и морфем" },
+    ],
+  },
+  {
+    version: "4.4",
+    date: "2026-07",
+    title: "Ispravlenje ošibok i poliruvka / Исправление ошибок и шлифовка",
+    titleIsv: "Poliruvka platformy",
+    features: [
+      { isv: "Ispravlenje ošibok i optimizacija raboty", ru: "Исправление ошибок и оптимизация работы" },
+      { isv: "Obogačenje tezaurusa (sinonimy, antonimy, rodstvennyje slova)", ru: "Улучшение тезауруса (синонимы, антонимы, родственные слова)" },
+      { isv: "Poliruvka morfemizatora (razbora slov na morfemy)", ru: "Улучшение работы морфемизатора (разбора слов на морфемы)" },
     ],
   },
 ]
