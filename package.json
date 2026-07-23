@@ -17,6 +17,7 @@
     "db:gen-corpus": "cross-env DB_TYPE=corpus prisma generate",
     "compute:frequency": "npx tsx scripts/compute-lexicon-frequency.ts",
     "upload:ruwordnet": "npx tsx scripts/db/upload-ruwordnet.ts",
+    "dedup:nsl-external": "npx tsx scripts/db/dedup-merge-nsl-external.ts",
     "db:migrate-auth": "cross-env DB_TYPE=auth prisma migrate dev",
     "db:migrate-data": "cross-env DB_TYPE=data prisma migrate dev",
     "db:migrate-library": "cross-env DB_TYPE=library prisma migrate dev",

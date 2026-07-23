@@ -411,6 +411,7 @@ export const ModelName = {
   Eo: 'Eo',
   Hsb: 'Hsb',
   Dsb: 'Dsb',
+  Translation: 'Translation',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2437,6 +2438,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Translation: {
+      payload: Prisma.$TranslationPayload<ExtArgs>
+      fields: Prisma.TranslationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TranslationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TranslationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        findFirst: {
+          args: Prisma.TranslationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TranslationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        findMany: {
+          args: Prisma.TranslationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>[]
+        }
+        create: {
+          args: Prisma.TranslationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        createMany: {
+          args: Prisma.TranslationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TranslationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>[]
+        }
+        delete: {
+          args: Prisma.TranslationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        update: {
+          args: Prisma.TranslationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        deleteMany: {
+          args: Prisma.TranslationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TranslationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TranslationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>[]
+        }
+        upsert: {
+          args: Prisma.TranslationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationPayload>
+        }
+        aggregate: {
+          args: Prisma.TranslationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTranslation>
+        }
+        groupBy: {
+          args: Prisma.TranslationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TranslationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TranslationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TranslationCountAggregateOutputType> | number
+        }
+      }
+    }
     BaseHomonym: {
       payload: Prisma.$BaseHomonymPayload<ExtArgs>
       fields: Prisma.BaseHomonymFieldRefs
@@ -3562,6 +3637,21 @@ export const DsbScalarFieldEnum = {
 export type DsbScalarFieldEnum = (typeof DsbScalarFieldEnum)[keyof typeof DsbScalarFieldEnum]
 
 
+export const TranslationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  language: 'language',
+  value: 'value',
+  veryfied: 'veryfied',
+  message: 'message',
+  meaningId: 'meaningId',
+  legacyWordId: 'legacyWordId'
+} as const
+
+export type TranslationScalarFieldEnum = (typeof TranslationScalarFieldEnum)[keyof typeof TranslationScalarFieldEnum]
+
+
 export const BaseHomonymScalarFieldEnum = {
   id: 'id',
   base: 'base',
@@ -3856,6 +3946,7 @@ export type GlobalOmitConfig = {
   eo?: Prisma.EoOmit
   hsb?: Prisma.HsbOmit
   dsb?: Prisma.DsbOmit
+  translation?: Prisma.TranslationOmit
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit

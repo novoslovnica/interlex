@@ -184,6 +184,11 @@ model Meaning {
   // экспонентом одного из ~64 семантических праймов
   primeExponents PrimeExponent[]
 
+  // Консолидированная таблица переводов (2026-07-23), заменяет собой
+  // en_word/en_mean...dsb_word/dsb_mean выше для новых данных — см. AGENTS.md.
+  // Старые 18 таблиц пока не удалены.
+  translations Translation[] @relation("TranslationMeaning")
+
   @@map("meanings")
   @@index([lexemeId])
 }
@@ -588,6 +593,36 @@ model Dsb {
   @@map("dsb")
   @@index([wordId])
   @@index([meaningId])
+}
+
+// Консолидированная таблица переводов (2026-07-23) — заменяет 18 таблиц выше
+// (En...Dsb) для новых данных, см. AGENTS.md. Старые 18 таблиц пока не удалены.
+//
+// legacyWordId — архивная копия старого wordId. Тот столбец по схеме должен
+// был указывать на Meaning, но по факту хранил Lexeme.id и уже расходился с
+// реальной лексемой для 93% строк hsb/dsb (и части en/ru/mk/sr/bg) на живых
+// данных — НЕ используется ни в одном запросе, только для истории/отката.
+// "Все переводы лексемы X" получаются через meaningId -> Meaning.lexemeId.
+model Translation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  language  String
+  value     String?
+  veryfied  Int?
+  message   String?
+
+  meaningId Int?
+  meaning   Meaning? @relation("TranslationMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
+
+  legacyWordId Int?
+
+  @@map("translations")
+  @@index([meaningId])
+  @@index([meaningId, veryfied])
+  @@index([language, meaningId])
+  @@index([language, veryfied])
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)

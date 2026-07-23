@@ -177,6 +177,11 @@ export type Hsb = Prisma.HsbModel
  */
 export type Dsb = Prisma.DsbModel
 /**
+ * Model Translation
+ * 
+ */
+export type Translation = Prisma.TranslationModel
+/**
  * Model BaseHomonym
  * 
  */
