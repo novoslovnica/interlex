@@ -9,7 +9,13 @@ import type { Metadata } from "next"
 import { logAudit } from "@/lib/audit-log"
 import { RELATION_CONFIG, isValidRelationType, type RelationType } from "../relation-config"
 import { init } from "@/lib/sqlite"
-import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
+import {
+  fetchSymmetricSemanticRelations,
+  saveSymmetricSemanticRelation,
+  fetchOutgoingSemanticRelations,
+  fetchIncomingSemanticRelations,
+  saveDirectionalSemanticRelation,
+} from "@/lib/relations"
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }): Promise<Metadata> {
   const { type } = await params
@@ -44,12 +50,11 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
   if (!isValidRelationType(type)) redirect("/admin")
 
   const cfg = RELATION_CONFIG[type]
-  const featureKey = cfg.featureKey as keyof typeof Feature
 
   const session = await auth()
   if (!session) redirect("/unauthorized")
 
-  await requirePermission(session, (Feature as any)[featureKey])
+  await requirePermission(session, cfg.featureKey as Feature)
 
   const userPermissions = session.user.role === "MODERATOR"
     ? (await dbAuth.featurePermission.findMany({
@@ -77,7 +82,11 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
     meaningIds.push(row.meaningId)
   }
 
-  const relationsByMeaning = fetchSymmetricRelations(dbSimple, cfg.tableName, meaningIds)
+  const relationsByMeaning = cfg.direction === "outgoing"
+    ? fetchOutgoingSemanticRelations(dbSimple, cfg.relationType, meaningIds)
+    : cfg.direction === "incoming"
+      ? fetchIncomingSemanticRelations(dbSimple, cfg.relationType, meaningIds)
+      : fetchSymmetricSemanticRelations(dbSimple, cfg.relationType, meaningIds)
   for (const word of wordMap.values()) {
     for (const meaning of word.meanings) {
       const related = relationsByMeaning.get(meaning.id) || []
@@ -97,7 +106,11 @@ export default async function AdminRelationsPage({ params }: { params: Promise<{
   async function updateRelations(sourceMeaningId: number, targetMeaningIds: number[]) {
     "use server"
 
-    saveSymmetricRelation(dbSimple, cfg.tableName, sourceMeaningId, targetMeaningIds, 1.0)
+    if (cfg.direction === "outgoing" || cfg.direction === "incoming") {
+      saveDirectionalSemanticRelation(dbSimple, cfg.relationType, sourceMeaningId, cfg.direction, targetMeaningIds, 1.0)
+    } else {
+      saveSymmetricSemanticRelation(dbSimple, cfg.relationType, sourceMeaningId, targetMeaningIds, 1.0)
+    }
 
     const meaning = await db.meaning.findUnique({
       where: { id: sourceMeaningId },

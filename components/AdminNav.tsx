@@ -48,8 +48,14 @@ const navItems: NavEntry[] = [
             { href: "/admin/relations/effects", label: "Следствия", roles: ["ADMIN", "MODERATOR"], feature: Feature.EffectsEdit },
             { href: "/admin/relations/premises", label: "Предпосылки", roles: ["ADMIN", "MODERATOR"], feature: Feature.PremisesEdit },
             { href: "/admin/relations/conclusions", label: "Заключения", roles: ["ADMIN", "MODERATOR"], feature: Feature.ConclusionsEdit },
+            { href: "/admin/relations/pos-synonyms", label: "Кросс-частеречные синонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.PosSynonymsEdit },
+            { href: "/admin/relations/instance-of", label: "Экземпляр класса", roles: ["ADMIN", "MODERATOR"], feature: Feature.InstanceOfEdit },
+            { href: "/admin/relations/instances", label: "Экземпляры класса", roles: ["ADMIN", "MODERATOR"], feature: Feature.InstancesEdit },
+            { href: "/admin/relations/derivation-targets", label: "Дериваты", roles: ["ADMIN", "MODERATOR"], feature: Feature.DerivationTargetsEdit },
+            { href: "/admin/relations/derivation-sources", label: "Источники деривации", roles: ["ADMIN", "MODERATOR"], feature: Feature.DerivationSourcesEdit },
         ],
     },
+    { href: "/admin/primes", label: "Праймы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SemanticPrimesManage },
     { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
     { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
@@ -79,13 +85,15 @@ function DropdownGroup({ group, userRole, userPermissions }: { group: NavGroup; 
     const pathname = usePathname()
     const [open, setOpen] = useState(false)
     const btnRef = useRef<HTMLButtonElement>(null)
+    const menuRef = useRef<HTMLDivElement>(null)
     const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({})
 
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
-            if (btnRef.current && !btnRef.current.contains(e.target as Node)) {
-                setOpen(false)
-            }
+            const target = e.target as Node
+            if (btnRef.current?.contains(target)) return
+            if (menuRef.current?.contains(target)) return
+            setOpen(false)
         }
         document.addEventListener("mousedown", handleClickOutside)
         return () => document.removeEventListener("mousedown", handleClickOutside)
@@ -121,7 +129,13 @@ function DropdownGroup({ group, userRole, userPermissions }: { group: NavGroup; 
                 </svg>
             </button>
             {open && createPortal(
-                <div style={menuStyle} className="bg-background border rounded-lg shadow-lg py-1 z-50">
+                <div
+                    ref={menuRef}
+                    style={menuStyle}
+                    className="bg-background border rounded-lg shadow-lg py-1 z-50"
+                    onMouseEnter={() => setOpen(true)}
+                    onMouseLeave={() => setOpen(false)}
+                >
                     {group.children.map(child => {
                         if (!hasAccess(child, userRole, userPermissions)) return null
                         const isActive = pathname === child.href

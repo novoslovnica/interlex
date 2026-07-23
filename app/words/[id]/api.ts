@@ -1,5 +1,5 @@
 import {init} from "@/lib/sqlite";
-import {fetchSymmetricRelations} from "@/lib/relations";
+import {fetchSymmetricSemanticRelations} from "@/lib/relations";
 
 const getLang = async (lang: string, wordId: string) => {
   const db = await init();
@@ -37,7 +37,7 @@ export const getItem = async (id: string) => {
   let antonymsByMeaning: Record<number, any[]> = {};
 
   if (meaningIds.length > 0) {
-    const synonymMap = fetchSymmetricRelations(db, 'synonyms', meaningIds);
+    const synonymMap = fetchSymmetricSemanticRelations(db, 'synonym', meaningIds);
     for (const [meaningId, related] of synonymMap) {
       synonymsByMeaning[meaningId] = related.map((r) => ({
         sourceMeaningId: meaningId,
@@ -48,7 +48,7 @@ export const getItem = async (id: string) => {
       }));
     }
 
-    const antonymMap = fetchSymmetricRelations(db, 'antonyms', meaningIds);
+    const antonymMap = fetchSymmetricSemanticRelations(db, 'antonym', meaningIds);
     for (const [meaningId, related] of antonymMap) {
       antonymsByMeaning[meaningId] = related.map((r) => ({
         sourceMeaningId: meaningId,

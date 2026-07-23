@@ -51,6 +51,16 @@ export enum SystemFeature {
 
     // Конструктор корпуса
     CorpusBuilder = "corpus_builder",
+
+    // Консолидированная семантическая сеть (2026-07-23) — новые типы отношений
+    PosSynonymsEdit = "pos_synonyms_edit",
+    InstanceOfEdit = "instance_of_edit",
+    InstancesEdit = "instances_edit",
+    DerivationTargetsEdit = "derivation_targets_edit",
+    DerivationSourcesEdit = "derivation_sources_edit",
+
+    // NSM-семантические праймы
+    SemanticPrimesManage = "semantic_primes_manage",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -298,6 +308,40 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
         label: "Конструктор корпуса",
         description: "Разметка текстов и сохранение в корпус",
         category: "Корпус",
+    },
+
+    // Консолидированная семантическая сеть — новые типы отношений
+    [SystemFeature.PosSynonymsEdit]: {
+        label: "Управление кросс-частеречными синонимами",
+        description: "Слова разных частей речи с общим корневым значением (напр. решение↔решать)",
+        category: "Семантика",
+    },
+    [SystemFeature.InstanceOfEdit]: {
+        label: "Управление instance-of (экземпляр→класс)",
+        description: "Чем это значение является экземпляром (напр. Москва — экземпляр города)",
+        category: "Семантика",
+    },
+    [SystemFeature.InstancesEdit]: {
+        label: "Управление instance-of (класс→экземпляры)",
+        description: "Какие значения являются экземплярами этого класса",
+        category: "Семантика",
+    },
+    [SystemFeature.DerivationTargetsEdit]: {
+        label: "Управление деривацией (что образовано от этого)",
+        description: "Словообразовательные производные от данного значения",
+        category: "Семантика",
+    },
+    [SystemFeature.DerivationSourcesEdit]: {
+        label: "Управление деривацией (от чего образовано это)",
+        description: "От каких значений словообразовательно произведено данное",
+        category: "Семантика",
+    },
+
+    // NSM-семантические праймы
+    [SystemFeature.SemanticPrimesManage]: {
+        label: "Управление экспонентами праймов",
+        description: "Привязка межславянских значений к семантическим праймам NSM",
+        category: "Семантика",
     },
 };
 

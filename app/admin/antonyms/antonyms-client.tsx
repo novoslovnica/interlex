@@ -12,6 +12,20 @@ interface SimpleMeaning {
     }
 }
 
+interface TargetMeaning {
+    id: number
+    meaning: string | null
+    lexeme: { id: number; value: string | null }
+}
+
+function toSimpleMeaning(t: TargetMeaning): SimpleMeaning {
+    return { id: t.id, meaning: t.meaning, word: { id: t.lexeme.id, value: t.lexeme.value } }
+}
+
+function toTargetMeaning(s: SimpleMeaning): TargetMeaning {
+    return { id: s.id, meaning: s.meaning, lexeme: { id: s.word.id, value: s.word.value } }
+}
+
 interface AntonymsClientProps {
     initialWords: WordItem[]
     onUpdateAntonyms: (sourceMeaningId: number, targetMeaningIds: number[]) => Promise<void>
@@ -101,7 +115,8 @@ export function AntonymsClient({ initialWords, onUpdateAntonyms }: AntonymsClien
             if (meaning) {
                 const existing: SimpleMeaning[] = meaning.antonymsSource
                     .map((a) => a.target)
-                    .filter((t): t is SimpleMeaning => !!t)
+                    .filter((t): t is TargetMeaning => !!t)
+                    .map(toSimpleMeaning)
                 setAttachedAntonyms(existing)
             } else {
                 setAttachedAntonyms([])
@@ -163,7 +178,7 @@ export function AntonymsClient({ initialWords, onUpdateAntonyms }: AntonymsClien
                                 antonymsSource: attachedAntonyms.map(a => ({
                                     id: 0,
                                     proximity: 1,
-                                    target: a
+                                    target: toTargetMeaning(a)
                                 }))
                             }
                         })

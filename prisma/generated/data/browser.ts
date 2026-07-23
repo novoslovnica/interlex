@@ -63,61 +63,6 @@ export type MorphemeAllophone = Prisma.MorphemeAllophoneModel
  */
 export type EndingAllophone = Prisma.EndingAllophoneModel
 /**
- * Model Synonym
- * 
- */
-export type Synonym = Prisma.SynonymModel
-/**
- * Model Antonym
- * 
- */
-export type Antonym = Prisma.AntonymModel
-/**
- * Model Hypernym
- * 
- */
-export type Hypernym = Prisma.HypernymModel
-/**
- * Model Hyponym
- * 
- */
-export type Hyponym = Prisma.HyponymModel
-/**
- * Model Meronym
- * 
- */
-export type Meronym = Prisma.MeronymModel
-/**
- * Model Holonym
- * 
- */
-export type Holonym = Prisma.HolonymModel
-/**
- * Model RelatedWord
- * 
- */
-export type RelatedWord = Prisma.RelatedWordModel
-/**
- * Model Cause
- * 
- */
-export type Cause = Prisma.CauseModel
-/**
- * Model Effect
- * 
- */
-export type Effect = Prisma.EffectModel
-/**
- * Model Premise
- * 
- */
-export type Premise = Prisma.PremiseModel
-/**
- * Model Conclusion
- * 
- */
-export type Conclusion = Prisma.ConclusionModel
-/**
  * Model En
  * 
  */

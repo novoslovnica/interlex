@@ -8,7 +8,7 @@ import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 import { logAudit } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
-import { fetchSymmetricRelations, saveSymmetricRelation } from "@/lib/relations"
+import { fetchSymmetricSemanticRelations, saveSymmetricSemanticRelation } from "@/lib/relations"
 
 export const metadata: Metadata = {
   title: "Синонимы",
@@ -60,7 +60,7 @@ export default async function AdminSynonymsPage() {
 
     const dbSimple = await init()
     const allMeaningIds = rawWords.flatMap((w) => w.meanings.map((m) => m.id))
-    const relationsByMeaning = fetchSymmetricRelations(dbSimple, "synonyms", allMeaningIds)
+    const relationsByMeaning = fetchSymmetricSemanticRelations(dbSimple, "synonym", allMeaningIds)
 
     const initialWords: WordItem[] = rawWords.map((w) => ({
         id: w.id,
@@ -83,7 +83,7 @@ export default async function AdminSynonymsPage() {
     async function updateSynonyms(sourceMeaningId: number, targetMeaningIds: number[]) {
         "use server"
 
-        saveSymmetricRelation(dbSimple, "synonyms", sourceMeaningId, targetMeaningIds, 1.0)
+        saveSymmetricSemanticRelation(dbSimple, "synonym", sourceMeaningId, targetMeaningIds, 1.0)
 
         const meaning = await db.meaning.findUnique({
             where: { id: sourceMeaningId },

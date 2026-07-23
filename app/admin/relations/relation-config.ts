@@ -2,7 +2,16 @@ export interface RelationConfig {
   label: string
   labelSingle: string
   labelSingleShort: string
-  tableName: string
+  /** relationType value in the consolidated `semantic_relations` table (2026-07-23). */
+  relationType: string
+  /**
+   * Symmetric types (undefined): order doesn't matter, sourceId/targetId are
+   * normalized on write — see lib/relations.ts's fetchSymmetricSemanticRelations.
+   * Directional types: "outgoing" = this meaning is sourceId (e.g. "hypernyms
+   * of X" — X points up to its more general concept), "incoming" = this
+   * meaning is targetId (e.g. "hyponyms of X" — things pointing up to X).
+   */
+  direction?: "outgoing" | "incoming"
   navHref: string
   featureKey: string
   color: string
@@ -19,13 +28,19 @@ export type RelationType =
   | "effects"
   | "premises"
   | "conclusions"
+  | "pos-synonyms"
+  | "instance-of"
+  | "instances"
+  | "derivation-targets"
+  | "derivation-sources"
 
 export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
   hypernyms: {
     label: "Гиперонимы",
     labelSingle: "гипероним",
     labelSingleShort: "гип.",
-    tableName: "hypernyms",
+    relationType: "hypernymy",
+    direction: "outgoing",
     navHref: "/admin/relations/hypernyms",
     featureKey: "hypernyms_edit",
     color: "blue",
@@ -35,7 +50,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Гипонимы",
     labelSingle: "гипоним",
     labelSingleShort: "ип.",
-    tableName: "hyponyms",
+    relationType: "hypernymy",
+    direction: "incoming",
     navHref: "/admin/relations/hyponyms",
     featureKey: "hyponyms_edit",
     color: "purple",
@@ -45,7 +61,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Меронимы",
     labelSingle: "мероним",
     labelSingleShort: "мер.",
-    tableName: "meronyms",
+    relationType: "meronymy",
+    direction: "incoming",
     navHref: "/admin/relations/meronyms",
     featureKey: "meronyms_edit",
     color: "green",
@@ -55,7 +72,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Холонимы",
     labelSingle: "холоним",
     labelSingleShort: "хол.",
-    tableName: "holonyms",
+    relationType: "meronymy",
+    direction: "outgoing",
     navHref: "/admin/relations/holonyms",
     featureKey: "holonyms_edit",
     color: "orange",
@@ -65,7 +83,7 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Связанные слова",
     labelSingle: "связанное",
     labelSingleShort: "свз.",
-    tableName: "related_words",
+    relationType: "related",
     navHref: "/admin/relations/related-words",
     featureKey: "related_words_edit",
     color: "slate",
@@ -75,7 +93,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Причины",
     labelSingle: "причина",
     labelSingleShort: "прч.",
-    tableName: "causes",
+    relationType: "causation",
+    direction: "incoming",
     navHref: "/admin/relations/causes",
     featureKey: "causes_edit",
     color: "amber",
@@ -85,7 +104,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Следствия",
     labelSingle: "следствие",
     labelSingleShort: "слд.",
-    tableName: "effects",
+    relationType: "causation",
+    direction: "outgoing",
     navHref: "/admin/relations/effects",
     featureKey: "effects_edit",
     color: "rose",
@@ -95,7 +115,8 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Предпосылки",
     labelSingle: "предпосылка",
     labelSingleShort: "прд.",
-    tableName: "premises",
+    relationType: "entailment",
+    direction: "incoming",
     navHref: "/admin/relations/premises",
     featureKey: "premises_edit",
     color: "teal",
@@ -105,11 +126,66 @@ export const RELATION_CONFIG: Record<RelationType, RelationConfig> = {
     label: "Заключения",
     labelSingle: "заключение",
     labelSingleShort: "зкл.",
-    tableName: "conclusions",
+    relationType: "entailment",
+    direction: "outgoing",
     navHref: "/admin/relations/conclusions",
     featureKey: "conclusions_edit",
     color: "indigo",
     description: "глагольные заключения",
+  },
+  "pos-synonyms": {
+    label: "Кросс-частеречные синонимы",
+    labelSingle: "кросс-частеречный синоним",
+    labelSingleShort: "чр.син.",
+    relationType: "pos_synonym",
+    navHref: "/admin/relations/pos-synonyms",
+    featureKey: "pos_synonyms_edit",
+    color: "cyan",
+    description: "привязать слова другой части речи с тем же корневым значением",
+  },
+  "instance-of": {
+    label: "Экземпляр класса (instance-of)",
+    labelSingle: "класс",
+    labelSingleShort: "cls.",
+    relationType: "instance_of",
+    direction: "outgoing",
+    navHref: "/admin/relations/instance-of",
+    featureKey: "instance_of_edit",
+    color: "pink",
+    description: "указать, экземпляром какого класса является это значение",
+  },
+  instances: {
+    label: "Экземпляры этого класса",
+    labelSingle: "экземпляр",
+    labelSingleShort: "экз.",
+    relationType: "instance_of",
+    direction: "incoming",
+    navHref: "/admin/relations/instances",
+    featureKey: "instances_edit",
+    color: "fuchsia",
+    description: "привязать значения, являющиеся экземплярами этого класса",
+  },
+  "derivation-targets": {
+    label: "Дериваты (образовано от этого)",
+    labelSingle: "дериват",
+    labelSingleShort: "дрв.",
+    relationType: "derivation",
+    direction: "outgoing",
+    navHref: "/admin/relations/derivation-targets",
+    featureKey: "derivation_targets_edit",
+    color: "lime",
+    description: "привязать словообразовательные производные от этого значения",
+  },
+  "derivation-sources": {
+    label: "Источники деривации",
+    labelSingle: "источник деривации",
+    labelSingleShort: "ист.",
+    relationType: "derivation",
+    direction: "incoming",
+    navHref: "/admin/relations/derivation-sources",
+    featureKey: "derivation_sources_edit",
+    color: "emerald",
+    description: "привязать значения, от которых словообразовательно произведено это",
   },
 }
 
@@ -123,6 +199,11 @@ const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = 
   rose: { bg: "bg-rose-500/5", text: "text-rose-600", border: "border-rose-500/20" },
   teal: { bg: "bg-teal-500/5", text: "text-teal-600", border: "border-teal-500/20" },
   indigo: { bg: "bg-indigo-500/5", text: "text-indigo-600", border: "border-indigo-500/20" },
+  cyan: { bg: "bg-cyan-500/5", text: "text-cyan-600", border: "border-cyan-500/20" },
+  pink: { bg: "bg-pink-500/5", text: "text-pink-600", border: "border-pink-500/20" },
+  fuchsia: { bg: "bg-fuchsia-500/5", text: "text-fuchsia-600", border: "border-fuchsia-500/20" },
+  lime: { bg: "bg-lime-500/5", text: "text-lime-600", border: "border-lime-500/20" },
+  emerald: { bg: "bg-emerald-500/5", text: "text-emerald-600", border: "border-emerald-500/20" },
 }
 
 export function getRelationColors(colorName: string) {

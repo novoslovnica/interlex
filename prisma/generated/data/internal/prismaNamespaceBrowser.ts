@@ -60,17 +60,6 @@ export const ModelName = {
   LexemeAllophone: 'LexemeAllophone',
   MorphemeAllophone: 'MorphemeAllophone',
   EndingAllophone: 'EndingAllophone',
-  Synonym: 'Synonym',
-  Antonym: 'Antonym',
-  Hypernym: 'Hypernym',
-  Hyponym: 'Hyponym',
-  Meronym: 'Meronym',
-  Holonym: 'Holonym',
-  RelatedWord: 'RelatedWord',
-  Cause: 'Cause',
-  Effect: 'Effect',
-  Premise: 'Premise',
-  Conclusion: 'Conclusion',
   En: 'En',
   Ru: 'Ru',
   Mk: 'Mk',
@@ -282,116 +271,6 @@ export const EndingAllophoneScalarFieldEnum = {
 } as const
 
 export type EndingAllophoneScalarFieldEnum = (typeof EndingAllophoneScalarFieldEnum)[keyof typeof EndingAllophoneScalarFieldEnum]
-
-
-export const SynonymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type SynonymScalarFieldEnum = (typeof SynonymScalarFieldEnum)[keyof typeof SynonymScalarFieldEnum]
-
-
-export const AntonymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type AntonymScalarFieldEnum = (typeof AntonymScalarFieldEnum)[keyof typeof AntonymScalarFieldEnum]
-
-
-export const HypernymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type HypernymScalarFieldEnum = (typeof HypernymScalarFieldEnum)[keyof typeof HypernymScalarFieldEnum]
-
-
-export const HyponymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type HyponymScalarFieldEnum = (typeof HyponymScalarFieldEnum)[keyof typeof HyponymScalarFieldEnum]
-
-
-export const MeronymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type MeronymScalarFieldEnum = (typeof MeronymScalarFieldEnum)[keyof typeof MeronymScalarFieldEnum]
-
-
-export const HolonymScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type HolonymScalarFieldEnum = (typeof HolonymScalarFieldEnum)[keyof typeof HolonymScalarFieldEnum]
-
-
-export const RelatedWordScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type RelatedWordScalarFieldEnum = (typeof RelatedWordScalarFieldEnum)[keyof typeof RelatedWordScalarFieldEnum]
-
-
-export const CauseScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type CauseScalarFieldEnum = (typeof CauseScalarFieldEnum)[keyof typeof CauseScalarFieldEnum]
-
-
-export const EffectScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type EffectScalarFieldEnum = (typeof EffectScalarFieldEnum)[keyof typeof EffectScalarFieldEnum]
-
-
-export const PremiseScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type PremiseScalarFieldEnum = (typeof PremiseScalarFieldEnum)[keyof typeof PremiseScalarFieldEnum]
-
-
-export const ConclusionScalarFieldEnum = {
-  id: 'id',
-  sourceId: 'sourceId',
-  targetId: 'targetId',
-  proximity: 'proximity'
-} as const
-
-export type ConclusionScalarFieldEnum = (typeof ConclusionScalarFieldEnum)[keyof typeof ConclusionScalarFieldEnum]
 
 
 export const EnScalarFieldEnum = {

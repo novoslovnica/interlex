@@ -11,7 +11,8 @@ import { init } from "@/lib/sqlite"
 import AdminNav from "@/components/AdminNav"
 import { RelationsTab } from "./_components/relations-tab"
 import { updateWord } from "@/lib/actions/word-actions"
-import { fetchSymmetricRelations } from "@/lib/relations"
+import { fetchSymmetricSemanticRelations, fetchOutgoingSemanticRelations, fetchIncomingSemanticRelations } from "@/lib/relations"
+import { RELATION_CONFIG } from "../../../relations/relation-config"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -242,26 +243,31 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     : []
 
   const dbSimple = await init()
-  const ALL_TABLES: { key: string; table: string }[] = [
-    { key: "synonyms", table: "synonyms" },
-    { key: "antonyms", table: "antonyms" },
-    { key: "hypernyms", table: "hypernyms" },
-    { key: "hyponyms", table: "hyponyms" },
-    { key: "meronyms", table: "meronyms" },
-    { key: "holonyms", table: "holonyms" },
-    { key: "related-words", table: "related_words" },
-    { key: "causes", table: "causes" },
-    { key: "effects", table: "effects" },
-    { key: "premises", table: "premises" },
-    { key: "conclusions", table: "conclusions" },
+  // Read-only summary tab — mirrors the semantic_relations relationType/direction
+  // convention used by the dedicated admin pages (relation-config.ts) so this
+  // tab never falls out of sync with what /admin/synonyms, /admin/antonyms and
+  // /admin/relations/[type] actually edit. synonym/antonym aren't part of
+  // relation-config.ts (they have their own dedicated pages) — added directly.
+  const ALL_RELATIONS: { key: string; relationType: string; direction?: "outgoing" | "incoming" }[] = [
+    { key: "synonyms", relationType: "synonym" },
+    { key: "antonyms", relationType: "antonym" },
+    ...Object.entries(RELATION_CONFIG).map(([key, cfg]) => ({
+      key,
+      relationType: cfg.relationType,
+      direction: cfg.direction,
+    })),
   ]
   const meaningIds = (wordData.meanings || []).map((m) => m.id)
   const relationsByMeaning: Record<number, Record<string, any[]>> = {}
   for (const meaning of wordData.meanings || []) {
     relationsByMeaning[meaning.id] = {}
   }
-  for (const { key, table } of ALL_TABLES) {
-    const relMap = fetchSymmetricRelations(dbSimple, table, meaningIds)
+  for (const { key, relationType, direction } of ALL_RELATIONS) {
+    const relMap = direction === "outgoing"
+      ? fetchOutgoingSemanticRelations(dbSimple, relationType, meaningIds)
+      : direction === "incoming"
+        ? fetchIncomingSemanticRelations(dbSimple, relationType, meaningIds)
+        : fetchSymmetricSemanticRelations(dbSimple, relationType, meaningIds)
     for (const meaning of wordData.meanings || []) {
       const related = relMap.get(meaning.id) || []
       relationsByMeaning[meaning.id][key] = related.map((r) => ({

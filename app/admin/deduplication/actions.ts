@@ -276,15 +276,27 @@ export async function mergeWordsAction(
                     updateLangStmt(lang);
                 }
 
+                // Rewire semantic_relations edges from the merged-away meanings onto
+                // targetMeaningId. sourceId/targetId here are meaningIds, not lexemeIds
+                // (the old code at this spot updated synonyms/antonyms using the
+                // lexeme-level targetId/sourceId params directly — a pre-existing
+                // ID-space bug, effectively a no-op since meaningId never matches a
+                // lexemeId). UPDATE OR IGNORE skips a row if retargeting it would
+                // collide with the unique (sourceId,targetId,relationType) index —
+                // that row is simply left pointing at a meaning about to be deleted,
+                // and gets cleaned up for free by the FK cascade on the DELETE below
+                // (better-sqlite3 has foreign_keys=ON by default, confirmed).
+                db.prepare(`UPDATE OR IGNORE semantic_relations SET sourceId = ? WHERE sourceId IN (${placeholders})`).run(targetMeaningId, ...sourceMeaningIds);
+                db.prepare(`UPDATE OR IGNORE semantic_relations SET targetId = ? WHERE targetId IN (${placeholders})`).run(targetMeaningId, ...sourceMeaningIds);
+                // Guard against a self-loop when both sides of a relation belonged to
+                // the merged-away lexeme (e.g. two of its own meanings were linked).
+                db.prepare(`DELETE FROM semantic_relations WHERE sourceId = targetId`).run();
+
                 db.prepare(`DELETE FROM meanings WHERE id IN (${placeholders})`).run(...sourceMeaningIds);
             }
 
             db.prepare(`UPDATE lexemes_morphemes SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
             db.prepare(`UPDATE inflection_anomalies SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
-            db.prepare(`UPDATE synonyms SET sourceId = ? WHERE sourceId = ?`).run(targetId, sourceId);
-            db.prepare(`UPDATE synonyms SET targetId = ? WHERE targetId = ?`).run(targetId, sourceId);
-            db.prepare(`UPDATE antonyms SET sourceId = ? WHERE sourceId = ?`).run(targetId, sourceId);
-            db.prepare(`UPDATE antonyms SET targetId = ? WHERE targetId = ?`).run(targetId, sourceId);
 
             db.prepare(`DELETE FROM lexemes WHERE id = ?`).run(sourceId);
 

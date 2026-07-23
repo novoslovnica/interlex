@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {init} from "@/lib/sqlite";
 import {auth} from "@/auth";
-import {fetchSymmetricRelations} from "@/lib/relations";
+import {fetchSymmetricSemanticRelations} from "@/lib/relations";
 
 export async function POST(request: Request) {
     try {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         const meaningToLexeme = new Map<number, number>();
         for (const r of meaningRows) meaningToLexeme.set(r.meaningId, r.lexemeId);
 
-        const relMap = fetchSymmetricRelations(db, 'synonyms', meaningRows.map((r) => r.meaningId));
+        const relMap = fetchSymmetricSemanticRelations(db, 'synonym', meaningRows.map((r) => r.meaningId));
 
         const grouped: Record<number, any[]> = {};
         for (const [meaningId, related] of relMap) {
