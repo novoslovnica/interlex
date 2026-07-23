@@ -328,6 +328,9 @@ export type MeaningWhereInput = {
   conclusionsSource?: Prisma.ConclusionListRelationFilter
   conclusionsTarget?: Prisma.ConclusionListRelationFilter
   synsets?: Prisma.MeaningSynsetListRelationFilter
+  semanticRelationsSource?: Prisma.SemanticRelationListRelationFilter
+  semanticRelationsTarget?: Prisma.SemanticRelationListRelationFilter
+  primeExponents?: Prisma.PrimeExponentListRelationFilter
 }
 
 export type MeaningOrderByWithRelationInput = {
@@ -401,6 +404,9 @@ export type MeaningOrderByWithRelationInput = {
   conclusionsSource?: Prisma.ConclusionOrderByRelationAggregateInput
   conclusionsTarget?: Prisma.ConclusionOrderByRelationAggregateInput
   synsets?: Prisma.MeaningSynsetOrderByRelationAggregateInput
+  semanticRelationsSource?: Prisma.SemanticRelationOrderByRelationAggregateInput
+  semanticRelationsTarget?: Prisma.SemanticRelationOrderByRelationAggregateInput
+  primeExponents?: Prisma.PrimeExponentOrderByRelationAggregateInput
 }
 
 export type MeaningWhereUniqueInput = Prisma.AtLeast<{
@@ -477,6 +483,9 @@ export type MeaningWhereUniqueInput = Prisma.AtLeast<{
   conclusionsSource?: Prisma.ConclusionListRelationFilter
   conclusionsTarget?: Prisma.ConclusionListRelationFilter
   synsets?: Prisma.MeaningSynsetListRelationFilter
+  semanticRelationsSource?: Prisma.SemanticRelationListRelationFilter
+  semanticRelationsTarget?: Prisma.SemanticRelationListRelationFilter
+  primeExponents?: Prisma.PrimeExponentListRelationFilter
 }, "id">
 
 export type MeaningOrderByWithAggregationInput = {
@@ -582,6 +591,9 @@ export type MeaningCreateInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateInput = {
@@ -654,6 +666,9 @@ export type MeaningUncheckedCreateInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUpdateInput = {
@@ -725,6 +740,9 @@ export type MeaningUpdateInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateInput = {
@@ -797,6 +815,9 @@ export type MeaningUncheckedUpdateInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateManyInput = {
@@ -1893,6 +1914,48 @@ export type MeaningUpdateOneRequiredWithoutSynsetsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutSynsetsInput, Prisma.MeaningUpdateWithoutSynsetsInput>, Prisma.MeaningUncheckedUpdateWithoutSynsetsInput>
 }
 
+export type MeaningCreateNestedOneWithoutSemanticRelationsSourceInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsSourceInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutSemanticRelationsSourceInput
+  connect?: Prisma.MeaningWhereUniqueInput
+}
+
+export type MeaningCreateNestedOneWithoutSemanticRelationsTargetInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsTargetInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutSemanticRelationsTargetInput
+  connect?: Prisma.MeaningWhereUniqueInput
+}
+
+export type MeaningUpdateOneRequiredWithoutSemanticRelationsSourceNestedInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsSourceInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutSemanticRelationsSourceInput
+  upsert?: Prisma.MeaningUpsertWithoutSemanticRelationsSourceInput
+  connect?: Prisma.MeaningWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutSemanticRelationsSourceInput, Prisma.MeaningUpdateWithoutSemanticRelationsSourceInput>, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsSourceInput>
+}
+
+export type MeaningUpdateOneRequiredWithoutSemanticRelationsTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsTargetInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutSemanticRelationsTargetInput
+  upsert?: Prisma.MeaningUpsertWithoutSemanticRelationsTargetInput
+  connect?: Prisma.MeaningWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutSemanticRelationsTargetInput, Prisma.MeaningUpdateWithoutSemanticRelationsTargetInput>, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsTargetInput>
+}
+
+export type MeaningCreateNestedOneWithoutPrimeExponentsInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedCreateWithoutPrimeExponentsInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutPrimeExponentsInput
+  connect?: Prisma.MeaningWhereUniqueInput
+}
+
+export type MeaningUpdateOneRequiredWithoutPrimeExponentsNestedInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedCreateWithoutPrimeExponentsInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutPrimeExponentsInput
+  upsert?: Prisma.MeaningUpsertWithoutPrimeExponentsInput
+  connect?: Prisma.MeaningWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutPrimeExponentsInput, Prisma.MeaningUpdateWithoutPrimeExponentsInput>, Prisma.MeaningUncheckedUpdateWithoutPrimeExponentsInput>
+}
+
 export type MeaningCreateWithoutLexemeInput = {
   meaning?: string | null
   examples?: string | null
@@ -1961,6 +2024,9 @@ export type MeaningCreateWithoutLexemeInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutLexemeInput = {
@@ -2032,6 +2098,9 @@ export type MeaningUncheckedCreateWithoutLexemeInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutLexemeInput = {
@@ -2143,6 +2212,9 @@ export type MeaningCreateWithoutSynonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSynonymsSourceInput = {
@@ -2214,6 +2286,9 @@ export type MeaningUncheckedCreateWithoutSynonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSynonymsSourceInput = {
@@ -2289,6 +2364,9 @@ export type MeaningCreateWithoutSynonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSynonymsTargetInput = {
@@ -2360,6 +2438,9 @@ export type MeaningUncheckedCreateWithoutSynonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSynonymsTargetInput = {
@@ -2446,6 +2527,9 @@ export type MeaningUpdateWithoutSynonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSynonymsSourceInput = {
@@ -2517,6 +2601,9 @@ export type MeaningUncheckedUpdateWithoutSynonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutSynonymsTargetInput = {
@@ -2598,6 +2685,9 @@ export type MeaningUpdateWithoutSynonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSynonymsTargetInput = {
@@ -2669,6 +2759,9 @@ export type MeaningUncheckedUpdateWithoutSynonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutAntonymsSourceInput = {
@@ -2739,6 +2832,9 @@ export type MeaningCreateWithoutAntonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutAntonymsSourceInput = {
@@ -2810,6 +2906,9 @@ export type MeaningUncheckedCreateWithoutAntonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutAntonymsSourceInput = {
@@ -2885,6 +2984,9 @@ export type MeaningCreateWithoutAntonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutAntonymsTargetInput = {
@@ -2956,6 +3058,9 @@ export type MeaningUncheckedCreateWithoutAntonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutAntonymsTargetInput = {
@@ -3042,6 +3147,9 @@ export type MeaningUpdateWithoutAntonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutAntonymsSourceInput = {
@@ -3113,6 +3221,9 @@ export type MeaningUncheckedUpdateWithoutAntonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutAntonymsTargetInput = {
@@ -3194,6 +3305,9 @@ export type MeaningUpdateWithoutAntonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutAntonymsTargetInput = {
@@ -3265,6 +3379,9 @@ export type MeaningUncheckedUpdateWithoutAntonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutHypernymsSourceInput = {
@@ -3335,6 +3452,9 @@ export type MeaningCreateWithoutHypernymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHypernymsSourceInput = {
@@ -3406,6 +3526,9 @@ export type MeaningUncheckedCreateWithoutHypernymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHypernymsSourceInput = {
@@ -3481,6 +3604,9 @@ export type MeaningCreateWithoutHypernymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHypernymsTargetInput = {
@@ -3552,6 +3678,9 @@ export type MeaningUncheckedCreateWithoutHypernymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHypernymsTargetInput = {
@@ -3638,6 +3767,9 @@ export type MeaningUpdateWithoutHypernymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHypernymsSourceInput = {
@@ -3709,6 +3841,9 @@ export type MeaningUncheckedUpdateWithoutHypernymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutHypernymsTargetInput = {
@@ -3790,6 +3925,9 @@ export type MeaningUpdateWithoutHypernymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHypernymsTargetInput = {
@@ -3861,6 +3999,9 @@ export type MeaningUncheckedUpdateWithoutHypernymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutHyponymsSourceInput = {
@@ -3931,6 +4072,9 @@ export type MeaningCreateWithoutHyponymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHyponymsSourceInput = {
@@ -4002,6 +4146,9 @@ export type MeaningUncheckedCreateWithoutHyponymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHyponymsSourceInput = {
@@ -4077,6 +4224,9 @@ export type MeaningCreateWithoutHyponymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHyponymsTargetInput = {
@@ -4148,6 +4298,9 @@ export type MeaningUncheckedCreateWithoutHyponymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHyponymsTargetInput = {
@@ -4234,6 +4387,9 @@ export type MeaningUpdateWithoutHyponymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHyponymsSourceInput = {
@@ -4305,6 +4461,9 @@ export type MeaningUncheckedUpdateWithoutHyponymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutHyponymsTargetInput = {
@@ -4386,6 +4545,9 @@ export type MeaningUpdateWithoutHyponymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHyponymsTargetInput = {
@@ -4457,6 +4619,9 @@ export type MeaningUncheckedUpdateWithoutHyponymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutMeronymsSourceInput = {
@@ -4527,6 +4692,9 @@ export type MeaningCreateWithoutMeronymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutMeronymsSourceInput = {
@@ -4598,6 +4766,9 @@ export type MeaningUncheckedCreateWithoutMeronymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutMeronymsSourceInput = {
@@ -4673,6 +4844,9 @@ export type MeaningCreateWithoutMeronymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutMeronymsTargetInput = {
@@ -4744,6 +4918,9 @@ export type MeaningUncheckedCreateWithoutMeronymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutMeronymsTargetInput = {
@@ -4830,6 +5007,9 @@ export type MeaningUpdateWithoutMeronymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutMeronymsSourceInput = {
@@ -4901,6 +5081,9 @@ export type MeaningUncheckedUpdateWithoutMeronymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutMeronymsTargetInput = {
@@ -4982,6 +5165,9 @@ export type MeaningUpdateWithoutMeronymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutMeronymsTargetInput = {
@@ -5053,6 +5239,9 @@ export type MeaningUncheckedUpdateWithoutMeronymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutHolonymsSourceInput = {
@@ -5123,6 +5312,9 @@ export type MeaningCreateWithoutHolonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHolonymsSourceInput = {
@@ -5194,6 +5386,9 @@ export type MeaningUncheckedCreateWithoutHolonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHolonymsSourceInput = {
@@ -5269,6 +5464,9 @@ export type MeaningCreateWithoutHolonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHolonymsTargetInput = {
@@ -5340,6 +5538,9 @@ export type MeaningUncheckedCreateWithoutHolonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHolonymsTargetInput = {
@@ -5426,6 +5627,9 @@ export type MeaningUpdateWithoutHolonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHolonymsSourceInput = {
@@ -5497,6 +5701,9 @@ export type MeaningUncheckedUpdateWithoutHolonymsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutHolonymsTargetInput = {
@@ -5578,6 +5785,9 @@ export type MeaningUpdateWithoutHolonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHolonymsTargetInput = {
@@ -5649,6 +5859,9 @@ export type MeaningUncheckedUpdateWithoutHolonymsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutRelatedWordsSourceInput = {
@@ -5719,6 +5932,9 @@ export type MeaningCreateWithoutRelatedWordsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutRelatedWordsSourceInput = {
@@ -5790,6 +6006,9 @@ export type MeaningUncheckedCreateWithoutRelatedWordsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutRelatedWordsSourceInput = {
@@ -5865,6 +6084,9 @@ export type MeaningCreateWithoutRelatedWordsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutRelatedWordsTargetInput = {
@@ -5936,6 +6158,9 @@ export type MeaningUncheckedCreateWithoutRelatedWordsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutRelatedWordsTargetInput = {
@@ -6022,6 +6247,9 @@ export type MeaningUpdateWithoutRelatedWordsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutRelatedWordsSourceInput = {
@@ -6093,6 +6321,9 @@ export type MeaningUncheckedUpdateWithoutRelatedWordsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutRelatedWordsTargetInput = {
@@ -6174,6 +6405,9 @@ export type MeaningUpdateWithoutRelatedWordsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutRelatedWordsTargetInput = {
@@ -6245,6 +6479,9 @@ export type MeaningUncheckedUpdateWithoutRelatedWordsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutCausesSourceInput = {
@@ -6315,6 +6552,9 @@ export type MeaningCreateWithoutCausesSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCausesSourceInput = {
@@ -6386,6 +6626,9 @@ export type MeaningUncheckedCreateWithoutCausesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCausesSourceInput = {
@@ -6461,6 +6704,9 @@ export type MeaningCreateWithoutCausesTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCausesTargetInput = {
@@ -6532,6 +6778,9 @@ export type MeaningUncheckedCreateWithoutCausesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCausesTargetInput = {
@@ -6618,6 +6867,9 @@ export type MeaningUpdateWithoutCausesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCausesSourceInput = {
@@ -6689,6 +6941,9 @@ export type MeaningUncheckedUpdateWithoutCausesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutCausesTargetInput = {
@@ -6770,6 +7025,9 @@ export type MeaningUpdateWithoutCausesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCausesTargetInput = {
@@ -6841,6 +7099,9 @@ export type MeaningUncheckedUpdateWithoutCausesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutEffectsSourceInput = {
@@ -6911,6 +7172,9 @@ export type MeaningCreateWithoutEffectsSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEffectsSourceInput = {
@@ -6982,6 +7246,9 @@ export type MeaningUncheckedCreateWithoutEffectsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEffectsSourceInput = {
@@ -7057,6 +7324,9 @@ export type MeaningCreateWithoutEffectsTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEffectsTargetInput = {
@@ -7128,6 +7398,9 @@ export type MeaningUncheckedCreateWithoutEffectsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEffectsTargetInput = {
@@ -7214,6 +7487,9 @@ export type MeaningUpdateWithoutEffectsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEffectsSourceInput = {
@@ -7285,6 +7561,9 @@ export type MeaningUncheckedUpdateWithoutEffectsSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutEffectsTargetInput = {
@@ -7366,6 +7645,9 @@ export type MeaningUpdateWithoutEffectsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEffectsTargetInput = {
@@ -7437,6 +7719,9 @@ export type MeaningUncheckedUpdateWithoutEffectsTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutPremisesSourceInput = {
@@ -7507,6 +7792,9 @@ export type MeaningCreateWithoutPremisesSourceInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutPremisesSourceInput = {
@@ -7578,6 +7866,9 @@ export type MeaningUncheckedCreateWithoutPremisesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutPremisesSourceInput = {
@@ -7653,6 +7944,9 @@ export type MeaningCreateWithoutPremisesTargetInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutPremisesTargetInput = {
@@ -7724,6 +8018,9 @@ export type MeaningUncheckedCreateWithoutPremisesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutPremisesTargetInput = {
@@ -7810,6 +8107,9 @@ export type MeaningUpdateWithoutPremisesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutPremisesSourceInput = {
@@ -7881,6 +8181,9 @@ export type MeaningUncheckedUpdateWithoutPremisesSourceInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutPremisesTargetInput = {
@@ -7962,6 +8265,9 @@ export type MeaningUpdateWithoutPremisesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutPremisesTargetInput = {
@@ -8033,6 +8339,9 @@ export type MeaningUncheckedUpdateWithoutPremisesTargetInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutConclusionsSourceInput = {
@@ -8103,6 +8412,9 @@ export type MeaningCreateWithoutConclusionsSourceInput = {
   premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutConclusionsSourceInput = {
@@ -8174,6 +8486,9 @@ export type MeaningUncheckedCreateWithoutConclusionsSourceInput = {
   premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutConclusionsSourceInput = {
@@ -8249,6 +8564,9 @@ export type MeaningCreateWithoutConclusionsTargetInput = {
   premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutConclusionsTargetInput = {
@@ -8320,6 +8638,9 @@ export type MeaningUncheckedCreateWithoutConclusionsTargetInput = {
   premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutConclusionsTargetInput = {
@@ -8406,6 +8727,9 @@ export type MeaningUpdateWithoutConclusionsSourceInput = {
   premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutConclusionsSourceInput = {
@@ -8477,6 +8801,9 @@ export type MeaningUncheckedUpdateWithoutConclusionsSourceInput = {
   premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutConclusionsTargetInput = {
@@ -8558,6 +8885,9 @@ export type MeaningUpdateWithoutConclusionsTargetInput = {
   premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutConclusionsTargetInput = {
@@ -8629,6 +8959,9 @@ export type MeaningUncheckedUpdateWithoutConclusionsTargetInput = {
   premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutEn_wordInput = {
@@ -8699,6 +9032,9 @@ export type MeaningCreateWithoutEn_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEn_wordInput = {
@@ -8770,6 +9106,9 @@ export type MeaningUncheckedCreateWithoutEn_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEn_wordInput = {
@@ -8845,6 +9184,9 @@ export type MeaningCreateWithoutEn_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEn_meanInput = {
@@ -8916,6 +9258,9 @@ export type MeaningUncheckedCreateWithoutEn_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEn_meanInput = {
@@ -9002,6 +9347,9 @@ export type MeaningUpdateWithoutEn_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEn_wordInput = {
@@ -9073,6 +9421,9 @@ export type MeaningUncheckedUpdateWithoutEn_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutEn_meanInput = {
@@ -9154,6 +9505,9 @@ export type MeaningUpdateWithoutEn_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEn_meanInput = {
@@ -9225,6 +9579,9 @@ export type MeaningUncheckedUpdateWithoutEn_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutRu_wordInput = {
@@ -9295,6 +9652,9 @@ export type MeaningCreateWithoutRu_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutRu_wordInput = {
@@ -9366,6 +9726,9 @@ export type MeaningUncheckedCreateWithoutRu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutRu_wordInput = {
@@ -9441,6 +9804,9 @@ export type MeaningCreateWithoutRu_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutRu_meanInput = {
@@ -9512,6 +9878,9 @@ export type MeaningUncheckedCreateWithoutRu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutRu_meanInput = {
@@ -9598,6 +9967,9 @@ export type MeaningUpdateWithoutRu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutRu_wordInput = {
@@ -9669,6 +10041,9 @@ export type MeaningUncheckedUpdateWithoutRu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutRu_meanInput = {
@@ -9750,6 +10125,9 @@ export type MeaningUpdateWithoutRu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutRu_meanInput = {
@@ -9821,6 +10199,9 @@ export type MeaningUncheckedUpdateWithoutRu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutMk_wordInput = {
@@ -9891,6 +10272,9 @@ export type MeaningCreateWithoutMk_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutMk_wordInput = {
@@ -9962,6 +10346,9 @@ export type MeaningUncheckedCreateWithoutMk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutMk_wordInput = {
@@ -10037,6 +10424,9 @@ export type MeaningCreateWithoutMk_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutMk_meanInput = {
@@ -10108,6 +10498,9 @@ export type MeaningUncheckedCreateWithoutMk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutMk_meanInput = {
@@ -10194,6 +10587,9 @@ export type MeaningUpdateWithoutMk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutMk_wordInput = {
@@ -10265,6 +10661,9 @@ export type MeaningUncheckedUpdateWithoutMk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutMk_meanInput = {
@@ -10346,6 +10745,9 @@ export type MeaningUpdateWithoutMk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutMk_meanInput = {
@@ -10417,6 +10819,9 @@ export type MeaningUncheckedUpdateWithoutMk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutSr_wordInput = {
@@ -10487,6 +10892,9 @@ export type MeaningCreateWithoutSr_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSr_wordInput = {
@@ -10558,6 +10966,9 @@ export type MeaningUncheckedCreateWithoutSr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSr_wordInput = {
@@ -10633,6 +11044,9 @@ export type MeaningCreateWithoutSr_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSr_meanInput = {
@@ -10704,6 +11118,9 @@ export type MeaningUncheckedCreateWithoutSr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSr_meanInput = {
@@ -10790,6 +11207,9 @@ export type MeaningUpdateWithoutSr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSr_wordInput = {
@@ -10861,6 +11281,9 @@ export type MeaningUncheckedUpdateWithoutSr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutSr_meanInput = {
@@ -10942,6 +11365,9 @@ export type MeaningUpdateWithoutSr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSr_meanInput = {
@@ -11013,6 +11439,9 @@ export type MeaningUncheckedUpdateWithoutSr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutUk_wordInput = {
@@ -11083,6 +11512,9 @@ export type MeaningCreateWithoutUk_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutUk_wordInput = {
@@ -11154,6 +11586,9 @@ export type MeaningUncheckedCreateWithoutUk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutUk_wordInput = {
@@ -11229,6 +11664,9 @@ export type MeaningCreateWithoutUk_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutUk_meanInput = {
@@ -11300,6 +11738,9 @@ export type MeaningUncheckedCreateWithoutUk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutUk_meanInput = {
@@ -11386,6 +11827,9 @@ export type MeaningUpdateWithoutUk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutUk_wordInput = {
@@ -11457,6 +11901,9 @@ export type MeaningUncheckedUpdateWithoutUk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutUk_meanInput = {
@@ -11538,6 +11985,9 @@ export type MeaningUpdateWithoutUk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutUk_meanInput = {
@@ -11609,6 +12059,9 @@ export type MeaningUncheckedUpdateWithoutUk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutBg_wordInput = {
@@ -11679,6 +12132,9 @@ export type MeaningCreateWithoutBg_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutBg_wordInput = {
@@ -11750,6 +12206,9 @@ export type MeaningUncheckedCreateWithoutBg_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutBg_wordInput = {
@@ -11825,6 +12284,9 @@ export type MeaningCreateWithoutBg_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutBg_meanInput = {
@@ -11896,6 +12358,9 @@ export type MeaningUncheckedCreateWithoutBg_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutBg_meanInput = {
@@ -11982,6 +12447,9 @@ export type MeaningUpdateWithoutBg_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutBg_wordInput = {
@@ -12053,6 +12521,9 @@ export type MeaningUncheckedUpdateWithoutBg_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutBg_meanInput = {
@@ -12134,6 +12605,9 @@ export type MeaningUpdateWithoutBg_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutBg_meanInput = {
@@ -12205,6 +12679,9 @@ export type MeaningUncheckedUpdateWithoutBg_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutPl_wordInput = {
@@ -12275,6 +12752,9 @@ export type MeaningCreateWithoutPl_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutPl_wordInput = {
@@ -12346,6 +12826,9 @@ export type MeaningUncheckedCreateWithoutPl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutPl_wordInput = {
@@ -12421,6 +12904,9 @@ export type MeaningCreateWithoutPl_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutPl_meanInput = {
@@ -12492,6 +12978,9 @@ export type MeaningUncheckedCreateWithoutPl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutPl_meanInput = {
@@ -12578,6 +13067,9 @@ export type MeaningUpdateWithoutPl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutPl_wordInput = {
@@ -12649,6 +13141,9 @@ export type MeaningUncheckedUpdateWithoutPl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutPl_meanInput = {
@@ -12730,6 +13225,9 @@ export type MeaningUpdateWithoutPl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutPl_meanInput = {
@@ -12801,6 +13299,9 @@ export type MeaningUncheckedUpdateWithoutPl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutBe_wordInput = {
@@ -12871,6 +13372,9 @@ export type MeaningCreateWithoutBe_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutBe_wordInput = {
@@ -12942,6 +13446,9 @@ export type MeaningUncheckedCreateWithoutBe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutBe_wordInput = {
@@ -13017,6 +13524,9 @@ export type MeaningCreateWithoutBe_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutBe_meanInput = {
@@ -13088,6 +13598,9 @@ export type MeaningUncheckedCreateWithoutBe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutBe_meanInput = {
@@ -13174,6 +13687,9 @@ export type MeaningUpdateWithoutBe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutBe_wordInput = {
@@ -13245,6 +13761,9 @@ export type MeaningUncheckedUpdateWithoutBe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutBe_meanInput = {
@@ -13326,6 +13845,9 @@ export type MeaningUpdateWithoutBe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutBe_meanInput = {
@@ -13397,6 +13919,9 @@ export type MeaningUncheckedUpdateWithoutBe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutCs_wordInput = {
@@ -13467,6 +13992,9 @@ export type MeaningCreateWithoutCs_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCs_wordInput = {
@@ -13538,6 +14066,9 @@ export type MeaningUncheckedCreateWithoutCs_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCs_wordInput = {
@@ -13613,6 +14144,9 @@ export type MeaningCreateWithoutCs_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCs_meanInput = {
@@ -13684,6 +14218,9 @@ export type MeaningUncheckedCreateWithoutCs_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCs_meanInput = {
@@ -13770,6 +14307,9 @@ export type MeaningUpdateWithoutCs_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCs_wordInput = {
@@ -13841,6 +14381,9 @@ export type MeaningUncheckedUpdateWithoutCs_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutCs_meanInput = {
@@ -13922,6 +14465,9 @@ export type MeaningUpdateWithoutCs_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCs_meanInput = {
@@ -13993,6 +14539,9 @@ export type MeaningUncheckedUpdateWithoutCs_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutSk_wordInput = {
@@ -14063,6 +14612,9 @@ export type MeaningCreateWithoutSk_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSk_wordInput = {
@@ -14134,6 +14686,9 @@ export type MeaningUncheckedCreateWithoutSk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSk_wordInput = {
@@ -14209,6 +14764,9 @@ export type MeaningCreateWithoutSk_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSk_meanInput = {
@@ -14280,6 +14838,9 @@ export type MeaningUncheckedCreateWithoutSk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSk_meanInput = {
@@ -14366,6 +14927,9 @@ export type MeaningUpdateWithoutSk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSk_wordInput = {
@@ -14437,6 +15001,9 @@ export type MeaningUncheckedUpdateWithoutSk_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutSk_meanInput = {
@@ -14518,6 +15085,9 @@ export type MeaningUpdateWithoutSk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSk_meanInput = {
@@ -14589,6 +15159,9 @@ export type MeaningUncheckedUpdateWithoutSk_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutSl_wordInput = {
@@ -14659,6 +15232,9 @@ export type MeaningCreateWithoutSl_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSl_wordInput = {
@@ -14730,6 +15306,9 @@ export type MeaningUncheckedCreateWithoutSl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSl_wordInput = {
@@ -14805,6 +15384,9 @@ export type MeaningCreateWithoutSl_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSl_meanInput = {
@@ -14876,6 +15458,9 @@ export type MeaningUncheckedCreateWithoutSl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSl_meanInput = {
@@ -14962,6 +15547,9 @@ export type MeaningUpdateWithoutSl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSl_wordInput = {
@@ -15033,6 +15621,9 @@ export type MeaningUncheckedUpdateWithoutSl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutSl_meanInput = {
@@ -15114,6 +15705,9 @@ export type MeaningUpdateWithoutSl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSl_meanInput = {
@@ -15185,6 +15779,9 @@ export type MeaningUncheckedUpdateWithoutSl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutHr_wordInput = {
@@ -15255,6 +15852,9 @@ export type MeaningCreateWithoutHr_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHr_wordInput = {
@@ -15326,6 +15926,9 @@ export type MeaningUncheckedCreateWithoutHr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHr_wordInput = {
@@ -15401,6 +16004,9 @@ export type MeaningCreateWithoutHr_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHr_meanInput = {
@@ -15472,6 +16078,9 @@ export type MeaningUncheckedCreateWithoutHr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHr_meanInput = {
@@ -15558,6 +16167,9 @@ export type MeaningUpdateWithoutHr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHr_wordInput = {
@@ -15629,6 +16241,9 @@ export type MeaningUncheckedUpdateWithoutHr_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutHr_meanInput = {
@@ -15710,6 +16325,9 @@ export type MeaningUpdateWithoutHr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHr_meanInput = {
@@ -15781,6 +16399,9 @@ export type MeaningUncheckedUpdateWithoutHr_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutCu_wordInput = {
@@ -15851,6 +16472,9 @@ export type MeaningCreateWithoutCu_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCu_wordInput = {
@@ -15922,6 +16546,9 @@ export type MeaningUncheckedCreateWithoutCu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCu_wordInput = {
@@ -15997,6 +16624,9 @@ export type MeaningCreateWithoutCu_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutCu_meanInput = {
@@ -16068,6 +16698,9 @@ export type MeaningUncheckedCreateWithoutCu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutCu_meanInput = {
@@ -16154,6 +16787,9 @@ export type MeaningUpdateWithoutCu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCu_wordInput = {
@@ -16225,6 +16861,9 @@ export type MeaningUncheckedUpdateWithoutCu_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutCu_meanInput = {
@@ -16306,6 +16945,9 @@ export type MeaningUpdateWithoutCu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutCu_meanInput = {
@@ -16377,6 +17019,9 @@ export type MeaningUncheckedUpdateWithoutCu_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutDe_wordInput = {
@@ -16447,6 +17092,9 @@ export type MeaningCreateWithoutDe_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutDe_wordInput = {
@@ -16518,6 +17166,9 @@ export type MeaningUncheckedCreateWithoutDe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutDe_wordInput = {
@@ -16593,6 +17244,9 @@ export type MeaningCreateWithoutDe_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutDe_meanInput = {
@@ -16664,6 +17318,9 @@ export type MeaningUncheckedCreateWithoutDe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutDe_meanInput = {
@@ -16750,6 +17407,9 @@ export type MeaningUpdateWithoutDe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutDe_wordInput = {
@@ -16821,6 +17481,9 @@ export type MeaningUncheckedUpdateWithoutDe_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutDe_meanInput = {
@@ -16902,6 +17565,9 @@ export type MeaningUpdateWithoutDe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutDe_meanInput = {
@@ -16973,6 +17639,9 @@ export type MeaningUncheckedUpdateWithoutDe_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutNl_wordInput = {
@@ -17043,6 +17712,9 @@ export type MeaningCreateWithoutNl_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutNl_wordInput = {
@@ -17114,6 +17786,9 @@ export type MeaningUncheckedCreateWithoutNl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutNl_wordInput = {
@@ -17189,6 +17864,9 @@ export type MeaningCreateWithoutNl_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutNl_meanInput = {
@@ -17260,6 +17938,9 @@ export type MeaningUncheckedCreateWithoutNl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutNl_meanInput = {
@@ -17346,6 +18027,9 @@ export type MeaningUpdateWithoutNl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutNl_wordInput = {
@@ -17417,6 +18101,9 @@ export type MeaningUncheckedUpdateWithoutNl_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutNl_meanInput = {
@@ -17498,6 +18185,9 @@ export type MeaningUpdateWithoutNl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutNl_meanInput = {
@@ -17569,6 +18259,9 @@ export type MeaningUncheckedUpdateWithoutNl_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutEo_wordInput = {
@@ -17639,6 +18332,9 @@ export type MeaningCreateWithoutEo_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEo_wordInput = {
@@ -17710,6 +18406,9 @@ export type MeaningUncheckedCreateWithoutEo_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEo_wordInput = {
@@ -17785,6 +18484,9 @@ export type MeaningCreateWithoutEo_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutEo_meanInput = {
@@ -17856,6 +18558,9 @@ export type MeaningUncheckedCreateWithoutEo_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutEo_meanInput = {
@@ -17942,6 +18647,9 @@ export type MeaningUpdateWithoutEo_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEo_wordInput = {
@@ -18013,6 +18721,9 @@ export type MeaningUncheckedUpdateWithoutEo_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutEo_meanInput = {
@@ -18094,6 +18805,9 @@ export type MeaningUpdateWithoutEo_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutEo_meanInput = {
@@ -18165,6 +18879,9 @@ export type MeaningUncheckedUpdateWithoutEo_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutHsb_wordInput = {
@@ -18235,6 +18952,9 @@ export type MeaningCreateWithoutHsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHsb_wordInput = {
@@ -18306,6 +19026,9 @@ export type MeaningUncheckedCreateWithoutHsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHsb_wordInput = {
@@ -18381,6 +19104,9 @@ export type MeaningCreateWithoutHsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutHsb_meanInput = {
@@ -18452,6 +19178,9 @@ export type MeaningUncheckedCreateWithoutHsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutHsb_meanInput = {
@@ -18538,6 +19267,9 @@ export type MeaningUpdateWithoutHsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHsb_wordInput = {
@@ -18609,6 +19341,9 @@ export type MeaningUncheckedUpdateWithoutHsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutHsb_meanInput = {
@@ -18690,6 +19425,9 @@ export type MeaningUpdateWithoutHsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutHsb_meanInput = {
@@ -18761,6 +19499,9 @@ export type MeaningUncheckedUpdateWithoutHsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutDsb_wordInput = {
@@ -18831,6 +19572,9 @@ export type MeaningCreateWithoutDsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutDsb_wordInput = {
@@ -18902,6 +19646,9 @@ export type MeaningUncheckedCreateWithoutDsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutDsb_wordInput = {
@@ -18977,6 +19724,9 @@ export type MeaningCreateWithoutDsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutDsb_meanInput = {
@@ -19048,6 +19798,9 @@ export type MeaningUncheckedCreateWithoutDsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
   synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutDsb_meanInput = {
@@ -19134,6 +19887,9 @@ export type MeaningUpdateWithoutDsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutDsb_wordInput = {
@@ -19205,6 +19961,9 @@ export type MeaningUncheckedUpdateWithoutDsb_wordInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUpsertWithoutDsb_meanInput = {
@@ -19286,6 +20045,9 @@ export type MeaningUpdateWithoutDsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutDsb_meanInput = {
@@ -19357,6 +20119,9 @@ export type MeaningUncheckedUpdateWithoutDsb_meanInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutSynsetsInput = {
@@ -19427,6 +20192,9 @@ export type MeaningCreateWithoutSynsetsInput = {
   premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
   conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutSynsetsInput = {
@@ -19498,6 +20266,9 @@ export type MeaningUncheckedCreateWithoutSynsetsInput = {
   premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
   conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
   conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutSynsetsInput = {
@@ -19584,6 +20355,9 @@ export type MeaningUpdateWithoutSynsetsInput = {
   premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutSynsetsInput = {
@@ -19655,6 +20429,939 @@ export type MeaningUncheckedUpdateWithoutSynsetsInput = {
   premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningCreateWithoutSemanticRelationsSourceInput = {
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lexeme: Prisma.LexemeCreateNestedOneWithoutMeaningsInput
+  en_word?: Prisma.EnCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningUncheckedCreateWithoutSemanticRelationsSourceInput = {
+  id?: number
+  lexemeId: number
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  en_word?: Prisma.EnUncheckedCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnUncheckedCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuUncheckedCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuUncheckedCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkUncheckedCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkUncheckedCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrUncheckedCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrUncheckedCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkUncheckedCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkUncheckedCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgUncheckedCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgUncheckedCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlUncheckedCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlUncheckedCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeUncheckedCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeUncheckedCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsUncheckedCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsUncheckedCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkUncheckedCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkUncheckedCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlUncheckedCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlUncheckedCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrUncheckedCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrUncheckedCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuUncheckedCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuUncheckedCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeUncheckedCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeUncheckedCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlUncheckedCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlUncheckedCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoUncheckedCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoUncheckedCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbUncheckedCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbUncheckedCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbUncheckedCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbUncheckedCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymUncheckedCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymUncheckedCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymUncheckedCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymUncheckedCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymUncheckedCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymUncheckedCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymUncheckedCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymUncheckedCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymUncheckedCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymUncheckedCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymUncheckedCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymUncheckedCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseUncheckedCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseUncheckedCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectUncheckedCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectUncheckedCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseUncheckedCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningCreateOrConnectWithoutSemanticRelationsSourceInput = {
+  where: Prisma.MeaningWhereUniqueInput
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsSourceInput>
+}
+
+export type MeaningCreateWithoutSemanticRelationsTargetInput = {
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lexeme: Prisma.LexemeCreateNestedOneWithoutMeaningsInput
+  en_word?: Prisma.EnCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningUncheckedCreateWithoutSemanticRelationsTargetInput = {
+  id?: number
+  lexemeId: number
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  en_word?: Prisma.EnUncheckedCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnUncheckedCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuUncheckedCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuUncheckedCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkUncheckedCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkUncheckedCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrUncheckedCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrUncheckedCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkUncheckedCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkUncheckedCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgUncheckedCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgUncheckedCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlUncheckedCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlUncheckedCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeUncheckedCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeUncheckedCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsUncheckedCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsUncheckedCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkUncheckedCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkUncheckedCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlUncheckedCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlUncheckedCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrUncheckedCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrUncheckedCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuUncheckedCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuUncheckedCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeUncheckedCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeUncheckedCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlUncheckedCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlUncheckedCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoUncheckedCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoUncheckedCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbUncheckedCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbUncheckedCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbUncheckedCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbUncheckedCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymUncheckedCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymUncheckedCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymUncheckedCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymUncheckedCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymUncheckedCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymUncheckedCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymUncheckedCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymUncheckedCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymUncheckedCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymUncheckedCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymUncheckedCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymUncheckedCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseUncheckedCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseUncheckedCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectUncheckedCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectUncheckedCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseUncheckedCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningCreateOrConnectWithoutSemanticRelationsTargetInput = {
+  where: Prisma.MeaningWhereUniqueInput
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsTargetInput>
+}
+
+export type MeaningUpsertWithoutSemanticRelationsSourceInput = {
+  update: Prisma.XOR<Prisma.MeaningUpdateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsSourceInput>
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsSourceInput>
+  where?: Prisma.MeaningWhereInput
+}
+
+export type MeaningUpdateToOneWithWhereWithoutSemanticRelationsSourceInput = {
+  where?: Prisma.MeaningWhereInput
+  data: Prisma.XOR<Prisma.MeaningUpdateWithoutSemanticRelationsSourceInput, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsSourceInput>
+}
+
+export type MeaningUpdateWithoutSemanticRelationsSourceInput = {
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lexeme?: Prisma.LexemeUpdateOneRequiredWithoutMeaningsNestedInput
+  en_word?: Prisma.EnUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningUncheckedUpdateWithoutSemanticRelationsSourceInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  en_word?: Prisma.EnUncheckedUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUncheckedUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUncheckedUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUncheckedUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUncheckedUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUncheckedUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUncheckedUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUncheckedUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUncheckedUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUncheckedUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUncheckedUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUncheckedUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUncheckedUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUncheckedUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUncheckedUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUncheckedUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUncheckedUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUncheckedUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUncheckedUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUncheckedUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUncheckedUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUncheckedUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUncheckedUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUncheckedUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUncheckedUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUncheckedUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUncheckedUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUncheckedUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUncheckedUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUncheckedUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUncheckedUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUncheckedUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUncheckedUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUncheckedUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUncheckedUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUncheckedUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUncheckedUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUncheckedUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUncheckedUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUncheckedUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUncheckedUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUncheckedUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUncheckedUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUncheckedUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUncheckedUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUncheckedUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUncheckedUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUncheckedUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUncheckedUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUncheckedUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUncheckedUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUncheckedUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUncheckedUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningUpsertWithoutSemanticRelationsTargetInput = {
+  update: Prisma.XOR<Prisma.MeaningUpdateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsTargetInput>
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedCreateWithoutSemanticRelationsTargetInput>
+  where?: Prisma.MeaningWhereInput
+}
+
+export type MeaningUpdateToOneWithWhereWithoutSemanticRelationsTargetInput = {
+  where?: Prisma.MeaningWhereInput
+  data: Prisma.XOR<Prisma.MeaningUpdateWithoutSemanticRelationsTargetInput, Prisma.MeaningUncheckedUpdateWithoutSemanticRelationsTargetInput>
+}
+
+export type MeaningUpdateWithoutSemanticRelationsTargetInput = {
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lexeme?: Prisma.LexemeUpdateOneRequiredWithoutMeaningsNestedInput
+  en_word?: Prisma.EnUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningUncheckedUpdateWithoutSemanticRelationsTargetInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  en_word?: Prisma.EnUncheckedUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUncheckedUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUncheckedUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUncheckedUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUncheckedUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUncheckedUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUncheckedUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUncheckedUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUncheckedUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUncheckedUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUncheckedUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUncheckedUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUncheckedUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUncheckedUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUncheckedUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUncheckedUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUncheckedUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUncheckedUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUncheckedUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUncheckedUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUncheckedUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUncheckedUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUncheckedUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUncheckedUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUncheckedUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUncheckedUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUncheckedUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUncheckedUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUncheckedUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUncheckedUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUncheckedUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUncheckedUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUncheckedUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUncheckedUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUncheckedUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUncheckedUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUncheckedUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUncheckedUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUncheckedUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUncheckedUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUncheckedUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUncheckedUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUncheckedUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUncheckedUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUncheckedUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUncheckedUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUncheckedUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUncheckedUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUncheckedUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUncheckedUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUncheckedUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUncheckedUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUncheckedUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningCreateWithoutPrimeExponentsInput = {
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lexeme: Prisma.LexemeCreateNestedOneWithoutMeaningsInput
+  en_word?: Prisma.EnCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+}
+
+export type MeaningUncheckedCreateWithoutPrimeExponentsInput = {
+  id?: number
+  lexemeId: number
+  meaning?: string | null
+  examples?: string | null
+  meaningVeryfied?: number | null
+  meaningMessage?: string | null
+  examplesVeryfied?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  en_word?: Prisma.EnUncheckedCreateNestedManyWithoutWordInput
+  en_mean?: Prisma.EnUncheckedCreateNestedManyWithoutMeaningInput
+  ru_word?: Prisma.RuUncheckedCreateNestedManyWithoutWordInput
+  ru_mean?: Prisma.RuUncheckedCreateNestedManyWithoutMeaningInput
+  mk_word?: Prisma.MkUncheckedCreateNestedManyWithoutWordInput
+  mk_mean?: Prisma.MkUncheckedCreateNestedManyWithoutMeaningInput
+  sr_word?: Prisma.SrUncheckedCreateNestedManyWithoutWordInput
+  sr_mean?: Prisma.SrUncheckedCreateNestedManyWithoutMeaningInput
+  uk_word?: Prisma.UkUncheckedCreateNestedManyWithoutWordInput
+  uk_mean?: Prisma.UkUncheckedCreateNestedManyWithoutMeaningInput
+  bg_word?: Prisma.BgUncheckedCreateNestedManyWithoutWordInput
+  bg_mean?: Prisma.BgUncheckedCreateNestedManyWithoutMeaningInput
+  pl_word?: Prisma.PlUncheckedCreateNestedManyWithoutWordInput
+  pl_mean?: Prisma.PlUncheckedCreateNestedManyWithoutMeaningInput
+  be_word?: Prisma.BeUncheckedCreateNestedManyWithoutWordInput
+  be_mean?: Prisma.BeUncheckedCreateNestedManyWithoutMeaningInput
+  cs_word?: Prisma.CsUncheckedCreateNestedManyWithoutWordInput
+  cs_mean?: Prisma.CsUncheckedCreateNestedManyWithoutMeaningInput
+  sk_word?: Prisma.SkUncheckedCreateNestedManyWithoutWordInput
+  sk_mean?: Prisma.SkUncheckedCreateNestedManyWithoutMeaningInput
+  sl_word?: Prisma.SlUncheckedCreateNestedManyWithoutWordInput
+  sl_mean?: Prisma.SlUncheckedCreateNestedManyWithoutMeaningInput
+  hr_word?: Prisma.HrUncheckedCreateNestedManyWithoutWordInput
+  hr_mean?: Prisma.HrUncheckedCreateNestedManyWithoutMeaningInput
+  cu_word?: Prisma.CuUncheckedCreateNestedManyWithoutWordInput
+  cu_mean?: Prisma.CuUncheckedCreateNestedManyWithoutMeaningInput
+  de_word?: Prisma.DeUncheckedCreateNestedManyWithoutWordInput
+  de_mean?: Prisma.DeUncheckedCreateNestedManyWithoutMeaningInput
+  nl_word?: Prisma.NlUncheckedCreateNestedManyWithoutWordInput
+  nl_mean?: Prisma.NlUncheckedCreateNestedManyWithoutMeaningInput
+  eo_word?: Prisma.EoUncheckedCreateNestedManyWithoutWordInput
+  eo_mean?: Prisma.EoUncheckedCreateNestedManyWithoutMeaningInput
+  hsb_word?: Prisma.HsbUncheckedCreateNestedManyWithoutWordInput
+  hsb_mean?: Prisma.HsbUncheckedCreateNestedManyWithoutMeaningInput
+  dsb_word?: Prisma.DsbUncheckedCreateNestedManyWithoutWordInput
+  dsb_mean?: Prisma.DsbUncheckedCreateNestedManyWithoutMeaningInput
+  synonymsSource?: Prisma.SynonymUncheckedCreateNestedManyWithoutSourceInput
+  synonymsTarget?: Prisma.SynonymUncheckedCreateNestedManyWithoutTargetInput
+  antonymsSource?: Prisma.AntonymUncheckedCreateNestedManyWithoutSourceInput
+  antonymsTarget?: Prisma.AntonymUncheckedCreateNestedManyWithoutTargetInput
+  hypernymsSource?: Prisma.HypernymUncheckedCreateNestedManyWithoutSourceInput
+  hypernymsTarget?: Prisma.HypernymUncheckedCreateNestedManyWithoutTargetInput
+  hyponymsSource?: Prisma.HyponymUncheckedCreateNestedManyWithoutSourceInput
+  hyponymsTarget?: Prisma.HyponymUncheckedCreateNestedManyWithoutTargetInput
+  meronymsSource?: Prisma.MeronymUncheckedCreateNestedManyWithoutSourceInput
+  meronymsTarget?: Prisma.MeronymUncheckedCreateNestedManyWithoutTargetInput
+  holonymsSource?: Prisma.HolonymUncheckedCreateNestedManyWithoutSourceInput
+  holonymsTarget?: Prisma.HolonymUncheckedCreateNestedManyWithoutTargetInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutSourceInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedCreateNestedManyWithoutTargetInput
+  causesSource?: Prisma.CauseUncheckedCreateNestedManyWithoutSourceInput
+  causesTarget?: Prisma.CauseUncheckedCreateNestedManyWithoutTargetInput
+  effectsSource?: Prisma.EffectUncheckedCreateNestedManyWithoutSourceInput
+  effectsTarget?: Prisma.EffectUncheckedCreateNestedManyWithoutTargetInput
+  premisesSource?: Prisma.PremiseUncheckedCreateNestedManyWithoutSourceInput
+  premisesTarget?: Prisma.PremiseUncheckedCreateNestedManyWithoutTargetInput
+  conclusionsSource?: Prisma.ConclusionUncheckedCreateNestedManyWithoutSourceInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedCreateNestedManyWithoutTargetInput
+  synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+}
+
+export type MeaningCreateOrConnectWithoutPrimeExponentsInput = {
+  where: Prisma.MeaningWhereUniqueInput
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedCreateWithoutPrimeExponentsInput>
+}
+
+export type MeaningUpsertWithoutPrimeExponentsInput = {
+  update: Prisma.XOR<Prisma.MeaningUpdateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedUpdateWithoutPrimeExponentsInput>
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedCreateWithoutPrimeExponentsInput>
+  where?: Prisma.MeaningWhereInput
+}
+
+export type MeaningUpdateToOneWithWhereWithoutPrimeExponentsInput = {
+  where?: Prisma.MeaningWhereInput
+  data: Prisma.XOR<Prisma.MeaningUpdateWithoutPrimeExponentsInput, Prisma.MeaningUncheckedUpdateWithoutPrimeExponentsInput>
+}
+
+export type MeaningUpdateWithoutPrimeExponentsInput = {
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lexeme?: Prisma.LexemeUpdateOneRequiredWithoutMeaningsNestedInput
+  en_word?: Prisma.EnUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+}
+
+export type MeaningUncheckedUpdateWithoutPrimeExponentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVeryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  en_word?: Prisma.EnUncheckedUpdateManyWithoutWordNestedInput
+  en_mean?: Prisma.EnUncheckedUpdateManyWithoutMeaningNestedInput
+  ru_word?: Prisma.RuUncheckedUpdateManyWithoutWordNestedInput
+  ru_mean?: Prisma.RuUncheckedUpdateManyWithoutMeaningNestedInput
+  mk_word?: Prisma.MkUncheckedUpdateManyWithoutWordNestedInput
+  mk_mean?: Prisma.MkUncheckedUpdateManyWithoutMeaningNestedInput
+  sr_word?: Prisma.SrUncheckedUpdateManyWithoutWordNestedInput
+  sr_mean?: Prisma.SrUncheckedUpdateManyWithoutMeaningNestedInput
+  uk_word?: Prisma.UkUncheckedUpdateManyWithoutWordNestedInput
+  uk_mean?: Prisma.UkUncheckedUpdateManyWithoutMeaningNestedInput
+  bg_word?: Prisma.BgUncheckedUpdateManyWithoutWordNestedInput
+  bg_mean?: Prisma.BgUncheckedUpdateManyWithoutMeaningNestedInput
+  pl_word?: Prisma.PlUncheckedUpdateManyWithoutWordNestedInput
+  pl_mean?: Prisma.PlUncheckedUpdateManyWithoutMeaningNestedInput
+  be_word?: Prisma.BeUncheckedUpdateManyWithoutWordNestedInput
+  be_mean?: Prisma.BeUncheckedUpdateManyWithoutMeaningNestedInput
+  cs_word?: Prisma.CsUncheckedUpdateManyWithoutWordNestedInput
+  cs_mean?: Prisma.CsUncheckedUpdateManyWithoutMeaningNestedInput
+  sk_word?: Prisma.SkUncheckedUpdateManyWithoutWordNestedInput
+  sk_mean?: Prisma.SkUncheckedUpdateManyWithoutMeaningNestedInput
+  sl_word?: Prisma.SlUncheckedUpdateManyWithoutWordNestedInput
+  sl_mean?: Prisma.SlUncheckedUpdateManyWithoutMeaningNestedInput
+  hr_word?: Prisma.HrUncheckedUpdateManyWithoutWordNestedInput
+  hr_mean?: Prisma.HrUncheckedUpdateManyWithoutMeaningNestedInput
+  cu_word?: Prisma.CuUncheckedUpdateManyWithoutWordNestedInput
+  cu_mean?: Prisma.CuUncheckedUpdateManyWithoutMeaningNestedInput
+  de_word?: Prisma.DeUncheckedUpdateManyWithoutWordNestedInput
+  de_mean?: Prisma.DeUncheckedUpdateManyWithoutMeaningNestedInput
+  nl_word?: Prisma.NlUncheckedUpdateManyWithoutWordNestedInput
+  nl_mean?: Prisma.NlUncheckedUpdateManyWithoutMeaningNestedInput
+  eo_word?: Prisma.EoUncheckedUpdateManyWithoutWordNestedInput
+  eo_mean?: Prisma.EoUncheckedUpdateManyWithoutMeaningNestedInput
+  hsb_word?: Prisma.HsbUncheckedUpdateManyWithoutWordNestedInput
+  hsb_mean?: Prisma.HsbUncheckedUpdateManyWithoutMeaningNestedInput
+  dsb_word?: Prisma.DsbUncheckedUpdateManyWithoutWordNestedInput
+  dsb_mean?: Prisma.DsbUncheckedUpdateManyWithoutMeaningNestedInput
+  synonymsSource?: Prisma.SynonymUncheckedUpdateManyWithoutSourceNestedInput
+  synonymsTarget?: Prisma.SynonymUncheckedUpdateManyWithoutTargetNestedInput
+  antonymsSource?: Prisma.AntonymUncheckedUpdateManyWithoutSourceNestedInput
+  antonymsTarget?: Prisma.AntonymUncheckedUpdateManyWithoutTargetNestedInput
+  hypernymsSource?: Prisma.HypernymUncheckedUpdateManyWithoutSourceNestedInput
+  hypernymsTarget?: Prisma.HypernymUncheckedUpdateManyWithoutTargetNestedInput
+  hyponymsSource?: Prisma.HyponymUncheckedUpdateManyWithoutSourceNestedInput
+  hyponymsTarget?: Prisma.HyponymUncheckedUpdateManyWithoutTargetNestedInput
+  meronymsSource?: Prisma.MeronymUncheckedUpdateManyWithoutSourceNestedInput
+  meronymsTarget?: Prisma.MeronymUncheckedUpdateManyWithoutTargetNestedInput
+  holonymsSource?: Prisma.HolonymUncheckedUpdateManyWithoutSourceNestedInput
+  holonymsTarget?: Prisma.HolonymUncheckedUpdateManyWithoutTargetNestedInput
+  relatedWordsSource?: Prisma.RelatedWordUncheckedUpdateManyWithoutSourceNestedInput
+  relatedWordsTarget?: Prisma.RelatedWordUncheckedUpdateManyWithoutTargetNestedInput
+  causesSource?: Prisma.CauseUncheckedUpdateManyWithoutSourceNestedInput
+  causesTarget?: Prisma.CauseUncheckedUpdateManyWithoutTargetNestedInput
+  effectsSource?: Prisma.EffectUncheckedUpdateManyWithoutSourceNestedInput
+  effectsTarget?: Prisma.EffectUncheckedUpdateManyWithoutTargetNestedInput
+  premisesSource?: Prisma.PremiseUncheckedUpdateManyWithoutSourceNestedInput
+  premisesTarget?: Prisma.PremiseUncheckedUpdateManyWithoutTargetNestedInput
+  conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
+  conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
+  synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
 }
 
 export type MeaningCreateManyLexemeInput = {
@@ -19737,6 +21444,9 @@ export type MeaningUpdateWithoutLexemeInput = {
   conclusionsSource?: Prisma.ConclusionUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutLexemeInput = {
@@ -19808,6 +21518,9 @@ export type MeaningUncheckedUpdateWithoutLexemeInput = {
   conclusionsSource?: Prisma.ConclusionUncheckedUpdateManyWithoutSourceNestedInput
   conclusionsTarget?: Prisma.ConclusionUncheckedUpdateManyWithoutTargetNestedInput
   synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateManyWithoutLexemeInput = {
@@ -19887,6 +21600,9 @@ export type MeaningCountOutputType = {
   conclusionsSource: number
   conclusionsTarget: number
   synsets: number
+  semanticRelationsSource: number
+  semanticRelationsTarget: number
+  primeExponents: number
 }
 
 export type MeaningCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -19949,6 +21665,9 @@ export type MeaningCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   conclusionsSource?: boolean | MeaningCountOutputTypeCountConclusionsSourceArgs
   conclusionsTarget?: boolean | MeaningCountOutputTypeCountConclusionsTargetArgs
   synsets?: boolean | MeaningCountOutputTypeCountSynsetsArgs
+  semanticRelationsSource?: boolean | MeaningCountOutputTypeCountSemanticRelationsSourceArgs
+  semanticRelationsTarget?: boolean | MeaningCountOutputTypeCountSemanticRelationsTargetArgs
+  primeExponents?: boolean | MeaningCountOutputTypeCountPrimeExponentsArgs
 }
 
 /**
@@ -20374,6 +22093,27 @@ export type MeaningCountOutputTypeCountSynsetsArgs<ExtArgs extends runtime.Types
   where?: Prisma.MeaningSynsetWhereInput
 }
 
+/**
+ * MeaningCountOutputType without action
+ */
+export type MeaningCountOutputTypeCountSemanticRelationsSourceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SemanticRelationWhereInput
+}
+
+/**
+ * MeaningCountOutputType without action
+ */
+export type MeaningCountOutputTypeCountSemanticRelationsTargetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SemanticRelationWhereInput
+}
+
+/**
+ * MeaningCountOutputType without action
+ */
+export type MeaningCountOutputTypeCountPrimeExponentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrimeExponentWhereInput
+}
+
 
 export type MeaningSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -20446,6 +22186,9 @@ export type MeaningSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   conclusionsSource?: boolean | Prisma.Meaning$conclusionsSourceArgs<ExtArgs>
   conclusionsTarget?: boolean | Prisma.Meaning$conclusionsTargetArgs<ExtArgs>
   synsets?: boolean | Prisma.Meaning$synsetsArgs<ExtArgs>
+  semanticRelationsSource?: boolean | Prisma.Meaning$semanticRelationsSourceArgs<ExtArgs>
+  semanticRelationsTarget?: boolean | Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>
+  primeExponents?: boolean | Prisma.Meaning$primeExponentsArgs<ExtArgs>
   _count?: boolean | Prisma.MeaningCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meaning"]>
 
@@ -20552,6 +22295,9 @@ export type MeaningInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   conclusionsSource?: boolean | Prisma.Meaning$conclusionsSourceArgs<ExtArgs>
   conclusionsTarget?: boolean | Prisma.Meaning$conclusionsTargetArgs<ExtArgs>
   synsets?: boolean | Prisma.Meaning$synsetsArgs<ExtArgs>
+  semanticRelationsSource?: boolean | Prisma.Meaning$semanticRelationsSourceArgs<ExtArgs>
+  semanticRelationsTarget?: boolean | Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>
+  primeExponents?: boolean | Prisma.Meaning$primeExponentsArgs<ExtArgs>
   _count?: boolean | Prisma.MeaningCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MeaningIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -20624,6 +22370,9 @@ export type $MeaningPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     conclusionsSource: Prisma.$ConclusionPayload<ExtArgs>[]
     conclusionsTarget: Prisma.$ConclusionPayload<ExtArgs>[]
     synsets: Prisma.$MeaningSynsetPayload<ExtArgs>[]
+    semanticRelationsSource: Prisma.$SemanticRelationPayload<ExtArgs>[]
+    semanticRelationsTarget: Prisma.$SemanticRelationPayload<ExtArgs>[]
+    primeExponents: Prisma.$PrimeExponentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -21090,6 +22839,9 @@ export interface Prisma__MeaningClient<T, Null = never, ExtArgs extends runtime.
   conclusionsSource<T extends Prisma.Meaning$conclusionsSourceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$conclusionsSourceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConclusionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conclusionsTarget<T extends Prisma.Meaning$conclusionsTargetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$conclusionsTargetArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConclusionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   synsets<T extends Prisma.Meaning$synsetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$synsetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeaningSynsetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  semanticRelationsSource<T extends Prisma.Meaning$semanticRelationsSourceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$semanticRelationsSourceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemanticRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  semanticRelationsTarget<T extends Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemanticRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  primeExponents<T extends Prisma.Meaning$primeExponentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$primeExponentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrimeExponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22941,6 +24693,78 @@ export type Meaning$synsetsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.MeaningSynsetScalarFieldEnum | Prisma.MeaningSynsetScalarFieldEnum[]
+}
+
+/**
+ * Meaning.semanticRelationsSource
+ */
+export type Meaning$semanticRelationsSourceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SemanticRelation
+   */
+  select?: Prisma.SemanticRelationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SemanticRelation
+   */
+  omit?: Prisma.SemanticRelationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SemanticRelationInclude<ExtArgs> | null
+  where?: Prisma.SemanticRelationWhereInput
+  orderBy?: Prisma.SemanticRelationOrderByWithRelationInput | Prisma.SemanticRelationOrderByWithRelationInput[]
+  cursor?: Prisma.SemanticRelationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SemanticRelationScalarFieldEnum | Prisma.SemanticRelationScalarFieldEnum[]
+}
+
+/**
+ * Meaning.semanticRelationsTarget
+ */
+export type Meaning$semanticRelationsTargetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SemanticRelation
+   */
+  select?: Prisma.SemanticRelationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SemanticRelation
+   */
+  omit?: Prisma.SemanticRelationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SemanticRelationInclude<ExtArgs> | null
+  where?: Prisma.SemanticRelationWhereInput
+  orderBy?: Prisma.SemanticRelationOrderByWithRelationInput | Prisma.SemanticRelationOrderByWithRelationInput[]
+  cursor?: Prisma.SemanticRelationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SemanticRelationScalarFieldEnum | Prisma.SemanticRelationScalarFieldEnum[]
+}
+
+/**
+ * Meaning.primeExponents
+ */
+export type Meaning$primeExponentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrimeExponent
+   */
+  select?: Prisma.PrimeExponentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrimeExponent
+   */
+  omit?: Prisma.PrimeExponentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrimeExponentInclude<ExtArgs> | null
+  where?: Prisma.PrimeExponentWhereInput
+  orderBy?: Prisma.PrimeExponentOrderByWithRelationInput | Prisma.PrimeExponentOrderByWithRelationInput[]
+  cursor?: Prisma.PrimeExponentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrimeExponentScalarFieldEnum | Prisma.PrimeExponentScalarFieldEnum[]
 }
 
 /**

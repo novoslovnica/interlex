@@ -94,7 +94,10 @@ export const ModelName = {
   ProtoSlavicWord: 'ProtoSlavicWord',
   Synset: 'Synset',
   MeaningSynset: 'MeaningSynset',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  SemanticRelation: 'SemanticRelation',
+  SemanticPrime: 'SemanticPrime',
+  PrimeExponent: 'PrimeExponent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -708,6 +711,40 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const SemanticRelationScalarFieldEnum = {
+  id: 'id',
+  sourceId: 'sourceId',
+  targetId: 'targetId',
+  relationType: 'relationType',
+  proximity: 'proximity',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type SemanticRelationScalarFieldEnum = (typeof SemanticRelationScalarFieldEnum)[keyof typeof SemanticRelationScalarFieldEnum]
+
+
+export const SemanticPrimeScalarFieldEnum = {
+  code: 'code',
+  category: 'category',
+  englishText: 'englishText',
+  sortOrder: 'sortOrder'
+} as const
+
+export type SemanticPrimeScalarFieldEnum = (typeof SemanticPrimeScalarFieldEnum)[keyof typeof SemanticPrimeScalarFieldEnum]
+
+
+export const PrimeExponentScalarFieldEnum = {
+  id: 'id',
+  primeCode: 'primeCode',
+  meaningId: 'meaningId',
+  isCanonical: 'isCanonical',
+  note: 'note'
+} as const
+
+export type PrimeExponentScalarFieldEnum = (typeof PrimeExponentScalarFieldEnum)[keyof typeof PrimeExponentScalarFieldEnum]
 
 
 export const SortOrder = {

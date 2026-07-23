@@ -427,7 +427,10 @@ export const ModelName = {
   ProtoSlavicWord: 'ProtoSlavicWord',
   Synset: 'Synset',
   MeaningSynset: 'MeaningSynset',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  SemanticRelation: 'SemanticRelation',
+  SemanticPrime: 'SemanticPrime',
+  PrimeExponent: 'PrimeExponent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -443,7 +446,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "synonym" | "antonym" | "hypernym" | "hyponym" | "meronym" | "holonym" | "relatedWord" | "cause" | "effect" | "premise" | "conclusion" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "synonym" | "antonym" | "hypernym" | "hyponym" | "meronym" | "holonym" | "relatedWord" | "cause" | "effect" | "premise" | "conclusion" | "en" | "ru" | "mk" | "sr" | "uk" | "bg" | "pl" | "be" | "cs" | "sk" | "sl" | "hr" | "cu" | "de" | "nl" | "eo" | "hsb" | "dsb" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3703,6 +3706,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SemanticRelation: {
+      payload: Prisma.$SemanticRelationPayload<ExtArgs>
+      fields: Prisma.SemanticRelationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SemanticRelationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SemanticRelationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        findFirst: {
+          args: Prisma.SemanticRelationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SemanticRelationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        findMany: {
+          args: Prisma.SemanticRelationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>[]
+        }
+        create: {
+          args: Prisma.SemanticRelationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        createMany: {
+          args: Prisma.SemanticRelationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SemanticRelationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>[]
+        }
+        delete: {
+          args: Prisma.SemanticRelationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        update: {
+          args: Prisma.SemanticRelationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SemanticRelationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SemanticRelationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SemanticRelationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>[]
+        }
+        upsert: {
+          args: Prisma.SemanticRelationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticRelationPayload>
+        }
+        aggregate: {
+          args: Prisma.SemanticRelationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSemanticRelation>
+        }
+        groupBy: {
+          args: Prisma.SemanticRelationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SemanticRelationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SemanticRelationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SemanticRelationCountAggregateOutputType> | number
+        }
+      }
+    }
+    SemanticPrime: {
+      payload: Prisma.$SemanticPrimePayload<ExtArgs>
+      fields: Prisma.SemanticPrimeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SemanticPrimeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SemanticPrimeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        findFirst: {
+          args: Prisma.SemanticPrimeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SemanticPrimeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        findMany: {
+          args: Prisma.SemanticPrimeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>[]
+        }
+        create: {
+          args: Prisma.SemanticPrimeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        createMany: {
+          args: Prisma.SemanticPrimeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SemanticPrimeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>[]
+        }
+        delete: {
+          args: Prisma.SemanticPrimeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        update: {
+          args: Prisma.SemanticPrimeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        deleteMany: {
+          args: Prisma.SemanticPrimeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SemanticPrimeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SemanticPrimeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>[]
+        }
+        upsert: {
+          args: Prisma.SemanticPrimeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SemanticPrimePayload>
+        }
+        aggregate: {
+          args: Prisma.SemanticPrimeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSemanticPrime>
+        }
+        groupBy: {
+          args: Prisma.SemanticPrimeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SemanticPrimeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SemanticPrimeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SemanticPrimeCountAggregateOutputType> | number
+        }
+      }
+    }
+    PrimeExponent: {
+      payload: Prisma.$PrimeExponentPayload<ExtArgs>
+      fields: Prisma.PrimeExponentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrimeExponentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrimeExponentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        findFirst: {
+          args: Prisma.PrimeExponentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrimeExponentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        findMany: {
+          args: Prisma.PrimeExponentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>[]
+        }
+        create: {
+          args: Prisma.PrimeExponentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        createMany: {
+          args: Prisma.PrimeExponentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrimeExponentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>[]
+        }
+        delete: {
+          args: Prisma.PrimeExponentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        update: {
+          args: Prisma.PrimeExponentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PrimeExponentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrimeExponentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrimeExponentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PrimeExponentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrimeExponentPayload>
+        }
+        aggregate: {
+          args: Prisma.PrimeExponentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrimeExponent>
+        }
+        groupBy: {
+          args: Prisma.PrimeExponentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrimeExponentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrimeExponentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrimeExponentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -4339,6 +4564,40 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const SemanticRelationScalarFieldEnum = {
+  id: 'id',
+  sourceId: 'sourceId',
+  targetId: 'targetId',
+  relationType: 'relationType',
+  proximity: 'proximity',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type SemanticRelationScalarFieldEnum = (typeof SemanticRelationScalarFieldEnum)[keyof typeof SemanticRelationScalarFieldEnum]
+
+
+export const SemanticPrimeScalarFieldEnum = {
+  code: 'code',
+  category: 'category',
+  englishText: 'englishText',
+  sortOrder: 'sortOrder'
+} as const
+
+export type SemanticPrimeScalarFieldEnum = (typeof SemanticPrimeScalarFieldEnum)[keyof typeof SemanticPrimeScalarFieldEnum]
+
+
+export const PrimeExponentScalarFieldEnum = {
+  id: 'id',
+  primeCode: 'primeCode',
+  meaningId: 'meaningId',
+  isCanonical: 'isCanonical',
+  note: 'note'
+} as const
+
+export type PrimeExponentScalarFieldEnum = (typeof PrimeExponentScalarFieldEnum)[keyof typeof PrimeExponentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -4549,6 +4808,9 @@ export type GlobalOmitConfig = {
   synset?: Prisma.SynsetOmit
   meaningSynset?: Prisma.MeaningSynsetOmit
   auditLog?: Prisma.AuditLogOmit
+  semanticRelation?: Prisma.SemanticRelationOmit
+  semanticPrime?: Prisma.SemanticPrimeOmit
+  primeExponent?: Prisma.PrimeExponentOmit
 }
 
 /* Types for Logging */

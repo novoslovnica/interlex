@@ -200,6 +200,16 @@ model Meaning {
   // Связь с синсетами RuWordNet
   synsets  MeaningSynset[]
 
+  // Консолидированная семантическая сеть (2026-07-23), заменяет собой
+  // Synonym/Antonym/Hypernym/.../Conclusion выше для новых данных — см.
+  // AGENTS.md "Semantic Network" секцию. Старые 11 таблиц пока не удалены.
+  semanticRelationsSource SemanticRelation[] @relation("SemanticRelationSource")
+  semanticRelationsTarget SemanticRelation[] @relation("SemanticRelationTarget")
+
+  // NSM-семантические праймы (2026-07-23) — если это значение является
+  // экспонентом одного из ~64 семантических праймов
+  primeExponents PrimeExponent[]
+
   @@map("meanings")
   @@index([lexemeId])
 }
@@ -850,4 +860,75 @@ model AuditLog {
   @@index([userId, createdAt])
   @@index([actionId])
   @@map("audit_logs")
+}
+
+// Консолидированная семантическая сеть (2026-07-23). Заменяет собой 11 таблиц
+// Synonym/Antonym/Hypernym/Hyponym/Meronym/Holonym/RelatedWord/Cause/Effect/
+// Premise/Conclusion — одна строка на факт, направление кодируется через
+// sourceId/targetId, а не отдельными зеркальными строками (см. AGENTS.md
+// "Semantic Network" — прошлые hypernyms/hyponyms и т.п. генерировались
+// независимо и могли расходиться).
+// relationType — обычная строка, не БД-enum, чтобы новые типы можно было
+// добавлять как данные без миграции схемы.
+// Симметричные типы (порядок неважен, при записи нормализуется sourceId=min,
+// targetId=max): synonym, antonym, related, pos_synonym.
+// Направленные типы (source=частное/зависимое, target=общее/управляющее):
+// hypernymy (source=гипоним→target=гипероним), meronymy (source=часть→
+// target=целое), causation (source=причина→target=следствие), entailment
+// (source=предпосылка→target=заключение), instance_of (source=экземпляр→
+// target=класс), derivation (source=база→target=производное).
+// Старые 11 таблиц пока не удалены — удаление отложено до переноса админки
+// (см. AGENTS.md, "деферред TODO").
+model SemanticRelation {
+  id           Int      @id @default(autoincrement())
+  sourceId     Int
+  targetId     Int
+  relationType String   @map("relation_type")
+  proximity    Float?
+  source       String   @default("manual")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  sourceMeaning Meaning @relation("SemanticRelationSource", fields: [sourceId], references: [id], onDelete: Cascade)
+  targetMeaning Meaning @relation("SemanticRelationTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, targetId, relationType])
+  @@index([sourceId, relationType])
+  @@index([targetId, relationType])
+  @@map("semantic_relations")
+}
+
+// NSM-семантические праймы (2026-07-23). Справочник ~64 универсальных
+// неопределяемых смыслов (Goddard 2011 chart, см. AGENTS.md "Semantic
+// Network" для точной цитаты и расхождения 64 vs широко цитируемых 65) —
+// код праймов не меняется независимо от того, какие межславянские слова
+// выбраны их экспонентами.
+model SemanticPrime {
+  code        String @id
+  category    String?
+  englishText String @map("english_text")
+  sortOrder   Int    @map("sort_order")
+
+  exponents PrimeExponent[]
+
+  @@map("semantic_primes")
+}
+
+// Экспонент прайма — конкретное межславянское значение (Meaning), которое
+// реализует данный прайм. Один прайм может иметь несколько аллолексов
+// (разные поверхностные формы в разных грамматических контекстах — это
+// заложено в саму теорию NSM, не ошибка), поэтому это join-таблица, а не
+// прямой FK на SemanticPrime.
+model PrimeExponent {
+  id          Int     @id @default(autoincrement())
+  primeCode   String  @map("prime_code")
+  meaningId   Int
+  isCanonical Boolean @default(true) @map("is_canonical")
+  note        String?
+
+  prime   SemanticPrime @relation(fields: [primeCode], references: [code], onDelete: Cascade)
+  meaning Meaning       @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+
+  @@unique([primeCode, meaningId])
+  @@index([meaningId])
+  @@map("prime_exponents")
 }

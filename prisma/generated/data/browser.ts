@@ -237,3 +237,18 @@ export type MeaningSynset = Prisma.MeaningSynsetModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model SemanticRelation
+ * 
+ */
+export type SemanticRelation = Prisma.SemanticRelationModel
+/**
+ * Model SemanticPrime
+ * 
+ */
+export type SemanticPrime = Prisma.SemanticPrimeModel
+/**
+ * Model PrimeExponent
+ * 
+ */
+export type PrimeExponent = Prisma.PrimeExponentModel

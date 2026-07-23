@@ -4,6 +4,7 @@
 slovnik*
 *.db
 *.db.*
+*.backup*
 NOTES.md
 drafts/
 scripts/python/pdf/
