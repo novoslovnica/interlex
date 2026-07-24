@@ -26,7 +26,7 @@ export interface TranslationRow {
   id: number
   language: string
   value: string | null
-  veryfied: number | null
+  verified: number | null
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
@@ -128,7 +128,7 @@ export function fetchOneTranslation(
 
 /**
  * Create-if-missing-else-update. Returns the resulting row plus `FieldChange[]`
- * shaped exactly as `${language}.value` / `${language}.veryfied` /
+ * shaped exactly as `${language}.value` / `${language}.verified` /
  * `${language}.message` / `${language}.created`, matching the audit-log
  * field-name convention every existing call site already relies on.
  */
@@ -139,7 +139,7 @@ export function upsertTranslation(
     meaningId?: number
     language: string
     value?: string | null
-    veryfied?: number
+    verified?: number
     message?: string | null
   }
 ): { row: TranslationRow; changes: FieldChange[]; created: boolean } {
@@ -157,17 +157,17 @@ export function upsertTranslation(
       throw new Error("upsertTranslation: meaningId is required to create a new translation")
     }
     const info = db.prepare(`
-      INSERT INTO translations (language, value, veryfied, message, meaningId, createdAt, updatedAt)
+      INSERT INTO translations (language, value, verified, message, meaningId, createdAt, updatedAt)
       VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `).run(
       params.language,
       params.value ?? null,
-      params.veryfied ?? null,
+      params.verified ?? null,
       params.message ?? null,
       params.meaningId
     )
     if (params.value !== undefined) changes.push({ field: `${params.language}.value`, oldValue: null, newValue: params.value })
-    if (params.veryfied !== undefined) changes.push({ field: `${params.language}.veryfied`, oldValue: null, newValue: params.veryfied })
+    if (params.verified !== undefined) changes.push({ field: `${params.language}.verified`, oldValue: null, newValue: params.verified })
     if (params.message !== undefined) changes.push({ field: `${params.language}.message`, oldValue: null, newValue: params.message })
     if (changes.length > 0) changes.push({ field: `${params.language}.created`, oldValue: null, newValue: "new translation" })
 
@@ -175,14 +175,14 @@ export function upsertTranslation(
     return { row, changes, created: true }
   }
 
-  const updateData: { value: string | null; veryfied: number | null; message: string | null } = {
+  const updateData: { value: string | null; verified: number | null; message: string | null } = {
     value: params.value !== undefined ? (params.value ?? null) : existing.value,
-    veryfied: params.veryfied !== undefined ? params.veryfied : existing.veryfied,
+    verified: params.verified !== undefined ? params.verified : existing.verified,
     message: params.message !== undefined ? (params.message ?? null) : existing.message,
   }
 
-  if (params.veryfied !== undefined && (existing.veryfied ?? 0) !== params.veryfied) {
-    changes.push({ field: `${params.language}.veryfied`, oldValue: existing.veryfied ?? 0, newValue: params.veryfied })
+  if (params.verified !== undefined && (existing.verified ?? 0) !== params.verified) {
+    changes.push({ field: `${params.language}.verified`, oldValue: existing.verified ?? 0, newValue: params.verified })
   }
   if (params.value !== undefined && (existing.value ?? "") !== (params.value ?? "")) {
     changes.push({ field: `${params.language}.value`, oldValue: existing.value ?? null, newValue: params.value })
@@ -192,8 +192,8 @@ export function upsertTranslation(
   }
 
   db.prepare(`
-    UPDATE translations SET value = ?, veryfied = ?, message = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?
-  `).run(updateData.value, updateData.veryfied, updateData.message, existing.id)
+    UPDATE translations SET value = ?, verified = ?, message = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?
+  `).run(updateData.value, updateData.verified, updateData.message, existing.id)
 
   const row = db.prepare(`SELECT * FROM translations WHERE id = ?`).get(existing.id) as TranslationRow
   return { row, changes, created: false }
@@ -209,7 +209,7 @@ export function syncTranslationsForMeaning(
   params: {
     meaningId: number
     language: string
-    translations: { id: number; value: string; veryfied: number; message: string }[]
+    translations: { id: number; value: string; verified: number; message: string }[]
   }
 ): FieldChange[] {
   const existingRows = db.prepare(`SELECT id FROM translations WHERE meaningId = ? AND language = ?`)
@@ -231,7 +231,7 @@ export function syncTranslationsForMeaning(
         id: t.id,
         language: params.language,
         value: t.value,
-        veryfied: t.veryfied,
+        verified: t.verified,
         message: t.message,
       })
       allChanges.push(...changes)
@@ -240,7 +240,7 @@ export function syncTranslationsForMeaning(
         meaningId: params.meaningId,
         language: params.language,
         value: t.value,
-        veryfied: t.veryfied,
+        verified: t.verified,
         message: t.message,
       })
       allChanges.push(...changes)

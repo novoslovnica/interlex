@@ -51,15 +51,15 @@ interface EditPageProps {
 }
 
 function extractTranslations(
-  byLang: Record<string, Record<number, { id: number; value: string | null; veryfied: number | null; message: string | null }[]>>,
+  byLang: Record<string, Record<number, { id: number; value: string | null; verified: number | null; message: string | null }[]>>,
   meaningId: number
-): Record<string, { id: number; value: string; veryfied: number; message: string }[]> {
-  const result: Record<string, { id: number; value: string; veryfied: number; message: string }[]> = {}
+): Record<string, { id: number; value: string; verified: number; message: string }[]> {
+  const result: Record<string, { id: number; value: string; verified: number; message: string }[]> = {}
   for (const lang of Object.keys(byLang)) {
     const rows = byLang[lang][meaningId] ?? []
     result[lang] = rows
       .filter((t) => t.value?.trim())
-      .map((t) => ({ id: t.id, value: t.value ?? "", veryfied: t.veryfied ?? 0, message: t.message ?? "" }))
+      .map((t) => ({ id: t.id, value: t.value ?? "", verified: t.verified ?? 0, message: t.message ?? "" }))
   }
   return result
 }
@@ -160,9 +160,9 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     id: m.id,
     meaning: m.meaning ?? "",
     examples: m.examples ?? "",
-    meaningVeryfied: m.meaningVeryfied ?? 0,
+    meaningVerified: m.meaningVerified ?? 0,
     meaningMessage: m.meaningMessage ?? "",
-    examplesVeryfied: m.examplesVeryfied ?? 0,
+    examplesVerified: m.examplesVerified ?? 0,
     examplesMessage: m.examplesMessage ?? "",
     translations: extractTranslations(translationsByLang, m.id),
   }))

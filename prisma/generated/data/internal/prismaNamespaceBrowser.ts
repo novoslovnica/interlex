@@ -60,24 +60,6 @@ export const ModelName = {
   LexemeAllophone: 'LexemeAllophone',
   MorphemeAllophone: 'MorphemeAllophone',
   EndingAllophone: 'EndingAllophone',
-  En: 'En',
-  Ru: 'Ru',
-  Mk: 'Mk',
-  Sr: 'Sr',
-  Uk: 'Uk',
-  Bg: 'Bg',
-  Pl: 'Pl',
-  Be: 'Be',
-  Cs: 'Cs',
-  Sk: 'Sk',
-  Sl: 'Sl',
-  Hr: 'Hr',
-  Cu: 'Cu',
-  De: 'De',
-  Nl: 'Nl',
-  Eo: 'Eo',
-  Hsb: 'Hsb',
-  Dsb: 'Dsb',
   Translation: 'Translation',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
@@ -200,9 +182,9 @@ export const MeaningScalarFieldEnum = {
   lexemeId: 'lexemeId',
   meaning: 'meaning',
   examples: 'examples',
-  meaningVeryfied: 'meaningVeryfied',
+  meaningVerified: 'meaningVerified',
   meaningMessage: 'meaningMessage',
-  examplesVeryfied: 'examplesVeryfied',
+  examplesVerified: 'examplesVerified',
   examplesMessage: 'examplesMessage',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -274,265 +256,13 @@ export const EndingAllophoneScalarFieldEnum = {
 export type EndingAllophoneScalarFieldEnum = (typeof EndingAllophoneScalarFieldEnum)[keyof typeof EndingAllophoneScalarFieldEnum]
 
 
-export const EnScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type EnScalarFieldEnum = (typeof EnScalarFieldEnum)[keyof typeof EnScalarFieldEnum]
-
-
-export const RuScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type RuScalarFieldEnum = (typeof RuScalarFieldEnum)[keyof typeof RuScalarFieldEnum]
-
-
-export const MkScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type MkScalarFieldEnum = (typeof MkScalarFieldEnum)[keyof typeof MkScalarFieldEnum]
-
-
-export const SrScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type SrScalarFieldEnum = (typeof SrScalarFieldEnum)[keyof typeof SrScalarFieldEnum]
-
-
-export const UkScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type UkScalarFieldEnum = (typeof UkScalarFieldEnum)[keyof typeof UkScalarFieldEnum]
-
-
-export const BgScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type BgScalarFieldEnum = (typeof BgScalarFieldEnum)[keyof typeof BgScalarFieldEnum]
-
-
-export const PlScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type PlScalarFieldEnum = (typeof PlScalarFieldEnum)[keyof typeof PlScalarFieldEnum]
-
-
-export const BeScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type BeScalarFieldEnum = (typeof BeScalarFieldEnum)[keyof typeof BeScalarFieldEnum]
-
-
-export const CsScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type CsScalarFieldEnum = (typeof CsScalarFieldEnum)[keyof typeof CsScalarFieldEnum]
-
-
-export const SkScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type SkScalarFieldEnum = (typeof SkScalarFieldEnum)[keyof typeof SkScalarFieldEnum]
-
-
-export const SlScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type SlScalarFieldEnum = (typeof SlScalarFieldEnum)[keyof typeof SlScalarFieldEnum]
-
-
-export const HrScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type HrScalarFieldEnum = (typeof HrScalarFieldEnum)[keyof typeof HrScalarFieldEnum]
-
-
-export const CuScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type CuScalarFieldEnum = (typeof CuScalarFieldEnum)[keyof typeof CuScalarFieldEnum]
-
-
-export const DeScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type DeScalarFieldEnum = (typeof DeScalarFieldEnum)[keyof typeof DeScalarFieldEnum]
-
-
-export const NlScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type NlScalarFieldEnum = (typeof NlScalarFieldEnum)[keyof typeof NlScalarFieldEnum]
-
-
-export const EoScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type EoScalarFieldEnum = (typeof EoScalarFieldEnum)[keyof typeof EoScalarFieldEnum]
-
-
-export const HsbScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type HsbScalarFieldEnum = (typeof HsbScalarFieldEnum)[keyof typeof HsbScalarFieldEnum]
-
-
-export const DsbScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  value: 'value',
-  veryfied: 'veryfied',
-  wordId: 'wordId',
-  meaningId: 'meaningId',
-  message: 'message'
-} as const
-
-export type DsbScalarFieldEnum = (typeof DsbScalarFieldEnum)[keyof typeof DsbScalarFieldEnum]
-
-
 export const TranslationScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   language: 'language',
   value: 'value',
-  veryfied: 'veryfied',
+  verified: 'verified',
   message: 'message',
   meaningId: 'meaningId',
   legacyWordId: 'legacyWordId'

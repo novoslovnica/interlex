@@ -24,7 +24,7 @@ async function main() {
         const batch = await db.lexeme.findMany({
             where: {
                 meanings: {
-                    some: {ru_mean: {some: {}}},
+                    some: {translations: {some: {language: 'ru'}}},
                 },
             },
             select: {
@@ -34,7 +34,8 @@ async function main() {
                 meanings: {
                     select: {
                         id: true,
-                        ru_mean: {
+                        translations: {
+                            where: {language: 'ru'},
                             select: {value: true},
                         },
                     },
@@ -48,7 +49,7 @@ async function main() {
 
         for (const word of batch) {
             for (const meaning of word.meanings) {
-                for (const en of meaning.ru_mean) {
+                for (const en of meaning.translations) {
                     const val = en.value?.trim()
                     if (!val) continue
                     allTranslations.push({

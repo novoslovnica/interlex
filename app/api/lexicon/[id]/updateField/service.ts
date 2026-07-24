@@ -74,7 +74,7 @@ async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: 
     if (newBase) await addToNewBase(newBase, wordId)
 }
 
-export const updateField = async (wordId: string, field: string, newValue: string, veryfied?: number, translationId?: number, message?: string, meaningId?: number) => {
+export const updateField = async (wordId: string, field: string, newValue: string, verified?: number, translationId?: number, message?: string, meaningId?: number) => {
     const session = await auth()
 
     if (["stem", "nsl", "isv", "value", "external_id"].includes(field)) {
@@ -157,7 +157,7 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             meaningId,
             language: lang,
             value: newValue,
-            veryfied,
+            verified,
             message,
         });
 

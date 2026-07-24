@@ -13,8 +13,7 @@ interface WordOfDayData {
     pos: string | null;
     meanings: {
         id: number;
-        ru_mean: { id: number; value: string | null }[];
-        en_mean: { id: number; value: string | null }[];
+        translations: { id: number; language: string; value: string | null }[];
     }[];
 }
 
@@ -69,7 +68,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
                           text-slate-700
                           dark:text-slate-200"
                         >
-                            {data.meanings.map(m => m.ru_mean ? m.ru_mean[0]?.value : "").join(", ")}
+                            {data.meanings.map(m => m.translations.find(t => t.language === 'ru')?.value ?? "").join(", ")}
                         </p>
 
                         <span className="mt-1.5 inline-flex items-center text-xs font-medium text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform duration-200">

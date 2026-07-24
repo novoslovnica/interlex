@@ -136,7 +136,7 @@ export const getDictItems = async (
     if (filterLang && unverified && langCodes.includes(filterLang)) {
         res = res.filter(item => {
             const langEntries = item[filterLang] as LangRecord[];
-            return langEntries.length > 0 && langEntries.some(entry => entry.veryfied !== 1);
+            return langEntries.length > 0 && langEntries.some(entry => entry.verified !== 1);
         });
     }
 
@@ -180,7 +180,7 @@ export const getDictItems = async (
 
     for (const item of res) {
         const langEntries = langCodes.flatMap(lang => item[lang] as LangRecord[]);
-        item.verified = langEntries.some(entry => entry.veryfied === 1);
+        item.verified = langEntries.some(entry => entry.verified === 1);
 
         const dup = item.value ? duplicateMap[item.value] : undefined;
         item.duplicateCount = dup ? dup.count : 1;

@@ -28,14 +28,14 @@ export type AggregateTranslation = {
 
 export type TranslationAvgAggregateOutputType = {
   id: number | null
-  veryfied: number | null
+  verified: number | null
   meaningId: number | null
   legacyWordId: number | null
 }
 
 export type TranslationSumAggregateOutputType = {
   id: number | null
-  veryfied: number | null
+  verified: number | null
   meaningId: number | null
   legacyWordId: number | null
 }
@@ -46,7 +46,7 @@ export type TranslationMinAggregateOutputType = {
   updatedAt: Date | null
   language: string | null
   value: string | null
-  veryfied: number | null
+  verified: number | null
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
@@ -58,7 +58,7 @@ export type TranslationMaxAggregateOutputType = {
   updatedAt: Date | null
   language: string | null
   value: string | null
-  veryfied: number | null
+  verified: number | null
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
@@ -70,7 +70,7 @@ export type TranslationCountAggregateOutputType = {
   updatedAt: number
   language: number
   value: number
-  veryfied: number
+  verified: number
   message: number
   meaningId: number
   legacyWordId: number
@@ -80,14 +80,14 @@ export type TranslationCountAggregateOutputType = {
 
 export type TranslationAvgAggregateInputType = {
   id?: true
-  veryfied?: true
+  verified?: true
   meaningId?: true
   legacyWordId?: true
 }
 
 export type TranslationSumAggregateInputType = {
   id?: true
-  veryfied?: true
+  verified?: true
   meaningId?: true
   legacyWordId?: true
 }
@@ -98,7 +98,7 @@ export type TranslationMinAggregateInputType = {
   updatedAt?: true
   language?: true
   value?: true
-  veryfied?: true
+  verified?: true
   message?: true
   meaningId?: true
   legacyWordId?: true
@@ -110,7 +110,7 @@ export type TranslationMaxAggregateInputType = {
   updatedAt?: true
   language?: true
   value?: true
-  veryfied?: true
+  verified?: true
   message?: true
   meaningId?: true
   legacyWordId?: true
@@ -122,7 +122,7 @@ export type TranslationCountAggregateInputType = {
   updatedAt?: true
   language?: true
   value?: true
-  veryfied?: true
+  verified?: true
   message?: true
   meaningId?: true
   legacyWordId?: true
@@ -221,7 +221,7 @@ export type TranslationGroupByOutputType = {
   updatedAt: Date
   language: string
   value: string | null
-  veryfied: number | null
+  verified: number | null
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
@@ -256,7 +256,7 @@ export type TranslationWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Translation"> | Date | string
   language?: Prisma.StringFilter<"Translation"> | string
   value?: Prisma.StringNullableFilter<"Translation"> | string | null
-  veryfied?: Prisma.IntNullableFilter<"Translation"> | number | null
+  verified?: Prisma.IntNullableFilter<"Translation"> | number | null
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
@@ -269,7 +269,7 @@ export type TranslationOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   language?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
-  veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
+  verified?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
   legacyWordId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -285,7 +285,7 @@ export type TranslationWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Translation"> | Date | string
   language?: Prisma.StringFilter<"Translation"> | string
   value?: Prisma.StringNullableFilter<"Translation"> | string | null
-  veryfied?: Prisma.IntNullableFilter<"Translation"> | number | null
+  verified?: Prisma.IntNullableFilter<"Translation"> | number | null
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
@@ -298,7 +298,7 @@ export type TranslationOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   language?: Prisma.SortOrder
   value?: Prisma.SortOrderInput | Prisma.SortOrder
-  veryfied?: Prisma.SortOrderInput | Prisma.SortOrder
+  verified?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
   legacyWordId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -318,7 +318,7 @@ export type TranslationScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Translation"> | Date | string
   language?: Prisma.StringWithAggregatesFilter<"Translation"> | string
   value?: Prisma.StringNullableWithAggregatesFilter<"Translation"> | string | null
-  veryfied?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
+  verified?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
   message?: Prisma.StringNullableWithAggregatesFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
@@ -329,7 +329,7 @@ export type TranslationCreateInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   legacyWordId?: number | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutTranslationsInput
@@ -341,7 +341,7 @@ export type TranslationUncheckedCreateInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   meaningId?: number | null
   legacyWordId?: number | null
@@ -352,7 +352,7 @@ export type TranslationUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   meaning?: Prisma.MeaningUpdateOneWithoutTranslationsNestedInput
@@ -364,7 +364,7 @@ export type TranslationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -376,7 +376,7 @@ export type TranslationCreateManyInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   meaningId?: number | null
   legacyWordId?: number | null
@@ -387,7 +387,7 @@ export type TranslationUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -398,7 +398,7 @@ export type TranslationUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -420,7 +420,7 @@ export type TranslationCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   language?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  veryfied?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
@@ -428,7 +428,7 @@ export type TranslationCountOrderByAggregateInput = {
 
 export type TranslationAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  veryfied?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
 }
@@ -439,7 +439,7 @@ export type TranslationMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   language?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  veryfied?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
@@ -451,7 +451,7 @@ export type TranslationMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   language?: Prisma.SortOrder
   value?: Prisma.SortOrder
-  veryfied?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
@@ -459,7 +459,7 @@ export type TranslationMinOrderByAggregateInput = {
 
 export type TranslationSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  veryfied?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
 }
@@ -511,7 +511,7 @@ export type TranslationCreateWithoutMeaningInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   legacyWordId?: number | null
 }
@@ -522,7 +522,7 @@ export type TranslationUncheckedCreateWithoutMeaningInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   legacyWordId?: number | null
 }
@@ -561,7 +561,7 @@ export type TranslationScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Translation"> | Date | string
   language?: Prisma.StringFilter<"Translation"> | string
   value?: Prisma.StringNullableFilter<"Translation"> | string | null
-  veryfied?: Prisma.IntNullableFilter<"Translation"> | number | null
+  verified?: Prisma.IntNullableFilter<"Translation"> | number | null
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
@@ -573,7 +573,7 @@ export type TranslationCreateManyMeaningInput = {
   updatedAt?: Date | string
   language: string
   value?: string | null
-  veryfied?: number | null
+  verified?: number | null
   message?: string | null
   legacyWordId?: number | null
 }
@@ -583,7 +583,7 @@ export type TranslationUpdateWithoutMeaningInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -594,7 +594,7 @@ export type TranslationUncheckedUpdateWithoutMeaningInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -605,7 +605,7 @@ export type TranslationUncheckedUpdateManyWithoutMeaningInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  veryfied?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
@@ -618,7 +618,7 @@ export type TranslationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   updatedAt?: boolean
   language?: boolean
   value?: boolean
-  veryfied?: boolean
+  verified?: boolean
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
@@ -631,7 +631,7 @@ export type TranslationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   updatedAt?: boolean
   language?: boolean
   value?: boolean
-  veryfied?: boolean
+  verified?: boolean
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
@@ -644,7 +644,7 @@ export type TranslationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   updatedAt?: boolean
   language?: boolean
   value?: boolean
-  veryfied?: boolean
+  verified?: boolean
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
@@ -657,13 +657,13 @@ export type TranslationSelectScalar = {
   updatedAt?: boolean
   language?: boolean
   value?: boolean
-  veryfied?: boolean
+  verified?: boolean
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
 }
 
-export type TranslationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "language" | "value" | "veryfied" | "message" | "meaningId" | "legacyWordId", ExtArgs["result"]["translation"]>
+export type TranslationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "language" | "value" | "verified" | "message" | "meaningId" | "legacyWordId", ExtArgs["result"]["translation"]>
 export type TranslationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
 }
@@ -685,7 +685,7 @@ export type $TranslationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     updatedAt: Date
     language: string
     value: string | null
-    veryfied: number | null
+    verified: number | null
     message: string | null
     meaningId: number | null
     legacyWordId: number | null
@@ -1118,7 +1118,7 @@ export interface TranslationFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Translation", 'DateTime'>
   readonly language: Prisma.FieldRef<"Translation", 'String'>
   readonly value: Prisma.FieldRef<"Translation", 'String'>
-  readonly veryfied: Prisma.FieldRef<"Translation", 'Int'>
+  readonly verified: Prisma.FieldRef<"Translation", 'Int'>
   readonly message: Prisma.FieldRef<"Translation", 'String'>
   readonly meaningId: Prisma.FieldRef<"Translation", 'Int'>
   readonly legacyWordId: Prisma.FieldRef<"Translation", 'Int'>

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         FROM meanings m
         WHERE NOT EXISTS (
             SELECT 1 FROM translations t
-            WHERE t.meaningId = m.id AND t.language = ? AND t.veryfied = 1
+            WHERE t.meaningId = m.id AND t.language = ? AND t.verified = 1
         )
         ORDER BY RANDOM() LIMIT 1
     `).get(lang) as { meaningId: number; meaning: string | null; examples: string | null; lexemeId: number } | undefined;

@@ -123,53 +123,15 @@ model Meaning {
   lexemeId   Int
   meaning  String?
   examples String?
-  meaningVeryfied Int?
+  meaningVerified Int?
   meaningMessage  String?
-  examplesVeryfied Int?
+  examplesVerified Int?
   examplesMessage  String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   // Связь с таблицей лексем
   lexeme     Lexeme      @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
-
-  // Обратные связи для языковых таблиц
-  en_word  En[]      @relation("EnWord")
-  en_mean  En[]      @relation("EnMeaning")
-  ru_word  Ru[]      @relation("RuWord")
-  ru_mean  Ru[]      @relation("RuMeaning")
-  mk_word  Mk[]      @relation("MkWord")
-  mk_mean  Mk[]      @relation("MkMeaning")
-  sr_word  Sr[]      @relation("SrWord")
-  sr_mean  Sr[]      @relation("SrMeaning")
-  uk_word  Uk[]      @relation("UkWord")
-  uk_mean  Uk[]      @relation("UkMeaning")
-  bg_word  Bg[]      @relation("BgWord")
-  bg_mean  Bg[]      @relation("BgMeaning")
-  pl_word  Pl[]      @relation("PlWord")
-  pl_mean  Pl[]      @relation("PlMeaning")
-  be_word  Be[]      @relation("BeWord")
-  be_mean  Be[]      @relation("BeMeaning")
-  cs_word  Cs[]      @relation("CsWord")
-  cs_mean  Cs[]      @relation("CsMeaning")
-  sk_word  Sk[]      @relation("SkWord")
-  sk_mean  Sk[]      @relation("SkMeaning")
-  sl_word  Sl[]      @relation("SlWord")
-  sl_mean  Sl[]      @relation("SlMeaning")
-  hr_word  Hr[]      @relation("HrWord")
-  hr_mean  Hr[]      @relation("HrMeaning")
-  cu_word  Cu[]      @relation("CuWord")
-  cu_mean  Cu[]      @relation("CuMeaning")
-  de_word  De[]      @relation("DeWord")
-  de_mean  De[]      @relation("DeMeaning")
-  nl_word  Nl[]      @relation("NlWord")
-  nl_mean  Nl[]      @relation("NlMeaning")
-  eo_word  Eo[]      @relation("EoWord")
-  eo_mean  Eo[]      @relation("EoMeaning")
-  hsb_word Hsb[]     @relation("HsbWord")
-  hsb_mean Hsb[]     @relation("HsbMeaning")
-  dsb_word Dsb[]     @relation("DsbWord")
-  dsb_mean Dsb[]     @relation("DsbMeaning")
 
   // Связь с синсетами RuWordNet
   synsets  MeaningSynset[]
@@ -185,8 +147,7 @@ model Meaning {
   primeExponents PrimeExponent[]
 
   // Консолидированная таблица переводов (2026-07-23), заменяет собой
-  // en_word/en_mean...dsb_word/dsb_mean выше для новых данных — см. AGENTS.md.
-  // Старые 18 таблиц пока не удалены.
+  // en_word/en_mean...dsb_word/dsb_mean (удалены 2026-07-24, см. AGENTS.md).
   translations Translation[] @relation("TranslationMeaning")
 
   @@map("meanings")
@@ -268,335 +229,8 @@ model EndingAllophone {
   @@index([flavorId])
 }
 
-// Динамические таблицы языков, преобразованные в схемы Prisma
-model En {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-
-  word      Meaning? @relation("EnWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("EnMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("en")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Ru {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-
-  word      Meaning? @relation("RuWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("RuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("ru")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Mk {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("MkWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("MkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("mk")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Sr {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("SrWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("SrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("sr")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Uk {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("UkWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("UkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("uk")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Bg {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("BgWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("BgMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("bg")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Pl {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("PlWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("PlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("pl")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Be {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("BeWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("BeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("be")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Cs {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("CsWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("CsMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("cs")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Sk {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("SkWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("SkMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("sk")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Sl {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("SlWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("SlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("sl")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Hr {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("HrWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("HrMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("hr")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Cu {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("CuWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("CuMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("cu")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model De {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("DeWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("DeMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("de")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Nl {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("NlWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("NlMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("nl")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Eo {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("EoWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("EoMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("eo")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Hsb {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("HsbWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("HsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("hsb")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-model Dsb {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value     String?
-  veryfied  Int?
-  wordId    Int?
-  meaningId Int?
-  word      Meaning? @relation("DsbWord", fields: [wordId], references: [id], onDelete: Cascade)
-  meaning   Meaning? @relation("DsbMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
-
-  message       String?
-
-  @@map("dsb")
-  @@index([wordId])
-  @@index([meaningId])
-}
-
-// Консолидированная таблица переводов (2026-07-23) — заменяет 18 таблиц выше
-// (En...Dsb) для новых данных, см. AGENTS.md. Старые 18 таблиц пока не удалены.
+// Консолидированная таблица переводов (2026-07-23) — заменяет 18 таблиц
+// (En...Dsb), удалённых 2026-07-24 (см. AGENTS.md), для всех данных.
 //
 // legacyWordId — архивная копия старого wordId. Тот столбец по схеме должен
 // был указывать на Meaning, но по факту хранил Lexeme.id и уже расходился с
@@ -610,7 +244,7 @@ model Translation {
 
   language  String
   value     String?
-  veryfied  Int?
+  verified  Int?
   message   String?
 
   meaningId Int?
@@ -620,9 +254,9 @@ model Translation {
 
   @@map("translations")
   @@index([meaningId])
-  @@index([meaningId, veryfied])
+  @@index([meaningId, verified])
   @@index([language, meaningId])
-  @@index([language, veryfied])
+  @@index([language, verified])
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)

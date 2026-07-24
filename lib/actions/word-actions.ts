@@ -212,9 +212,9 @@ export async function updateWord(formData: any) {
         data: {
           meaning: m.meaning || null,
           examples: m.examples || null,
-          meaningVeryfied: m.meaningVeryfied ?? null,
+          meaningVerified: m.meaningVerified ?? null,
           meaningMessage: m.meaningMessage || null,
-          examplesVeryfied: m.examplesVeryfied ?? null,
+          examplesVerified: m.examplesVerified ?? null,
           examplesMessage: m.examplesMessage || null,
         },
       })
@@ -224,9 +224,9 @@ export async function updateWord(formData: any) {
           lexemeId: wordId,
           meaning: m.meaning || null,
           examples: m.examples || null,
-          meaningVeryfied: m.meaningVeryfied ?? null,
+          meaningVerified: m.meaningVerified ?? null,
           meaningMessage: m.meaningMessage || null,
-          examplesVeryfied: m.examplesVeryfied ?? null,
+          examplesVerified: m.examplesVerified ?? null,
           examplesMessage: m.examplesMessage || null,
         },
       })
@@ -331,7 +331,7 @@ export async function createWord(formData: any) {
     meaningId: newMeaning.id,
     language: "en",
     value: formData.translationEn,
-    veryfied: formData.isEnVerified ? 1 : 0,
+    verified: formData.isEnVerified ? 1 : 0,
   })
   if (enResult.changes.length > 0) {
     await logAudit(session?.user, "Lexeme", newWord.id, enResult.changes)
@@ -341,7 +341,7 @@ export async function createWord(formData: any) {
     meaningId: newMeaning.id,
     language: "ru",
     value: formData.translationRu,
-    veryfied: formData.isRuVerified ? 1 : 0,
+    verified: formData.isRuVerified ? 1 : 0,
   })
   if (ruResult.changes.length > 0) {
     await logAudit(session?.user, "Lexeme", newWord.id, ruResult.changes)

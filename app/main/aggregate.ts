@@ -7,8 +7,7 @@ interface RandomWordResult {
     pos: string | null;
     meanings: {
         id: number;
-        ru_mean: { id: number; value: string | null }[];
-        en_mean: { id: number; value: string | null }[];
+        translations: { id: number; language: string; value: string | null }[];
     }[];
 }
 
@@ -27,8 +26,10 @@ async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWo
             meanings: {
                 select: {
                     id: true,
-                    ru_mean: { select: { id: true, value: true } },
-                    en_mean: { select: { id: true, value: true } },
+                    translations: {
+                        where: { language: { in: ['ru', 'en'] } },
+                        select: { id: true, language: true, value: true },
+                    },
                 },
             },
         },
@@ -71,8 +72,10 @@ export async function getRandomWordWithTranslations(): Promise<RandomWordResult 
                 meanings: {
                     select: {
                         id: true,
-                        ru_mean: { select: { id: true, value: true } },
-                        en_mean: { select: { id: true, value: true } },
+                        translations: {
+                            where: { language: { in: ['ru', 'en'] } },
+                            select: { id: true, language: true, value: true },
+                        },
                     },
                 },
             },

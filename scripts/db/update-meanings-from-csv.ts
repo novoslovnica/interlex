@@ -131,8 +131,8 @@ async function main(): Promise<void> {
             data: {
                 meaning: appendText(existing.meaning, incomingMeaning),
                 examples: appendText(existing.examples, incomingExamples),
-                meaningVeryfied: 0,
-                examplesVeryfied: 0,
+                meaningVerified: 0,
+                examplesVerified: 0,
             },
         });
 

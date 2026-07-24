@@ -5,7 +5,7 @@ import { CellContext } from '@tanstack/react-table';
 interface LangObject {
     id: number;
     value: string | null;
-    veryfied: number | null;
+    verified: number | null;
     message: string | null;
     wordId: number | null;
     meaningId: number | null;
@@ -75,15 +75,15 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
     const [value, setValue] = useState(primary?.value || '');
     const [isEditing, setIsEditing] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
-    const [localVeryfied, setLocalVeryfied] = useState(primary?.veryfied ?? 0);
+    const [localVerified, setLocalVerified] = useState(primary?.verified ?? 0);
     const [localMessage, setLocalMessage] = useState(primary?.message || '');
     const [showRejectDialog, setShowRejectDialog] = useState(false);
 
     useEffect(() => {
         setValue(primary?.value || '');
-        setLocalVeryfied(primary?.veryfied ?? 0);
+        setLocalVerified(primary?.verified ?? 0);
         setLocalMessage(primary?.message || '');
-    }, [primary?.value, primary?.veryfied, primary?.message]);
+    }, [primary?.value, primary?.verified, primary?.message]);
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
@@ -159,7 +159,7 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
         setIsEditing(false);
     };
 
-    const updateVerification = async (newVeryfied: number, rejectMessage?: string) => {
+    const updateVerification = async (newVerified: number, rejectMessage?: string) => {
         const wordId = primary?.wordId ?? row.original.id;
         const meaningId = primary?.meaningId ?? row.original.meaningId;
 
@@ -168,7 +168,7 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
         try {
             const body: Record<string, unknown> = {
                 field: column.id,
-                veryfied: newVeryfied,
+                verified: newVerified,
             };
             if (primary?.id) {
                 body.translationId = primary.id;
@@ -189,14 +189,14 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
 
             const updated = await response.json();
 
-            setLocalVeryfied(updated.veryfied ?? newVeryfied);
+            setLocalVerified(updated.verified ?? newVerified);
             setLocalMessage(updated.message || '');
 
             const tableMeta = table.options.meta as any;
             if (tableMeta?.updateCellData) {
                 if (primary?.id) {
                     const updatedArray = langDataArray.map((item, idx) =>
-                        idx === 0 ? { ...item, veryfied: updated.veryfied ?? newVeryfied, message: updated.message || '' } : item
+                        idx === 0 ? { ...item, verified: updated.verified ?? newVerified, message: updated.message || '' } : item
                     );
                     tableMeta.updateCellData(row.index, column.id, updatedArray);
                 } else {
@@ -231,7 +231,7 @@ export function EditableLanguageCell<TData>({ cell, row, column, table, getValue
         );
     }
 
-    const isVerified = localVeryfied === 1;
+    const isVerified = localVerified === 1;
     const displayText = primary?.value || '';
     const borderClass = hasMultiple ? 'border-2 border-red-400' : 'border border-transparent';
 

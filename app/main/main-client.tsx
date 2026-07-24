@@ -9,8 +9,7 @@ interface RandomWordResult {
     pos: string | null;
     meanings: {
         id: number;
-        ru_mean: { id: number; value: string | null }[];
-        en_mean: { id: number; value: string | null }[];
+        translations: { id: number; language: string; value: string | null }[];
     }[];
 }
 

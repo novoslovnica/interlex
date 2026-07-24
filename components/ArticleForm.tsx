@@ -161,7 +161,7 @@ const MAIN_CATEGORY_OPTIONS = [
 interface TranslationData {
   id: number
   value: string
-  veryfied: number
+  verified: number
   message: string
 }
 
@@ -169,9 +169,9 @@ interface MeaningData {
   id: number
   meaning: string
   examples: string
-  meaningVeryfied: number
+  meaningVerified: number
   meaningMessage: string
-  examplesVeryfied: number
+  examplesVerified: number
   examplesMessage: string
   translations: Record<string, TranslationData[]>
 }
@@ -358,7 +358,7 @@ export default function ArticleForm({
   const [meanings, setMeanings] = useState<MeaningData[]>(
     initialData?.meanings?.length
       ? initialData.meanings as MeaningData[]
-      : [{ id: 0, meaning: "", examples: "", meaningVeryfied: 0, meaningMessage: "", examplesVeryfied: 0, examplesMessage: "", translations: emptyTranslations() }]
+      : [{ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() }]
   )
   const [selectedMeaningIdx, setSelectedMeaningIdx] = useState(0)
   const [activeLang, setActiveLang] = useState("en")
@@ -516,14 +516,14 @@ export default function ArticleForm({
   function addMeaning() {
     setMeanings((prev) => [
       ...prev,
-      { id: 0, meaning: "", examples: "", meaningVeryfied: 0, meaningMessage: "", examplesVeryfied: 0, examplesMessage: "", translations: emptyTranslations() },
+      { id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() },
     ])
   }
 
   function removeMeaning(idx: number) {
     setMeanings((prev) => {
       const next = prev.filter((_, i) => i !== idx)
-      if (next.length === 0) next.push({ id: 0, meaning: "", examples: "", meaningVeryfied: 0, meaningMessage: "", examplesVeryfied: 0, examplesMessage: "", translations: emptyTranslations() })
+      if (next.length === 0) next.push({ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() })
       return next
     })
     setSelectedMeaningIdx((prev) => Math.min(prev, meanings.length - 2))
@@ -534,12 +534,12 @@ export default function ArticleForm({
       prev.map((m, i) => {
         if (i !== selectedMeaningIdx) return m
         const current = m.translations[lang] || []
-        return { ...m, translations: { ...m.translations, [lang]: [...current, { id: 0, value: "", veryfied: 0, message: "" }] } }
+        return { ...m, translations: { ...m.translations, [lang]: [...current, { id: 0, value: "", verified: 0, message: "" }] } }
       })
     )
   }
 
-  function updateTranslation(lang: string, tIdx: number, field: "value" | "veryfied" | "message", val: string | number) {
+  function updateTranslation(lang: string, tIdx: number, field: "value" | "verified" | "message", val: string | number) {
     setMeanings((prev) =>
       prev.map((m, i) => {
         if (i !== selectedMeaningIdx) return m
@@ -601,9 +601,9 @@ export default function ArticleForm({
           id: m.id,
           meaning: m.meaning,
           examples: m.examples,
-          meaningVeryfied: m.meaningVeryfied,
+          meaningVerified: m.meaningVerified,
           meaningMessage: m.meaningMessage,
-          examplesVeryfied: m.examplesVeryfied,
+          examplesVerified: m.examplesVerified,
           examplesMessage: m.examplesMessage,
           translations: m.translations,
         })),
@@ -1064,17 +1064,17 @@ export default function ArticleForm({
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3">
-                    <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer" title={activeMeaning.meaningVeryfied !== 1 && activeMeaning.meaningMessage ? activeMeaning.meaningMessage : undefined}>
+                    <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer" title={activeMeaning.meaningVerified !== 1 && activeMeaning.meaningMessage ? activeMeaning.meaningMessage : undefined}>
                       <input
                         type="checkbox"
-                        checked={activeMeaning.meaningVeryfied === 1}
+                        checked={activeMeaning.meaningVerified === 1}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, meaningVeryfied: 1, meaningMessage: "" } : m))
+                            setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, meaningVerified: 1, meaningMessage: "" } : m))
                           } else {
                             const msg = prompt("Укажите причину отклонения значения:", activeMeaning.meaningMessage || "")
                             if (msg !== null) {
-                              setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, meaningVeryfied: 0, meaningMessage: msg } : m))
+                              setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, meaningVerified: 0, meaningMessage: msg } : m))
                             }
                           }
                         }}
@@ -1082,22 +1082,22 @@ export default function ArticleForm({
                       />
                       <span>Значение верифицировано</span>
                     </label>
-                    {activeMeaning.meaningVeryfied !== 1 && activeMeaning.meaningMessage && (
+                    {activeMeaning.meaningVerified !== 1 && activeMeaning.meaningMessage && (
                       <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={activeMeaning.meaningMessage}>
                         {activeMeaning.meaningMessage}
                       </span>
                     )}
-                    <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer" title={activeMeaning.examplesVeryfied !== 1 && activeMeaning.examplesMessage ? activeMeaning.examplesMessage : undefined}>
+                    <label className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer" title={activeMeaning.examplesVerified !== 1 && activeMeaning.examplesMessage ? activeMeaning.examplesMessage : undefined}>
                       <input
                         type="checkbox"
-                        checked={activeMeaning.examplesVeryfied === 1}
+                        checked={activeMeaning.examplesVerified === 1}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, examplesVeryfied: 1, examplesMessage: "" } : m))
+                            setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, examplesVerified: 1, examplesMessage: "" } : m))
                           } else {
                             const msg = prompt("Укажите причину отклонения примеров:", activeMeaning.examplesMessage || "")
                             if (msg !== null) {
-                              setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, examplesVeryfied: 0, examplesMessage: msg } : m))
+                              setMeanings((prev) => prev.map((m, i) => i === selectedMeaningIdx ? { ...m, examplesVerified: 0, examplesMessage: msg } : m))
                             }
                           }
                         }}
@@ -1105,7 +1105,7 @@ export default function ArticleForm({
                       />
                       <span>Примеры верифицированы</span>
                     </label>
-                    {activeMeaning.examplesVeryfied !== 1 && activeMeaning.examplesMessage && (
+                    {activeMeaning.examplesVerified !== 1 && activeMeaning.examplesMessage && (
                       <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded truncate max-w-[200px]" title={activeMeaning.examplesMessage}>
                         {activeMeaning.examplesMessage}
                       </span>
@@ -1149,24 +1149,24 @@ export default function ArticleForm({
                             onChange={(e) => updateTranslation(activeLang, tIdx, "value", e.target.value)}
                             className="flex-1 px-2 py-1.5 border rounded bg-background text-sm"
                             placeholder="Перевод..."
-                            title={!t.veryfied && t.message ? t.message : undefined}
+                            title={!t.verified && t.message ? t.message : undefined}
                           />
-                          <label className="flex items-center gap-1 text-[10px] text-muted-foreground cursor-pointer whitespace-nowrap" title={!t.veryfied && t.message ? t.message : undefined}>
+                          <label className="flex items-center gap-1 text-[10px] text-muted-foreground cursor-pointer whitespace-nowrap" title={!t.verified && t.message ? t.message : undefined}>
                             <input
                               type="checkbox"
-                              checked={t.veryfied === 1}
+                              checked={t.verified === 1}
                               onChange={(e) => {
                                 if (!e.target.checked) {
                                   setRejectDialog({ meaningIdx: selectedMeaningIdx, lang: activeLang, tIdx, currentMessage: t.message })
                                   setRejectText(t.message)
                                 } else {
-                                  updateTranslation(activeLang, tIdx, "veryfied", 1)
+                                  updateTranslation(activeLang, tIdx, "verified", 1)
                                   updateTranslation(activeLang, tIdx, "message", "")
                                 }
                               }}
                               className="h-3 w-3 rounded border-gray-300 text-primary"
                             />
-                            {!t.veryfied && t.message ? (
+                            {!t.verified && t.message ? (
                               <span className="text-amber-600 truncate max-w-[100px]">{t.message}</span>
                             ) : (
                               "Verified"
@@ -1219,7 +1219,7 @@ export default function ArticleForm({
               <button
                 onClick={() => {
                   if (rejectDialog) {
-                    updateTranslation(rejectDialog.lang, rejectDialog.tIdx, "veryfied", 0)
+                    updateTranslation(rejectDialog.lang, rejectDialog.tIdx, "verified", 0)
                     updateTranslation(rejectDialog.lang, rejectDialog.tIdx, "message", rejectText)
                     setRejectDialog(null)
                     setRejectText("")

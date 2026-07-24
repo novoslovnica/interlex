@@ -7,7 +7,7 @@ import { createPortal } from "react-dom"
 interface LangObject {
     id: number
     value: string | null
-    veryfied: number | null
+    verified: number | null
     message: string | null
     wordId: number | null
     meaningId: number | null
@@ -140,7 +140,7 @@ export default function TranslationCardsClient({
         try {
             const body: Record<string, unknown> = {
                 field: selectedLang,
-                veryfied: 1,
+                verified: 1,
                 meaningId: card.meaningId,
             }
             if (targetEntry) {
@@ -177,7 +177,7 @@ export default function TranslationCardsClient({
         try {
             const body: Record<string, unknown> = {
                 field: selectedLang,
-                veryfied: 0,
+                verified: 0,
                 message,
                 meaningId: card.meaningId,
                 newValue: inputValue,
