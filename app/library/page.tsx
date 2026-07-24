@@ -5,6 +5,7 @@ import {getTranslations} from "next-intl/server"
 import { auth } from "@/auth"
 import { Feature } from "@/config/features"
 import { checkPermission } from "@/lib/permissions"
+import { aggregateBodyLengths } from "@/lib/library-stats"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("library");
@@ -51,6 +52,7 @@ export default async function LibraryPage() {
     orderBy: { createdAt: "desc" },
     where: isAdmin ? undefined : { isPublic: true },
     select: {
+      id: true,
       slug: true,
       title: true,
       author: true,
@@ -69,6 +71,8 @@ export default async function LibraryPage() {
       _count: { select: { children: true } },
     },
   })
+
+  const aggregatedBodyLengths = aggregateBodyLengths(entries)
 
   const items = entries.map(e => {
     const childCount = e._count.children
@@ -92,7 +96,7 @@ export default async function LibraryPage() {
       audioFile: e.audioFile,
       summary: e.summary,
       views: e.views,
-      bodyLength: e.bodyLength,
+      bodyLength: aggregatedBodyLengths.get(e.id) ?? e.bodyLength,
       date: e.createdAt.toISOString().slice(0, 10),
       isCollection: childCount > 0,
     }

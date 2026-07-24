@@ -4,6 +4,7 @@ import { prismaLibrary as db } from "@/lib/prisma"
 import { MarkdownRenderer } from "./MarkdownRenderer"
 import { decompressBody } from "@/lib/body"
 import { getFlavorLabel } from "@/config/flavor"
+import { getCollectionBodyLength } from "@/lib/library-stats"
 import type { Metadata } from "next"
 import {getTranslations} from "next-intl/server"
 
@@ -112,8 +113,10 @@ export default async function LibraryReadingPage({ params }: PageProps) {
   })
 
   const children = entry.children || []
-  const bodyLength = entry.bodyLength || 0
   const isCollection = children.length > 0
+  const bodyLength = isCollection
+    ? await getCollectionBodyLength(entry.id)
+    : (entry.bodyLength || 0)
   const childAuthors = [
     ...new Set(children.map(c => c.author).filter(Boolean) as string[]),
   ]
