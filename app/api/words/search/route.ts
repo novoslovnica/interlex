@@ -17,6 +17,7 @@ export async function GET(request: Request) {
             },
             select: {
                 id: true,
+                slug: true,
                 value: true,
                 lexemeAllophones: {
                     where: { flavor: { code: 'CORE' }, type: 'standard' },
@@ -29,6 +30,7 @@ export async function GET(request: Request) {
 
         const result = words.map(w => ({
             id: w.id,
+            slug: w.slug,
             value: w.value,
             isv: w.lexemeAllophones[0]?.value ?? w.value,
         }))

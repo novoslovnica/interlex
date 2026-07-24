@@ -9,6 +9,7 @@ export default function CorpusAdminNav() {
   const isBuilder = pathname.startsWith("/admin/corpus/builder")
   const isDocuments = pathname.startsWith("/admin/corpus/documents")
   const isImport = pathname.startsWith("/admin/corpus/import")
+  const isSemanticField = pathname.startsWith("/admin/corpus/semantic-field")
 
   const linkClass = (active: boolean) =>
     `inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80 ${
@@ -29,6 +30,9 @@ export default function CorpusAdminNav() {
           </Link>
           <Link href="/admin/corpus/import" className={linkClass(isImport)}>
             Импорт
+          </Link>
+          <Link href="/admin/corpus/semantic-field" className={linkClass(isSemanticField)}>
+            Семантическое поле
           </Link>
         </nav>
       </div>

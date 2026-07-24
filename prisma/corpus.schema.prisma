@@ -77,6 +77,12 @@ model CorpusToken {
   @@index([lemma])
   @@index([pos])
   @@index([documentSlug, tokenIndex])
+  // Для оконного self-join по совместной встречаемости слов (см.
+  // lib/corpus/collocations/) — применено вручную скриптом
+  // scripts/db/2026-07-24-add-corpus-token-wordindex-index.ts, а не через
+  // `prisma migrate dev` (в corpus.db нет таблицы _prisma_migrations,
+  // тот же класс проблемы, что и дрейф interlex.db, см. CLAUDE.md).
+  @@index([documentSlug, wordIndex])
 
   @@index([wordSlug])
 }
