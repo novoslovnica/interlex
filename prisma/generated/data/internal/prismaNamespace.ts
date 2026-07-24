@@ -402,7 +402,9 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   SemanticRelation: 'SemanticRelation',
   SemanticPrime: 'SemanticPrime',
-  PrimeExponent: 'PrimeExponent'
+  PrimeExponent: 'PrimeExponent',
+  CoreVocabularyConcept: 'CoreVocabularyConcept',
+  CoreVocabularyExponent: 'CoreVocabularyExponent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1828,6 +1830,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CoreVocabularyConcept: {
+      payload: Prisma.$CoreVocabularyConceptPayload<ExtArgs>
+      fields: Prisma.CoreVocabularyConceptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoreVocabularyConceptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoreVocabularyConceptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        findFirst: {
+          args: Prisma.CoreVocabularyConceptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoreVocabularyConceptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        findMany: {
+          args: Prisma.CoreVocabularyConceptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>[]
+        }
+        create: {
+          args: Prisma.CoreVocabularyConceptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        createMany: {
+          args: Prisma.CoreVocabularyConceptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CoreVocabularyConceptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>[]
+        }
+        delete: {
+          args: Prisma.CoreVocabularyConceptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        update: {
+          args: Prisma.CoreVocabularyConceptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        deleteMany: {
+          args: Prisma.CoreVocabularyConceptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoreVocabularyConceptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CoreVocabularyConceptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>[]
+        }
+        upsert: {
+          args: Prisma.CoreVocabularyConceptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyConceptPayload>
+        }
+        aggregate: {
+          args: Prisma.CoreVocabularyConceptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoreVocabularyConcept>
+        }
+        groupBy: {
+          args: Prisma.CoreVocabularyConceptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoreVocabularyConceptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoreVocabularyConceptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoreVocabularyConceptCountAggregateOutputType> | number
+        }
+      }
+    }
+    CoreVocabularyExponent: {
+      payload: Prisma.$CoreVocabularyExponentPayload<ExtArgs>
+      fields: Prisma.CoreVocabularyExponentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoreVocabularyExponentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoreVocabularyExponentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        findFirst: {
+          args: Prisma.CoreVocabularyExponentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoreVocabularyExponentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        findMany: {
+          args: Prisma.CoreVocabularyExponentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>[]
+        }
+        create: {
+          args: Prisma.CoreVocabularyExponentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        createMany: {
+          args: Prisma.CoreVocabularyExponentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CoreVocabularyExponentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>[]
+        }
+        delete: {
+          args: Prisma.CoreVocabularyExponentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        update: {
+          args: Prisma.CoreVocabularyExponentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CoreVocabularyExponentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoreVocabularyExponentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CoreVocabularyExponentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CoreVocabularyExponentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoreVocabularyExponentPayload>
+        }
+        aggregate: {
+          args: Prisma.CoreVocabularyExponentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoreVocabularyExponent>
+        }
+        groupBy: {
+          args: Prisma.CoreVocabularyExponentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoreVocabularyExponentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoreVocabularyExponentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoreVocabularyExponentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2151,6 +2301,27 @@ export const PrimeExponentScalarFieldEnum = {
 export type PrimeExponentScalarFieldEnum = (typeof PrimeExponentScalarFieldEnum)[keyof typeof PrimeExponentScalarFieldEnum]
 
 
+export const CoreVocabularyConceptScalarFieldEnum = {
+  id: 'id',
+  gloss: 'gloss',
+  swadesh100Rank: 'swadesh100Rank',
+  leipzigJakartaRank: 'leipzigJakartaRank'
+} as const
+
+export type CoreVocabularyConceptScalarFieldEnum = (typeof CoreVocabularyConceptScalarFieldEnum)[keyof typeof CoreVocabularyConceptScalarFieldEnum]
+
+
+export const CoreVocabularyExponentScalarFieldEnum = {
+  id: 'id',
+  conceptId: 'conceptId',
+  meaningId: 'meaningId',
+  isCanonical: 'isCanonical',
+  note: 'note'
+} as const
+
+export type CoreVocabularyExponentScalarFieldEnum = (typeof CoreVocabularyExponentScalarFieldEnum)[keyof typeof CoreVocabularyExponentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2336,6 +2507,8 @@ export type GlobalOmitConfig = {
   semanticRelation?: Prisma.SemanticRelationOmit
   semanticPrime?: Prisma.SemanticPrimeOmit
   primeExponent?: Prisma.PrimeExponentOmit
+  coreVocabularyConcept?: Prisma.CoreVocabularyConceptOmit
+  coreVocabularyExponent?: Prisma.CoreVocabularyExponentOmit
 }
 
 /* Types for Logging */

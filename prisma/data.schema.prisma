@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Lexeme {
-  id              Int              @id @default(autoincrement())
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  slug            String           @unique
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  slug            String   @unique
   external_id     Int?
   value           String?
   transcription   String?
@@ -30,27 +30,27 @@ model Lexeme {
   sameInLanguages String?
   etymology       String?
 
-  proto           String?
-  paradigm        String?
-  protoStemClass  String?
-  stemExtension   String?
-  genesis         String?
+  proto          String?
+  paradigm       String?
+  protoStemClass String?
+  stemExtension  String?
+  genesis        String?
 
   // ПОЛЯ ДЛЯ АВТОМАТИЧЕСКОЙ ГЕНЕРАЦИИ ПАРАДИГМ
-  stem            String?
-  secondaryStem   String?
-  tertiaryStem    String?
-  governsCase     Int?               // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC. В будущем отдельная таблица для множественности
-  gender          String?
-  declension      Int?
-  conjugation     Int?
-  stressPosition  Int?               // Ударный слог от начала слова (0=первый). Для paradigm A, override penultimate.
+  stem           String?
+  secondaryStem  String?
+  tertiaryStem   String?
+  governsCase    Int? // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC. В будущем отдельная таблица для множественности
+  gender         String?
+  declension     Int?
+  conjugation    Int?
+  stressPosition Int? // Ударный слог от начала слова (0=первый). Для paradigm A, override penultimate.
 
   // Имя собственное / нарицательное
-  properNoun      Boolean          @default(false)
+  properNoun Boolean @default(false)
 
   // Маркер аномалий флексий
-  hasAnomalies    Boolean          @default(false)
+  hasAnomalies Boolean @default(false)
 
   // Частотность на основе корпусных данных
   corpusFrequency       Int?
@@ -59,82 +59,82 @@ model Lexeme {
   corpusHapax           Boolean?
 
   // CEFR уровень и метрики распределения
-  distributionD         Float?    // Juilland's D coefficient (0.01–1.0)
-  usageScore            Float?    // usage_score = f_ipm × D × k_slav
-  cefrLevel             String?   // 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'
+  distributionD Float? // Juilland's D coefficient (0.01–1.0)
+  usageScore    Float? // usage_score = f_ipm × D × k_slav
+  cefrLevel     String? // 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'
 
   // Обратные связи Prisma
-  meanings        Meaning[]
+  meanings          Meaning[]
   lexemes_morphemes LexemeMorpheme[]
-  anomalies       InflectionAnomaly[]
-  lexemeAllophones   LexemeAllophone[]
+  anomalies         InflectionAnomaly[]
+  lexemeAllophones  LexemeAllophone[]
 
-  @@map("lexemes")
   @@index([slug])
   @@index([value])
+  @@map("lexemes")
 }
 
 model Candidate {
-  id              Int      @id @default(autoincrement())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  value           String?
-  isv             String?
-  nsl             String?
-  transcription   String?
-  mainCategory    String?
-  usageType       String?
-  pos             String?
-  aspect          String?
-  transitivity    String?
-  animacy         String?
-  degree          String?
-  pronType        String?
-  numType         String?
-  frequency       String?
-  intelligibility String?
-  addition        String?
-  sameInLanguages String?
-  etymology       String?
-  proto           String?
-  paradigm        String?
-  protoStemClass  String?
-  stemExtension   String?
-  genesis         String?
-  stem            String?
-  secondaryStem   String?
-  tertiaryStem    String?
-  governsCase     Int?               // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC
-  gender          String?
-  declension      Int?
-  conjugation     Int?
-  properNoun      Boolean          @default(false)
-  hasAnomalies    Boolean          @default(false)
-  promotedAt      DateTime?
+  id                 Int       @id @default(autoincrement())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  value              String?
+  isv                String?
+  nsl                String?
+  transcription      String?
+  mainCategory       String?
+  usageType          String?
+  pos                String?
+  aspect             String?
+  transitivity       String?
+  animacy            String?
+  degree             String?
+  pronType           String?
+  numType            String?
+  frequency          String?
+  intelligibility    String?
+  addition           String?
+  sameInLanguages    String?
+  etymology          String?
+  proto              String?
+  paradigm           String?
+  protoStemClass     String?
+  stemExtension      String?
+  genesis            String?
+  stem               String?
+  secondaryStem      String?
+  tertiaryStem       String?
+  governsCase        Int? // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC
+  gender             String?
+  declension         Int?
+  conjugation        Int?
+  properNoun         Boolean   @default(false)
+  hasAnomalies       Boolean   @default(false)
+  promotedAt         DateTime?
   promotedToLexemeId Int?
 
-  @@map("candidates")
   @@index([value])
   @@index([pos])
+  @@map("candidates")
 }
 
 model Meaning {
-  id       Int       @id @default(autoincrement())
-  lexemeId   Int
-  meaning  String?
-  examples String?
-  meaningVerified Int?
-  meaningMessage  String?
+  id               Int      @id @default(autoincrement())
+  lexemeId         Int
+  meaning          String?
+  examples         String?
+  meaningVerified  Int?
+  meaningMessage   String?
   examplesVerified Int?
   examplesMessage  String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   // Связь с таблицей лексем
-  lexeme     Lexeme      @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  lexeme Lexeme @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
 
   // Связь с синсетами RuWordNet
-  synsets  MeaningSynset[]
+  synsets MeaningSynset[]
 
   // Консолидированная семантическая сеть (2026-07-23), заменяет собой
   // Synonym/Antonym/Hypernym/.../Conclusion выше для новых данных — см.
@@ -146,87 +146,95 @@ model Meaning {
   // экспонентом одного из ~64 семантических праймов
   primeExponents PrimeExponent[]
 
+  // Базовая лексика (2026-07-25) — если это значение является экспонентом
+  // понятия из списка Сводеша-100 и/или списка Лейпциг-Джакарта
+  coreVocabularyExponents CoreVocabularyExponent[]
+
   // Консолидированная таблица переводов (2026-07-23), заменяет собой
   // en_word/en_mean...dsb_word/dsb_mean (удалены 2026-07-24, см. AGENTS.md).
   translations Translation[] @relation("TranslationMeaning")
 
-  @@map("meanings")
   @@index([lexemeId])
+  @@map("meanings")
 }
 
 model Morpheme {
-  id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  value String?
-  type  Int?    @default(0)
-  stressPosition Int?               // Какой слог внутри морфемы ударный (0=первый, NULL=нейтральный)
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  value          String?
+  type           Int?     @default(0)
+  stressPosition Int? // Какой слог внутри морфемы ударный (0=первый, NULL=нейтральный)
 
-  lexemes_morphemes LexemeMorpheme[]
-  morphemeAllophones  MorphemeAllophone[]
+  lexemes_morphemes  LexemeMorpheme[]
+  morphemeAllophones MorphemeAllophone[]
 
   @@map("morphemes")
 }
 
 model LexemeMorpheme {
-  id     Int  @id @default(autoincrement())
-  lexemeId Int?
+  id         Int  @id @default(autoincrement())
+  lexemeId   Int?
   morphemeId Int?
 
-  lexeme   Lexeme? @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
-  morpheme   Morpheme? @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
+  lexeme   Lexeme?   @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  morpheme Morpheme? @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
 
   @@map("lexemes_morphemes")
 }
 
 model AllophoneFlavor {
-  id          Int     @id @default(autoincrement())
-  code        String  @unique
-  label       String
-  description String?
+  id                 Int                 @id @default(autoincrement())
+  code               String              @unique
+  label              String
+  description        String?
   lexemeAllophones   LexemeAllophone[]
   morphemeAllophones MorphemeAllophone[]
   endingAllophones   EndingAllophone[]
+
   @@map("allophone_flavors")
 }
 
 model LexemeAllophone {
-  id        Int     @id @default(autoincrement())
-  lexemeId  Int
-  value     String
-  flavorId  Int
-  type      String  @default("standard")
-  lexeme    Lexeme               @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
-  flavor    AllophoneFlavor      @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  id       Int             @id @default(autoincrement())
+  lexemeId Int
+  value    String
+  flavorId Int
+  type     String          @default("standard")
+  lexeme   Lexeme          @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  flavor   AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+
   @@unique([lexemeId, flavorId, type])
-  @@map("lexeme_allophones")
   @@index([lexemeId])
   @@index([flavorId])
+  @@map("lexeme_allophones")
 }
 
 model MorphemeAllophone {
-  id         Int     @id @default(autoincrement())
+  id         Int             @id @default(autoincrement())
   morphemeId Int
   value      String
   flavorId   Int
-  morpheme   Morpheme             @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
-  flavor     AllophoneFlavor      @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  morpheme   Morpheme        @relation(fields: [morphemeId], references: [id], onDelete: Cascade)
+  flavor     AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+
   @@unique([morphemeId, flavorId])
-  @@map("morpheme_allophones")
   @@index([morphemeId])
   @@index([flavorId])
+  @@map("morpheme_allophones")
 }
 
 model EndingAllophone {
-  id        Int     @id @default(autoincrement())
-  stemType  String
-  grammeme  String
-  value     String
-  flavorId  Int
-  flavor    AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+  id       Int             @id @default(autoincrement())
+  stemType String
+  grammeme String
+  value    String
+  flavorId Int
+  flavor   AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
+
   @@unique([stemType, grammeme, flavorId])
-  @@map("ending_allophones")
   @@index([flavorId])
+  @@map("ending_allophones")
 }
 
 // Консолидированная таблица переводов (2026-07-23) — заменяет 18 таблиц
@@ -242,21 +250,21 @@ model Translation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  language  String
-  value     String?
-  verified  Int?
-  message   String?
+  language String
+  value    String?
+  verified Int?
+  message  String?
 
   meaningId Int?
   meaning   Meaning? @relation("TranslationMeaning", fields: [meaningId], references: [id], onDelete: Cascade)
 
   legacyWordId Int?
 
-  @@map("translations")
   @@index([meaningId])
   @@index([meaningId, verified])
   @@index([language, meaningId])
   @@index([language, verified])
+  @@map("translations")
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)
@@ -264,10 +272,10 @@ model Translation {
 model BaseHomonym {
   id      Int    @id @default(autoincrement())
   base    String @unique // Основа (н-р: "vod" для "voda")
-  wordIds String          // JSON-массив: "[1, 5, 12]"
+  wordIds String // JSON-массив: "[1, 5, 12]"
 
-  @@map("base_homonyms")
   @@index([base])
+  @@map("base_homonyms")
 }
 
 // Таблица аномалий флексий
@@ -276,15 +284,15 @@ model BaseHomonym {
 // Ключ-склейка граммемы (н-р: "PL_INST", "PL_GEN")
 model InflectionAnomaly {
   id         Int    @id @default(autoincrement())
-  lexemeId     Int
+  lexemeId   Int
   inflection String
   grammeme   String
 
-  lexeme       Lexeme   @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  lexeme Lexeme @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
 
-  @@map("inflection_anomalies")
   @@index([lexemeId])
   @@index([grammeme])
+  @@map("inflection_anomalies")
 }
 
 model ProtoSlavicWord {
@@ -293,20 +301,20 @@ model ProtoSlavicWord {
   body      String @default("")
   sourceUrl String @default("") @map("source_url")
 
-  @@map("proto_slavic_words")
   @@index([lemma])
+  @@map("proto_slavic_words")
 }
 
 // Синсеты RuWordNet — смысловые группы слов
 model Synset {
-  synsetId         String           @id
-  synsetExternalId String?          @map("synset_external_id")
+  synsetId         String  @id
+  synsetExternalId String? @map("synset_external_id")
   definition       String?
   domains          String?
-  semanticCodes    String?          @map("semantic_codes")
-  partOfSpeech     String?          @map("part_of_speech")
+  semanticCodes    String? @map("semantic_codes")
+  partOfSpeech     String? @map("part_of_speech")
 
-  meanings         MeaningSynset[]
+  meanings MeaningSynset[]
 
   @@map("synsets")
 }
@@ -318,8 +326,8 @@ model MeaningSynset {
   source     String?
   confidence Float?
 
-  meaning    Meaning  @relation(fields: [meaningId], references: [id], onDelete: Cascade)
-  synset     Synset   @relation(fields: [synsetId], references: [synsetId], onDelete: Cascade)
+  meaning Meaning @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+  synset  Synset  @relation(fields: [synsetId], references: [synsetId], onDelete: Cascade)
 
   @@id([meaningId, synsetId])
   @@map("meanings_synsets")
@@ -333,8 +341,8 @@ model MeaningSynset {
 // тот же принцип, что уже применялся к полю author в старом actionHistory.
 model AuditLog {
   id         Int      @id @default(autoincrement())
-  actionId   String   // группирует несколько изменённых полей одного сохранения в одно действие
-  entityType String   // 'Lexeme' | 'Morpheme' | 'Candidate' | ...
+  actionId   String // группирует несколько изменённых полей одного сохранения в одно действие
+  entityType String // 'Lexeme' | 'Morpheme' | 'Candidate' | ...
   entityId   Int
   field      String
   oldValue   String?
@@ -390,10 +398,10 @@ model SemanticRelation {
 // код праймов не меняется независимо от того, какие межславянские слова
 // выбраны их экспонентами.
 model SemanticPrime {
-  code        String @id
+  code        String  @id
   category    String?
-  englishText String @map("english_text")
-  sortOrder   Int    @map("sort_order")
+  englishText String  @map("english_text")
+  sortOrder   Int     @map("sort_order")
 
   exponents PrimeExponent[]
 
@@ -418,4 +426,42 @@ model PrimeExponent {
   @@unique([primeCode, meaningId])
   @@index([meaningId])
   @@map("prime_exponents")
+}
+
+// Базовая лексика (2026-07-25) — справочник понятий из двух пересекающихся,
+// но не идентичных списков "устойчивой к заимствованиям" базовой лексики:
+// список Сводеша-100 (Swadesh 1955/1971, "The Origin and Diversification of
+// Language", ed. Sherzer) и список Лейпциг-Джакарта (Tadmor 2009, отобран из
+// базы данных заимствований WOLD — 41 язык, включая русский). Понятие,
+// присутствующее в обоих списках, хранится ОДНОЙ строкой с обоими рангами
+// заполненными — не дублируется, т.к. экспонент (межславянское слово) для
+// пересекающегося понятия один и тот же. См. scripts/db/seed-core-vocabulary.ts
+// для точных списков, цитат и методики слияния по нормализованному глоссу.
+model CoreVocabularyConcept {
+  id                 Int    @id @default(autoincrement())
+  gloss              String @unique // канонический английский глосс, напр. "water", "big"
+  swadesh100Rank     Int? // ранг 1-100 в списке Сводеша-100, null если понятия там нет
+  leipzigJakartaRank Int? // ранг 1-100 в списке Лейпциг-Джакарта, null если понятия там нет
+
+  exponents CoreVocabularyExponent[]
+
+  @@map("core_vocabulary_concepts")
+}
+
+// Экспонент понятия базовой лексики — конкретное межславянское значение
+// (Meaning), которое реализует данное понятие. Join-таблица по той же причине,
+// что и PrimeExponent — потенциально несколько аллолексов на понятие.
+model CoreVocabularyExponent {
+  id          Int     @id @default(autoincrement())
+  conceptId   Int
+  meaningId   Int
+  isCanonical Boolean @default(true)
+  note        String?
+
+  concept CoreVocabularyConcept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  meaning Meaning               @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+
+  @@unique([conceptId, meaningId])
+  @@index([meaningId])
+  @@map("core_vocabulary_exponents")
 }

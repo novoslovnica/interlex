@@ -61,6 +61,9 @@ export enum SystemFeature {
 
     // NSM-семантические праймы
     SemanticPrimesManage = "semantic_primes_manage",
+
+    // Базовая лексика (список Сводеша-100 / Лейпциг-Джакарта)
+    CoreVocabularyManage = "core_vocabulary_manage",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -341,6 +344,13 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.SemanticPrimesManage]: {
         label: "Управление экспонентами праймов",
         description: "Привязка межславянских значений к семантическим праймам NSM",
+        category: "Семантика",
+    },
+
+    // Базовая лексика
+    [SystemFeature.CoreVocabularyManage]: {
+        label: "Управление базовой лексикой",
+        description: "Привязка межславянских значений к понятиям из списков Сводеша-100 и Лейпциг-Джакарта",
         category: "Семантика",
     },
 };

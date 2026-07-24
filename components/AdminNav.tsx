@@ -56,6 +56,7 @@ const navItems: NavEntry[] = [
         ],
     },
     { href: "/admin/primes", label: "Праймы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SemanticPrimesManage },
+    { href: "/admin/core-vocabulary", label: "Базовая лексика", roles: ["ADMIN", "MODERATOR"], feature: Feature.CoreVocabularyManage },
     { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
     { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },

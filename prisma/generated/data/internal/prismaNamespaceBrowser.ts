@@ -69,7 +69,9 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   SemanticRelation: 'SemanticRelation',
   SemanticPrime: 'SemanticPrime',
-  PrimeExponent: 'PrimeExponent'
+  PrimeExponent: 'PrimeExponent',
+  CoreVocabularyConcept: 'CoreVocabularyConcept',
+  CoreVocabularyExponent: 'CoreVocabularyExponent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -370,6 +372,27 @@ export const PrimeExponentScalarFieldEnum = {
 } as const
 
 export type PrimeExponentScalarFieldEnum = (typeof PrimeExponentScalarFieldEnum)[keyof typeof PrimeExponentScalarFieldEnum]
+
+
+export const CoreVocabularyConceptScalarFieldEnum = {
+  id: 'id',
+  gloss: 'gloss',
+  swadesh100Rank: 'swadesh100Rank',
+  leipzigJakartaRank: 'leipzigJakartaRank'
+} as const
+
+export type CoreVocabularyConceptScalarFieldEnum = (typeof CoreVocabularyConceptScalarFieldEnum)[keyof typeof CoreVocabularyConceptScalarFieldEnum]
+
+
+export const CoreVocabularyExponentScalarFieldEnum = {
+  id: 'id',
+  conceptId: 'conceptId',
+  meaningId: 'meaningId',
+  isCanonical: 'isCanonical',
+  note: 'note'
+} as const
+
+export type CoreVocabularyExponentScalarFieldEnum = (typeof CoreVocabularyExponentScalarFieldEnum)[keyof typeof CoreVocabularyExponentScalarFieldEnum]
 
 
 export const SortOrder = {

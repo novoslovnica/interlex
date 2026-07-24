@@ -112,3 +112,13 @@ export type SemanticPrime = Prisma.SemanticPrimeModel
  * 
  */
 export type PrimeExponent = Prisma.PrimeExponentModel
+/**
+ * Model CoreVocabularyConcept
+ * 
+ */
+export type CoreVocabularyConcept = Prisma.CoreVocabularyConceptModel
+/**
+ * Model CoreVocabularyExponent
+ * 
+ */
+export type CoreVocabularyExponent = Prisma.CoreVocabularyExponentModel
