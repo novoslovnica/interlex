@@ -404,7 +404,9 @@ export const ModelName = {
   SemanticPrime: 'SemanticPrime',
   PrimeExponent: 'PrimeExponent',
   CoreVocabularyConcept: 'CoreVocabularyConcept',
-  CoreVocabularyExponent: 'CoreVocabularyExponent'
+  CoreVocabularyExponent: 'CoreVocabularyExponent',
+  ValencyFrame: 'ValencyFrame',
+  ValencyArgument: 'ValencyArgument'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent"
+    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1978,6 +1980,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ValencyFrame: {
+      payload: Prisma.$ValencyFramePayload<ExtArgs>
+      fields: Prisma.ValencyFrameFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ValencyFrameFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ValencyFrameFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        findFirst: {
+          args: Prisma.ValencyFrameFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ValencyFrameFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        findMany: {
+          args: Prisma.ValencyFrameFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>[]
+        }
+        create: {
+          args: Prisma.ValencyFrameCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        createMany: {
+          args: Prisma.ValencyFrameCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ValencyFrameCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>[]
+        }
+        delete: {
+          args: Prisma.ValencyFrameDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        update: {
+          args: Prisma.ValencyFrameUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        deleteMany: {
+          args: Prisma.ValencyFrameDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ValencyFrameUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ValencyFrameUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>[]
+        }
+        upsert: {
+          args: Prisma.ValencyFrameUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyFramePayload>
+        }
+        aggregate: {
+          args: Prisma.ValencyFrameAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateValencyFrame>
+        }
+        groupBy: {
+          args: Prisma.ValencyFrameGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ValencyFrameGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ValencyFrameCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ValencyFrameCountAggregateOutputType> | number
+        }
+      }
+    }
+    ValencyArgument: {
+      payload: Prisma.$ValencyArgumentPayload<ExtArgs>
+      fields: Prisma.ValencyArgumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ValencyArgumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ValencyArgumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        findFirst: {
+          args: Prisma.ValencyArgumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ValencyArgumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        findMany: {
+          args: Prisma.ValencyArgumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>[]
+        }
+        create: {
+          args: Prisma.ValencyArgumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        createMany: {
+          args: Prisma.ValencyArgumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ValencyArgumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>[]
+        }
+        delete: {
+          args: Prisma.ValencyArgumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        update: {
+          args: Prisma.ValencyArgumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ValencyArgumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ValencyArgumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ValencyArgumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ValencyArgumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ValencyArgumentPayload>
+        }
+        aggregate: {
+          args: Prisma.ValencyArgumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateValencyArgument>
+        }
+        groupBy: {
+          args: Prisma.ValencyArgumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ValencyArgumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ValencyArgumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ValencyArgumentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2322,6 +2472,29 @@ export const CoreVocabularyExponentScalarFieldEnum = {
 export type CoreVocabularyExponentScalarFieldEnum = (typeof CoreVocabularyExponentScalarFieldEnum)[keyof typeof CoreVocabularyExponentScalarFieldEnum]
 
 
+export const ValencyFrameScalarFieldEnum = {
+  id: 'id',
+  meaningId: 'meaningId',
+  label: 'label',
+  sortOrder: 'sortOrder'
+} as const
+
+export type ValencyFrameScalarFieldEnum = (typeof ValencyFrameScalarFieldEnum)[keyof typeof ValencyFrameScalarFieldEnum]
+
+
+export const ValencyArgumentScalarFieldEnum = {
+  id: 'id',
+  frameId: 'frameId',
+  role: 'role',
+  case: 'case',
+  preposition: 'preposition',
+  isOptional: 'isOptional',
+  sortOrder: 'sortOrder'
+} as const
+
+export type ValencyArgumentScalarFieldEnum = (typeof ValencyArgumentScalarFieldEnum)[keyof typeof ValencyArgumentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2509,6 +2682,8 @@ export type GlobalOmitConfig = {
   primeExponent?: Prisma.PrimeExponentOmit
   coreVocabularyConcept?: Prisma.CoreVocabularyConceptOmit
   coreVocabularyExponent?: Prisma.CoreVocabularyExponentOmit
+  valencyFrame?: Prisma.ValencyFrameOmit
+  valencyArgument?: Prisma.ValencyArgumentOmit
 }
 
 /* Types for Logging */

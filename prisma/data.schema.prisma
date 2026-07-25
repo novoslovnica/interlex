@@ -150,6 +150,11 @@ model Meaning {
   // понятия из списка Сводеша-100 и/или списка Лейпциг-Джакарта
   coreVocabularyExponents CoreVocabularyExponent[]
 
+  // Валентность (2026-07-26) — модели управления падежом/предлогом для
+  // этого значения (мультивалентность: несколько фреймов = альтернация,
+  // несколько аргументов во фрейме = мультиаргументность/дитранзитивность)
+  valencyFrames ValencyFrame[]
+
   // Консолидированная таблица переводов (2026-07-23), заменяет собой
   // en_word/en_mean...dsb_word/dsb_mean (удалены 2026-07-24, см. AGENTS.md).
   translations Translation[] @relation("TranslationMeaning")
@@ -464,4 +469,45 @@ model CoreVocabularyExponent {
   @@unique([conceptId, meaningId])
   @@index([meaningId])
   @@map("core_vocabulary_exponents")
+}
+
+// Валентность (2026-07-26) — заменяет одиночное Lexeme.governsCase (int,
+// 2-6, только для предлогов) моделью мультивалентности: одно значение
+// (Meaning) может иметь несколько фреймов управления (альтернация падежа/
+// предлога в зависимости от смысла), каждый фрейм — один и более аргументов
+// (мультиаргументность/дитранзитивность, напр. "dati" ACC+DAT одновременно).
+// См. AGENTS.md "Мультивалентные слова" для полного разбора и эмпирических
+// примеров (pristupati do/k, obhoditi se bez/s — уже существующие в данных
+// пары дублированных лексем, которые на самом деле одно слово с двумя
+// значениями и разным управлением).
+model ValencyFrame {
+  id        Int     @id @default(autoincrement())
+  meaningId Int
+  label     String? // помечает альтернацию, напр. "без чего" / "с кем"
+  sortOrder Int     @default(0)
+
+  meaning   Meaning           @relation(fields: [meaningId], references: [id], onDelete: Cascade)
+  arguments ValencyArgument[]
+
+  @@index([meaningId])
+  @@map("valency_frames")
+}
+
+// case — значение GrammaticalCase (lib/grammar/common/case.ts): 'gen'|'dat'|
+// 'acc'|'ins'|'loc'|'nom'|'voc' — строка, а не легаси-int, чтобы совпадать с
+// представлением, которое уже использует lib/corpus/disambiguation и
+// lib/grammar/common/addition-parser.ts.
+model ValencyArgument {
+  id          Int     @id @default(autoincrement())
+  frameId     Int
+  role        String? // свободный текст: "адресат", "прямое дополнение" и т.п.
+  case        String
+  preposition String? // null = управление без предлога (голым падежом)
+  isOptional  Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  frame ValencyFrame @relation(fields: [frameId], references: [id], onDelete: Cascade)
+
+  @@index([frameId])
+  @@map("valency_arguments")
 }

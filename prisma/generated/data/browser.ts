@@ -122,3 +122,13 @@ export type CoreVocabularyConcept = Prisma.CoreVocabularyConceptModel
  * 
  */
 export type CoreVocabularyExponent = Prisma.CoreVocabularyExponentModel
+/**
+ * Model ValencyFrame
+ * 
+ */
+export type ValencyFrame = Prisma.ValencyFrameModel
+/**
+ * Model ValencyArgument
+ * 
+ */
+export type ValencyArgument = Prisma.ValencyArgumentModel

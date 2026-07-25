@@ -274,6 +274,7 @@ export type MeaningWhereInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationListRelationFilter
   primeExponents?: Prisma.PrimeExponentListRelationFilter
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentListRelationFilter
+  valencyFrames?: Prisma.ValencyFrameListRelationFilter
   translations?: Prisma.TranslationListRelationFilter
 }
 
@@ -294,6 +295,7 @@ export type MeaningOrderByWithRelationInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationOrderByRelationAggregateInput
   primeExponents?: Prisma.PrimeExponentOrderByRelationAggregateInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentOrderByRelationAggregateInput
+  valencyFrames?: Prisma.ValencyFrameOrderByRelationAggregateInput
   translations?: Prisma.TranslationOrderByRelationAggregateInput
 }
 
@@ -317,6 +319,7 @@ export type MeaningWhereUniqueInput = Prisma.AtLeast<{
   semanticRelationsTarget?: Prisma.SemanticRelationListRelationFilter
   primeExponents?: Prisma.PrimeExponentListRelationFilter
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentListRelationFilter
+  valencyFrames?: Prisma.ValencyFrameListRelationFilter
   translations?: Prisma.TranslationListRelationFilter
 }, "id">
 
@@ -369,6 +372,7 @@ export type MeaningCreateInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -388,6 +392,7 @@ export type MeaningUncheckedCreateInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -406,6 +411,7 @@ export type MeaningUpdateInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -425,6 +431,7 @@ export type MeaningUncheckedUpdateInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -666,6 +673,20 @@ export type MeaningUpdateOneRequiredWithoutCoreVocabularyExponentsNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutCoreVocabularyExponentsInput, Prisma.MeaningUpdateWithoutCoreVocabularyExponentsInput>, Prisma.MeaningUncheckedUpdateWithoutCoreVocabularyExponentsInput>
 }
 
+export type MeaningCreateNestedOneWithoutValencyFramesInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutValencyFramesInput, Prisma.MeaningUncheckedCreateWithoutValencyFramesInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutValencyFramesInput
+  connect?: Prisma.MeaningWhereUniqueInput
+}
+
+export type MeaningUpdateOneRequiredWithoutValencyFramesNestedInput = {
+  create?: Prisma.XOR<Prisma.MeaningCreateWithoutValencyFramesInput, Prisma.MeaningUncheckedCreateWithoutValencyFramesInput>
+  connectOrCreate?: Prisma.MeaningCreateOrConnectWithoutValencyFramesInput
+  upsert?: Prisma.MeaningUpsertWithoutValencyFramesInput
+  connect?: Prisma.MeaningWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MeaningUpdateToOneWithWhereWithoutValencyFramesInput, Prisma.MeaningUpdateWithoutValencyFramesInput>, Prisma.MeaningUncheckedUpdateWithoutValencyFramesInput>
+}
+
 export type MeaningCreateWithoutLexemeInput = {
   meaning?: string | null
   examples?: string | null
@@ -680,6 +701,7 @@ export type MeaningCreateWithoutLexemeInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -698,6 +720,7 @@ export type MeaningUncheckedCreateWithoutLexemeInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -757,6 +780,7 @@ export type MeaningCreateWithoutTranslationsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningUncheckedCreateWithoutTranslationsInput = {
@@ -775,6 +799,7 @@ export type MeaningUncheckedCreateWithoutTranslationsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
 }
 
 export type MeaningCreateOrConnectWithoutTranslationsInput = {
@@ -808,6 +833,7 @@ export type MeaningUpdateWithoutTranslationsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningUncheckedUpdateWithoutTranslationsInput = {
@@ -826,6 +852,7 @@ export type MeaningUncheckedUpdateWithoutTranslationsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
 export type MeaningCreateWithoutSynsetsInput = {
@@ -842,6 +869,7 @@ export type MeaningCreateWithoutSynsetsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -860,6 +888,7 @@ export type MeaningUncheckedCreateWithoutSynsetsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -893,6 +922,7 @@ export type MeaningUpdateWithoutSynsetsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -911,6 +941,7 @@ export type MeaningUncheckedUpdateWithoutSynsetsInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -928,6 +959,7 @@ export type MeaningCreateWithoutSemanticRelationsSourceInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -946,6 +978,7 @@ export type MeaningUncheckedCreateWithoutSemanticRelationsSourceInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -968,6 +1001,7 @@ export type MeaningCreateWithoutSemanticRelationsTargetInput = {
   semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -986,6 +1020,7 @@ export type MeaningUncheckedCreateWithoutSemanticRelationsTargetInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -1019,6 +1054,7 @@ export type MeaningUpdateWithoutSemanticRelationsSourceInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1037,6 +1073,7 @@ export type MeaningUncheckedUpdateWithoutSemanticRelationsSourceInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1065,6 +1102,7 @@ export type MeaningUpdateWithoutSemanticRelationsTargetInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1083,6 +1121,7 @@ export type MeaningUncheckedUpdateWithoutSemanticRelationsTargetInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1100,6 +1139,7 @@ export type MeaningCreateWithoutPrimeExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -1118,6 +1158,7 @@ export type MeaningUncheckedCreateWithoutPrimeExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -1151,6 +1192,7 @@ export type MeaningUpdateWithoutPrimeExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1169,6 +1211,7 @@ export type MeaningUncheckedUpdateWithoutPrimeExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1186,6 +1229,7 @@ export type MeaningCreateWithoutCoreVocabularyExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
   semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
 }
 
@@ -1204,6 +1248,7 @@ export type MeaningUncheckedCreateWithoutCoreVocabularyExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
   primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedCreateNestedManyWithoutMeaningInput
   translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
 }
 
@@ -1237,6 +1282,7 @@ export type MeaningUpdateWithoutCoreVocabularyExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1255,6 +1301,97 @@ export type MeaningUncheckedUpdateWithoutCoreVocabularyExponentsInput = {
   semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
+  translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningCreateWithoutValencyFramesInput = {
+  meaning?: string | null
+  examples?: string | null
+  meaningVerified?: number | null
+  meaningMessage?: string | null
+  examplesVerified?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lexeme: Prisma.LexemeCreateNestedOneWithoutMeaningsInput
+  synsets?: Prisma.MeaningSynsetCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentCreateNestedManyWithoutMeaningInput
+  coreVocabularyExponents?: Prisma.CoreVocabularyExponentCreateNestedManyWithoutMeaningInput
+  translations?: Prisma.TranslationCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningUncheckedCreateWithoutValencyFramesInput = {
+  id?: number
+  lexemeId: number
+  meaning?: string | null
+  examples?: string | null
+  meaningVerified?: number | null
+  meaningMessage?: string | null
+  examplesVerified?: number | null
+  examplesMessage?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  synsets?: Prisma.MeaningSynsetUncheckedCreateNestedManyWithoutMeaningInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutSourceMeaningInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedCreateNestedManyWithoutTargetMeaningInput
+  primeExponents?: Prisma.PrimeExponentUncheckedCreateNestedManyWithoutMeaningInput
+  coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedCreateNestedManyWithoutMeaningInput
+  translations?: Prisma.TranslationUncheckedCreateNestedManyWithoutMeaningInput
+}
+
+export type MeaningCreateOrConnectWithoutValencyFramesInput = {
+  where: Prisma.MeaningWhereUniqueInput
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutValencyFramesInput, Prisma.MeaningUncheckedCreateWithoutValencyFramesInput>
+}
+
+export type MeaningUpsertWithoutValencyFramesInput = {
+  update: Prisma.XOR<Prisma.MeaningUpdateWithoutValencyFramesInput, Prisma.MeaningUncheckedUpdateWithoutValencyFramesInput>
+  create: Prisma.XOR<Prisma.MeaningCreateWithoutValencyFramesInput, Prisma.MeaningUncheckedCreateWithoutValencyFramesInput>
+  where?: Prisma.MeaningWhereInput
+}
+
+export type MeaningUpdateToOneWithWhereWithoutValencyFramesInput = {
+  where?: Prisma.MeaningWhereInput
+  data: Prisma.XOR<Prisma.MeaningUpdateWithoutValencyFramesInput, Prisma.MeaningUncheckedUpdateWithoutValencyFramesInput>
+}
+
+export type MeaningUpdateWithoutValencyFramesInput = {
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVerified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVerified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lexeme?: Prisma.LexemeUpdateOneRequiredWithoutMeaningsNestedInput
+  synsets?: Prisma.MeaningSynsetUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
+  coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
+}
+
+export type MeaningUncheckedUpdateWithoutValencyFramesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examples?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningVerified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaningMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examplesVerified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  examplesMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  synsets?: Prisma.MeaningSynsetUncheckedUpdateManyWithoutMeaningNestedInput
+  semanticRelationsSource?: Prisma.SemanticRelationUncheckedUpdateManyWithoutSourceMeaningNestedInput
+  semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
+  primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1284,6 +1421,7 @@ export type MeaningUpdateWithoutLexemeInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1302,6 +1440,7 @@ export type MeaningUncheckedUpdateWithoutLexemeInput = {
   semanticRelationsTarget?: Prisma.SemanticRelationUncheckedUpdateManyWithoutTargetMeaningNestedInput
   primeExponents?: Prisma.PrimeExponentUncheckedUpdateManyWithoutMeaningNestedInput
   coreVocabularyExponents?: Prisma.CoreVocabularyExponentUncheckedUpdateManyWithoutMeaningNestedInput
+  valencyFrames?: Prisma.ValencyFrameUncheckedUpdateManyWithoutMeaningNestedInput
   translations?: Prisma.TranslationUncheckedUpdateManyWithoutMeaningNestedInput
 }
 
@@ -1328,6 +1467,7 @@ export type MeaningCountOutputType = {
   semanticRelationsTarget: number
   primeExponents: number
   coreVocabularyExponents: number
+  valencyFrames: number
   translations: number
 }
 
@@ -1337,6 +1477,7 @@ export type MeaningCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   semanticRelationsTarget?: boolean | MeaningCountOutputTypeCountSemanticRelationsTargetArgs
   primeExponents?: boolean | MeaningCountOutputTypeCountPrimeExponentsArgs
   coreVocabularyExponents?: boolean | MeaningCountOutputTypeCountCoreVocabularyExponentsArgs
+  valencyFrames?: boolean | MeaningCountOutputTypeCountValencyFramesArgs
   translations?: boolean | MeaningCountOutputTypeCountTranslationsArgs
 }
 
@@ -1388,6 +1529,13 @@ export type MeaningCountOutputTypeCountCoreVocabularyExponentsArgs<ExtArgs exten
 /**
  * MeaningCountOutputType without action
  */
+export type MeaningCountOutputTypeCountValencyFramesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ValencyFrameWhereInput
+}
+
+/**
+ * MeaningCountOutputType without action
+ */
 export type MeaningCountOutputTypeCountTranslationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TranslationWhereInput
 }
@@ -1410,6 +1558,7 @@ export type MeaningSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   semanticRelationsTarget?: boolean | Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>
   primeExponents?: boolean | Prisma.Meaning$primeExponentsArgs<ExtArgs>
   coreVocabularyExponents?: boolean | Prisma.Meaning$coreVocabularyExponentsArgs<ExtArgs>
+  valencyFrames?: boolean | Prisma.Meaning$valencyFramesArgs<ExtArgs>
   translations?: boolean | Prisma.Meaning$translationsArgs<ExtArgs>
   _count?: boolean | Prisma.MeaningCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meaning"]>
@@ -1463,6 +1612,7 @@ export type MeaningInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   semanticRelationsTarget?: boolean | Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>
   primeExponents?: boolean | Prisma.Meaning$primeExponentsArgs<ExtArgs>
   coreVocabularyExponents?: boolean | Prisma.Meaning$coreVocabularyExponentsArgs<ExtArgs>
+  valencyFrames?: boolean | Prisma.Meaning$valencyFramesArgs<ExtArgs>
   translations?: boolean | Prisma.Meaning$translationsArgs<ExtArgs>
   _count?: boolean | Prisma.MeaningCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1482,6 +1632,7 @@ export type $MeaningPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     semanticRelationsTarget: Prisma.$SemanticRelationPayload<ExtArgs>[]
     primeExponents: Prisma.$PrimeExponentPayload<ExtArgs>[]
     coreVocabularyExponents: Prisma.$CoreVocabularyExponentPayload<ExtArgs>[]
+    valencyFrames: Prisma.$ValencyFramePayload<ExtArgs>[]
     translations: Prisma.$TranslationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1895,6 +2046,7 @@ export interface Prisma__MeaningClient<T, Null = never, ExtArgs extends runtime.
   semanticRelationsTarget<T extends Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$semanticRelationsTargetArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemanticRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   primeExponents<T extends Prisma.Meaning$primeExponentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$primeExponentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrimeExponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   coreVocabularyExponents<T extends Prisma.Meaning$coreVocabularyExponentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$coreVocabularyExponentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoreVocabularyExponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  valencyFrames<T extends Prisma.Meaning$valencyFramesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$valencyFramesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ValencyFramePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   translations<T extends Prisma.Meaning$translationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meaning$translationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2451,6 +2603,30 @@ export type Meaning$coreVocabularyExponentsArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.CoreVocabularyExponentScalarFieldEnum | Prisma.CoreVocabularyExponentScalarFieldEnum[]
+}
+
+/**
+ * Meaning.valencyFrames
+ */
+export type Meaning$valencyFramesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ValencyFrame
+   */
+  select?: Prisma.ValencyFrameSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ValencyFrame
+   */
+  omit?: Prisma.ValencyFrameOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ValencyFrameInclude<ExtArgs> | null
+  where?: Prisma.ValencyFrameWhereInput
+  orderBy?: Prisma.ValencyFrameOrderByWithRelationInput | Prisma.ValencyFrameOrderByWithRelationInput[]
+  cursor?: Prisma.ValencyFrameWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ValencyFrameScalarFieldEnum | Prisma.ValencyFrameScalarFieldEnum[]
 }
 
 /**

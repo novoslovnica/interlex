@@ -80,7 +80,14 @@ export default async function EditArticlePage({ params, searchParams }: EditPage
     db.lexeme.findUnique({
       where: { id: wordId },
       include: {
-        meanings: true,
+        meanings: {
+          include: {
+            valencyFrames: {
+              include: { arguments: { orderBy: { sortOrder: "asc" } } },
+              orderBy: { sortOrder: "asc" },
+            },
+          },
+        },
         lexemes_morphemes: {
           take: 1,
           select: {
@@ -165,6 +172,17 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     examplesVerified: m.examplesVerified ?? 0,
     examplesMessage: m.examplesMessage ?? "",
     translations: extractTranslations(translationsByLang, m.id),
+    valencyFrames: m.valencyFrames.map((f) => ({
+      id: f.id,
+      label: f.label ?? "",
+      arguments: f.arguments.map((a) => ({
+        id: a.id,
+        case: a.case,
+        preposition: a.preposition ?? "",
+        role: a.role ?? "",
+        isOptional: a.isOptional,
+      })),
+    })),
   }))
 
   async function handleUpdate(formData: any) {
@@ -277,7 +295,6 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
                   degree: wordData.degree,
                   pronType: wordData.pronType,
                   numType: wordData.numType,
-                  governsCase: wordData.governsCase,
                   declension: wordData.declension,
                   conjugation: wordData.conjugation,
                   mainCategory: wordData.mainCategory,

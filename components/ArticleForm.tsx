@@ -6,6 +6,8 @@ import { UsageType, ALL_USAGE_TYPES } from "@/lib/enums/UsageType"
 import { MainCategory, ALL_MAIN_CATEGORIES } from "@/lib/enums/MainCategory"
 import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 import { generateAllFlavors } from "@/lib/flavors"
+import { PosType } from "@/lib/grammar/common/pos"
+import { GrammaticalCase } from "@/lib/grammar/common/case"
 
 const LANGUAGES: { key: string; label: string }[] = [
   { key: "en", label: "English" },
@@ -28,17 +30,23 @@ const LANGUAGES: { key: string; label: string }[] = [
   { key: "eo", label: "Esperanto" },
 ]
 
+// Значения — канонический PosType (UD-теги), а не произвольный словарь: это
+// то, что реально хранится в Lexeme.pos и что использует остальной проект
+// (напр. app/words/[id]/Word.tsx сравнивает pos === PosType.VERB для выбора
+// таблиц склонения/спряжения). См. AGENTS.md "Мультивалентные слова" — до
+// этой правки словарь не совпадал с реальными данными, и часть
+// POS-специфичных полей (в т.ч. управляемый падеж) не рендерилась вовсе.
 const POS_OPTIONS = [
-  { value: "noun", label: "Noun / Существительное" },
-  { value: "verb", label: "Verb / Глагол" },
-  { value: "adjective", label: "Adjective / Прилагательное" },
-  { value: "adverb", label: "Adverb / Наречие" },
-  { value: "pronoun", label: "Pronoun / Местоимение" },
-  { value: "numeral", label: "Numeral / Числительное" },
-  { value: "preposition", label: "Preposition / Предлог" },
-  { value: "conjunction", label: "Conjunction / Союз" },
-  { value: "particle", label: "Particle / Частица" },
-  { value: "interjection", label: "Interjection / Междометие" },
+  { value: PosType.NOUN, label: "Noun / Существительное" },
+  { value: PosType.VERB, label: "Verb / Глагол" },
+  { value: PosType.ADJ, label: "Adjective / Прилагательное" },
+  { value: PosType.ADV, label: "Adverb / Наречие" },
+  { value: PosType.PRON, label: "Pronoun / Местоимение" },
+  { value: PosType.NUM, label: "Numeral / Числительное" },
+  { value: PosType.ADP, label: "Preposition / Предлог" },
+  { value: PosType.CCONJ, label: "Conjunction / Союз" },
+  { value: PosType.PART, label: "Particle / Частица" },
+  { value: PosType.INTJ, label: "Interjection / Междометие" },
 ]
 
 const GENDER_OPTIONS = [
@@ -88,12 +96,14 @@ const NUM_TYPE_OPTIONS = [
   { value: "fractional", label: "Fractional / Дробное" },
 ]
 
-const GOVERNS_CASE_OPTIONS = [
-  { value: 2, label: "GEN (Родительный)" },
-  { value: 3, label: "DAT (Дательный)" },
-  { value: 4, label: "ACC (Винительный)" },
-  { value: 5, label: "INS (Творительный)" },
-  { value: 6, label: "LOC (Предложный)" },
+// Падежи для аргументов валентности (см. ValencyArgument.case) — только те,
+// которыми реально может управлять слово (без NOM/VOC).
+const VALENCY_CASE_OPTIONS = [
+  { value: GrammaticalCase.GEN, label: "GEN (Родительный)" },
+  { value: GrammaticalCase.DAT, label: "DAT (Дательный)" },
+  { value: GrammaticalCase.ACC, label: "ACC (Винительный)" },
+  { value: GrammaticalCase.INS, label: "INS (Творительный)" },
+  { value: GrammaticalCase.LOC, label: "LOC (Предложный)" },
 ]
 
 const SLAVIC_LANG_CODES: { code: string; flag: string; name: string }[] = [
@@ -165,6 +175,20 @@ interface TranslationData {
   message: string
 }
 
+interface ValencyArgumentData {
+  id: number
+  case: string
+  preposition: string
+  role: string
+  isOptional: boolean
+}
+
+interface ValencyFrameData {
+  id: number
+  label: string
+  arguments: ValencyArgumentData[]
+}
+
 interface MeaningData {
   id: number
   meaning: string
@@ -174,6 +198,7 @@ interface MeaningData {
   examplesVerified: number
   examplesMessage: string
   translations: Record<string, TranslationData[]>
+  valencyFrames: ValencyFrameData[]
 }
 
 interface InflectionAnomalyItem {
@@ -213,7 +238,6 @@ interface ArticleFormProps {
     degree?: string | null
     pronType?: string | null
     numType?: string | null
-    governsCase?: number | null
     declension?: number | null
     conjugation?: number | null
     mainCategory?: string | null
@@ -281,7 +305,6 @@ export default function ArticleForm({
     degree: initialData?.degree ?? "",
     pronType: initialData?.pronType ?? "",
     numType: initialData?.numType ?? "",
-    governsCase: initialData?.governsCase ?? null,
     declension: initialData?.declension ?? null,
     conjugation: initialData?.conjugation ?? null,
     mainCategory: initialData?.mainCategory ?? "",
@@ -336,20 +359,20 @@ export default function ArticleForm({
   function getPosGrammarFields(pos: string): string[] {
     const common = ["pos"]
     switch (pos) {
-      case "noun":
+      case PosType.NOUN:
         return [...common, "gender", "declension", "animacy"]
-      case "verb":
+      case PosType.VERB:
         return [...common, "aspect", "transitivity", "conjugation"]
-      case "adjective":
+      case PosType.ADJ:
         return [...common, "degree", "gender"]
-      case "adverb":
+      case PosType.ADV:
         return [...common, "degree"]
-      case "pronoun":
+      case PosType.PRON:
         return [...common, "pronType"]
-      case "numeral":
+      case PosType.NUM:
         return [...common, "numType"]
-      case "preposition":
-        return [...common, "governsCase"]
+      // Управляемый падеж/предлог теперь редактируется per-meaning (см.
+      // блок "Валентность" в панели значения) — не зависит от части речи.
       default:
         return common
     }
@@ -358,7 +381,7 @@ export default function ArticleForm({
   const [meanings, setMeanings] = useState<MeaningData[]>(
     initialData?.meanings?.length
       ? initialData.meanings as MeaningData[]
-      : [{ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() }]
+      : [{ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations(), valencyFrames: [] }]
   )
   const [selectedMeaningIdx, setSelectedMeaningIdx] = useState(0)
   const [activeLang, setActiveLang] = useState("en")
@@ -516,14 +539,14 @@ export default function ArticleForm({
   function addMeaning() {
     setMeanings((prev) => [
       ...prev,
-      { id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() },
+      { id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations(), valencyFrames: [] },
     ])
   }
 
   function removeMeaning(idx: number) {
     setMeanings((prev) => {
       const next = prev.filter((_, i) => i !== idx)
-      if (next.length === 0) next.push({ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations() })
+      if (next.length === 0) next.push({ id: 0, meaning: "", examples: "", meaningVerified: 0, meaningMessage: "", examplesVerified: 0, examplesMessage: "", translations: emptyTranslations(), valencyFrames: [] })
       return next
     })
     setSelectedMeaningIdx((prev) => Math.min(prev, meanings.length - 2))
@@ -561,6 +584,79 @@ export default function ArticleForm({
         if (i !== selectedMeaningIdx) return m
         const current = m.translations[lang] || []
         return { ...m, translations: { ...m.translations, [lang]: current.filter((_, j) => j !== tIdx) } }
+      })
+    )
+  }
+
+  function addValencyFrame() {
+    setMeanings((prev) =>
+      prev.map((m, i) =>
+        i !== selectedMeaningIdx
+          ? m
+          : { ...m, valencyFrames: [...m.valencyFrames, { id: 0, label: "", arguments: [] }] }
+      )
+    )
+  }
+
+  function removeValencyFrame(frameIdx: number) {
+    setMeanings((prev) =>
+      prev.map((m, i) =>
+        i !== selectedMeaningIdx ? m : { ...m, valencyFrames: m.valencyFrames.filter((_, j) => j !== frameIdx) }
+      )
+    )
+  }
+
+  function updateValencyFrameLabel(frameIdx: number, label: string) {
+    setMeanings((prev) =>
+      prev.map((m, i) => {
+        if (i !== selectedMeaningIdx) return m
+        return { ...m, valencyFrames: m.valencyFrames.map((f, j) => (j === frameIdx ? { ...f, label } : f)) }
+      })
+    )
+  }
+
+  function addValencyArgument(frameIdx: number) {
+    setMeanings((prev) =>
+      prev.map((m, i) => {
+        if (i !== selectedMeaningIdx) return m
+        return {
+          ...m,
+          valencyFrames: m.valencyFrames.map((f, j) =>
+            j !== frameIdx
+              ? f
+              : { ...f, arguments: [...f.arguments, { id: 0, case: GrammaticalCase.GEN, preposition: "", role: "", isOptional: false }] }
+          ),
+        }
+      })
+    )
+  }
+
+  function removeValencyArgument(frameIdx: number, argIdx: number) {
+    setMeanings((prev) =>
+      prev.map((m, i) => {
+        if (i !== selectedMeaningIdx) return m
+        return {
+          ...m,
+          valencyFrames: m.valencyFrames.map((f, j) =>
+            j !== frameIdx ? f : { ...f, arguments: f.arguments.filter((_, k) => k !== argIdx) }
+          ),
+        }
+      })
+    )
+  }
+
+  function updateValencyArgument(frameIdx: number, argIdx: number, field: keyof ValencyArgumentData, value: string | boolean) {
+    setMeanings((prev) =>
+      prev.map((m, i) => {
+        if (i !== selectedMeaningIdx) return m
+        return {
+          ...m,
+          valencyFrames: m.valencyFrames.map((f, j) =>
+            j !== frameIdx
+              ? f
+              : { ...f, arguments: f.arguments.map((a, k) => (k === argIdx ? { ...a, [field]: value } : a)) }
+          ),
+        }
       })
     )
   }
@@ -606,6 +702,7 @@ export default function ArticleForm({
           examplesVerified: m.examplesVerified,
           examplesMessage: m.examplesMessage,
           translations: m.translations,
+          valencyFrames: m.valencyFrames,
         })),
       })
     })
@@ -886,9 +983,6 @@ export default function ArticleForm({
                     if (fields.includes("numType")) {
                       elements.push(<SelectField key="numType" label="Тип числительного" value={grammar.numType} options={NUM_TYPE_OPTIONS} onChange={(v) => setGram("numType", v)} />)
                     }
-                    if (fields.includes("governsCase")) {
-                      elements.push(<SelectField key="governsCase" label="Управляемый падеж" value={grammar.governsCase} options={GOVERNS_CASE_OPTIONS} onChange={(v) => setGram("governsCase", v)} />)
-                    }
                     if (fields.includes("declension")) {
                       elements.push(<NumberField key="declension" label="Склонение" value={grammar.declension} onChange={(v) => setGram("declension", v)} placeholder="1–4" />)
                     }
@@ -1115,6 +1209,60 @@ export default function ArticleForm({
                   {meanings.length > 1 && (
                     <button type="button" onClick={() => removeMeaning(selectedMeaningIdx)} className="text-xs text-destructive hover:text-destructive/80">Удалить это значение</button>
                   )}
+
+                  <div className="border rounded-md bg-muted/10 p-2 space-y-2">
+                    <label className="block text-xs font-medium">Валентность (управление падежом/предлогом)</label>
+                    {activeMeaning.valencyFrames.map((frame, frameIdx) => (
+                      <div key={frameIdx} className="border rounded bg-background p-2 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={frame.label}
+                            onChange={(e) => updateValencyFrameLabel(frameIdx, e.target.value)}
+                            className="flex-1 px-2 py-1 border rounded bg-background text-xs"
+                            placeholder="Пометка (напр. «без чего» / «с кем»)..."
+                          />
+                          <button type="button" onClick={() => removeValencyFrame(frameIdx)} className="text-xs text-destructive hover:text-destructive/80 shrink-0">Удалить фрейм</button>
+                        </div>
+                        {frame.arguments.map((arg, argIdx) => (
+                          <div key={argIdx} className="flex flex-wrap items-center gap-1.5 pl-2 border-l-2">
+                            <SelectField
+                              label="Падеж"
+                              value={arg.case}
+                              options={VALENCY_CASE_OPTIONS}
+                              onChange={(v) => updateValencyArgument(frameIdx, argIdx, "case", v as string)}
+                            />
+                            <input
+                              type="text"
+                              value={arg.preposition}
+                              onChange={(e) => updateValencyArgument(frameIdx, argIdx, "preposition", e.target.value)}
+                              className="w-24 px-2 py-1 border rounded bg-background text-xs"
+                              placeholder="предлог"
+                            />
+                            <input
+                              type="text"
+                              value={arg.role}
+                              onChange={(e) => updateValencyArgument(frameIdx, argIdx, "role", e.target.value)}
+                              className="flex-1 min-w-[100px] px-2 py-1 border rounded bg-background text-xs"
+                              placeholder="роль (адресат, дополнение...)"
+                            />
+                            <label className="flex items-center gap-1 text-[11px] text-muted-foreground cursor-pointer shrink-0">
+                              <input
+                                type="checkbox"
+                                checked={arg.isOptional}
+                                onChange={(e) => updateValencyArgument(frameIdx, argIdx, "isOptional", e.target.checked)}
+                                className="h-3.5 w-3.5 rounded border-gray-300 text-primary"
+                              />
+                              необязателен
+                            </label>
+                            <button type="button" onClick={() => removeValencyArgument(frameIdx, argIdx)} className="text-xs text-destructive hover:text-destructive/80 shrink-0">×</button>
+                          </div>
+                        ))}
+                        <button type="button" onClick={() => addValencyArgument(frameIdx)} className="text-xs text-primary hover:underline">+ Добавить аргумент</button>
+                      </div>
+                    ))}
+                    <button type="button" onClick={addValencyFrame} className="w-full text-center py-1.5 border border-dashed rounded text-xs text-primary hover:bg-primary/5 transition-colors">+ Добавить фрейм управления</button>
+                  </div>
 
                   <div>
                     <label className="block text-xs font-medium mb-1">Переводы</label>

@@ -8,6 +8,7 @@ import { generateUniqueSlug } from "@/lib/slug"
 import { logAudit, type FieldChange } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
 import { upsertTranslation, syncTranslationsForMeaning } from "@/lib/translations"
+import { syncValencyFramesForMeaning } from "@/lib/valency"
 
 export async function updateWord(formData: any) {
   const session = await auth()
@@ -32,9 +33,15 @@ export async function updateWord(formData: any) {
     wordChanges.push({ field: "properNoun", oldValue: currentWord?.properNoun, newValue: formData.properNoun === true })
   }
 
+  // "governsCase" намеренно не входит в этот список: с 2026-07-26 управление
+  // падежом/предлогом редактируется per-meaning через ValencyFrame/
+  // ValencyArgument (см. AGENTS.md "Мультивалентные слова"), а старое поле
+  // Lexeme.governsCase сохраняется как есть (мигрированные/легаси данные) —
+  // если добавить его сюда, каждое сохранение слова будет обнулять его,
+  // т.к. ArticleForm больше не передаёт это поле в formData.
   const grammarFields: string[] = [
     "pos", "gender", "aspect", "transitivity", "animacy", "degree",
-    "pronType", "numType", "governsCase", "declension", "conjugation",
+    "pronType", "numType", "declension", "conjugation",
     "mainCategory", "usageType", "intelligibility", "addition",
     "sameInLanguages", "etymology", "proto", "paradigm", "protoStemClass",
     "stemExtension", "stressPosition", "genesis", "secondaryStem", "tertiaryStem",
@@ -233,14 +240,22 @@ export async function updateWord(formData: any) {
       meaningId = created.id
     }
 
-    if (m.translations) {
+    if (m.translations || m.valencyFrames) {
       const dbSimple = await init()
-      for (const lang of Object.keys(m.translations)) {
-        const changes = syncTranslationsForMeaning(dbSimple, {
-          meaningId,
-          language: lang,
-          translations: m.translations[lang],
-        })
+      if (m.translations) {
+        for (const lang of Object.keys(m.translations)) {
+          const changes = syncTranslationsForMeaning(dbSimple, {
+            meaningId,
+            language: lang,
+            translations: m.translations[lang],
+          })
+          if (changes.length > 0) {
+            await logAudit(session?.user, "Lexeme", wordId, changes)
+          }
+        }
+      }
+      if (m.valencyFrames) {
+        const changes = syncValencyFramesForMeaning(dbSimple, meaningId, m.valencyFrames)
         if (changes.length > 0) {
           await logAudit(session?.user, "Lexeme", wordId, changes)
         }

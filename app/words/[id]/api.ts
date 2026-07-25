@@ -53,10 +53,32 @@ export const getItem = async (id: string) => {
     }
   }
 
+  const valencyFramesByMeaning: Record<number, any[]> = {};
+  if (meaningIds.length > 0) {
+    const placeholders = meaningIds.map(() => '?').join(',');
+    const frames = db.prepare(`SELECT * FROM valency_frames WHERE meaningId IN (${placeholders}) ORDER BY sortOrder, id`).all(...meaningIds) as any[];
+    const frameIds = frames.map(f => f.id);
+    const argumentsByFrame: Record<number, any[]> = {};
+    if (frameIds.length > 0) {
+      const argPlaceholders = frameIds.map(() => '?').join(',');
+      const args = db.prepare(`SELECT * FROM valency_arguments WHERE frameId IN (${argPlaceholders}) ORDER BY sortOrder, id`).all(...frameIds) as any[];
+      for (const arg of args) {
+        (argumentsByFrame[arg.frameId] ??= []).push(arg);
+      }
+    }
+    for (const frame of frames) {
+      (valencyFramesByMeaning[frame.meaningId] ??= []).push({
+        ...frame,
+        arguments: argumentsByFrame[frame.id] || [],
+      });
+    }
+  }
+
   const meaningsWithRelations = meanings.map(m => ({
     ...m,
     synonyms: synonymsByMeaning[m.id] || [],
     antonyms: antonymsByMeaning[m.id] || [],
+    valencyFrames: valencyFramesByMeaning[m.id] || [],
   }));
 
   const byLang = fetchTranslationsForLexeme(db, parseInt(id, 10));

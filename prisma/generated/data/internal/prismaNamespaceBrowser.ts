@@ -71,7 +71,9 @@ export const ModelName = {
   SemanticPrime: 'SemanticPrime',
   PrimeExponent: 'PrimeExponent',
   CoreVocabularyConcept: 'CoreVocabularyConcept',
-  CoreVocabularyExponent: 'CoreVocabularyExponent'
+  CoreVocabularyExponent: 'CoreVocabularyExponent',
+  ValencyFrame: 'ValencyFrame',
+  ValencyArgument: 'ValencyArgument'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -393,6 +395,29 @@ export const CoreVocabularyExponentScalarFieldEnum = {
 } as const
 
 export type CoreVocabularyExponentScalarFieldEnum = (typeof CoreVocabularyExponentScalarFieldEnum)[keyof typeof CoreVocabularyExponentScalarFieldEnum]
+
+
+export const ValencyFrameScalarFieldEnum = {
+  id: 'id',
+  meaningId: 'meaningId',
+  label: 'label',
+  sortOrder: 'sortOrder'
+} as const
+
+export type ValencyFrameScalarFieldEnum = (typeof ValencyFrameScalarFieldEnum)[keyof typeof ValencyFrameScalarFieldEnum]
+
+
+export const ValencyArgumentScalarFieldEnum = {
+  id: 'id',
+  frameId: 'frameId',
+  role: 'role',
+  case: 'case',
+  preposition: 'preposition',
+  isOptional: 'isOptional',
+  sortOrder: 'sortOrder'
+} as const
+
+export type ValencyArgumentScalarFieldEnum = (typeof ValencyArgumentScalarFieldEnum)[keyof typeof ValencyArgumentScalarFieldEnum]
 
 
 export const SortOrder = {

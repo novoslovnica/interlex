@@ -457,6 +457,24 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                                     </div>
                                 )}
 
+                                {m.valencyFrames?.length > 0 && (
+                                    <div className="text-xs text-slate-500">
+                                        <span className="font-semibold uppercase tracking-wider text-slate-400 mr-1">Управление:</span>
+                                        {m.valencyFrames.map((frame: any, fIdx: number) => (
+                                            <span key={frame.id}>
+                                                {fIdx > 0 && "; "}
+                                                {frame.label && <em>{frame.label}: </em>}
+                                                {frame.arguments.map((arg: any, aIdx: number) => (
+                                                    <span key={arg.id}>
+                                                        {aIdx > 0 && " + "}
+                                                        {arg.preposition ? `${arg.preposition} ` : ""}{String(arg.case).toUpperCase()}
+                                                    </span>
+                                                ))}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {hasTranslations && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                                         {Object.entries(meaningTranslations).map(([lang, val]) => (
