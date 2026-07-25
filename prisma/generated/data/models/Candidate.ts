@@ -28,7 +28,6 @@ export type AggregateCandidate = {
 
 export type CandidateAvgAggregateOutputType = {
   id: number | null
-  governsCase: number | null
   declension: number | null
   conjugation: number | null
   promotedToLexemeId: number | null
@@ -36,7 +35,6 @@ export type CandidateAvgAggregateOutputType = {
 
 export type CandidateSumAggregateOutputType = {
   id: number | null
-  governsCase: number | null
   declension: number | null
   conjugation: number | null
   promotedToLexemeId: number | null
@@ -72,7 +70,6 @@ export type CandidateMinAggregateOutputType = {
   stem: string | null
   secondaryStem: string | null
   tertiaryStem: string | null
-  governsCase: number | null
   gender: string | null
   declension: number | null
   conjugation: number | null
@@ -112,7 +109,6 @@ export type CandidateMaxAggregateOutputType = {
   stem: string | null
   secondaryStem: string | null
   tertiaryStem: string | null
-  governsCase: number | null
   gender: string | null
   declension: number | null
   conjugation: number | null
@@ -152,7 +148,6 @@ export type CandidateCountAggregateOutputType = {
   stem: number
   secondaryStem: number
   tertiaryStem: number
-  governsCase: number
   gender: number
   declension: number
   conjugation: number
@@ -166,7 +161,6 @@ export type CandidateCountAggregateOutputType = {
 
 export type CandidateAvgAggregateInputType = {
   id?: true
-  governsCase?: true
   declension?: true
   conjugation?: true
   promotedToLexemeId?: true
@@ -174,7 +168,6 @@ export type CandidateAvgAggregateInputType = {
 
 export type CandidateSumAggregateInputType = {
   id?: true
-  governsCase?: true
   declension?: true
   conjugation?: true
   promotedToLexemeId?: true
@@ -210,7 +203,6 @@ export type CandidateMinAggregateInputType = {
   stem?: true
   secondaryStem?: true
   tertiaryStem?: true
-  governsCase?: true
   gender?: true
   declension?: true
   conjugation?: true
@@ -250,7 +242,6 @@ export type CandidateMaxAggregateInputType = {
   stem?: true
   secondaryStem?: true
   tertiaryStem?: true
-  governsCase?: true
   gender?: true
   declension?: true
   conjugation?: true
@@ -290,7 +281,6 @@ export type CandidateCountAggregateInputType = {
   stem?: true
   secondaryStem?: true
   tertiaryStem?: true
-  governsCase?: true
   gender?: true
   declension?: true
   conjugation?: true
@@ -417,7 +407,6 @@ export type CandidateGroupByOutputType = {
   stem: string | null
   secondaryStem: string | null
   tertiaryStem: string | null
-  governsCase: number | null
   gender: string | null
   declension: number | null
   conjugation: number | null
@@ -480,7 +469,6 @@ export type CandidateWhereInput = {
   stem?: Prisma.StringNullableFilter<"Candidate"> | string | null
   secondaryStem?: Prisma.StringNullableFilter<"Candidate"> | string | null
   tertiaryStem?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  governsCase?: Prisma.IntNullableFilter<"Candidate"> | number | null
   gender?: Prisma.StringNullableFilter<"Candidate"> | string | null
   declension?: Prisma.IntNullableFilter<"Candidate"> | number | null
   conjugation?: Prisma.IntNullableFilter<"Candidate"> | number | null
@@ -520,7 +508,6 @@ export type CandidateOrderByWithRelationInput = {
   stem?: Prisma.SortOrderInput | Prisma.SortOrder
   secondaryStem?: Prisma.SortOrderInput | Prisma.SortOrder
   tertiaryStem?: Prisma.SortOrderInput | Prisma.SortOrder
-  governsCase?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   declension?: Prisma.SortOrderInput | Prisma.SortOrder
   conjugation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -563,7 +550,6 @@ export type CandidateWhereUniqueInput = Prisma.AtLeast<{
   stem?: Prisma.StringNullableFilter<"Candidate"> | string | null
   secondaryStem?: Prisma.StringNullableFilter<"Candidate"> | string | null
   tertiaryStem?: Prisma.StringNullableFilter<"Candidate"> | string | null
-  governsCase?: Prisma.IntNullableFilter<"Candidate"> | number | null
   gender?: Prisma.StringNullableFilter<"Candidate"> | string | null
   declension?: Prisma.IntNullableFilter<"Candidate"> | number | null
   conjugation?: Prisma.IntNullableFilter<"Candidate"> | number | null
@@ -603,7 +589,6 @@ export type CandidateOrderByWithAggregationInput = {
   stem?: Prisma.SortOrderInput | Prisma.SortOrder
   secondaryStem?: Prisma.SortOrderInput | Prisma.SortOrder
   tertiaryStem?: Prisma.SortOrderInput | Prisma.SortOrder
-  governsCase?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   declension?: Prisma.SortOrderInput | Prisma.SortOrder
   conjugation?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -651,7 +636,6 @@ export type CandidateScalarWhereWithAggregatesInput = {
   stem?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   secondaryStem?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   tertiaryStem?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
-  governsCase?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
   gender?: Prisma.StringNullableWithAggregatesFilter<"Candidate"> | string | null
   declension?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
   conjugation?: Prisma.IntNullableWithAggregatesFilter<"Candidate"> | number | null
@@ -690,7 +674,6 @@ export type CandidateCreateInput = {
   stem?: string | null
   secondaryStem?: string | null
   tertiaryStem?: string | null
-  governsCase?: number | null
   gender?: string | null
   declension?: number | null
   conjugation?: number | null
@@ -730,7 +713,6 @@ export type CandidateUncheckedCreateInput = {
   stem?: string | null
   secondaryStem?: string | null
   tertiaryStem?: string | null
-  governsCase?: number | null
   gender?: string | null
   declension?: number | null
   conjugation?: number | null
@@ -769,7 +751,6 @@ export type CandidateUpdateInput = {
   stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  governsCase?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -809,7 +790,6 @@ export type CandidateUncheckedUpdateInput = {
   stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  governsCase?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -849,7 +829,6 @@ export type CandidateCreateManyInput = {
   stem?: string | null
   secondaryStem?: string | null
   tertiaryStem?: string | null
-  governsCase?: number | null
   gender?: string | null
   declension?: number | null
   conjugation?: number | null
@@ -888,7 +867,6 @@ export type CandidateUpdateManyMutationInput = {
   stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  governsCase?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -928,7 +906,6 @@ export type CandidateUncheckedUpdateManyInput = {
   stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  governsCase?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -968,7 +945,6 @@ export type CandidateCountOrderByAggregateInput = {
   stem?: Prisma.SortOrder
   secondaryStem?: Prisma.SortOrder
   tertiaryStem?: Prisma.SortOrder
-  governsCase?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
@@ -980,7 +956,6 @@ export type CandidateCountOrderByAggregateInput = {
 
 export type CandidateAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  governsCase?: Prisma.SortOrder
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
   promotedToLexemeId?: Prisma.SortOrder
@@ -1016,7 +991,6 @@ export type CandidateMaxOrderByAggregateInput = {
   stem?: Prisma.SortOrder
   secondaryStem?: Prisma.SortOrder
   tertiaryStem?: Prisma.SortOrder
-  governsCase?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
@@ -1056,7 +1030,6 @@ export type CandidateMinOrderByAggregateInput = {
   stem?: Prisma.SortOrder
   secondaryStem?: Prisma.SortOrder
   tertiaryStem?: Prisma.SortOrder
-  governsCase?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
@@ -1068,7 +1041,6 @@ export type CandidateMinOrderByAggregateInput = {
 
 export type CandidateSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  governsCase?: Prisma.SortOrder
   declension?: Prisma.SortOrder
   conjugation?: Prisma.SortOrder
   promotedToLexemeId?: Prisma.SortOrder
@@ -1110,7 +1082,6 @@ export type CandidateSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   stem?: boolean
   secondaryStem?: boolean
   tertiaryStem?: boolean
-  governsCase?: boolean
   gender?: boolean
   declension?: boolean
   conjugation?: boolean
@@ -1150,7 +1121,6 @@ export type CandidateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   stem?: boolean
   secondaryStem?: boolean
   tertiaryStem?: boolean
-  governsCase?: boolean
   gender?: boolean
   declension?: boolean
   conjugation?: boolean
@@ -1190,7 +1160,6 @@ export type CandidateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   stem?: boolean
   secondaryStem?: boolean
   tertiaryStem?: boolean
-  governsCase?: boolean
   gender?: boolean
   declension?: boolean
   conjugation?: boolean
@@ -1230,7 +1199,6 @@ export type CandidateSelectScalar = {
   stem?: boolean
   secondaryStem?: boolean
   tertiaryStem?: boolean
-  governsCase?: boolean
   gender?: boolean
   declension?: boolean
   conjugation?: boolean
@@ -1240,7 +1208,7 @@ export type CandidateSelectScalar = {
   promotedToLexemeId?: boolean
 }
 
-export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "isv" | "nsl" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "governsCase" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "promotedAt" | "promotedToLexemeId", ExtArgs["result"]["candidate"]>
+export type CandidateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "isv" | "nsl" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "gender" | "declension" | "conjugation" | "properNoun" | "hasAnomalies" | "promotedAt" | "promotedToLexemeId", ExtArgs["result"]["candidate"]>
 
 export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Candidate"
@@ -1275,7 +1243,6 @@ export type $CandidatePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     stem: string | null
     secondaryStem: string | null
     tertiaryStem: string | null
-    governsCase: number | null
     gender: string | null
     declension: number | null
     conjugation: number | null
@@ -1735,7 +1702,6 @@ export interface CandidateFieldRefs {
   readonly stem: Prisma.FieldRef<"Candidate", 'String'>
   readonly secondaryStem: Prisma.FieldRef<"Candidate", 'String'>
   readonly tertiaryStem: Prisma.FieldRef<"Candidate", 'String'>
-  readonly governsCase: Prisma.FieldRef<"Candidate", 'Int'>
   readonly gender: Prisma.FieldRef<"Candidate", 'String'>
   readonly declension: Prisma.FieldRef<"Candidate", 'Int'>
   readonly conjugation: Prisma.FieldRef<"Candidate", 'Int'>

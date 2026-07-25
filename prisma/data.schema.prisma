@@ -40,7 +40,6 @@ model Lexeme {
   stem           String?
   secondaryStem  String?
   tertiaryStem   String?
-  governsCase    Int? // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC. В будущем отдельная таблица для множественности
   gender         String?
   declension     Int?
   conjugation    Int?
@@ -104,7 +103,6 @@ model Candidate {
   stem               String?
   secondaryStem      String?
   tertiaryStem       String?
-  governsCase        Int? // 2=GEN, 3=DAT, 4=ACC, 5=INS, 6=LOC
   gender             String?
   declension         Int?
   conjugation        Int?
@@ -479,7 +477,11 @@ model CoreVocabularyExponent {
 // См. AGENTS.md "Мультивалентные слова" для полного разбора и эмпирических
 // примеров (pristupati do/k, obhoditi se bez/s — уже существующие в данных
 // пары дублированных лексем, которые на самом деле одно слово с двумя
-// значениями и разным управлением).
+// значениями и разным управлением). Данные из Lexeme.governsCase перенесены
+// сюда скриптом scripts/db/2026-07-26-migrate-governs-case-to-valency.ts;
+// само поле governsCase удалено (2026-07-27) скриптом
+// scripts/db/2026-07-27-drop-governs-case.ts после подтверждения стабильности
+// миграции в проде.
 model ValencyFrame {
   id        Int     @id @default(autoincrement())
   meaningId Int

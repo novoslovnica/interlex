@@ -51,7 +51,7 @@ export const getDictItems = async (
                    l.pronType, l.numType, l.frequency, l.intelligibility,
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.secondaryStem, l.tertiaryStem,
                    l.hasAnomalies, l.mainCategory, l.usageType
             FROM lexemes l
             LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
@@ -78,7 +78,7 @@ export const getDictItems = async (
                    l.pronType, l.numType, l.frequency, l.intelligibility,
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                   l.secondaryStem, l.tertiaryStem, l.governsCase,
+                   l.secondaryStem, l.tertiaryStem,
                    l.hasAnomalies, l.mainCategory, l.usageType
             FROM lexemes l
             LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'

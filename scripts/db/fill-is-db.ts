@@ -118,7 +118,6 @@ decl,
     gender?: string;
 }): [bigint, bigint] => {
     const additionResult = parseAddition(addition, pos);
-    const governsCase = additionResult.governsCase;
     const stem = heuristicStem(lat, pos).toLowerCase();
     const secondaryStem = additionResult.secondaryStem;
     const tertiaryStem = additionResult.tertiaryStem;
@@ -149,10 +148,9 @@ decl,
         stem,
         secondaryStem,
         tertiaryStem,
-        governsCase,
         hasAnomalies,
         updatedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 
     const check = db.prepare(`SELECT * FROM lexemes WHERE slug = ? `).get(`${value}-${pos}`);
 
@@ -185,7 +183,6 @@ decl,
             stem,
             secondaryStem,
             tertiaryStem,
-            governsCase,
             additionResult.hasAnomalies ? 1 : 0,
             new Date().toISOString(),
         );
