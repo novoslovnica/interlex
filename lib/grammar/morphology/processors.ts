@@ -40,7 +40,9 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         paradigm: (word.paradigm as AccentParadigm) || AccentParadigm.A,
         gender: (word.gender as GrammaticalGender) || GrammaticalGender.MASC,
         protoStemClass: (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT,
-        stemExtension: (word.stemExtension as StemExtension) || StemExtension.NONE
+        stemExtension: (word.stemExtension as StemExtension) || StemExtension.NONE,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     // 2. Разворачиваем полную матрицу форм (7 падежей * 3 числа = 21 словоформа)
@@ -132,6 +134,8 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         verbClass: stems.verbClass,
         aspect: (word.aspect as VerbalAspect) || VerbalAspect.IPF,
         paradigm: (word.paradigm as AccentParadigm) || AccentParadigm.A,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     // 4. Запускаем генерацию полной глагольной матрицы
@@ -251,7 +255,9 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
         protoSlavic: word.isv,
         paradigm,
         protoStemClass,
-        adjClass
+        adjClass,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     const cases = Object.values(Case);
@@ -319,7 +325,9 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
         interslavic: word.isv,
         protoSlavic: word.isv,
         paradigm,
-        pronClass
+        pronClass,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     const cases = Object.values(Case);
@@ -428,7 +436,9 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
             interslavic: word.isv,
             protoSlavic: word.isv, // Используем лемму как фоллбэк праформы для рендеринга тонов
             paradigm,
-            protoStemClass
+            protoStemClass,
+            stressPosition: word.stressPosition,
+            morphemes: word.morphemes,
         };
 
         for (const num of numbers) {
@@ -460,7 +470,9 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
             interslavic: word.isv,
             protoSlavic: word.isv,
             paradigm,
-            collClass
+            collClass,
+            stressPosition: word.stressPosition,
+            morphemes: word.morphemes,
         };
 
         for (const cas of cases) {
@@ -488,7 +500,9 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
         interslavic: word.isv,
         protoSlavic: word.isv,
         paradigm,
-        numClass
+        numClass,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     if (numClass === 'one') {
@@ -561,7 +575,9 @@ export function processDeterminer(word: EngineWordInput): GeneratedForm[] {
         interslavic: word.isv,
         protoSlavic: word.isv,
         paradigm,
-        protoStemClass: (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT
+        protoStemClass: (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
     };
 
     const cases = Object.values(Case);

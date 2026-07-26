@@ -12,6 +12,7 @@ import {
     GrammaticalGender
 } from "@/lib/grammar/common/gender";
 import { getEnding } from '@/lib/grammar/endingLoader';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 // =========================================================================
 // 1. СТРОГИЕ СИСТЕМНЫЕ ТИПЫ И КАТЕГОРИИ
@@ -56,6 +57,8 @@ export interface EnhancedDbItem {
     gender: GrammaticalGender;         // Строгий Родовой Enum (MASC, FEM, NEUT)
     protoStemClass: ProtoStemClass;     // Строгий Класс Праславянской основы
     stemExtension?: StemExtension;      // Строгое Наращение основы (EN, ES, ENT, ER, NONE)
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
 
 export interface FinalUserRequest {
@@ -230,25 +233,29 @@ export function generateBaseNounFormWithFourTones(
     stemType: StemType,
     targetCase: Case,
     targetNumber: NumberType,
-    flavor: string = 'CORE'
+    flavor: string = 'CORE',
+    stressPosition?: number,
 ): string {
     const ending = getEnding(stemType, targetNumber, targetCase, flavor);
     const fullForm = stemWithExtension(interslavicWord, stemType, targetCase, targetNumber) + ending;
 
     // ПАРАДИГМА A: Стабильно-восходящее ударение на корне (Долгий/Краткий Акут)
     if (paradigm === AccentParadigm.A) {
-        const toneType = getAcuteToneType(fullForm, 1);
-        return applyFourTonesMark(fullForm, 1, toneType);
+        const idx = stressPosition ?? 1;
+        const toneType = getAcuteToneType(fullForm, idx);
+        return applyFourTonesMark(fullForm, idx, toneType);
     }
 
     // ПАРАДИГМА B: Окситоническая. При падении еров — ретракция на корень (Неокут)
     if (paradigm === AccentParadigm.B) {
         if (ending === 'ъ' || ending === 'ь' || ending === '') {
-            const toneType = getAcuteToneType(fullForm, 1);
-            return applyFourTonesMark(fullForm, 1, toneType); // bóbъ vs kòńь
+            const idx = stressPosition ?? 1;
+            const toneType = getAcuteToneType(fullForm, idx);
+            return applyFourTonesMark(fullForm, idx, toneType); // bóbъ vs kòńь
         }
-        const toneType = getAcuteToneType(fullForm, 0);
-        return applyFourTonesMark(fullForm, 0, toneType);   // bobá, bobóvъ
+        const idx = stressPosition ?? 0;
+        const toneType = getAcuteToneType(fullForm, idx);
+        return applyFourTonesMark(fullForm, idx, toneType);   // bobá, bobóvъ
     }
 
     // ПАРАДИГМА C: Подвижная (Циркумфлексы на корне vs Акуты на окончаниях)
@@ -257,41 +264,51 @@ export function generateBaseNounFormWithFourTones(
         const isNeuter = stemType === 'a_hard' || stemType === 'a_soft' || stemType === 'consonant_n' || stemType === 'consonant_s';
         const isFeminine = stemType === 'i_basis' || stemType.startsWith('a_');
 
-        // --- А. ЖЕНСКИЙ РОД (rų̂ka [долгий] vs gorȃ [краткий]) ---
+        // --- А. ЖЕНСКИЙ РОД (rų̂ka [долгий] vs gorȃ [краткий]) ---
         if (isFeminine) {
             if (targetNumber === NumberType.SINGULAR && (targetCase === Case.NOMINATIVE || targetCase === Case.ACCUSATIVE)) {
-                return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1));
+                const idx = stressPosition ?? 1;
+                return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx));
             }
-            return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0));
+            const idx = stressPosition ?? 0;
+            return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
         }
 
-        // --- Б. МУЖСКОЙ РОД (bȏbъ [краткий циркумфлекс]) ---
+        // --- Б. МУЖСКОЙ РОД (bȏbъ [краткий циркумфлекс]) ---
         if (isMasculine) {
             if (targetNumber === NumberType.SINGULAR) {
                 if (targetCase === Case.NOMINATIVE || targetCase === Case.ACCUSATIVE) {
-                    return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1));
+                    const idx = stressPosition ?? 1;
+                    return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx));
                 }
-                return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0)); // Косвенные падежи
+                const idx = stressPosition ?? 0;
+                return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx)); // Косвенные падежи
             }
             if (targetNumber === NumberType.PLURAL) {
                 if (targetCase === Case.ACCUSATIVE) {
-                    return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1)); // bóby
+                    const idx = stressPosition ?? 1;
+                    return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx)); // bóby
                 }
-                return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0));
+                const idx = stressPosition ?? 0;
+                return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
             }
-            return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0)); // Дуалис
+            const idx = stressPosition ?? 0;
+            return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx)); // Дуалис
         }
 
-        // --- В. СРЕДНИЙ РОД (tě̂lo [долгий] vs ȏko [краткий]) ---
+        // --- В. СРЕДНИЙ РОД (tě̂lo [долгий] vs ȏko [краткий]) ---
         if (isNeuter) {
             if (targetNumber === NumberType.SINGULAR) {
-                return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1));
+                const idx = stressPosition ?? 1;
+                return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx));
             }
             if (targetNumber === NumberType.PLURAL) {
-                return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0)); // telá
+                const idx = stressPosition ?? 0;
+                return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx)); // telá
             }
             if (targetNumber === NumberType.DUAL) {
-                return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1)); // tě̂lě
+                const idx = stressPosition ?? 1;
+                return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx)); // tě̂lě
             }
         }
     }
@@ -342,6 +359,12 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
     // Шаг 1: Идентификация флексийного класса
     const stemType = identifyStemTypeByDb(dbItem);
 
+    // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
+    // (заимствования) — та же логика, что и в declineNoun.ts (реальная страница слова).
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor ?? 'CORE');
+    const fullFormForStress = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
+    const stressPosition = resolveStressOverride(fullFormForStress, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
+
     // Шаг 2: Генерация базовой словоформы с расчетом 4 тонов
     const baseAccentedNoun = generateBaseNounFormWithFourTones(
         dbItem.interslavic,
@@ -349,7 +372,8 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
         stemType,
         targetCase,
         targetNumber,
-        flavor
+        flavor,
+        stressPosition
     );
 
     // Шаг 3: Если предлог опущен — отдаем форму как есть

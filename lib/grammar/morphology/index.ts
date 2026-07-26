@@ -32,4 +32,6 @@ export interface EngineWordInput {
     alternationType?: string | null;
     fleetingVowelAt?: number | null;
     flavor?: string;
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }

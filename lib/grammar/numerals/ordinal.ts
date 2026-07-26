@@ -7,6 +7,8 @@ export interface OrdinalDbItem {
     protoSlavic: string;
     paradigm: AccentParadigm; // Обычно Парадигма А (стабильное ударение)
     protoStemClass: ProtoStemClass; // o_short или jo_short
+    stressPosition?: number | null;
+    morphemes?: { value: string; stressPosition?: number | null }[];
 }
 
 /**
@@ -23,7 +25,9 @@ export function declineOrdinalNumeral(request: {
         interslavic: request.dbItem.interslavic,
         protoSlavic: request.dbItem.protoSlavic,
         paradigm: request.dbItem.paradigm,
-        protoStemClass: request.dbItem.protoStemClass
+        protoStemClass: request.dbItem.protoStemClass,
+        stressPosition: request.dbItem.stressPosition,
+        morphemes: request.dbItem.morphemes,
     };
 
     return generateAdjectiveForm({

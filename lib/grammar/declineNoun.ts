@@ -4,7 +4,7 @@ import { applyAccent } from './accentUtils';
 import {applyPrepositionEnclitic, applyPrepositionEncliticWithFourTones} from './encliticEngine';
 import { generateBaseNounFormWithFourTones, stemWithExtension } from './fourTonesGenerator';
 import {EnhancedDbItem, identifyStemTypeByDb} from "@/lib/grammar/stemClassifier";
-import {computeStressFromMorphemes, countSyllables} from "@/lib/grammar/stress";
+import {resolveStressOverride} from "@/lib/grammar/stress";
 import {normalizeSoftConsonants, collapseDoubleJ} from "@/lib/isv";
 
 export interface ExtendedWordFormRequest {
@@ -269,17 +269,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
     const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', dbItem.gender, dbItem.animacy);
     const fullForm = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
 
-    let effectiveStressPosition: number | undefined = undefined;
-    if (dbItem.paradigm === 'A') {
-        const fromMorphemes = dbItem.morphemes
-            ? computeStressFromMorphemes(fullForm, dbItem.morphemes)
-            : null;
-        const stressFromStart = fromMorphemes ?? dbItem.stressPosition ?? null;
-        if (stressFromStart != null) {
-            const total = countSyllables(fullForm);
-            effectiveStressPosition = total - 1 - stressFromStart;
-        }
-    }
+    const effectiveStressPosition = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
 
     // 3. Генерируем форму с точным расчетом одного из 4 тонов Зализняка
     const baseAccentedNoun = generateBaseNounFormWithFourTones(

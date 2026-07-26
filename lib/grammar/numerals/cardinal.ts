@@ -8,6 +8,7 @@ import { buildGrammeme } from '@/lib/grammar/grammemes';
 import { ADJECTIVE_ENDINGS_REGISTRY } from '@/lib/grammar/adjective';
 import { SLAVIC_ENDINGS_REGISTRY } from '@/lib/grammar/endingsRegistry';
 import { normalizeSoftConsonants, collapseDoubleJ } from '@/lib/isv';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 // =========================================================================
 // 1. СТРОГИЕ ИНТЕРФЕЙСЫ И ТИПЫ ДАННЫХ
@@ -20,6 +21,8 @@ export interface EnhancedNumDbItem {
     protoSlavic: string;
     paradigm: AccentParadigm; // A, B, C
     numClass: NumeralTypeClass; // Новый мета-тег разметки класса числительного
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
 
 export interface NumFormRequest {
@@ -167,14 +170,18 @@ export function generateNumeralForm(request: NumFormRequest): string {
 
     // Убираем задвоенную мягкость перед тоновой разметкой (pęťj -> pęť, noći -> noči)
     fullForm = collapseDoubleJ(normalizeSoftConsonants(fullForm));
-
     // =========================================================================
     // ТОНОВАЯ СЕТКА ЗАЛИЗНЯКА ДЛЯ ЧИСЛИТЕЛЬНЫХ
     // =========================================================================
 
+    // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
+    // (заимствования) — переопределяет только СЛОГ, тип тона решает парадигма ниже.
+    const override = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
+
     // ПАРАДИГМА A: Неподвижное ударение на корне
     if (dbItem.paradigm === AccentParadigm.A) {
-        return applyFourTonesMark(fullForm, 1, getAcuteToneType(fullForm, 1));
+        const idx = override ?? 1;
+        return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
     }
 
     // ПАРАДИГМА B (Окситонная): Перенос на окончание
@@ -187,9 +194,11 @@ export function generateNumeralForm(request: NumFormRequest): string {
         // значение выбранного окончания, а не конец fullForm: endsWith('') всегда
         // true в JS, так что прежняя проверка была фактически тавтологией.
         if (usedEnding === '' || usedEnding === 'ъ' || usedEnding === 'ь') {
-            return applyFourTonesMark(fullForm, 1, getAcuteToneType(fullForm, 1));
+            const idx = override ?? 1;
+            return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
         }
-        return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0)); // На флексию (pętí)
+        const idx = override ?? 0;
+        return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx)); // На флексию (pętí)
     }
 
     // ПАРАДИГМА C (Мобильная): Праславянские энклиномены (два, три, пять — исторически тип C)
@@ -198,11 +207,13 @@ export function generateNumeralForm(request: NumFormRequest): string {
 
         if (isDirectCase) {
             // Именительный и Винительный падежи несут нисходящий циркумфлекс на корне
-            return applyFourTonesMark(fullForm, 1, getCircumflexToneType(fullForm, 1)); // dvâ, pę̂tь
+            const idx = override ?? 1;
+            return applyFourTonesMark(fullForm, idx, getCircumflexToneType(fullForm, idx)); // dvâ, pę̂tь
         }
 
         // Косвенные падежи улетают на флексию (восходящий тон)
-        return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0)); // dvajų́, pętьjǫ́
+        const idx = override ?? 0;
+        return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx)); // dvajų́, pętьjǫ́
     }
 
     return fullForm;

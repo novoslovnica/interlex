@@ -5,6 +5,7 @@ import {
 } from '@/lib/grammar/common'; // Системные Enum из таблицы Word
 import { Case, NumberType, FourSlavicTones, stripAccents } from '../noun';
 import { getEnding } from '@/lib/grammar/endingLoader';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 // =========================================================================
 // 1. СТРОГИЕ ИНТЕРФЕЙСЫ И ТИПЫ ДАННЫХ
@@ -17,6 +18,8 @@ export interface EnhancedAdjDbItem {
     protoSlavic: string;
     paradigm: AccentParadigm; // A, B, C
     protoStemClass: ProtoStemClass; // o / jo основы
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
 
 export interface AdjFormRequest {
@@ -220,10 +223,15 @@ export function generateAdjectiveForm(request: AdjFormRequest): string {
     const cleanBase = dbItem.interslavic.slice(0, -1);
     const fullForm = cleanBase + ending;
 
+    // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
+    // (заимствования) — переопределяет только СЛОГ, тип тона решает парадигма ниже.
+    const override = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
+
     // ПАРАДИГМА A: Абсолютный неподвижный баритонез (Ударение на корне)
     if (dbItem.paradigm === AccentParadigm.A) {
-        const toneType = getAcuteToneType(fullForm, 1); // Слог перед флексией
-        return applyFourTonesMark(fullForm, 1, toneType);
+        const idx = override ?? 1; // Слог перед флексией
+        const toneType = getAcuteToneType(fullForm, idx);
+        return applyFourTonesMark(fullForm, idx, toneType);
     }
 
     // ПАРАДИГМА B (Окситоническая): Ударение падает на первый слог флексии полного окончания
@@ -235,9 +243,10 @@ export function generateAdjectiveForm(request: AdjFormRequest): string {
 
         // Вычисляем индекс слога окончания с конца слова
         const syllableFromEnd = totalVowels - baseVowels - 1;
-        const toneType = getAcuteToneType(fullForm, Math.max(0, syllableFromEnd));
+        const idx = override ?? Math.max(0, syllableFromEnd);
+        const toneType = getAcuteToneType(fullForm, idx);
 
-        return applyFourTonesMark(fullForm, Math.max(0, syllableFromEnd), toneType);
+        return applyFourTonesMark(fullForm, idx, toneType);
     }
 
     // ПАРАДИГМА C (Мобильная): В полных формах прилагательных праславянский циркумфлекс
@@ -247,13 +256,15 @@ export function generateAdjectiveForm(request: AdjFormRequest): string {
         const isNomOrAccSg = targetNumber === NumberType.SINGULAR && (targetCase === Case.NOMINATIVE || targetCase === Case.ACCUSATIVE);
 
         if (isNomOrAccSg) {
-            const toneType = getCircumflexToneType(fullForm, 1);
-            return applyFourTonesMark(fullForm, 1, toneType); // nòv-y (краткий циркумфлекс)
+            const idx = override ?? 1;
+            const toneType = getCircumflexToneType(fullForm, idx);
+            return applyFourTonesMark(fullForm, idx, toneType); // nòv-y (краткий циркумфлекс)
         }
 
         // В остальных падежах ведет себя как восходящее корневое ударение
-        const toneType = getAcuteToneType(fullForm, 1);
-        return applyFourTonesMark(fullForm, 1, toneType);
+        const idx = override ?? 1;
+        const toneType = getAcuteToneType(fullForm, idx);
+        return applyFourTonesMark(fullForm, idx, toneType);
     }
 
     return fullForm;

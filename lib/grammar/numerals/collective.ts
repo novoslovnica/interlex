@@ -2,6 +2,7 @@ import { AccentParadigm, GrammaticalGender } from '@/lib/grammar/common';
 import { Case, NumberType, FourSlavicTones } from '../noun';
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 import { buildGrammeme } from '@/lib/grammar/grammemes';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 export type CollectiveClass = 'oje_type' | 'ero_type'; // dvoje vs četvero
 
@@ -10,6 +11,8 @@ export interface CollectiveDbItem {
     protoSlavic: string;
     paradigm: AccentParadigm; // Исторически это окситонеза (B) или мобильный тип (C)
     collClass: CollectiveClass;
+    stressPosition?: number | null;
+    morphemes?: { value: string; stressPosition?: number | null }[];
 }
 
 const COLLECTIVE_FALLBACK: Record<CollectiveClass, Record<Case, string>> = {
@@ -37,20 +40,25 @@ export function declineCollectiveNumeral(request: {
     const fullForm = cleanBase + ending;
 
     // Хелперы Юникода (импортируем из базового тонового процессора)
-    const { applyFourTonesMark, getAcuteToneType, getCircumflexToneType } = require('../numerals/cardinal');
+    const { applyFourTonesMark, getAcuteToneType } = require('../numerals/cardinal');
+
+    // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
+    // (заимствования) — переопределяет только СЛОГ, тип тона решает парадигма ниже.
+    const override = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
 
     // ПАРАДИГМА A: Неподвижное ударение
     if (paradigm === AccentParadigm.A) {
-        return applyFourTonesMark(fullForm, 1, getAcuteToneType(fullForm, 1));
+        const idx = override ?? 1;
+        return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
     }
 
-    // ПАРАДИГМА B / C: Собирательные числительные удерживают ударение СТРОГО на суффиксе (dvójih, četvéryh)
+    // ПАРАДИГМА B / C: Собирательные числительные удерживают ударение СТРОГО на суффиксе (dvójih, četvéryh)
     // Это обусловлено праславянской ретракцией на долгий суффиксальный слог.
     const totalVowels = (fullForm.match(/[aeiouyěęǫọų]/gi) || []).length;
     const baseVowels = (cleanBase.match(/[aeiouyěęǫọų]/gi) || []).length;
 
     // Вычисляем позицию суффикса (последний слог основы)
-    const suffixSyllableIndex = totalVowels - baseVowels;
+    const suffixSyllableIndex = override ?? (totalVowels - baseVowels);
 
     return applyFourTonesMark(fullForm, suffixSyllableIndex, getAcuteToneType(fullForm, suffixSyllableIndex));
 }

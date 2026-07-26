@@ -5,6 +5,7 @@ import {
     VerbalAspect
 } from "@/lib/grammar/common/aspect";
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 const PRES_GRAMMEME = 'Tense=Pres|VerbForm=Fin';
 const AOR_GRAMMEME = 'Tense=Aor|VerbForm=Fin';
@@ -121,6 +122,8 @@ export interface VerbModel {
     verbClass: ProtoSlavicClass;
     aspect: VerbalAspect;
     paradigm: AccentParadigm;
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
 
 export interface ExtractedStems {
@@ -262,8 +265,23 @@ export function extractProtoStems(infinitive: string): ExtractedStems {
 // 5. ГЕНЕРАТОР ПРИЧАСТИЙ
 // =========================================================================
 
+// Ударение причастий — первый проход по аналогии с accentLPart (структурно
+// близкая форма: основа + суффикс), не отдельно верифицированная деривация для
+// каждого типа причастия. Парадигма A — акут на первом слоге корня; B/C — акут
+// на слоге суффикса (тот же паттерн, что уже используется для императива B/C).
+function accentParticiple(form: string, paradigm: AccentParadigm, override?: number): string {
+    if (paradigm === AccentParadigm.A) {
+        return accentSyllable(form, override ?? 'first', 'acute');
+    }
+    if (paradigm === AccentParadigm.B || paradigm === AccentParadigm.C) {
+        return accentSyllable(form, override ?? 1, 'acute');
+    }
+    return form;
+}
+
 export function generateParticiples(verb: VerbModel): Participles {
-    const { infinitive, infStem, presentStem, verbClass } = verb;
+    const { infinitive, infStem, presentStem, verbClass, paradigm, morphemes, stressPosition } = verb;
+    const overrideFor = (form: string) => resolveStressOverride(form, morphemes, stressPosition) ?? undefined;
     const hasThematicE = presentStem.endsWith('e');
     const baseForVowels = hasThematicE ? presentStem.slice(0, -1) : presentStem;
 
@@ -347,9 +365,24 @@ export function generateParticiples(verb: VerbModel): Participles {
     const ppaPl = ppaMasc.replace('yj', 'e');
 
     return {
-        presentActive: { masculine: paMasc, feminine: paFem, neuter: paNeut, plural: paPl },
-        presentPassive: { masculine: ppm, feminine: ppf, neuter: ppn, plural: pppl },
-        pastPassive: { masculine: ppaMasc, feminine: ppaFem, neuter: ppaNeut, plural: ppaPl },
+        presentActive: {
+            masculine: accentParticiple(paMasc, paradigm, overrideFor(paMasc)),
+            feminine: accentParticiple(paFem, paradigm, overrideFor(paFem)),
+            neuter: accentParticiple(paNeut, paradigm, overrideFor(paNeut)),
+            plural: accentParticiple(paPl, paradigm, overrideFor(paPl)),
+        },
+        presentPassive: {
+            masculine: accentParticiple(ppm, paradigm, overrideFor(ppm)),
+            feminine: accentParticiple(ppf, paradigm, overrideFor(ppf)),
+            neuter: accentParticiple(ppn, paradigm, overrideFor(ppn)),
+            plural: accentParticiple(pppl, paradigm, overrideFor(pppl)),
+        },
+        pastPassive: {
+            masculine: accentParticiple(ppaMasc, paradigm, overrideFor(ppaMasc)),
+            feminine: accentParticiple(ppaFem, paradigm, overrideFor(ppaFem)),
+            neuter: accentParticiple(ppaNeut, paradigm, overrideFor(ppaNeut)),
+            plural: accentParticiple(ppaPl, paradigm, overrideFor(ppaPl)),
+        },
     };
 }
 
@@ -358,7 +391,8 @@ export function generateParticiples(verb: VerbModel): Participles {
 // =========================================================================
 
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
-    const { infinitive, infStem, presentStem, aoristStem, tertiaryStem, verbClass, aspect, paradigm } = verb;
+    const { infinitive, infStem, presentStem, aoristStem, tertiaryStem, verbClass, aspect, paradigm, morphemes, stressPosition } = verb;
+    const overrideFor = (form: string) => resolveStressOverride(form, morphemes, stressPosition) ?? undefined;
 
     // --- А. ПРЕЗЕНС (НАСТОЯЩЕЕ / БУДУЩЕЕ ПРЯМОЕ) ---
     const hasThematicE = presentStem.endsWith('e');
@@ -379,16 +413,19 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         : `${baseForVowels}${getVE(presentStemType, '3pl', PRES_GRAMMEME, 'ųt')}`;
 
     const accentPresentForm = (form: string, person: string): string => {
+        const override = overrideFor(form);
         if (paradigm === AccentParadigm.A) {
-            return accentSyllable(form, 'first', 'acute');
+            return accentSyllable(form, override ?? 'first', 'acute');
         }
         if (paradigm === AccentParadigm.B) {
-            if (person === '1sg') return accentSyllable(form, 0, 'short'); // На флексию
-            return accentSyllable(form, 1, 'neoacute'); // Ретракция Шахматова
+            if (person === '1sg') return accentSyllable(form, override ?? 0, 'short'); // На флексию
+            return accentSyllable(form, override ?? 1, 'neoacute'); // Ретракция Шахматова
         }
         if (paradigm === AccentParadigm.C) {
-            if (person === '1sg') return accentSyllable(form, 0, 'short');
-            return accentSyllable(form, 'first', 'short'); // Откат на абсолютный первый слог/приставку
+            // Ретракция (закон Дыбо + закон Ившича) даёт новоакут, а не краткий/грав —
+            // тот же тип ретракции, что и в парадигме B выше ("Ретракция Шахматова").
+            if (person === '1sg') return accentSyllable(form, override ?? 0, 'neoacute');
+            return accentSyllable(form, override ?? 'first', 'neoacute'); // Откат на абсолютный первый слог/приставку
         }
         return form;
     };
@@ -409,10 +446,11 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
     const isVowelStem = ['III', 'IV'].includes(verbClass) || infStem.endsWith('a') || infStem.endsWith('i');
 
     const accentAoristForm = (form: string, person: string): string => {
+        const override = overrideFor(form);
         if (paradigm === AccentParadigm.C && ['2sg', '3sg'].includes(person)) {
-            return accentSyllable(form, 0, 'short'); // Конечное ударение для 2sg/3sg в парадигме C (spasé)
+            return accentSyllable(form, override ?? 0, 'short'); // Конечное ударение для 2sg/3sg в парадигме C (spasé)
         }
-        return accentSyllable(form, 'first', paradigm === AccentParadigm.A ? 'acute' : 'short');
+        return accentSyllable(form, override ?? 'first', paradigm === AccentParadigm.A ? 'acute' : 'short');
     };
 
     const aoristStemType = isVowelStem ? 'verb_aorist_sigmatic' : 'verb_aorist_asigmatic';
@@ -431,7 +469,7 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
 
     // --- В. ИМПЕРФЕКТ ---
     const impBase = isVowelStem ? infStem : `${infStem}ě`;
-    const accentImperfectForm = (form: string) => accentSyllable(form, 1, 'circumflex'); // Безусловное ударение на суффикс *-а-
+    const accentImperfectForm = (form: string) => accentSyllable(form, overrideFor(form) ?? 1, 'circumflex'); // Безусловное ударение на суффикс *-а-
 
     const imperfect: FullParadigm = {
         '1sg': accentImperfectForm(`${impBase}${getVE('verb_imperfect', '1sg', IMPF_GRAMMEME, 'ah')}`),
@@ -447,10 +485,11 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
 
     // --- Г. L-ПРИЧАСТИЕ (ОСНОВА ДЛЯ ПЕРФЕКТА/КОНДИЦИОНАЛА) ---
     const accentLPart = (form: string, gender: 'm' | 'f' | 'n' | 'pl') => {
+        const override = overrideFor(form);
         if (paradigm === AccentParadigm.C && gender === 'f') {
-            return accentSyllable(form, 0, 'short'); // Смещение на флексию женского рода в мобильном типе (neslá)
+            return accentSyllable(form, override ?? 0, 'short'); // Смещение на флексию женского рода в мобильном типе (neslá)
         }
-        return accentSyllable(form, 'first', paradigm === AccentParadigm.A ? 'acute' : 'short');
+        return accentSyllable(form, override ?? 'first', paradigm === AccentParadigm.A ? 'acute' : 'short');
     };
 
     const lStem = tertiaryStem || infStem;
@@ -511,8 +550,9 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
     }
 
     const accentImperative = (form: string) => {
-        if (paradigm === AccentParadigm.A) return accentSyllable(form, 'first', 'acute');
-        return accentSyllable(form, 1, 'acute'); // Суффикс императива *-i-/-j-* под ударением для B и C (xvalí!)
+        const override = overrideFor(form);
+        if (paradigm === AccentParadigm.A) return accentSyllable(form, override ?? 'first', 'acute');
+        return accentSyllable(form, override ?? 1, 'acute'); // Суффикс императива *-i-/-j-* под ударением для B и C (xvalí!)
     };
 
     const imperative: ImperativeParadigm = {

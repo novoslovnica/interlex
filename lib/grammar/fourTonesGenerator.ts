@@ -138,11 +138,13 @@ export function generateBaseNounFormWithFourTones(
     // =========================================================================
     if (paradigm === 'B') {
         if (ending === 'ъ' || ending === 'ь' || ending === '') {
-            const toneType = getAcuteToneType(fullForm, 1); // Неокутовый тон на корне
-            return applyFourTonesMark(fullForm, 1, toneType); // bóbъ (долгий) vs kòńь (краткий неокут)
+            const idx = stressPosition ?? 1;
+            const toneType = getAcuteToneType(fullForm, idx); // Неокутовый тон на корне
+            return applyFourTonesMark(fullForm, idx, toneType); // bóbъ (долгий) vs kòńь (краткий неокут)
         }
-        const toneType = getAcuteToneType(fullForm, 0); // Тон на окончании
-        return applyFourTonesMark(fullForm, 0, toneType);   // žená (долгий) vs ženě̀ (краткий)
+        const idx = stressPosition ?? 0;
+        const toneType = getAcuteToneType(fullForm, idx); // Тон на окончании
+        return applyFourTonesMark(fullForm, idx, toneType);   // žená (долгий) vs ženě̀ (краткий)
     }
 
     // =========================================================================
@@ -153,53 +155,64 @@ export function generateBaseNounFormWithFourTones(
         const isNeuter = stemType === 'a_hard' || stemType === 'a_soft' || stemType === 'consonant_n' || stemType === 'consonant_s';
         const isFeminine = stemType === 'i_basis' || stemType.startsWith('a_');
 
-        // --- А. ЖЕНСКИЙ РОД (Примеры: rų̂ka [долгий циркумфлекс] vs gorȃ [краткий циркумфлекс]) ---
+        // --- А. ЖЕНСКИЙ РОД (Примеры: rų̂ka [долгий циркумфлекс] vs gorȃ [краткий циркумфлекс]) ---
         if (isFeminine) {
             if (targetNumber === 'singular' && (targetCase === 'nominative' || targetCase === 'accusative')) {
-                const toneType = getCircumflexToneType(fullForm, 1);
-                return applyFourTonesMark(fullForm, 1, toneType); // rų̂ka (долгий ̂) vs goȓa (краткий ̑)
+                const idx = stressPosition ?? 1;
+                const toneType = getCircumflexToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType); // rų̂ka (долгий ̂) vs goȓa (краткий ̑)
             }
-            const toneType = getAcuteToneType(fullForm, 0);
-            return applyFourTonesMark(fullForm, 0, toneType); // На флексиях всегда восходящее: ruký
+            const idx = stressPosition ?? 0;
+            const toneType = getAcuteToneType(fullForm, idx);
+            return applyFourTonesMark(fullForm, idx, toneType); // На флексиях всегда восходящее: ruký
         }
 
-        // --- Б. МУЖСКОЙ РОД (Примеры: bоbъ -> bȏbъ [краткий циркумфлекс]) ---
+        // --- Б. МУЖСКОЙ РОД (Примеры: bоbъ -> bȏbъ [краткий циркумфлекс]) ---
         if (isMasculine) {
             if (targetNumber === 'singular') {
                 if (targetCase === 'nominative' || targetCase === 'accusative') {
-                    const toneType = getCircumflexToneType(fullForm, 1);
-                    return applyFourTonesMark(fullForm, 1, toneType); // bȏbъ (краткий циркумфлекс U+0311 на 'o')
+                    const idx = stressPosition ?? 1;
+                    const toneType = getCircumflexToneType(fullForm, idx);
+                    return applyFourTonesMark(fullForm, idx, toneType); // bȏbъ (краткий циркумфлекс U+0311 на 'o')
                 }
-                const toneType = getAcuteToneType(fullForm, 0);
-                return applyFourTonesMark(fullForm, 0, toneType); // bobá (косвенные падежи)
+                const idx = stressPosition ?? 0;
+                const toneType = getAcuteToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType); // bobá (косвенные падежи)
             }
             if (targetNumber === 'plural') {
                 if (targetCase === 'accusative') {
-                    const toneType = getCircumflexToneType(fullForm, 1);
-                    return applyFourTonesMark(fullForm, 1, toneType); // Acc.Pl уходит на корень: bȏby
+                    const idx = stressPosition ?? 1;
+                    const toneType = getCircumflexToneType(fullForm, idx);
+                    return applyFourTonesMark(fullForm, idx, toneType); // Acc.Pl уходит на корень: bȏby
                 }
-                const toneType = getAcuteToneType(fullForm, 0);
-                return applyFourTonesMark(fullForm, 0, toneType);
+                const idx = stressPosition ?? 0;
+                const toneType = getAcuteToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType);
             }
-            return applyFourTonesMark(fullForm, 0, getAcuteToneType(fullForm, 0));
+            const idx = stressPosition ?? 0;
+            return applyFourTonesMark(fullForm, idx, getAcuteToneType(fullForm, idx));
         }
 
-        // --- В. СРЕДНИЙ РОД (Примеры: tě̂lo [долгий] vs ȏko [краткий]) ---
+        // --- В. СРЕДНИЙ РОД (Примеры: tě̂lo [долгий] vs ȏko [краткий]) ---
         if (isNeuter) {
             if (targetNumber === 'singular') {
-                const toneType = getCircumflexToneType(fullForm, 1);
-                return applyFourTonesMark(fullForm, 1, toneType); // tě̂lo (долгий ̂) vs ȏko (краткий ̑)
+                const idx = stressPosition ?? 1;
+                const toneType = getCircumflexToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType); // tě̂lo (долгий ̂) vs ȏko (краткий ̑)
             }
             if (targetNumber === 'plural') {
-                const toneType = getAcuteToneType(fullForm, 0);
-                return applyFourTonesMark(fullForm, 0, toneType); // На окончание: telá
+                const idx = stressPosition ?? 0;
+                const toneType = getAcuteToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType); // На окончание: telá
             }
             if (targetNumber === 'dual') {
-                const toneType = getCircumflexToneType(fullForm, 1);
-                return applyFourTonesMark(fullForm, 1, toneType); // Дуалис на корень: tě̂lě, ȏki
+                const idx = stressPosition ?? 1;
+                const toneType = getCircumflexToneType(fullForm, idx);
+                return applyFourTonesMark(fullForm, idx, toneType); // Дуалис на корень: tě̂lě, ȏki
             }
         }
     }
+
 
     return fullForm;
 }

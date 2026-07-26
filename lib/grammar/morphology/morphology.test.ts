@@ -83,10 +83,13 @@ export function runMorphologyEngineTests(): void {
     const nestiForms = processVerb(verbNesti);
     assert('nesti: Общее количество сгенерированных временных и причастных форм > 35', nestiForms.length >= 35);
     // Парадигма C: 1sg уходит на флексию, остальные формы презенса ретрагируются в абсолютное начало слова
-    // ОТЛОЖЕНО: тон (грав vs акут) в этой ветке требует отдельной лингвистической проверки —
-    // сознательно оставлено падающим, движок не трогали.
+    // Тон — новоакут (закон Дыбо + закон Ившича), тот же тип ретракции, что и в парадигме B (Ретракция Шахматова).
     assert('nesti: Настоящее 1sg окситонируется на флексию (nesǫ́ / nesų́)', findForm(nestiForms, { verbForm: 'fin', person: '1', number: 'sg', tense: 'pres' }) === 'nesų\u0301');
     assert('nesti: Настоящее 2sg ретрагируется на первый слог (néseš)', findForm(nestiForms, { verbForm: 'fin', person: '2', number: 'sg', tense: 'pres' }) === 'ne\u0301seš');
+    // Причастия раньше вообще не несли диакритики (generateParticiples не вызывал accentSyllable) —
+    // не верифицированная деривация, просто проверяем наличие хоть какого-то знака ударения.
+    const nestiPresActPart = findForm(nestiForms, { verbForm: 'part', tense: 'pres', voice: 'act', gender: 'masc', number: 'sg' });
+    assert('nesti: Причастие наст. вр. действ. залога несёт знак ударения', !!nestiPresActPart && /[\u0300\u0301\u0302\u0311]/.test(nestiPresActPart));
 
     // Пример Б: "govoriti" (Класс IV, i-основа, Парадигма B)
     const verbGovoriti: EngineWordInput = {

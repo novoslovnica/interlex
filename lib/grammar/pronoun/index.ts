@@ -5,6 +5,7 @@ import {
 import { Case, NumberType, FourSlavicTones, stripAccents } from '../noun';
 import { getEnding } from '@/lib/grammar/endingLoader';
 import { ADJECTIVE_ENDINGS_REGISTRY } from '@/lib/grammar/adjective';
+import { resolveStressOverride } from '@/lib/grammar/stress';
 
 // =========================================================================
 // 1. СТРОГИЕ ИНТЕРФЕЙСЫ И ТИПЫ ДАННЫХ
@@ -17,6 +18,8 @@ export interface EnhancedPronounDbItem {
     protoSlavic: string;
     paradigm: AccentParadigm; // A, B, C
     pronClass: PronounClass;  // Классификатор типа местоимения
+    stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
+    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
 
 export interface PronounFormRequest {
@@ -177,19 +180,26 @@ export function generatePronounForm(request: PronounFormRequest): string {
     // ТОНОВЫЕ ПРАВИЛА ЗАЛИЗНЯКА И СЛАВЯНСКАЯ АКЦЕНТОЛОГИЯ МЕСТОИМЕНИЙ
     // =========================================================================
 
+    // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
+    // (заимствования) — переопределяет только СЛОГ, тип тона решает парадигма ниже.
+    const override = resolveStressOverride(rawForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
+
     // ПАРАДИГМА A (Стационарная): Ударение строго фиксировано на корне
     if (dbItem.paradigm === AccentParadigm.A) {
-        return applyFourTonesMark(rawForm, 1, getAcuteToneType(rawForm, 1));
+        const idx = override ?? 1;
+        return applyFourTonesMark(rawForm, idx, getAcuteToneType(rawForm, idx));
     }
 
     // ПАРАДИГМА B (Окситонная): Местоимения типа *kto, *čto, *on исторически окситонировались
     if (dbItem.paradigm === AccentParadigm.B) {
         // В коротких закрытых падежах на редуцированные (ъ/ь) — ретракция на корень
         if (rawForm.endsWith('ъ') || rawForm.endsWith('ь') || rawForm.length <= 3) {
-            return applyFourTonesMark(rawForm, 1, getAcuteToneType(rawForm, 1)); // kòstь, tъ̀
+            const idx = override ?? 1;
+            return applyFourTonesMark(rawForm, idx, getAcuteToneType(rawForm, idx)); // kòstь, tъ̀
         }
-        // В остальных падежах — восходящее ударение на окончание (kogá, jemú)
-        return applyFourTonesMark(rawForm, 0, getAcuteToneType(rawForm, 0));
+        // В остальных падежах — восходящее ударение на окончание (kogá, jemú)
+        const idx = override ?? 0;
+        return applyFourTonesMark(rawForm, idx, getAcuteToneType(rawForm, idx));
     }
 
     // ПАРАДИГМА C (Мобильная): Личные местоимения (ja, ty) — абсолютные энклиномены
@@ -197,12 +207,14 @@ export function generatePronounForm(request: PronounFormRequest): string {
         const isDirectCase = targetCase === Case.NOMINATIVE || targetCase === Case.VOCATIVE;
 
         if (isDirectCase) {
-            // Именительный падеж личных местоимений несет нисходящий циркумфлекс (jâ, tŷ)
-            return applyFourTonesMark(rawForm, 1, getCircumflexToneType(rawForm, 1));
+            // Именительный падеж личных местоимений несет нисходящий циркумфлекс (jâ, tŷ)
+            const idx = override ?? 1;
+            return applyFourTonesMark(rawForm, idx, getCircumflexToneType(rawForm, idx));
         }
 
         // В полных косвенных падежах (mene, tebe, tobě) ударение падает на окончание (восходящий тон)
-        return applyFourTonesMark(rawForm, 0, getAcuteToneType(rawForm, 0)); // mené, tebé
+        const idx = override ?? 0;
+        return applyFourTonesMark(rawForm, idx, getAcuteToneType(rawForm, idx)); // mené, tebé
     }
 
     return rawForm;
