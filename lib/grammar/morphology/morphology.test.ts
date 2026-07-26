@@ -97,10 +97,10 @@ export function runMorphologyEngineTests(): void {
         paradigm: AccentParadigm.B, aspect: VerbalAspect.IPF
     };
     const govoritiForms = processVerb(verbGovoriti);
-    // Йотовая палатализация r -> rj / r' в 1sg презенса
-    // ОТЛОЖЕНО: в таблице йотации класса IV отсутствует случай 'r' — требует
-    // отдельной лингвистической проверки правильного результата, движок не трогали.
-    assert('govoriti: Наличие йотовой палатализации в форме 1sg (govorljų)', findForm(govoritiForms, { verbForm: 'fin', person: '1', number: 'sg', tense: 'pres' })?.startsWith('govorlj') === true);
+    // Йотовая палатализация сонорных r/l/n перед j: +j без вставки эпентетического l
+    // (в отличие от губных p/b/m/v/f, которые получают +lj). Подтверждено примерами
+    // живого словаря: govoriti -> govorjut, galjati -> galjajut, obměniti -> obměnjajut.
+    assert('govoriti: Наличие йотовой палатализации сонорного r в форме 1sg (govorj\u0173\u0300)', findForm(govoritiForms, { verbForm: 'fin', person: '1', number: 'sg', tense: 'pres' })?.startsWith('govorj') === true);
 
 
     // =========================================================================

@@ -254,19 +254,20 @@ export interface FinalUserRequest {
     targetCase: 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative' | 'vocative';
     targetNumber: 'singular' | 'plural' | 'dual';
     preposition?: string;
+    flavor?: string; // Региональный/диалектный вариант окончаний (напр. NSL) — по умолчанию CORE
 }
 
 /**
  * Главная точка входа автоматического словаря акцентуированных форм
  */
 export function declineWordAutomatically(request: FinalUserRequest): string {
-    const { dbItem, targetCase, targetNumber, preposition } = request;
+    const { dbItem, targetCase, targetNumber, preposition, flavor = 'CORE' } = request;
 
     // 1. Автоматически вычисляем класс склонения по метаданным из базы
     const stemType = identifyStemTypeByDb(dbItem);
 
     // 2. Вычисляем позицию ударения: морфемы → stressPosition на лексеме → penultimate
-    const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', dbItem.gender, dbItem.animacy);
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor, dbItem.gender, dbItem.animacy);
     const fullForm = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
 
     const effectiveStressPosition = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
@@ -281,6 +282,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
         effectiveStressPosition,
         dbItem.gender,
         dbItem.animacy,
+        flavor,
     );
 
     // 4. Убираем задвоенную мягкость (напр. noć + j -> noć, noć + i -> noči) —

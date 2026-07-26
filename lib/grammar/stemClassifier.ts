@@ -28,35 +28,44 @@ export function resolveGender(gender: string | null | undefined, protoStemClass?
 }
 
 export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
-    const { protoStemClass, stemExtension, gender } = item;
+    const { gender } = item;
+
+    // protoStemClass/stemExtension встречаются в двух формах: короткие нижнерегистровые
+    // славистические коды из БД ('o'/'jo'/'i'/'u'/'ā'/'jā'/'consonant', 'en'/'es'/'ent'/'er')
+    // и полные верхнерегистровые значения enum'ов ProtoStemClass/StemExtension ('O_SHORT',
+    // 'CONSONANT', 'EN', ...), которыми исторически пользовались тесты и Stack B
+    // (noun/index.ts, до его удаления при слиянии). Приводим к нижнему регистру перед
+    // сравнением, как уже делает resolveGender() для рода — та же проблема, тот же фикс.
+    const psc = String(item.protoStemClass).toLowerCase();
+    const se = String(item.stemExtension).toLowerCase();
 
     // 1. Проверяем консонантные основы по наращению
-    if (protoStemClass === 'consonant') {
-        if (stemExtension === 'en') return 'consonant_n';
-        if (stemExtension === 'es') return 'consonant_s';
-        if (stemExtension === 'ent') return 'consonant_ent';
-        if (stemExtension === 'er') return 'consonant_er';
+    if (psc === 'consonant') {
+        if (se === 'en') return 'consonant_n';
+        if (se === 'es') return 'consonant_s';
+        if (se === 'ent') return 'consonant_ent';
+        if (se === 'er') return 'consonant_er';
     }
 
     // 2. Проверяем u-основы мужского рода напрямую из метаданных (syn, dom)
-    if (protoStemClass === 'u' && gender === 'masculine') {
+    if (psc === 'u' && gender === 'masculine') {
         return 'u_basis';
     }
 
     // 3. i-основы (kost, gost)
-    if (protoStemClass === 'i') {
+    if (psc === 'i') {
         return 'i_basis';
     }
 
     // 4. Твердые и мягкие ā-основы (женский род)
-    if (protoStemClass === 'ā') return 'a_hard';
-    if (protoStemClass === 'jā') return 'a_soft';
+    if (psc === 'ā') return 'a_hard';
+    if (psc === 'jā') return 'a_soft';
 
     // 5. Твердые и мягкие o-основы (мужской и средний род)
-    if (protoStemClass === 'o') {
+    if (psc === 'o') {
         return gender === 'neuter' ? 'a_hard' : 'o_hard';
     }
-    if (protoStemClass === 'jo') {
+    if (psc === 'jo') {
         return gender === 'neuter' ? 'a_soft' : 'o_soft';
     }
 

@@ -171,6 +171,12 @@ const IOTATION: Record<string, string> = {
 
 const LABIALS = ['p', 'b', 'm', 'v', 'f'];
 
+// Сонорные r/l/n перед j палатализуются (r'/l'/ń) без вставки эпентетического l,
+// в отличие от губных (p/b/m/v/f + j -> +lj). Подтверждено примерами живого словаря:
+// "govoriti" -> govorjut, "galjati" -> galjajut, "obměniti" -> obměnjajut — то есть
+// просто "+j", а не "+lj".
+const SONORANTS_APPEND_J = ['r', 'l', 'n'];
+
 // =========================================================================
 // 3. НИЗКОУРОВНЕВЫЙ ДВИЖОК ЗВУКОВЫХ ЧЕРЕДОВАНИЙ И ДИАКРИТИКИ
 // =========================================================================
@@ -192,6 +198,7 @@ export function applyIotation(stem: string): string {
 
     const lastChar = stem.slice(-1);
     if (LABIALS.includes(lastChar)) return stem + 'lj';
+    if (SONORANTS_APPEND_J.includes(lastChar)) return stem + 'j';
 
     if (lastChar in IOTATION) {
         return stem.slice(0, -1) + IOTATION[lastChar];

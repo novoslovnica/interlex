@@ -117,9 +117,10 @@ export function generateBaseNounFormWithFourTones(
     stressPosition?: number,
     gender?: string,
     animacy?: string,
+    flavor: string = 'CORE',
 ): string {
 
-    const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', gender, animacy);
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor, gender, animacy);
     const fullForm = stemWithExtension(interslavicWord, stemType, targetCase, targetNumber) + ending;
 
     // =========================================================================

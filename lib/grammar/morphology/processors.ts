@@ -4,15 +4,15 @@ import {
     AccentParadigm,
     ProtoStemClass,
     VerbalAspect,
-    PosType,
-    AdjectiveTypeClass, StemExtension,
+    AdjectiveTypeClass,
 } from '@/lib/grammar/common';
 // Импортируем изолированные движки трех классов числительных
 import { generateNumeralForm, EnhancedNumDbItem } from '../numerals/cardinal';
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
-import { declineWordAutomatically, EnhancedDbItem } from '../noun';
+import { declineWordAutomatically } from '../declineNoun';
+import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
     conjugateFullVerb,
     extractProtoStems,
@@ -33,15 +33,20 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
 
     const results: GeneratedForm[] = [];
 
-    // 1. Безопасно приводим сырые метаданные из Word к строгим системным Enum
+    // 1. Безопасно приводим сырые метаданные из Word — используем ту же нормализацию
+    // рода (resolveGender), что и реальная страница слова (app/words/[id]/page.tsx),
+    // поэтому регистр/формат gender из БД ('Masc'/'MASC'/'masculine') не имеет значения.
+    // Так же, как и страница слова, предпочитаем "голый" корень (word.stem) словарной
+    // форме (word.isv) — getEnding() сам добавляет падежное окончание к корню, и если
+    // подать вместо корня уже готовую словарную форму (у которой это окончание уже
+    // есть, напр. "selo" для среднего рода), окончание наложится второй раз ("seloo").
     const dbItem: EnhancedDbItem = {
-        interslavic: word.isv,
+        interslavic: word.stem || word.isv,
         protoSlavic: word.isv, // Используем лемму как фоллбэк для расчета вокалических ядер
-        pos: PosType.NOUN,
-        paradigm: (word.paradigm as AccentParadigm) || AccentParadigm.A,
-        gender: (word.gender as GrammaticalGender) || GrammaticalGender.MASC,
-        protoStemClass: (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT,
-        stemExtension: (word.stemExtension as StemExtension) || StemExtension.NONE,
+        paradigm: (word.paradigm as 'A' | 'B' | 'C') || 'A',
+        gender: resolveGender(word.gender, word.protoStemClass ?? undefined),
+        protoStemClass: word.protoStemClass || 'o',
+        stemExtension: word.stemExtension || undefined,
         animacy: word.animacy || undefined,
         stressPosition: word.stressPosition,
         morphemes: word.morphemes,
@@ -50,6 +55,8 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
     // 2. Разворачиваем полную матрицу форм (7 падежей * 3 числа = 21 словоформа)
     const cases = ALL_CASES;
     const numbers = ALL_NUMBERS;
+
+    const genderFeat = dbItem.gender === 'masculine' ? 'masc' : dbItem.gender === 'feminine' ? 'fem' : 'neut';
 
     for (const num of numbers) {
         for (const cas of cases) {
@@ -67,7 +74,7 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
                 feats: {
                     case: cas, // 'nominative' | 'genitive' ...
                     number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
-                    gender: dbItem.gender.toLowerCase() as 'masc' | 'fem' | 'neut'
+                    gender: genderFeat
                 }
             });
         }

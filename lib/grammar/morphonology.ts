@@ -26,6 +26,11 @@ const IOTATION: Record<string, string> = {
 // Губные согласные, требующие вставки L-эпитетичного (epentheticum) перед j
 const LABIALS = ['p', 'b', 'm', 'v', 'f'];
 
+// Сонорные r/l/n перед j палатализуются (r'/l'/ń) без вставки эпентетического l,
+// в отличие от губных. Подтверждено примерами живого словаря: "govoriti" -> govorjut,
+// "galjati" -> galjajut, "obměniti" -> obměnjajut — то есть просто "+j", а не "+lj".
+const SONORANTS_APPEND_J = ['r', 'l', 'n'];
+
 /**
  * 1. Первая палатализация (First Palatalization)
  * Применяется в I классе (e-основы) для глаголов типа pekti -> pečeš, mogti -> možeš
@@ -59,6 +64,11 @@ export function applyIotation(stem: string): string {
     const lastChar = stem.slice(-1);
     if (LABIALS.includes(lastChar)) {
         return stem + 'lj';
+    }
+
+    // 2b. Сонорные r/l/n + j -> просто +j, без вставки l
+    if (SONORANTS_APPEND_J.includes(lastChar)) {
+        return stem + 'j';
     }
 
     // 3. Стандартная йотация одиночных согласных
