@@ -78,6 +78,36 @@ function getCircumflexToneType(word: string, syllableIndex: number): 'long_circu
 /**
  * 🔥 ДВИЖОК ПОЛНОЙ ЧЕТЫРЕХТОНОВОЙ АКЦЕНТУАЦИИ СУЩЕСТВЕННЫХ
  */
+// Наращение основы консонантных существительных (imę→imen-, nebo→nebes-, telę→telent-,
+// mati→mater-) — вставляется между основой и окончанием во всех формах, кроме
+// им./вин./зв. падежа ед.ч. (там наращение исторически невидимо: "nebo", не "nebeso").
+// Исключение — consonant_er: там вин. ед.ч. уже ведёт себя как косвенный падеж ("mater").
+const STEM_EXTENSIONS: Partial<Record<StemType, string>> = {
+    consonant_n: 'en',
+    consonant_s: 'es',
+    consonant_ent: 'ent',
+    consonant_er: 'er',
+};
+
+// consonant_n/consonant_ent имеют ПУСТОЕ окончание им.п. ед.ч. ("ime", "telę") — значит
+// последний гласный словарной формы исторически сам является наращением/окончанием,
+// а не неизменной частью основы, и его нужно отбросить перед вставкой полного
+// наращения в косвенных падежах ("ime" → "im" + "en" + "e" = "imene"). У consonant_s/
+// consonant_er окончание им.п. ед.ч. непустое ("nebo", "mati") — переданная основа
+// уже "голая" (без гласного наращения), резать её не нужно ("drev" + "es" + "e").
+const NOMINATIVE_BLANK_STEM_TYPES: StemType[] = ['consonant_n', 'consonant_ent'];
+
+export function stemWithExtension(interslavicWord: string, stemType: StemType, targetCase: Case, targetNumber: NumberType): string {
+    const extension = STEM_EXTENSIONS[stemType];
+    if (!extension) return interslavicWord;
+    const skipCases: Case[] = stemType === 'consonant_er'
+        ? ['nominative', 'vocative']
+        : ['nominative', 'accusative', 'vocative'];
+    if (targetNumber === 'singular' && skipCases.includes(targetCase)) return interslavicWord;
+    const base = NOMINATIVE_BLANK_STEM_TYPES.includes(stemType) ? interslavicWord.slice(0, -1) : interslavicWord;
+    return base + extension;
+}
+
 export function generateBaseNounFormWithFourTones(
     interslavicWord: string,
     paradigm: 'A' | 'B' | 'C',
@@ -90,7 +120,7 @@ export function generateBaseNounFormWithFourTones(
 ): string {
 
     const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', gender, animacy);
-    const fullForm = interslavicWord + ending;
+    const fullForm = stemWithExtension(interslavicWord, stemType, targetCase, targetNumber) + ending;
 
     // =========================================================================
     // ПАРАДИГМА A: Восходящее ударение на корне.

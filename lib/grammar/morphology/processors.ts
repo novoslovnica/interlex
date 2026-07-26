@@ -18,7 +18,7 @@ import {
     VerbModel,
     FullParadigm
 } from '../verb';
-import { generateAdjectiveForm, EnhancedAdjDbItem } from '../adjective';
+import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType } from '../adjective';
 import { generatePronounForm, EnhancedPronounDbItem, PronounClass } from '../pronoun';
 
 /**
@@ -243,21 +243,8 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
     const paradigm = (word.paradigm as AccentParadigm) || AccentParadigm.A;
     const protoStemClass = (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT;
 
-    // Автоматический или ручной детекшн типа прилагательного.
-    // Качественные прилагательные межславянского обычно заканчиваются на -vy, -ky, -ry, -by, -ly
-    let adjClass: AdjectiveTypeClass = 'relative';
-    const cleanLemma = word.isv.toLowerCase().trim();
-
-    if (
-        cleanLemma.endsWith('ovy') ||
-        cleanLemma.endsWith('evy') ||
-        cleanLemma.endsWith('ny') ||
-        cleanLemma.endsWith('sky')
-    ) {
-        adjClass = 'relative'; // Относительные суффиксы (-овый, -ный, -ский) не имеют степеней
-    } else {
-        adjClass = 'qualitative'; // Базовые качественные (novy, bely, veliky, stari)
-    }
+    // Детекшн типа прилагательного — единая функция, см. lib/grammar/adjective/index.ts
+    const adjClass: AdjectiveTypeClass = classifyAdjectiveType(word.isv);
 
     const dbItem: EnhancedAdjDbItem = {
         interslavic: word.isv,

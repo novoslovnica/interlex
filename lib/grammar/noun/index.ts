@@ -41,7 +41,9 @@ export type StemType =
     | 'u_basis'     // u-основы (synъ)
     | 'i_basis'     // i-основы (kostь, gostь)
     | 'consonant_n' // консонантные n-основы (imę)
-    | 'consonant_s'; // консонантные s-основы (nebo)
+    | 'consonant_s' // консонантные s-основы (nebo)
+    | 'consonant_ent' // консонантные ent-основы, детеныши (telę)
+    | 'consonant_er'; // консонантные er-основы, термины родства (mati)
 
 /**
  * EnhancedDbItem теперь строго отражает схему таблицы Word из Main DB
@@ -145,33 +147,43 @@ function accentPrepositionWithFourTones(prep: string, syllableIndex: number): st
 // =========================================================================
 
 export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
-    const { protoStemClass, stemExtension, gender } = item;
+    const { stemExtension, gender } = item;
 
-    // 1. Консонантные основы (n-основы и s-основы по наращению)
-    if (protoStemClass === ProtoStemClass.CONSONANT) {
-        if (stemExtension === StemExtension.EN) return 'consonant_n';
-        if (stemExtension === StemExtension.ES) return 'consonant_s';
+    // В БД protoStemClass/stemExtension хранятся как короткие нижнерегистровые
+    // славистические коды ('o', 'ā', 'jo', 'i', 'jā', 'u', 'consonant', 'en', 'es', ...),
+    // а не как строковые значения enum'ов ProtoStemClass/StemExtension (которые описательные
+    // и верхнерегистровые, напр. 'O_SHORT'). Сравнивать нужно с реальными кодами, иначе
+    // ни одно настоящее слово из БД никогда не совпадёт (см. AGENTS.md).
+    const psc = String(item.protoStemClass).toLowerCase();
+    const se = String(stemExtension).toLowerCase();
+
+    // 1. Консонантные основы (по наращению)
+    if (psc === 'consonant') {
+        if (se === 'en') return 'consonant_n';
+        if (se === 'es') return 'consonant_s';
+        if (se === 'ent') return 'consonant_ent';
+        if (se === 'er') return 'consonant_er';
     }
 
     // 2. u-основы мужского рода (synъ, domъ)
-    if (protoStemClass === ProtoStemClass.U_SHORT && gender === GrammaticalGender.MASC) {
+    if (psc === 'u' && gender === GrammaticalGender.MASC) {
         return 'u_basis';
     }
 
     // 3. i-основы женского и мужского рода (kostь, gostь)
-    if (protoStemClass === ProtoStemClass.I_SHORT) {
+    if (psc === 'i') {
         return 'i_basis';
     }
 
     // 4. ā-основы женского и мужского рода (voda, sluga)
-    if (protoStemClass === ProtoStemClass.A_LONG) return 'a_hard';
-    if (protoStemClass === ProtoStemClass.JA_LONG) return 'a_soft';
+    if (psc === 'ā') return 'a_hard';
+    if (psc === 'jā') return 'a_soft';
 
     // 5. o-основы (Разведение по родам для среднего и мужского рода)
-    if (protoStemClass === ProtoStemClass.O_SHORT) {
+    if (psc === 'o') {
         return gender === GrammaticalGender.NEUT ? 'a_hard' : 'o_hard';
     }
-    if (protoStemClass === ProtoStemClass.JO_SHORT) {
+    if (psc === 'jo') {
         return gender === GrammaticalGender.NEUT ? 'a_soft' : 'o_soft';
     }
 
@@ -182,6 +194,36 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
 // 5. ДВИЖОК ЧЕТЫРЕХТОНОВОГО СЛОВОИЗМЕНЕНИЯ И РЕТРАКЦИИ
 // =========================================================================
 
+// Наращение основы консонантных существительных (imę→imen-, nebo→nebes-, telę→telent-,
+// mati→mater-) — вставляется между основой и окончанием во всех формах, кроме
+// им./вин./зв. падежа ед.ч. (там наращение исторически невидимо: "nebo", не "nebeso").
+// Исключение — consonant_er: там вин. ед.ч. уже ведёт себя как косвенный падеж ("mater").
+const STEM_EXTENSIONS: Partial<Record<StemType, string>> = {
+    consonant_n: 'en',
+    consonant_s: 'es',
+    consonant_ent: 'ent',
+    consonant_er: 'er',
+};
+
+// consonant_n/consonant_ent имеют ПУСТОЕ окончание им.п. ед.ч. ("ime", "telę") — значит
+// последний гласный словарной формы исторически сам является наращением/окончанием,
+// а не неизменной частью основы, и его нужно отбросить перед вставкой полного
+// наращения в косвенных падежах ("ime" → "im" + "en" + "e" = "imene"). У consonant_s/
+// consonant_er окончание им.п. ед.ч. непустое ("nebo", "mati") — переданная основа
+// уже "голая" (без гласного наращения), резать её не нужно ("drev" + "es" + "e").
+const NOMINATIVE_BLANK_STEM_TYPES: StemType[] = ['consonant_n', 'consonant_ent'];
+
+function stemWithExtension(interslavicWord: string, stemType: StemType, targetCase: Case, targetNumber: NumberType): string {
+    const extension = STEM_EXTENSIONS[stemType];
+    if (!extension) return interslavicWord;
+    const skipCases: Case[] = stemType === 'consonant_er'
+        ? [Case.NOMINATIVE, Case.VOCATIVE]
+        : [Case.NOMINATIVE, Case.ACCUSATIVE, Case.VOCATIVE];
+    if (targetNumber === NumberType.SINGULAR && skipCases.includes(targetCase)) return interslavicWord;
+    const base = NOMINATIVE_BLANK_STEM_TYPES.includes(stemType) ? interslavicWord.slice(0, -1) : interslavicWord;
+    return base + extension;
+}
+
 export function generateBaseNounFormWithFourTones(
     interslavicWord: string,
     paradigm: AccentParadigm,
@@ -191,7 +233,7 @@ export function generateBaseNounFormWithFourTones(
     flavor: string = 'CORE'
 ): string {
     const ending = getEnding(stemType, targetNumber, targetCase, flavor);
-    const fullForm = interslavicWord + ending;
+    const fullForm = stemWithExtension(interslavicWord, stemType, targetCase, targetNumber) + ending;
 
     // ПАРАДИГМА A: Стабильно-восходящее ударение на корне (Долгий/Краткий Акут)
     if (paradigm === AccentParadigm.A) {

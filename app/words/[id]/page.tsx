@@ -61,6 +61,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 gender: resolveGender(item.gender, item.protoStemClass),
                 animacy: item.animacy || undefined,
                 protoStemClass: item.protoStemClass || "u",
+                stemExtension: item.stemExtension || undefined,
                 paradigm: item.paradigm || "A",
                 stressPosition: item.stressPosition,
                 morphemes: item.roots?.map((r: any) => ({

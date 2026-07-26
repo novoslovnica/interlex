@@ -2,7 +2,7 @@ import { StemType, Case, NumberType } from './endingsRegistry';
 import { getEnding } from './endingLoader';
 import { applyAccent } from './accentUtils';
 import {applyPrepositionEnclitic, applyPrepositionEncliticWithFourTones} from './encliticEngine';
-import { generateBaseNounFormWithFourTones } from './fourTonesGenerator';
+import { generateBaseNounFormWithFourTones, stemWithExtension } from './fourTonesGenerator';
 import {EnhancedDbItem, identifyStemTypeByDb} from "@/lib/grammar/stemClassifier";
 import {computeStressFromMorphemes, countSyllables} from "@/lib/grammar/stress";
 import {normalizeSoftConsonants, collapseDoubleJ} from "@/lib/isv";
@@ -267,7 +267,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
 
     // 2. Вычисляем позицию ударения: морфемы → stressPosition на лексеме → penultimate
     const ending = getEnding(stemType, targetNumber, targetCase, 'CORE', dbItem.gender, dbItem.animacy);
-    const fullForm = dbItem.interslavic + ending;
+    const fullForm = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
 
     let effectiveStressPosition: number | undefined = undefined;
     if (dbItem.paradigm === 'A') {

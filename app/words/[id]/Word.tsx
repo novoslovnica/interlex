@@ -14,6 +14,7 @@ import {PosType, AccentParadigm, VerbalAspect} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
 import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
+import {classifyAdjectiveType} from "@/lib/grammar/adjective/index";
 import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
@@ -379,7 +380,7 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                                     isv={item.value}
                                     paradigm={item.paradigm || 'A'}
                                     protoStemClass={item.protoStemClass || 'o'}
-                                    isQualitative={!item.value.endsWith('ovy') && !item.value.endsWith('evy') && !item.value.endsWith('sky')}
+                                    isQualitative={classifyAdjectiveType(item.value) === 'qualitative'}
                                     properNoun={meta.properNoun}
                                 />
                             ) : isNum ? (

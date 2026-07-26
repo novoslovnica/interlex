@@ -57,36 +57,6 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
         { key: 'sup', lookup: 'adjective.superlative' },
     ];
 
-    function generateAdjFormWithDegree(
-        dbItem: EnhancedAdjDbItem,
-        targetCase: Case,
-        targetNumber: NumberType,
-        targetGender: GrammaticalGender,
-        degree: 'pos' | 'comp' | 'sup'
-    ): string {
-        if (degree === 'pos') {
-            return generateAdjectiveForm({ dbItem, targetCase, targetNumber, targetGender });
-        }
-
-        const base = dbItem.interslavic.slice(0, -1);
-        const softDbItem: EnhancedAdjDbItem = {
-            ...dbItem,
-            protoStemClass: ProtoStemClass.JO_SHORT,
-        };
-        let stem: string;
-        if (degree === 'comp') {
-            stem = base + 'ějš';
-        } else {
-            stem = 'naj' + base + 'ějš';
-        }
-        return generateAdjectiveForm({
-            dbItem: { ...softDbItem, interslavic: stem + 'i' },
-            targetCase,
-            targetNumber,
-            targetGender,
-        });
-    }
-
     const dbItem: EnhancedAdjDbItem = {
         interslavic: isv,
         protoSlavic: isv,
@@ -98,7 +68,7 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
         title: n.title,
         forms: CASES.reduce((acc, c) => ({
             ...acc,
-            [c.key]: generateAdjFormWithDegree(dbItem, c.key, n.key, activeGender, activeDegree),
+            [c.key]: generateAdjectiveForm({ dbItem, targetCase: c.key, targetNumber: n.key, targetGender: activeGender, degree: activeDegree }),
         }), {} as Record<string, string>),
     }));
 

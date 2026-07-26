@@ -24,6 +24,7 @@ export interface AdjFormRequest {
     targetCase: Case;
     targetNumber: NumberType;
     targetGender: GrammaticalGender;
+    degree?: 'pos' | 'comp' | 'sup';
 }
 
 // =========================================================================
@@ -167,12 +168,49 @@ export function identifyAdjStemType(item: EnhancedAdjDbItem): AdjStemType {
     return 'adj_hard';
 }
 
+// Суффиксы, маркирующие ОТНОСИТЕЛЬНЫЕ прилагательные (не имеют степеней сравнения).
+// Единственное место с этой логикой — используется и движком (processors.ts), и живой
+// страницей слова (Word.tsx), вместо двух независимых, разошедшихся друг с другом копий.
+//
+// Эвристика приблизительна (в схеме нет отдельного поля "тип прилагательного" — в
+// перспективе классификацию стоит перенести на явное поле в БД; морфемный подход сейчас
+// неприменим, т.к. суффикс-морфемы вроде "-ов-"/"-ев-"/"-ск-"/"-н-" в данных не тегированы).
+// MIN_STEM_LEN отсекает случайное совпадение суффикса с концом качественного корня
+// (напр. "novy" оканчивается на "ovy", но это корень "nov-" + окончание "-y", а не
+// существительное + суффикс "-ов-", как в "otcovy").
+const RELATIVE_SUFFIXES = ['ovy', 'evy', 'ny', 'sky'] as const;
+const MIN_STEM_LEN = 2;
+
+export function classifyAdjectiveType(lemma: string): 'qualitative' | 'relative' {
+    const cleanLemma = lemma.toLowerCase().trim();
+    for (const suffix of RELATIVE_SUFFIXES) {
+        if (cleanLemma.endsWith(suffix) && cleanLemma.length - suffix.length >= MIN_STEM_LEN) {
+            return 'relative';
+        }
+    }
+    return 'qualitative';
+}
+
 // =========================================================================
 // 5. ДВИЖОК СКЛОНЕНИЯ ПРИЛАГАТЕЛЬНЫХ
 // =========================================================================
 
 export function generateAdjectiveForm(request: AdjFormRequest): string {
-    const { dbItem, targetCase, targetNumber, targetGender } = request;
+    const { dbItem, targetCase, targetNumber, targetGender, degree = 'pos' } = request;
+
+    // Компаратив/суперлатив: суффикс -ějš- (мягкое склонение, независимо от исходного
+    // твёрдого/мягкого типа) + naj- для превосходной степени. Ударение фиксируется на
+    // суффиксе — см. paradigm-независимую ветку ниже.
+    if (degree !== 'pos') {
+        const base = dbItem.interslavic.slice(0, -1);
+        const stem = degree === 'comp' ? base + 'ějš' : 'naj' + base + 'ějš';
+        return generateAdjectiveForm({
+            dbItem: { ...dbItem, protoStemClass: ProtoStemClass.JO_SHORT, interslavic: stem + 'i' },
+            targetCase,
+            targetNumber,
+            targetGender,
+        });
+    }
 
     const stemType = identifyAdjStemType(dbItem);
     const dbEnding = getEnding(stemType, targetNumber, targetCase, 'CORE', targetGender);

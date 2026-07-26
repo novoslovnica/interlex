@@ -34,6 +34,8 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
     if (protoStemClass === 'consonant') {
         if (stemExtension === 'en') return 'consonant_n';
         if (stemExtension === 'es') return 'consonant_s';
+        if (stemExtension === 'ent') return 'consonant_ent';
+        if (stemExtension === 'er') return 'consonant_er';
     }
 
     // 2. Проверяем u-основы мужского рода напрямую из метаданных (syn, dom)

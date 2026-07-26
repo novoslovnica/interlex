@@ -10,7 +10,7 @@ import { GrammaticalGender } from "@/lib/grammar/common";
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
 
 // === Noun stem types (already present) ===
-const NOUN_STEM_TYPES: StemType[] = ['o_hard', 'o_soft', 'a_hard', 'a_soft', 'u_basis', 'i_basis', 'consonant_n', 'consonant_s'];
+const NOUN_STEM_TYPES: StemType[] = ['o_hard', 'o_soft', 'a_hard', 'a_soft', 'u_basis', 'i_basis', 'consonant_n', 'consonant_s', 'consonant_ent', 'consonant_er'];
 const NUMBERS: NumberType[] = ['singular', 'plural', 'dual'];
 const CASES: Case[] = ['nominative', 'accusative', 'genitive', 'dative', 'instrumental', 'locative', 'vocative'];
 

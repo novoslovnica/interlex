@@ -18,7 +18,9 @@ export type StemType =
     | 'u_basis'  // u-основы (synъ)
     | 'i_basis'  // i-основы (kostь, gostь)
     | 'consonant_n' // консонантные n-основы (imę)
-    | 'consonant_s'; // консонантные s-основы (nebo)
+    | 'consonant_s' // консонантные s-основы (nebo)
+    | 'consonant_ent' // консонантные ent-основы, детеныши (telę)
+    | 'consonant_er'; // консонантные er-основы, термины родства (mati)
 
 /**
  * Реестр окончаний современного интерславянского (не праславянских реконструкций).
@@ -290,6 +292,76 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
             instrumental: 'ema', // nebesema
             locative: 'u',        // nebesu
             vocative: 'ě'        // nebesě (звательная форма в двойственном числе)
+        }
+    },
+
+    // =========================================================================
+    // 9. СРЕДНИЙ РОД: КОНСОНАНТНЫЕ ent-ОСНОВЫ (Детеныши, пример: telę, основа telent-)
+    // Праслав. *-ent- (перед носовым ę→en редуцировано по той же аналогии, что ę→en в imę→imen-)
+    // =========================================================================
+    consonant_ent: {
+        singular: {
+            nominative: '',      // telę
+            accusative: '',      // telę
+            genitive: 'e',       // telente
+            dative: 'i',         // telenti
+            instrumental: 'em', // telentem
+            locative: 'i',        // telenti
+            vocative: ''         // telę (звательная форма совпадает с номинативом)
+        },
+        plural: {
+            nominative: 'a',     // telenta
+            accusative: 'a',     // telenta
+            genitive: '',       // telent
+            dative: 'em',       // telentem
+            instrumental: 'y',   // telenty
+            locative: 'eh',      // telenteh
+            vocative: 'a'        // telenta (звательная форма во множественном числе)
+        },
+        dual: {
+            nominative: 'i',     // telenti
+            accusative: 'i',     // telenti
+            genitive: 'u',       // telentu
+            dative: 'ema',       // telentema
+            instrumental: 'ema', // telentema
+            locative: 'u',        // telentu
+            vocative: 'i'        // telenti (звательная форма в двойственном числе)
+        }
+    },
+
+    // =========================================================================
+    // 10. ЖЕНСКИЙ РОД: КОНСОНАНТНЫЕ er-ОСНОВЫ (Термины родства, пример: mati, основа mater-)
+    // Праслав. mati/matere/materi/materь/materьjǫ/materi/mati (еры сняты, instr./loc.
+    // унифицированы по образцу остальных консонантных основ). В отличие от en/es/ent,
+    // винительный падеж ед.ч. ("mater") уже несёт наращение — не совпадает с именительным ("mati").
+    // =========================================================================
+    consonant_er: {
+        singular: {
+            nominative: 'i',     // mati (без наращения)
+            accusative: '',      // mater (с наращением, но с пустым окончанием)
+            genitive: 'e',       // matere
+            dative: 'i',         // materi
+            instrumental: 'em', // materem
+            locative: 'i',        // materi
+            vocative: 'i'        // mati (звательная форма совпадает с номинативом)
+        },
+        plural: {
+            nominative: 'i',     // materi
+            accusative: 'i',     // materi
+            genitive: '',       // mater
+            dative: 'em',       // materem
+            instrumental: 'y',   // matery
+            locative: 'eh',      // matereh
+            vocative: 'i'        // materi (звательная форма во множественном числе)
+        },
+        dual: {
+            nominative: 'i',     // materi
+            accusative: 'i',     // materi
+            genitive: 'u',       // materu
+            dative: 'ema',       // materema
+            instrumental: 'ema', // materema
+            locative: 'u',        // materu
+            vocative: 'i'        // materi (звательная форма в двойственном числе)
         }
     },
 };
