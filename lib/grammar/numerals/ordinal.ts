@@ -1,5 +1,5 @@
 import { generateAdjectiveForm, EnhancedAdjDbItem, AdjFormRequest } from '../adjective';
-import { Case, NumberType } from '../noun';
+import { Case, NumberType } from '../endingsRegistry';
 import { GrammaticalGender, AccentParadigm, ProtoStemClass } from '@/lib/grammar/common';
 
 export interface OrdinalDbItem {

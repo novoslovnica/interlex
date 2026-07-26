@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { generateNumeralForm, EnhancedNumDbItem } from '@/lib/grammar/numerals/cardinal';
-import { Case, NumberType } from '@/lib/grammar/noun/index';
+import { Case, NumberType } from '@/lib/grammar/endingsRegistry';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
 
 import {capitalize} from "@/lib/script-mode";

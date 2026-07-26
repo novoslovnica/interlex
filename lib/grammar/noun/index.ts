@@ -13,38 +13,20 @@ import {
 } from "@/lib/grammar/common/gender";
 import { getEnding } from '@/lib/grammar/endingLoader';
 import { resolveStressOverride } from '@/lib/grammar/stress';
+import { Case, NumberType, StemType } from '@/lib/grammar/endingsRegistry';
+import { FourSlavicTones } from '@/lib/grammar/fourTonesGenerator';
+import { stripAccents } from '@/lib/grammar/accentUtils';
 
 // =========================================================================
 // 1. СТРОГИЕ СИСТЕМНЫЕ ТИПЫ И КАТЕГОРИИ
+// Case/NumberType/StemType/FourSlavicTones/stripAccents консолидированы в свои
+// канонические места (endingsRegistry.ts/fourTonesGenerator.ts/accentUtils.ts) —
+// этот файл (Stack B) реэкспортирует их для обратной совместимости своих
+// собственных вызывающих сторон, но больше не объявляет свои копии.
 // =========================================================================
 
-export enum Case {
-    NOMINATIVE = 'nominative',
-    ACCUSATIVE = 'accusative',
-    GENITIVE = 'genitive',
-    DATIVE = 'dative',
-    INSTRUMENTAL = 'instrumental',
-    LOCATIVE = 'locative',
-    VOCATIVE = 'vocative'
-}
-
-export enum NumberType {
-    SINGULAR = 'singular',
-    PLURAL = 'plural',
-    DUAL = 'dual'
-}
-
-export type FourSlavicTones = 'long_acute' | 'short_acute' | 'long_circumflex' | 'short_circumflex';
-
-export type StemType =
-
-    | 'o_hard' | 'o_soft' | 'a_hard' | 'a_soft'
-    | 'u_basis'     // u-основы (synъ)
-    | 'i_basis'     // i-основы (kostь, gostь)
-    | 'consonant_n' // консонантные n-основы (imę)
-    | 'consonant_s' // консонантные s-основы (nebo)
-    | 'consonant_ent' // консонантные ent-основы, детеныши (telę)
-    | 'consonant_er'; // консонантные er-основы, термины родства (mati)
+export { Case, NumberType, stripAccents };
+export type { StemType, FourSlavicTones };
 
 /**
  * EnhancedDbItem теперь строго отражает схему таблицы Word из Main DB
@@ -57,6 +39,7 @@ export interface EnhancedDbItem {
     gender: GrammaticalGender;         // Строгий Родовой Enum (MASC, FEM, NEUT)
     protoStemClass: ProtoStemClass;     // Строгий Класс Праславянской основы
     stemExtension?: StemExtension;      // Строгое Наращение основы (EN, ES, ENT, ER, NONE)
+    animacy?: string;                   // Одушевлённость (влияет на окончание, напр. Acc.Sg.Masc)
     stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
     morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
 }
@@ -83,10 +66,6 @@ export interface EncliticFourTonesRequest {
 
 function isShortVowel(char: string): boolean {
     return /[oe]/i.test(char);
-}
-
-export function stripAccents(word: string): string {
-    return word.replace(/[\u0301\u0300\u0302\u0311]/g, '');
 }
 
 function applyFourTonesMark(word: string, syllableIndex: number, tone: FourSlavicTones): string {
@@ -160,6 +139,14 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
     const psc = String(item.protoStemClass).toLowerCase();
     const se = String(stemExtension).toLowerCase();
 
+    // gender в БД встречается в двух формах: сокращённой верхнерегистровой ('MASC'/'FEM'/'NEUT',
+    // как в enum GrammaticalGender) и полной нижнерегистровой ('masculine'/'feminine'/'neuter') —
+    // сравнение по префиксу после lowercase покрывает обе (та же проблема, что уже была
+    // исправлена для protoStemClass/stemExtension выше, просто не применена к gender).
+    const genderLower = String(gender ?? '').toLowerCase();
+    const isMasc = genderLower.startsWith('masc');
+    const isNeut = genderLower.startsWith('neut');
+
     // 1. Консонантные основы (по наращению)
     if (psc === 'consonant') {
         if (se === 'en') return 'consonant_n';
@@ -169,7 +156,7 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
     }
 
     // 2. u-основы мужского рода (synъ, domъ)
-    if (psc === 'u' && gender === GrammaticalGender.MASC) {
+    if (psc === 'u' && isMasc) {
         return 'u_basis';
     }
 
@@ -184,10 +171,10 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
 
     // 5. o-основы (Разведение по родам для среднего и мужского рода)
     if (psc === 'o') {
-        return gender === GrammaticalGender.NEUT ? 'a_hard' : 'o_hard';
+        return isNeut ? 'a_hard' : 'o_hard';
     }
     if (psc === 'jo') {
-        return gender === GrammaticalGender.NEUT ? 'a_soft' : 'o_soft';
+        return isNeut ? 'a_soft' : 'o_soft';
     }
 
     return 'o_hard'; // Дефолтный безопасный фоллбек для системы
@@ -235,8 +222,10 @@ export function generateBaseNounFormWithFourTones(
     targetNumber: NumberType,
     flavor: string = 'CORE',
     stressPosition?: number,
+    gender?: string,
+    animacy?: string,
 ): string {
-    const ending = getEnding(stemType, targetNumber, targetCase, flavor);
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor, gender, animacy);
     const fullForm = stemWithExtension(interslavicWord, stemType, targetCase, targetNumber) + ending;
 
     // ПАРАДИГМА A: Стабильно-восходящее ударение на корне (Долгий/Краткий Акут)
@@ -361,7 +350,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
 
     // Переопределение ударения морфемой (ударный суффикс/корень) или словом целиком
     // (заимствования) — та же логика, что и в declineNoun.ts (реальная страница слова).
-    const ending = getEnding(stemType, targetNumber, targetCase, flavor ?? 'CORE');
+    const ending = getEnding(stemType, targetNumber, targetCase, flavor ?? 'CORE', dbItem.gender, dbItem.animacy);
     const fullFormForStress = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
     const stressPosition = resolveStressOverride(fullFormForStress, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
 
@@ -373,7 +362,9 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
         targetCase,
         targetNumber,
         flavor,
-        stressPosition
+        stressPosition,
+        dbItem.gender,
+        dbItem.animacy
     );
 
     // Шаг 3: Если предлог опущен — отдаем форму как есть

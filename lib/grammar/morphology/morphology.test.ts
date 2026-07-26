@@ -118,7 +118,14 @@ export function runMorphologyEngineTests(): void {
     assert('novy: Качественное прилагательное разворачивает все три степени сравнения (189 форм)', novyForms.length === 189);
     // Унифицировано с уже живой реализацией AdjectiveDeclensionTables.tsx (мягкое
     // склонение JO_SHORT + суффикс -ějš-, ять, а не праслав. плоское 'e').
-    assert('novy: Компаратив образует суффикс -ějš- с мягким склонением (no\u0311vějš)', findForm(novyForms, { case: 'nominative', number: 'sg', gender: 'masc', degree: 'comp' }) === 'no\u0311vějš');
+    // Полная (склоняемая) форма компаратива несёт окончание adj_soft/Masc/Nom.Sg = 'i'
+    // (согласовано БД ending_allophones и хардкод-регистром ADJECTIVE_ENDINGS_REGISTRY —
+    // до фикса регистра рода этот grammeme-лукап молча промахивался мимо БД, и
+    // '?? ADJECTIVE_ENDINGS_REGISTRY' никогда не срабатывал из-за того что getEnding() всегда
+    // возвращает строку, даже пустую. Ударение остаётся на суффиксе -ějš-
+    // (как и задумано комментарием выше), просто теперь корректно попадает на его
+    // гласную 'ě' в полной, а не усечённой форме.
+    assert('novy: Компаратив образует суффикс -ějš- с мягким склонением (nov\u011b\u0302jši)', findForm(novyForms, { case: 'nominative', number: 'sg', gender: 'masc', degree: 'comp' }) === 'nov\u011b\u0302jši');
 
     // Пример Б: "kamienny" (Относительное прилагательное, Парадигма A)
     const adjKamienny: EngineWordInput = {

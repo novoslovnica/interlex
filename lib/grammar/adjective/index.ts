@@ -3,7 +3,9 @@ import {
     ProtoStemClass,
     GrammaticalGender
 } from '@/lib/grammar/common'; // Системные Enum из таблицы Word
-import { Case, NumberType, FourSlavicTones, stripAccents } from '../noun';
+import { Case, NumberType } from '../endingsRegistry';
+import { FourSlavicTones } from '../fourTonesGenerator';
+import { stripAccents } from '../accentUtils';
 import { getEnding } from '@/lib/grammar/endingLoader';
 import { resolveStressOverride } from '@/lib/grammar/stress';
 

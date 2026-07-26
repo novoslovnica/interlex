@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { generatePronounForm, EnhancedPronounDbItem } from '@/lib/grammar/pronoun/index';
-import { Case, NumberType } from '@/lib/grammar/noun/index';
+import { Case, NumberType } from '@/lib/grammar/endingsRegistry';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
 import { AccentParadigm } from '@/lib/grammar/common/paradigm';
 

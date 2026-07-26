@@ -1,7 +1,34 @@
 
-export type Case = 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative' | 'vocative';
+// Case/NumberType живут и как тип (union строковых литералов — так их всегда использовал
+// этот файл: endingLoader.ts/declineNoun.ts/fourTonesGenerator.ts/stemClassifier.ts), и как
+// объект-значение с enum-подобными участниками (Case.NOMINATIVE и т.д.) — этот второй профиль
+// нужен для консолидации с noun/index.ts, чей Case/NumberType были настоящими TS enum'ами и
+// использовались как значения (Case.NOMINATIVE) в adjective/pronoun/numerals/*DeclensionTables.
+// Имя типа и имя константы не конфликтуют — они живут в разных TS-неймспейсах.
+export const Case = {
+    NOMINATIVE: 'nominative',
+    ACCUSATIVE: 'accusative',
+    GENITIVE: 'genitive',
+    DATIVE: 'dative',
+    INSTRUMENTAL: 'instrumental',
+    LOCATIVE: 'locative',
+    VOCATIVE: 'vocative',
+} as const;
+export type Case = typeof Case[keyof typeof Case];
+
 // ИСПРАВЛЕНО: Теперь чисел строго три
-export type NumberType = 'singular' | 'plural' | 'dual';
+export const NumberType = {
+    SINGULAR: 'singular',
+    PLURAL: 'plural',
+    DUAL: 'dual',
+} as const;
+export type NumberType = typeof NumberType[keyof typeof NumberType];
+
+// Массивы для перебора всех значений (напр. processors.ts, ранее делавший Object.values()
+// над одноимённым enum'ом в noun/index.ts) — эквивалентны Object.values(Case)/(NumberType),
+// но не зависят от того, что Case/NumberType остаются реальным enum-объектом.
+export const ALL_CASES: Case[] = Object.values(Case);
+export const ALL_NUMBERS: NumberType[] = Object.values(NumberType);
 
 export interface WordFormRequest {
     interslavicWord: string;

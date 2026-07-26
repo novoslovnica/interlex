@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { generateAdjectiveForm, EnhancedAdjDbItem } from '@/lib/grammar/adjective/index';
-import { Case, NumberType } from '@/lib/grammar/noun/index';
+import { Case, NumberType } from '@/lib/grammar/endingsRegistry';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
 import { AccentParadigm } from '@/lib/grammar/common/paradigm';
 import { ProtoStemClass } from '@/lib/grammar/common/stem';

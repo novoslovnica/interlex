@@ -11,7 +11,8 @@ import {
 import { generateNumeralForm, EnhancedNumDbItem } from '../numerals/cardinal';
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
-import { Case, NumberType, declineWordAutomatically, EnhancedDbItem } from '../noun';
+import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
+import { declineWordAutomatically, EnhancedDbItem } from '../noun';
 import {
     conjugateFullVerb,
     extractProtoStems,
@@ -41,13 +42,14 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         gender: (word.gender as GrammaticalGender) || GrammaticalGender.MASC,
         protoStemClass: (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT,
         stemExtension: (word.stemExtension as StemExtension) || StemExtension.NONE,
+        animacy: word.animacy || undefined,
         stressPosition: word.stressPosition,
         morphemes: word.morphemes,
     };
 
     // 2. Разворачиваем полную матрицу форм (7 падежей * 3 числа = 21 словоформа)
-    const cases = Object.values(Case);
-    const numbers = Object.values(NumberType);
+    const cases = ALL_CASES;
+    const numbers = ALL_NUMBERS;
 
     for (const num of numbers) {
         for (const cas of cases) {
@@ -260,8 +262,8 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = Object.values(Case);
-    const numbers = Object.values(NumberType);
+    const cases = ALL_CASES;
+    const numbers = ALL_NUMBERS;
     const genders = Object.values(GrammaticalGender);
 
     // Определяем массив итерируемых степеней
@@ -330,8 +332,8 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = Object.values(Case);
-    const numbers = Object.values(NumberType);
+    const cases = ALL_CASES;
+    const numbers = ALL_NUMBERS;
     const genders = Object.values(GrammaticalGender);
 
     // =========================================================================
@@ -424,8 +426,8 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
     }
 
     // Сетки итерирования для генератора полной матрицы форм
-    const cases = Object.values(Case);
-    const numbers = Object.values(NumberType);
+    const cases = ALL_CASES;
+    const numbers = ALL_NUMBERS;
     const genders = Object.values(GrammaticalGender);
 
     // =========================================================================
@@ -580,8 +582,8 @@ export function processDeterminer(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = Object.values(Case);
-    const numbers = Object.values(NumberType);
+    const cases = ALL_CASES;
+    const numbers = ALL_NUMBERS;
     const genders = Object.values(GrammaticalGender);
 
     for (const num of numbers) {

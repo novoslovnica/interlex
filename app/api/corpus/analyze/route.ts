@@ -88,6 +88,7 @@ async function getAnalyzer(): Promise<DbAnalyzer> {
                 paradigm: true,
                 stem: true,
                 gender: true,
+                animacy: true,
             },
         })
         return rows.map((r) => ({
@@ -100,6 +101,7 @@ async function getAnalyzer(): Promise<DbAnalyzer> {
             paradigm: r.paradigm,
             stem: r.stem,
             gender: r.gender,
+            animacy: r.animacy,
             base: null,
             alternationType: null,
             fleetingVowelAt: null,

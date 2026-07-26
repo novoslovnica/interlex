@@ -15,6 +15,7 @@ export interface WordBaseRecord {
     stem: string | null;
     base: string | null;
     gender: string | null;
+    animacy: string | null;
     alternationType: string | null;
     fleetingVowelAt: number | null;
     flavor?: string;
@@ -124,6 +125,7 @@ export class DbAnalyzer {
                 paradigm: word.paradigm,
                 stem: word.stem,
                 gender: word.gender,
+                animacy: word.animacy,
                 alternationType: word.alternationType,
                 fleetingVowelAt: word.fleetingVowelAt,
                 flavor: word.flavor || 'CORE',

@@ -56,6 +56,7 @@ const analyzerPromise = buildValidEndings().then((validEndings) =>
                 paradigm: true,
                 stem: true,
                 gender: true,
+                animacy: true,
             },
         })
         return rows.map((r) => ({
@@ -68,6 +69,7 @@ const analyzerPromise = buildValidEndings().then((validEndings) =>
             paradigm: r.paradigm,
             stem: r.stem,
             gender: r.gender,
+            animacy: r.animacy,
             base: null,
             alternationType: null,
             fleetingVowelAt: null,

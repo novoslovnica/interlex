@@ -1,5 +1,6 @@
 import { AccentParadigm, GrammaticalGender } from '@/lib/grammar/common';
-import { Case, NumberType, FourSlavicTones } from '../noun';
+import { Case, NumberType } from '../endingsRegistry';
+import { FourSlavicTones } from '../fourTonesGenerator';
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 import { buildGrammeme } from '@/lib/grammar/grammemes';
 import { resolveStressOverride } from '@/lib/grammar/stress';

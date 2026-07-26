@@ -50,9 +50,9 @@ const POS_OPTIONS = [
 ]
 
 const GENDER_OPTIONS = [
-  { value: "masculine", label: "Masculine / Мужской" },
-  { value: "feminine", label: "Feminine / Женский" },
-  { value: "neuter", label: "Neuter / Средний" },
+  { value: "Masc", label: "Masculine / Мужской" },
+  { value: "Fem", label: "Feminine / Женский" },
+  { value: "Neut", label: "Neuter / Средний" },
 ]
 
 const ASPECT_OPTIONS = [
@@ -67,8 +67,8 @@ const TRANSITIVITY_OPTIONS = [
 ]
 
 const ANIMACY_OPTIONS = [
-  { value: "animate", label: "Animate / Одушевлённое" },
-  { value: "inanimate", label: "Inanimate / Неодушевлённое" },
+  { value: "Anim", label: "Animate / Одушевлённое" },
+  { value: "Inan", label: "Inanimate / Неодушевлённое" },
 ]
 
 const DEGREE_OPTIONS = [

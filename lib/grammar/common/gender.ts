@@ -1,5 +1,7 @@
+// Значения соответствуют канонической UD-граммеме Gender (Masc/Fem/Neut) — той же,
+// что buildGrammeme()/ending_allophones уже используют для оверрайдов окончаний.
 export enum GrammaticalGender {
-    MASC = 'MASC', // Мужской род (masculinum)
-    FEM  = 'FEM',  // Женский род (femininum)
-    NEUT = 'NEUT'  // Средний род (neutrum)
+    MASC = 'Masc', // Мужской род (masculinum)
+    FEM  = 'Fem',  // Женский род (femininum)
+    NEUT = 'Neut'  // Средний род (neutrum)
 }

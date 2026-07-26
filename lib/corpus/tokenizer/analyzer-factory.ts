@@ -49,6 +49,7 @@ export function createQueryWordsByBase(): (
         paradigm: true,
         stem: true,
         gender: true,
+        animacy: true,
       },
     })
     return rows.map((r) => ({
@@ -61,6 +62,7 @@ export function createQueryWordsByBase(): (
       paradigm: r.paradigm,
       stem: r.stem,
       gender: r.gender,
+      animacy: r.animacy,
       base: null,
       alternationType: null,
       fleetingVowelAt: null,
