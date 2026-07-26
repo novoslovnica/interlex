@@ -273,6 +273,83 @@ function emptyTranslations(): Record<string, TranslationData[]> {
 
 type GrammarValue = string | number | null | undefined
 
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value: GrammarValue
+  options: { value: string | number; label: string }[]
+  onChange: (v: string | number) => void
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
+      <select
+        value={value ?? ""}
+        onChange={(e) => {
+          const v = e.target.value
+          const opt = options.find((o) => String(o.value) === v)
+          onChange(opt ? opt.value : v)
+        }}
+        className="w-full px-2 py-1.5 border rounded bg-background text-sm"
+      >
+        <option value="">—</option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
+function TextField({ label, value, onChange, placeholder, type = "text", hint }: {
+  label: string
+  value: GrammarValue
+  onChange: (v: string) => void
+  placeholder?: string
+  type?: string
+  hint?: string
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
+      <input
+        type={type}
+        value={value ?? ""}
+        onChange={(e) => onChange(type === "number" ? e.target.value : e.target.value)}
+        className="w-full px-2 py-1.5 border rounded bg-background text-sm"
+        placeholder={placeholder}
+      />
+      {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
+    </div>
+  )
+}
+
+function NumberField({ label, value, onChange, placeholder }: {
+  label: string
+  value: GrammarValue
+  onChange: (v: number | null) => void
+  placeholder?: string
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
+      <input
+        type="number"
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
+        className="w-full px-2 py-1.5 border rounded bg-background text-sm"
+        placeholder={placeholder}
+      />
+    </div>
+  )
+}
+
 export default function ArticleForm({
   title,
   submitButtonText,
@@ -709,83 +786,6 @@ export default function ArticleForm({
         })),
       })
     })
-  }
-
-  function SelectField({
-    label,
-    value,
-    options,
-    onChange,
-  }: {
-    label: string
-    value: GrammarValue
-    options: { value: string | number; label: string }[]
-    onChange: (v: string | number) => void
-  }) {
-    return (
-      <div>
-        <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
-        <select
-          value={value ?? ""}
-          onChange={(e) => {
-            const v = e.target.value
-            const opt = options.find((o) => String(o.value) === v)
-            onChange(opt ? opt.value : v)
-          }}
-          className="w-full px-2 py-1.5 border rounded bg-background text-sm"
-        >
-          <option value="">—</option>
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </div>
-    )
-  }
-
-  function TextField({ label, value, onChange, placeholder, type = "text", hint }: {
-    label: string
-    value: GrammarValue
-    onChange: (v: string) => void
-    placeholder?: string
-    type?: string
-    hint?: string
-  }) {
-    return (
-      <div>
-        <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
-        <input
-          type={type}
-          value={value ?? ""}
-          onChange={(e) => onChange(type === "number" ? e.target.value : e.target.value)}
-          className="w-full px-2 py-1.5 border rounded bg-background text-sm"
-          placeholder={placeholder}
-        />
-        {hint && <p className="text-[10px] text-muted-foreground mt-0.5">{hint}</p>}
-      </div>
-    )
-  }
-
-  function NumberField({ label, value, onChange, placeholder }: {
-    label: string
-    value: GrammarValue
-    onChange: (v: number | null) => void
-    placeholder?: string
-  }) {
-    return (
-      <div>
-        <label className="block text-xs font-medium mb-0.5 text-muted-foreground">{label}</label>
-        <input
-          type="number"
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
-          className="w-full px-2 py-1.5 border rounded bg-background text-sm"
-          placeholder={placeholder}
-        />
-      </div>
-    )
   }
 
   return (
