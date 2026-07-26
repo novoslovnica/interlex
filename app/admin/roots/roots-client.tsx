@@ -13,6 +13,8 @@ interface RootItem {
   value: string | null
   type: number | null
   stressPosition: number | null
+  meaning?: string | null
+  protoSlavicWordId?: number | null
 }
 
 interface RootFull extends RootItem {
@@ -26,11 +28,17 @@ interface RootFull extends RootItem {
     flavorId: number
     flavor: { code: string }
   }[]
+  protoSlavicWord?: { id: number; lemma: string } | null
 }
 
 interface WordOption {
   id: number
   value: string | null
+}
+
+interface ProtoSlavicWordOption {
+  id: number
+  lemma: string
 }
 
 const ITEMS_PER_PAGE = 50
@@ -307,6 +315,10 @@ function EditRootModal({
   const [value, setValue] = useState(root.value ?? "")
   const [type, setType] = useState(root.type ?? 0)
   const [stressPosition, setStressPosition] = useState<number | null>(root.stressPosition ?? null)
+  const [meaning, setMeaning] = useState(root.meaning ?? "")
+  const [protoSlavicWordId, setProtoSlavicWordId] = useState<number | null>(root.protoSlavicWordId ?? null)
+  const [protoSlavicWordLemma, setProtoSlavicWordLemma] = useState(root.protoSlavicWord?.lemma ?? "")
+  const [protoSearch, setProtoSearch] = useState("")
   const [allophones, setAllophones] = useState<Record<string, string>>(() => {
     const allos = root.morphemeAllophones || []
     return {
@@ -347,13 +359,28 @@ function EditRootModal({
     enabled: debouncedWordSearch.trim().length > 0,
   })
 
+  const debouncedProtoSearch = useDebounce(protoSearch, 400)
+
+  const { data: protoResults } = useQuery({
+    queryKey: ["proto-search", debouncedProtoSearch],
+    queryFn: async () => {
+      if (!debouncedProtoSearch.trim()) return []
+      const res = await fetch(
+        `/api/proto?search=${encodeURIComponent(debouncedProtoSearch)}&limit=10`
+      )
+      const data = await res.json() as { items: ProtoSlavicWordOption[]; total: number }
+      return data.items
+    },
+    enabled: debouncedProtoSearch.trim().length > 0,
+  })
+
   const handleSave = async () => {
     setSaving(true)
     try {
       const res = await fetch(`/api/roots/${root.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type, allophones, stressPosition }),
+        body: JSON.stringify({ value, type, allophones, stressPosition, meaning: meaning.trim() || null, protoSlavicWordId }),
       })
       if (res.ok) onSaved()
       else alert("Ошибка при сохранении")
@@ -441,6 +468,68 @@ function EditRootModal({
                 min={0}
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold mb-1">Семантика (значение морфемы)</label>
+            <textarea
+              className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500 text-sm"
+              rows={2}
+              value={meaning}
+              onChange={(e) => setMeaning(e.target.value)}
+              placeholder="Например: движение наружу / за пределы чего-либо"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold mb-1">Прото-славянская форма</label>
+            {protoSlavicWordId !== null ? (
+              <div className="flex items-center justify-between bg-muted/20 px-3 py-1.5 rounded-md">
+                <span className="text-sm">
+                  {protoSlavicWordLemma}
+                  <span className="text-muted-foreground ml-1">ID: {protoSlavicWordId}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProtoSlavicWordId(null)
+                    setProtoSlavicWordLemma("")
+                  }}
+                  className="text-red-600 hover:text-red-800 text-xs px-1"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Поиск прото-формы по лемме..."
+                  className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                  value={protoSearch}
+                  onChange={(e) => setProtoSearch(e.target.value)}
+                />
+                {protoResults && protoResults.length > 0 && (
+                  <div className="border rounded-md max-h-40 overflow-y-auto mt-1">
+                    {protoResults.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          setProtoSlavicWordId(p.id)
+                          setProtoSlavicWordLemma(p.lemma)
+                          setProtoSearch("")
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted/20 transition-colors"
+                      >
+                        {p.lemma}
+                        <span className="text-muted-foreground ml-1">ID: {p.id}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
@@ -565,8 +654,27 @@ function CreateRootModal({
   const [value, setValue] = useState("")
   const [type, setType] = useState(MorphemeType.ROOT)
   const [stressPosition, setStressPosition] = useState<number | null>(null)
+  const [meaning, setMeaning] = useState("")
+  const [protoSlavicWordId, setProtoSlavicWordId] = useState<number | null>(null)
+  const [protoSlavicWordLemma, setProtoSlavicWordLemma] = useState("")
+  const [protoSearch, setProtoSearch] = useState("")
   const [allophones, setAllophones] = useState<Record<string, string>>({ core: "", nsl: "", east: "", west: "", south: "" })
   const [creating, setCreating] = useState(false)
+
+  const debouncedProtoSearch = useDebounce(protoSearch, 400)
+
+  const { data: protoResults } = useQuery({
+    queryKey: ["proto-search", debouncedProtoSearch],
+    queryFn: async () => {
+      if (!debouncedProtoSearch.trim()) return []
+      const res = await fetch(
+        `/api/proto?search=${encodeURIComponent(debouncedProtoSearch)}&limit=10`
+      )
+      const data = await res.json() as { items: ProtoSlavicWordOption[]; total: number }
+      return data.items
+    },
+    enabled: debouncedProtoSearch.trim().length > 0,
+  })
 
   const handleCreate = async () => {
     if (!value.trim()) {
@@ -578,7 +686,7 @@ function CreateRootModal({
       const res = await fetch("/api/roots/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value, type, allophones, stressPosition }),
+        body: JSON.stringify({ value, type, allophones, stressPosition, meaning: meaning.trim() || null, protoSlavicWordId }),
       })
       if (res.ok) onCreated()
       else {
@@ -622,6 +730,68 @@ function CreateRootModal({
             placeholder="—"
             min={0}
           />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1">Семантика (значение морфемы)</label>
+          <textarea
+            className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500 text-sm"
+            rows={2}
+            value={meaning}
+            onChange={(e) => setMeaning(e.target.value)}
+            placeholder="Например: движение наружу / за пределы чего-либо"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold mb-1">Прото-славянская форма</label>
+          {protoSlavicWordId !== null ? (
+            <div className="flex items-center justify-between bg-muted/20 px-3 py-1.5 rounded-md">
+              <span className="text-sm">
+                {protoSlavicWordLemma}
+                <span className="text-muted-foreground ml-1">ID: {protoSlavicWordId}</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setProtoSlavicWordId(null)
+                  setProtoSlavicWordLemma("")
+                }}
+                className="text-red-600 hover:text-red-800 text-xs px-1"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <>
+              <input
+                type="text"
+                placeholder="Поиск прото-формы по лемме..."
+                className="w-full px-3 py-1.5 border rounded-md bg-background focus:ring-2 focus:ring-blue-500"
+                value={protoSearch}
+                onChange={(e) => setProtoSearch(e.target.value)}
+              />
+              {protoResults && protoResults.length > 0 && (
+                <div className="border rounded-md max-h-40 overflow-y-auto mt-1">
+                  {protoResults.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        setProtoSlavicWordId(p.id)
+                        setProtoSlavicWordLemma(p.lemma)
+                        setProtoSearch("")
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-sm hover:bg-muted/20 transition-colors"
+                    >
+                      {p.lemma}
+                      <span className="text-muted-foreground ml-1">ID: {p.id}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">

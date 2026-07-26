@@ -125,6 +125,7 @@ export const LexemeScalarFieldEnum = {
   stressPosition: 'stressPosition',
   properNoun: 'properNoun',
   hasAnomalies: 'hasAnomalies',
+  isPublic: 'isPublic',
   corpusFrequency: 'corpusFrequency',
   corpusFrequencyPerMln: 'corpusFrequencyPerMln',
   corpusRank: 'corpusRank',
@@ -201,7 +202,9 @@ export const MorphemeScalarFieldEnum = {
   updatedAt: 'updatedAt',
   value: 'value',
   type: 'type',
-  stressPosition: 'stressPosition'
+  stressPosition: 'stressPosition',
+  meaning: 'meaning',
+  protoSlavicWordId: 'protoSlavicWordId'
 } as const
 
 export type MorphemeScalarFieldEnum = (typeof MorphemeScalarFieldEnum)[keyof typeof MorphemeScalarFieldEnum]

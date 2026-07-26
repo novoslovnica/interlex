@@ -34,6 +34,7 @@ export async function GET(
         morphemeAllophones: {
           include: { flavor: true },
         },
+        protoSlavicWord: true,
       },
     })
 
@@ -65,7 +66,7 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { value, type, allophones, stressPosition } = body
+    const { value, type, allophones, stressPosition, meaning, protoSlavicWordId } = body
 
     const before = await db.morpheme.findUnique({ where: { id: rootId } })
 
@@ -75,6 +76,8 @@ export async function PATCH(
         ...(value !== undefined && { value }),
         ...(type !== undefined && { type }),
         ...(stressPosition !== undefined && { stressPosition: stressPosition ?? null }),
+        ...(meaning !== undefined && { meaning: meaning ?? null }),
+        ...(protoSlavicWordId !== undefined && { protoSlavicWordId: protoSlavicWordId ?? null }),
       },
     })
 
@@ -87,6 +90,12 @@ export async function PATCH(
     }
     if (stressPosition !== undefined && before?.stressPosition !== (stressPosition ?? null)) {
       changes.push({ field: "stressPosition", oldValue: before?.stressPosition ?? null, newValue: stressPosition ?? null })
+    }
+    if (meaning !== undefined && (before?.meaning ?? null) !== (meaning ?? null)) {
+      changes.push({ field: "meaning", oldValue: before?.meaning ?? null, newValue: meaning ?? null })
+    }
+    if (protoSlavicWordId !== undefined && (before?.protoSlavicWordId ?? null) !== (protoSlavicWordId ?? null)) {
+      changes.push({ field: "protoSlavicWordId", oldValue: before?.protoSlavicWordId ?? null, newValue: protoSlavicWordId ?? null })
     }
     await logAudit(session?.user, "Morpheme", rootId, changes)
 

@@ -11,6 +11,7 @@ export const getDictItems = async (
     usageType?: string,
     filterLang?: string,
     unverified?: boolean,
+    includeHidden?: boolean,
 ) => {
     const db = await init();
 
@@ -37,6 +38,7 @@ export const getDictItems = async (
                     AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value ${searchOp})
                 )
             )
+            ${includeHidden ? '' : 'AND l.isPublic = 1'}
         `).all(searchParam, searchParam) as { id: number }[];
 
         const ids = lexemeIds.map(r => r.id);
@@ -52,7 +54,7 @@ export const getDictItems = async (
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
                    l.secondaryStem, l.tertiaryStem,
-                   l.hasAnomalies, l.mainCategory, l.usageType
+                   l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
             FROM lexemes l
             LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
             LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
@@ -70,6 +72,9 @@ export const getDictItems = async (
             filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
             filterParams.push(usageType);
         }
+        if (!includeHidden) {
+            filterClause += filterClause ? ' AND l.isPublic = 1' : ' WHERE l.isPublic = 1';
+        }
 
         data = db.prepare(`
             SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
@@ -79,7 +84,7 @@ export const getDictItems = async (
                    l.addition, l.sameInLanguages, l.etymology, l.proto,
                    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
                    l.secondaryStem, l.tertiaryStem,
-                   l.hasAnomalies, l.mainCategory, l.usageType
+                   l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
             FROM lexemes l
             LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
             LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'

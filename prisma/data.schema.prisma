@@ -51,6 +51,9 @@ model Lexeme {
   // Маркер аномалий флексий
   hasAnomalies Boolean @default(false)
 
+  // Публичность в поиске/листингах (скрытые лексемы остаются доступны по прямой ссылке)
+  isPublic Boolean @default(true)
+
   // Частотность на основе корпусных данных
   corpusFrequency       Int?
   corpusFrequencyPerMln Float?
@@ -169,9 +172,17 @@ model Morpheme {
   type           Int?     @default(0)
   stressPosition Int? // Какой слог внутри морфемы ударный (0=первый, NULL=нейтральный)
 
+  // Семантика морфемы (значение приставки/суффикса/корня)
+  meaning String?
+
+  // Привязка к прото-славянской форме
+  protoSlavicWordId Int?
+  protoSlavicWord   ProtoSlavicWord? @relation(fields: [protoSlavicWordId], references: [id])
+
   lexemes_morphemes  LexemeMorpheme[]
   morphemeAllophones MorphemeAllophone[]
 
+  @@index([protoSlavicWordId])
   @@map("morphemes")
 }
 
@@ -303,6 +314,8 @@ model ProtoSlavicWord {
   lemma     String
   body      String @default("")
   sourceUrl String @default("") @map("source_url")
+
+  morphemes Morpheme[]
 
   @@index([lemma])
   @@map("proto_slavic_words")

@@ -304,7 +304,12 @@
     "emptyChapter": "Materials for this subsection are being synchronized with the Interslavic manual.",
     "prevChapter": "← Back",
     "nextChapter": "Forward →",
-    "categories": ["Basics", "Grammar", "Verbs", "Vocabulary"],
+    "categories": [
+      "Basics",
+      "Grammar",
+      "Verbs",
+      "Vocabulary"
+    ],
     "chapters": {
       "preface": "Preface and introduction",
       "ch1": "1. Pronunciation and alphabet",
@@ -374,6 +379,12 @@
       "transitivity": "Transitivity",
       "animacy": "Animacy",
       "articleId": "Article ID"
+    },
+    "codification": {
+      "codified": "Codified",
+      "notCodified": "Not codified",
+      "codifiedTooltip": "This word is present in the official Interslavic dictionary",
+      "notCodifiedTooltip": "This word is not yet codified in the official dictionary (NSL/candidate)"
     },
     "display": {
       "nslCyrillic": "Novoslovnica Cyrillic:",
@@ -832,7 +843,7 @@
           "title": "Title *",
           "titlePlaceholder": "Text title",
           "authorPlaceholder": "Author name",
-"categoryDefault": "Select genre",
+          "categoryDefault": "Select genre",
           "topicDefault": "No topic",
           "sourceLink": "Source link",
           "yearWritten": "Year written",

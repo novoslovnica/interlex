@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { value, type, allophones, stressPosition } = body
+    const { value, type, allophones, stressPosition, meaning, protoSlavicWordId } = body
 
     if (!value || !value.trim()) {
       return NextResponse.json({ error: "value is required" }, { status: 400 })
@@ -24,12 +24,16 @@ export async function POST(request: Request) {
         value,
         type: type !== undefined ? type : 0,
         stressPosition: stressPosition ?? null,
+        meaning: meaning ?? null,
+        protoSlavicWordId: protoSlavicWordId ?? null,
       },
     })
     await logAudit(session?.user, "Morpheme", root.id, [
       { field: "value", oldValue: null, newValue: value },
       { field: "type", oldValue: null, newValue: type !== undefined ? type : 0 },
       ...(stressPosition != null ? [{ field: "stressPosition", oldValue: null, newValue: stressPosition }] : []),
+      ...(meaning != null ? [{ field: "meaning", oldValue: null, newValue: meaning }] : []),
+      ...(protoSlavicWordId != null ? [{ field: "protoSlavicWordId", oldValue: null, newValue: protoSlavicWordId }] : []),
     ])
 
     if (allophones) {

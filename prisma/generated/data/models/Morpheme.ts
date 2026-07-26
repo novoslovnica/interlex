@@ -30,12 +30,14 @@ export type MorphemeAvgAggregateOutputType = {
   id: number | null
   type: number | null
   stressPosition: number | null
+  protoSlavicWordId: number | null
 }
 
 export type MorphemeSumAggregateOutputType = {
   id: number | null
   type: number | null
   stressPosition: number | null
+  protoSlavicWordId: number | null
 }
 
 export type MorphemeMinAggregateOutputType = {
@@ -45,6 +47,8 @@ export type MorphemeMinAggregateOutputType = {
   value: string | null
   type: number | null
   stressPosition: number | null
+  meaning: string | null
+  protoSlavicWordId: number | null
 }
 
 export type MorphemeMaxAggregateOutputType = {
@@ -54,6 +58,8 @@ export type MorphemeMaxAggregateOutputType = {
   value: string | null
   type: number | null
   stressPosition: number | null
+  meaning: string | null
+  protoSlavicWordId: number | null
 }
 
 export type MorphemeCountAggregateOutputType = {
@@ -63,6 +69,8 @@ export type MorphemeCountAggregateOutputType = {
   value: number
   type: number
   stressPosition: number
+  meaning: number
+  protoSlavicWordId: number
   _all: number
 }
 
@@ -71,12 +79,14 @@ export type MorphemeAvgAggregateInputType = {
   id?: true
   type?: true
   stressPosition?: true
+  protoSlavicWordId?: true
 }
 
 export type MorphemeSumAggregateInputType = {
   id?: true
   type?: true
   stressPosition?: true
+  protoSlavicWordId?: true
 }
 
 export type MorphemeMinAggregateInputType = {
@@ -86,6 +96,8 @@ export type MorphemeMinAggregateInputType = {
   value?: true
   type?: true
   stressPosition?: true
+  meaning?: true
+  protoSlavicWordId?: true
 }
 
 export type MorphemeMaxAggregateInputType = {
@@ -95,6 +107,8 @@ export type MorphemeMaxAggregateInputType = {
   value?: true
   type?: true
   stressPosition?: true
+  meaning?: true
+  protoSlavicWordId?: true
 }
 
 export type MorphemeCountAggregateInputType = {
@@ -104,6 +118,8 @@ export type MorphemeCountAggregateInputType = {
   value?: true
   type?: true
   stressPosition?: true
+  meaning?: true
+  protoSlavicWordId?: true
   _all?: true
 }
 
@@ -200,6 +216,8 @@ export type MorphemeGroupByOutputType = {
   value: string | null
   type: number | null
   stressPosition: number | null
+  meaning: string | null
+  protoSlavicWordId: number | null
   _count: MorphemeCountAggregateOutputType | null
   _avg: MorphemeAvgAggregateOutputType | null
   _sum: MorphemeSumAggregateOutputType | null
@@ -232,6 +250,9 @@ export type MorphemeWhereInput = {
   value?: Prisma.StringNullableFilter<"Morpheme"> | string | null
   type?: Prisma.IntNullableFilter<"Morpheme"> | number | null
   stressPosition?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  meaning?: Prisma.StringNullableFilter<"Morpheme"> | string | null
+  protoSlavicWordId?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  protoSlavicWord?: Prisma.XOR<Prisma.ProtoSlavicWordNullableScalarRelationFilter, Prisma.ProtoSlavicWordWhereInput> | null
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
   morphemeAllophones?: Prisma.MorphemeAllophoneListRelationFilter
 }
@@ -243,6 +264,9 @@ export type MorphemeOrderByWithRelationInput = {
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   stressPosition?: Prisma.SortOrderInput | Prisma.SortOrder
+  meaning?: Prisma.SortOrderInput | Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  protoSlavicWord?: Prisma.ProtoSlavicWordOrderByWithRelationInput
   lexemes_morphemes?: Prisma.LexemeMorphemeOrderByRelationAggregateInput
   morphemeAllophones?: Prisma.MorphemeAllophoneOrderByRelationAggregateInput
 }
@@ -257,6 +281,9 @@ export type MorphemeWhereUniqueInput = Prisma.AtLeast<{
   value?: Prisma.StringNullableFilter<"Morpheme"> | string | null
   type?: Prisma.IntNullableFilter<"Morpheme"> | number | null
   stressPosition?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  meaning?: Prisma.StringNullableFilter<"Morpheme"> | string | null
+  protoSlavicWordId?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  protoSlavicWord?: Prisma.XOR<Prisma.ProtoSlavicWordNullableScalarRelationFilter, Prisma.ProtoSlavicWordWhereInput> | null
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
   morphemeAllophones?: Prisma.MorphemeAllophoneListRelationFilter
 }, "id">
@@ -268,6 +295,8 @@ export type MorphemeOrderByWithAggregationInput = {
   value?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   stressPosition?: Prisma.SortOrderInput | Prisma.SortOrder
+  meaning?: Prisma.SortOrderInput | Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MorphemeCountOrderByAggregateInput
   _avg?: Prisma.MorphemeAvgOrderByAggregateInput
   _max?: Prisma.MorphemeMaxOrderByAggregateInput
@@ -285,6 +314,8 @@ export type MorphemeScalarWhereWithAggregatesInput = {
   value?: Prisma.StringNullableWithAggregatesFilter<"Morpheme"> | string | null
   type?: Prisma.IntNullableWithAggregatesFilter<"Morpheme"> | number | null
   stressPosition?: Prisma.IntNullableWithAggregatesFilter<"Morpheme"> | number | null
+  meaning?: Prisma.StringNullableWithAggregatesFilter<"Morpheme"> | string | null
+  protoSlavicWordId?: Prisma.IntNullableWithAggregatesFilter<"Morpheme"> | number | null
 }
 
 export type MorphemeCreateInput = {
@@ -293,6 +324,8 @@ export type MorphemeCreateInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordCreateNestedOneWithoutMorphemesInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutMorphemeInput
   morphemeAllophones?: Prisma.MorphemeAllophoneCreateNestedManyWithoutMorphemeInput
 }
@@ -304,6 +337,8 @@ export type MorphemeUncheckedCreateInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWordId?: number | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutMorphemeInput
   morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedCreateNestedManyWithoutMorphemeInput
 }
@@ -314,6 +349,8 @@ export type MorphemeUpdateInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordUpdateOneWithoutMorphemesNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutMorphemeNestedInput
   morphemeAllophones?: Prisma.MorphemeAllophoneUpdateManyWithoutMorphemeNestedInput
 }
@@ -325,6 +362,8 @@ export type MorphemeUncheckedUpdateInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutMorphemeNestedInput
   morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedUpdateManyWithoutMorphemeNestedInput
 }
@@ -336,6 +375,8 @@ export type MorphemeCreateManyInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWordId?: number | null
 }
 
 export type MorphemeUpdateManyMutationInput = {
@@ -344,6 +385,7 @@ export type MorphemeUpdateManyMutationInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MorphemeUncheckedUpdateManyInput = {
@@ -353,6 +395,8 @@ export type MorphemeUncheckedUpdateManyInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type MorphemeCountOrderByAggregateInput = {
@@ -362,12 +406,15 @@ export type MorphemeCountOrderByAggregateInput = {
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  meaning?: Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrder
 }
 
 export type MorphemeAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrder
 }
 
 export type MorphemeMaxOrderByAggregateInput = {
@@ -377,6 +424,8 @@ export type MorphemeMaxOrderByAggregateInput = {
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  meaning?: Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrder
 }
 
 export type MorphemeMinOrderByAggregateInput = {
@@ -386,12 +435,15 @@ export type MorphemeMinOrderByAggregateInput = {
   value?: Prisma.SortOrder
   type?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  meaning?: Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrder
 }
 
 export type MorphemeSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
   stressPosition?: Prisma.SortOrder
+  protoSlavicWordId?: Prisma.SortOrder
 }
 
 export type MorphemeNullableScalarRelationFilter = {
@@ -402,6 +454,16 @@ export type MorphemeNullableScalarRelationFilter = {
 export type MorphemeScalarRelationFilter = {
   is?: Prisma.MorphemeWhereInput
   isNot?: Prisma.MorphemeWhereInput
+}
+
+export type MorphemeListRelationFilter = {
+  every?: Prisma.MorphemeWhereInput
+  some?: Prisma.MorphemeWhereInput
+  none?: Prisma.MorphemeWhereInput
+}
+
+export type MorphemeOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type MorphemeCreateNestedOneWithoutLexemes_morphemesInput = {
@@ -434,12 +496,56 @@ export type MorphemeUpdateOneRequiredWithoutMorphemeAllophonesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MorphemeUpdateToOneWithWhereWithoutMorphemeAllophonesInput, Prisma.MorphemeUpdateWithoutMorphemeAllophonesInput>, Prisma.MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput>
 }
 
+export type MorphemeCreateNestedManyWithoutProtoSlavicWordInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput> | Prisma.MorphemeCreateWithoutProtoSlavicWordInput[] | Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput[]
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput | Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput[]
+  createMany?: Prisma.MorphemeCreateManyProtoSlavicWordInputEnvelope
+  connect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+}
+
+export type MorphemeUncheckedCreateNestedManyWithoutProtoSlavicWordInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput> | Prisma.MorphemeCreateWithoutProtoSlavicWordInput[] | Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput[]
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput | Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput[]
+  createMany?: Prisma.MorphemeCreateManyProtoSlavicWordInputEnvelope
+  connect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+}
+
+export type MorphemeUpdateManyWithoutProtoSlavicWordNestedInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput> | Prisma.MorphemeCreateWithoutProtoSlavicWordInput[] | Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput[]
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput | Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput[]
+  upsert?: Prisma.MorphemeUpsertWithWhereUniqueWithoutProtoSlavicWordInput | Prisma.MorphemeUpsertWithWhereUniqueWithoutProtoSlavicWordInput[]
+  createMany?: Prisma.MorphemeCreateManyProtoSlavicWordInputEnvelope
+  set?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  disconnect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  delete?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  connect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  update?: Prisma.MorphemeUpdateWithWhereUniqueWithoutProtoSlavicWordInput | Prisma.MorphemeUpdateWithWhereUniqueWithoutProtoSlavicWordInput[]
+  updateMany?: Prisma.MorphemeUpdateManyWithWhereWithoutProtoSlavicWordInput | Prisma.MorphemeUpdateManyWithWhereWithoutProtoSlavicWordInput[]
+  deleteMany?: Prisma.MorphemeScalarWhereInput | Prisma.MorphemeScalarWhereInput[]
+}
+
+export type MorphemeUncheckedUpdateManyWithoutProtoSlavicWordNestedInput = {
+  create?: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput> | Prisma.MorphemeCreateWithoutProtoSlavicWordInput[] | Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput[]
+  connectOrCreate?: Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput | Prisma.MorphemeCreateOrConnectWithoutProtoSlavicWordInput[]
+  upsert?: Prisma.MorphemeUpsertWithWhereUniqueWithoutProtoSlavicWordInput | Prisma.MorphemeUpsertWithWhereUniqueWithoutProtoSlavicWordInput[]
+  createMany?: Prisma.MorphemeCreateManyProtoSlavicWordInputEnvelope
+  set?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  disconnect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  delete?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  connect?: Prisma.MorphemeWhereUniqueInput | Prisma.MorphemeWhereUniqueInput[]
+  update?: Prisma.MorphemeUpdateWithWhereUniqueWithoutProtoSlavicWordInput | Prisma.MorphemeUpdateWithWhereUniqueWithoutProtoSlavicWordInput[]
+  updateMany?: Prisma.MorphemeUpdateManyWithWhereWithoutProtoSlavicWordInput | Prisma.MorphemeUpdateManyWithWhereWithoutProtoSlavicWordInput[]
+  deleteMany?: Prisma.MorphemeScalarWhereInput | Prisma.MorphemeScalarWhereInput[]
+}
+
 export type MorphemeCreateWithoutLexemes_morphemesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordCreateNestedOneWithoutMorphemesInput
   morphemeAllophones?: Prisma.MorphemeAllophoneCreateNestedManyWithoutMorphemeInput
 }
 
@@ -450,6 +556,8 @@ export type MorphemeUncheckedCreateWithoutLexemes_morphemesInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWordId?: number | null
   morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedCreateNestedManyWithoutMorphemeInput
 }
 
@@ -475,6 +583,8 @@ export type MorphemeUpdateWithoutLexemes_morphemesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordUpdateOneWithoutMorphemesNestedInput
   morphemeAllophones?: Prisma.MorphemeAllophoneUpdateManyWithoutMorphemeNestedInput
 }
 
@@ -485,6 +595,8 @@ export type MorphemeUncheckedUpdateWithoutLexemes_morphemesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedUpdateManyWithoutMorphemeNestedInput
 }
 
@@ -494,6 +606,8 @@ export type MorphemeCreateWithoutMorphemeAllophonesInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordCreateNestedOneWithoutMorphemesInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutMorphemeInput
 }
 
@@ -504,6 +618,8 @@ export type MorphemeUncheckedCreateWithoutMorphemeAllophonesInput = {
   value?: string | null
   type?: number | null
   stressPosition?: number | null
+  meaning?: string | null
+  protoSlavicWordId?: number | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutMorphemeInput
 }
 
@@ -529,6 +645,8 @@ export type MorphemeUpdateWithoutMorphemeAllophonesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWord?: Prisma.ProtoSlavicWordUpdateOneWithoutMorphemesNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutMorphemeNestedInput
 }
 
@@ -539,7 +657,114 @@ export type MorphemeUncheckedUpdateWithoutMorphemeAllophonesInput = {
   value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoSlavicWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutMorphemeNestedInput
+}
+
+export type MorphemeCreateWithoutProtoSlavicWordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  value?: string | null
+  type?: number | null
+  stressPosition?: number | null
+  meaning?: string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutMorphemeInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneCreateNestedManyWithoutMorphemeInput
+}
+
+export type MorphemeUncheckedCreateWithoutProtoSlavicWordInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  value?: string | null
+  type?: number | null
+  stressPosition?: number | null
+  meaning?: string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutMorphemeInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedCreateNestedManyWithoutMorphemeInput
+}
+
+export type MorphemeCreateOrConnectWithoutProtoSlavicWordInput = {
+  where: Prisma.MorphemeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput>
+}
+
+export type MorphemeCreateManyProtoSlavicWordInputEnvelope = {
+  data: Prisma.MorphemeCreateManyProtoSlavicWordInput | Prisma.MorphemeCreateManyProtoSlavicWordInput[]
+}
+
+export type MorphemeUpsertWithWhereUniqueWithoutProtoSlavicWordInput = {
+  where: Prisma.MorphemeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MorphemeUpdateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedUpdateWithoutProtoSlavicWordInput>
+  create: Prisma.XOR<Prisma.MorphemeCreateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedCreateWithoutProtoSlavicWordInput>
+}
+
+export type MorphemeUpdateWithWhereUniqueWithoutProtoSlavicWordInput = {
+  where: Prisma.MorphemeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MorphemeUpdateWithoutProtoSlavicWordInput, Prisma.MorphemeUncheckedUpdateWithoutProtoSlavicWordInput>
+}
+
+export type MorphemeUpdateManyWithWhereWithoutProtoSlavicWordInput = {
+  where: Prisma.MorphemeScalarWhereInput
+  data: Prisma.XOR<Prisma.MorphemeUpdateManyMutationInput, Prisma.MorphemeUncheckedUpdateManyWithoutProtoSlavicWordInput>
+}
+
+export type MorphemeScalarWhereInput = {
+  AND?: Prisma.MorphemeScalarWhereInput | Prisma.MorphemeScalarWhereInput[]
+  OR?: Prisma.MorphemeScalarWhereInput[]
+  NOT?: Prisma.MorphemeScalarWhereInput | Prisma.MorphemeScalarWhereInput[]
+  id?: Prisma.IntFilter<"Morpheme"> | number
+  createdAt?: Prisma.DateTimeFilter<"Morpheme"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Morpheme"> | Date | string
+  value?: Prisma.StringNullableFilter<"Morpheme"> | string | null
+  type?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  stressPosition?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+  meaning?: Prisma.StringNullableFilter<"Morpheme"> | string | null
+  protoSlavicWordId?: Prisma.IntNullableFilter<"Morpheme"> | number | null
+}
+
+export type MorphemeCreateManyProtoSlavicWordInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  value?: string | null
+  type?: number | null
+  stressPosition?: number | null
+  meaning?: string | null
+}
+
+export type MorphemeUpdateWithoutProtoSlavicWordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutMorphemeNestedInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUpdateManyWithoutMorphemeNestedInput
+}
+
+export type MorphemeUncheckedUpdateWithoutProtoSlavicWordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutMorphemeNestedInput
+  morphemeAllophones?: Prisma.MorphemeAllophoneUncheckedUpdateManyWithoutMorphemeNestedInput
+}
+
+export type MorphemeUncheckedUpdateManyWithoutProtoSlavicWordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meaning?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -589,6 +814,9 @@ export type MorphemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   value?: boolean
   type?: boolean
   stressPosition?: boolean
+  meaning?: boolean
+  protoSlavicWordId?: boolean
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>
   morphemeAllophones?: boolean | Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>
   _count?: boolean | Prisma.MorphemeCountOutputTypeDefaultArgs<ExtArgs>
@@ -601,6 +829,9 @@ export type MorphemeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   value?: boolean
   type?: boolean
   stressPosition?: boolean
+  meaning?: boolean
+  protoSlavicWordId?: boolean
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
 }, ExtArgs["result"]["morpheme"]>
 
 export type MorphemeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -610,6 +841,9 @@ export type MorphemeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   value?: boolean
   type?: boolean
   stressPosition?: boolean
+  meaning?: boolean
+  protoSlavicWordId?: boolean
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
 }, ExtArgs["result"]["morpheme"]>
 
 export type MorphemeSelectScalar = {
@@ -619,20 +853,28 @@ export type MorphemeSelectScalar = {
   value?: boolean
   type?: boolean
   stressPosition?: boolean
+  meaning?: boolean
+  protoSlavicWordId?: boolean
 }
 
-export type MorphemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "type" | "stressPosition", ExtArgs["result"]["morpheme"]>
+export type MorphemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "value" | "type" | "stressPosition" | "meaning" | "protoSlavicWordId", ExtArgs["result"]["morpheme"]>
 export type MorphemeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>
   morphemeAllophones?: boolean | Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>
   _count?: boolean | Prisma.MorphemeCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type MorphemeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type MorphemeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type MorphemeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
+}
+export type MorphemeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  protoSlavicWord?: boolean | Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>
+}
 
 export type $MorphemePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Morpheme"
   objects: {
+    protoSlavicWord: Prisma.$ProtoSlavicWordPayload<ExtArgs> | null
     lexemes_morphemes: Prisma.$LexemeMorphemePayload<ExtArgs>[]
     morphemeAllophones: Prisma.$MorphemeAllophonePayload<ExtArgs>[]
   }
@@ -643,6 +885,8 @@ export type $MorphemePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     value: string | null
     type: number | null
     stressPosition: number | null
+    meaning: string | null
+    protoSlavicWordId: number | null
   }, ExtArgs["result"]["morpheme"]>
   composites: {}
 }
@@ -1037,6 +1281,7 @@ readonly fields: MorphemeFieldRefs;
  */
 export interface Prisma__MorphemeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  protoSlavicWord<T extends Prisma.Morpheme$protoSlavicWordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Morpheme$protoSlavicWordArgs<ExtArgs>>): Prisma.Prisma__ProtoSlavicWordClient<runtime.Types.Result.GetResult<Prisma.$ProtoSlavicWordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lexemes_morphemes<T extends Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Morpheme$lexemes_morphemesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LexemeMorphemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   morphemeAllophones<T extends Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Morpheme$morphemeAllophonesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MorphemeAllophonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1074,6 +1319,8 @@ export interface MorphemeFieldRefs {
   readonly value: Prisma.FieldRef<"Morpheme", 'String'>
   readonly type: Prisma.FieldRef<"Morpheme", 'Int'>
   readonly stressPosition: Prisma.FieldRef<"Morpheme", 'Int'>
+  readonly meaning: Prisma.FieldRef<"Morpheme", 'String'>
+  readonly protoSlavicWordId: Prisma.FieldRef<"Morpheme", 'Int'>
 }
     
 
@@ -1326,6 +1573,10 @@ export type MorphemeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Morphemes.
    */
   data: Prisma.MorphemeCreateManyInput | Prisma.MorphemeCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MorphemeIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1396,6 +1647,10 @@ export type MorphemeUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many Morphemes to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MorphemeIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1462,6 +1717,25 @@ export type MorphemeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Morphemes to delete.
    */
   limit?: number
+}
+
+/**
+ * Morpheme.protoSlavicWord
+ */
+export type Morpheme$protoSlavicWordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProtoSlavicWord
+   */
+  select?: Prisma.ProtoSlavicWordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProtoSlavicWord
+   */
+  omit?: Prisma.ProtoSlavicWordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProtoSlavicWordInclude<ExtArgs> | null
+  where?: Prisma.ProtoSlavicWordWhereInput
 }
 
 /**

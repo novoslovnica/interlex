@@ -304,7 +304,12 @@
     "emptyChapter": "Materialy danogo podrazděla nahodęt se v procese sinhronizacije s medžuslovjanskym manualom.",
     "prevChapter": "← Nazad",
     "nextChapter": "Vpered →",
-    "categories": ["Osnovy", "Gramatika", "Glagoly", "Leksika"],
+    "categories": [
+      "Osnovy",
+      "Gramatika",
+      "Glagoly",
+      "Leksika"
+    ],
     "chapters": {
       "preface": "Prědslovije i vvedenije",
       "ch1": "1. Proiznošenije i alfabet",
@@ -374,6 +379,12 @@
       "transitivity": "Perehodnost",
       "animacy": "Duševnost",
       "articleId": "ID statji"
+    },
+    "codification": {
+      "codified": "Kodificěrano",
+      "notCodified": "Nekodificěrano",
+      "codifiedTooltip": "To slovo jest v oficialnom slovniku Medžuslovjanskogo jezyka",
+      "notCodifiedTooltip": "To slovo ješče nejest kodificěrano v oficialnom slovniku (NSL/kandidat)"
     },
     "display": {
       "nslCyrillic": "Kirilica Novoslovnice:",

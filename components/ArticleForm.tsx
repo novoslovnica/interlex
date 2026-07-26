@@ -257,6 +257,7 @@ interface ArticleFormProps {
     tertiaryStem?: string | null
     properNoun?: boolean
     external_id?: number | null
+    isPublic?: boolean
   }
   initialRoots: RootOption[]
   onSubmit: (data: any) => Promise<void>
@@ -292,6 +293,7 @@ export default function ArticleForm({
   const [changedHomonyms, setChangedHomonyms] = useState<Set<string>>(new Set())
   const [hasAnomalies, setHasAnomalies] = useState(initialData?.hasAnomalies || false)
   const [properNoun, setProperNoun] = useState(initialData?.properNoun || false)
+  const [isPublic, setIsPublic] = useState(initialData?.isPublic ?? true)
   const [inflectionAnomalies, setInflectionAnomalies] = useState<InflectionAnomalyItem[]>(
     initialData?.inflectionAnomalies || []
   )
@@ -686,6 +688,7 @@ export default function ArticleForm({
         homonymBases,
         hasAnomalies,
         properNoun,
+        isPublic,
         etymology,
         intelligibility: intelligibilityStr,
         genesis: genesisCodes.join(" "),
@@ -891,6 +894,19 @@ export default function ArticleForm({
                 className="w-full px-3 py-2 border rounded-md bg-transparent text-sm"
                 placeholder="Этимологическая справка..."
               />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isPublic"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-primary"
+              />
+              <label htmlFor="isPublic" className="text-xs font-medium cursor-pointer select-none text-muted-foreground hover:text-foreground transition-colors">
+                Публично (показывать в поиске)
+              </label>
             </div>
 
             <div className="p-3 border rounded-md bg-muted/10 space-y-2">

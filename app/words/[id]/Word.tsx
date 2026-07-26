@@ -215,6 +215,21 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                             )}
                         </span>
                     )}
+                    {item.external_id != null ? (
+                        <span
+                            className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-700"
+                            title={t("codification.codifiedTooltip")}
+                        >
+                            {t("codification.codified")}
+                        </span>
+                    ) : (
+                        <span
+                            className="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-500"
+                            title={t("codification.notCodifiedTooltip")}
+                        >
+                            {t("codification.notCodified")}
+                        </span>
+                    )}
                     <BookmarkButton wordId={item.id} />
                 </div>
             </header>

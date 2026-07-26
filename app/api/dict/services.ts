@@ -55,7 +55,7 @@ export const getDictItems = async (search: string, from: string, to: string, mai
         }
 
         const lexemes = db.prepare(`
-            SELECT l.* FROM lexemes l WHERE l.id IN (${placeholders})${filterClause}
+            SELECT l.* FROM lexemes l WHERE l.id IN (${placeholders}) AND l.isPublic = 1${filterClause}
         `).all(...foreignKeysArray, ...filterParams) as any[];
 
         // Every translation, in the target language, belonging to any meaning
@@ -103,7 +103,7 @@ export const getDictItems = async (search: string, from: string, to: string, mai
 
         const lexemeRows = foreignKeysArray.length > 0
             ? db.prepare(`
-                SELECT * FROM lexemes WHERE id IN (${placeholders})${filterClause}
+                SELECT * FROM lexemes WHERE id IN (${placeholders}) AND isPublic = 1${filterClause}
             `).all(...foreignKeysArray, ...filterParams) as any[]
             : [];
 

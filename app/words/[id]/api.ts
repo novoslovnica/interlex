@@ -18,9 +18,17 @@ export const getItem = async (id: string) => {
   const isv = word?.value;
   const nsl = allophones.find(a => a.flavorCode === 'NSL' && a.type === 'standard')?.value;
 
-  const roots = db.prepare(`
-    select * from morphemes where id IN (select morphemeId from lexemes_morphemes where lexemeId = ?)
-  `).all(id);
+  const rawRoots = db.prepare(`
+    select m.*, p.lemma as protoSlavicWordLemma
+    from morphemes m
+    left join proto_slavic_words p on p.id = m.protoSlavicWordId
+    where m.id IN (select morphemeId from lexemes_morphemes where lexemeId = ?)
+  `).all(id) as any[];
+
+  const roots = rawRoots.map(r => ({
+    ...r,
+    protoSlavicWord: r.protoSlavicWordId != null ? { id: r.protoSlavicWordId, lemma: r.protoSlavicWordLemma } : null,
+  }));
 
   const meanings = db.prepare('select * from meanings where lexemeId = ?').all(id) as any[];
 

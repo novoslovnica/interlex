@@ -1,5 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {getDictItems} from "@/app/api/lexicon/services";
+import {auth} from "@/auth";
 
 export async function GET(request: NextRequest) {
     const url = new URL(request.url);
@@ -12,6 +13,9 @@ export async function GET(request: NextRequest) {
     const filterLang = params.get('filterLang') || '';
     const unverified = params.get('unverified') || '';
 
+    const session = await auth();
+    const includeHidden = session?.user?.role === 'ADMIN' || session?.user?.role === 'MODERATOR';
+
     const dicts = await getDictItems(
         query,
         Number(offset),
@@ -20,6 +24,7 @@ export async function GET(request: NextRequest) {
         usageType,
         filterLang,
         unverified === '1',
+        includeHidden,
     );
 
     return NextResponse.json(dicts, {

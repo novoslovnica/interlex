@@ -1,12 +1,21 @@
 'use client';
 import { useMemo } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { MorphemeType, generateMorphemeCandidates, type MorphemePart } from '@/lib/grammar/common';
 import {ScriptMode} from "@/lib/script-mode";
 
+interface RootData {
+  id: number;
+  value: string;
+  type: number;
+  meaning?: string | null;
+  protoSlavicWord?: { id: number; lemma: string } | null;
+}
+
 interface MorphemeAnalysisProps {
   word: string;
-  roots: { id: number; value: string; type: number }[] | null | undefined;
+  roots: RootData[] | null | undefined;
   base: string | null | undefined;
   currentScript: ScriptMode;
 }
@@ -15,7 +24,7 @@ function isNumeric(value: string): boolean {
   return /^\d+$/.test(value);
 }
 
-function extractMorphemes(word: string, base: string | null | undefined, roots: { id: number; value: string; type: number }[] | null | undefined): MorphemePart[] | null {
+function extractMorphemes(word: string, base: string | null | undefined, roots: RootData[] | null | undefined): MorphemePart[] | null {
   if (!roots || roots.length === 0) return null;
 
   const wordLower = word.toLowerCase();
@@ -141,6 +150,21 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
 
   const morphemes: MorphemePart[] | null = raw;
 
+  const rootMetaByCandidate = useMemo(() => {
+    const map = new Map<string, { meaning?: string | null; protoSlavicWord?: { id: number; lemma: string } | null }>();
+    for (const root of roots || []) {
+      if (!root.value || isNumeric(root.value)) continue;
+      const candidates = generateMorphemeCandidates(root.value, root.type);
+      for (const candidate of candidates) {
+        const key = candidate.toLowerCase();
+        if (!map.has(key) && (root.meaning || root.protoSlavicWord)) {
+          map.set(key, { meaning: root.meaning, protoSlavicWord: root.protoSlavicWord });
+        }
+      }
+    }
+    return map;
+  }, [roots]);
+
   const widths = useMemo(() => morphemes ? measureWidths(morphemes) : [], [morphemes]);
   const gap = 8;
   const totalW = widths.reduce((s, w) => s + w, 0) + (morphemes ? (morphemes.length - 1) * gap : 0);
@@ -208,10 +232,21 @@ export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysis
       </text>,
     );
 
+    const meta = rootMetaByCandidate.get(part.text.toLowerCase());
+
     labelNodes.push(
       <span key={i} className="flex items-center gap-1">
         <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-        {LABEL[type]}: {part.text}
+        <span title={meta?.meaning || undefined}>{LABEL[type]}: {part.text}</span>
+        {meta?.protoSlavicWord && (
+          <Link
+            href={`/proto/${meta.protoSlavicWord.id}`}
+            className="text-blue-600 hover:underline"
+            title="Прото-славянская форма"
+          >
+            ({meta.protoSlavicWord.lemma})
+          </Link>
+        )}
       </span>,
     );
 
