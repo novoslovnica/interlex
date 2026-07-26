@@ -20,8 +20,18 @@ export type CorpusDocumentModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateCorpusDocument = {
   _count: CorpusDocumentCountAggregateOutputType | null
+  _avg: CorpusDocumentAvgAggregateOutputType | null
+  _sum: CorpusDocumentSumAggregateOutputType | null
   _min: CorpusDocumentMinAggregateOutputType | null
   _max: CorpusDocumentMaxAggregateOutputType | null
+}
+
+export type CorpusDocumentAvgAggregateOutputType = {
+  sourceRevisionId: number | null
+}
+
+export type CorpusDocumentSumAggregateOutputType = {
+  sourceRevisionId: number | null
 }
 
 export type CorpusDocumentMinAggregateOutputType = {
@@ -35,6 +45,9 @@ export type CorpusDocumentMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   candidatesProcessed: boolean | null
+  sourceUrl: string | null
+  externalId: string | null
+  sourceRevisionId: number | null
 }
 
 export type CorpusDocumentMaxAggregateOutputType = {
@@ -48,6 +61,9 @@ export type CorpusDocumentMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   candidatesProcessed: boolean | null
+  sourceUrl: string | null
+  externalId: string | null
+  sourceRevisionId: number | null
 }
 
 export type CorpusDocumentCountAggregateOutputType = {
@@ -61,9 +77,20 @@ export type CorpusDocumentCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   candidatesProcessed: number
+  sourceUrl: number
+  externalId: number
+  sourceRevisionId: number
   _all: number
 }
 
+
+export type CorpusDocumentAvgAggregateInputType = {
+  sourceRevisionId?: true
+}
+
+export type CorpusDocumentSumAggregateInputType = {
+  sourceRevisionId?: true
+}
 
 export type CorpusDocumentMinAggregateInputType = {
   id?: true
@@ -76,6 +103,9 @@ export type CorpusDocumentMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   candidatesProcessed?: true
+  sourceUrl?: true
+  externalId?: true
+  sourceRevisionId?: true
 }
 
 export type CorpusDocumentMaxAggregateInputType = {
@@ -89,6 +119,9 @@ export type CorpusDocumentMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   candidatesProcessed?: true
+  sourceUrl?: true
+  externalId?: true
+  sourceRevisionId?: true
 }
 
 export type CorpusDocumentCountAggregateInputType = {
@@ -102,6 +135,9 @@ export type CorpusDocumentCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   candidatesProcessed?: true
+  sourceUrl?: true
+  externalId?: true
+  sourceRevisionId?: true
   _all?: true
 }
 
@@ -143,6 +179,18 @@ export type CorpusDocumentAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CorpusDocumentAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CorpusDocumentSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CorpusDocumentMinAggregateInputType
@@ -173,6 +221,8 @@ export type CorpusDocumentGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: CorpusDocumentCountAggregateInputType | true
+  _avg?: CorpusDocumentAvgAggregateInputType
+  _sum?: CorpusDocumentSumAggregateInputType
   _min?: CorpusDocumentMinAggregateInputType
   _max?: CorpusDocumentMaxAggregateInputType
 }
@@ -188,7 +238,12 @@ export type CorpusDocumentGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   candidatesProcessed: boolean
+  sourceUrl: string | null
+  externalId: string | null
+  sourceRevisionId: number | null
   _count: CorpusDocumentCountAggregateOutputType | null
+  _avg: CorpusDocumentAvgAggregateOutputType | null
+  _sum: CorpusDocumentSumAggregateOutputType | null
   _min: CorpusDocumentMinAggregateOutputType | null
   _max: CorpusDocumentMaxAggregateOutputType | null
 }
@@ -222,6 +277,9 @@ export type CorpusDocumentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CorpusDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CorpusDocument"> | Date | string
   candidatesProcessed?: Prisma.BoolFilter<"CorpusDocument"> | boolean
+  sourceUrl?: Prisma.StringNullableFilter<"CorpusDocument"> | string | null
+  externalId?: Prisma.StringNullableFilter<"CorpusDocument"> | string | null
+  sourceRevisionId?: Prisma.IntNullableFilter<"CorpusDocument"> | number | null
   tokens?: Prisma.CorpusTokenListRelationFilter
   sentences?: Prisma.CorpusSentenceListRelationFilter
   segments?: Prisma.CorpusSegmentListRelationFilter
@@ -238,6 +296,9 @@ export type CorpusDocumentOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   candidatesProcessed?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceRevisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   tokens?: Prisma.CorpusTokenOrderByRelationAggregateInput
   sentences?: Prisma.CorpusSentenceOrderByRelationAggregateInput
   segments?: Prisma.CorpusSegmentOrderByRelationAggregateInput
@@ -246,6 +307,7 @@ export type CorpusDocumentOrderByWithRelationInput = {
 export type CorpusDocumentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   slug?: string
+  externalId?: string
   AND?: Prisma.CorpusDocumentWhereInput | Prisma.CorpusDocumentWhereInput[]
   OR?: Prisma.CorpusDocumentWhereInput[]
   NOT?: Prisma.CorpusDocumentWhereInput | Prisma.CorpusDocumentWhereInput[]
@@ -257,10 +319,12 @@ export type CorpusDocumentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"CorpusDocument"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CorpusDocument"> | Date | string
   candidatesProcessed?: Prisma.BoolFilter<"CorpusDocument"> | boolean
+  sourceUrl?: Prisma.StringNullableFilter<"CorpusDocument"> | string | null
+  sourceRevisionId?: Prisma.IntNullableFilter<"CorpusDocument"> | number | null
   tokens?: Prisma.CorpusTokenListRelationFilter
   sentences?: Prisma.CorpusSentenceListRelationFilter
   segments?: Prisma.CorpusSegmentListRelationFilter
-}, "id" | "slug">
+}, "id" | "slug" | "externalId">
 
 export type CorpusDocumentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -273,9 +337,14 @@ export type CorpusDocumentOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   candidatesProcessed?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalId?: Prisma.SortOrderInput | Prisma.SortOrder
+  sourceRevisionId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CorpusDocumentCountOrderByAggregateInput
+  _avg?: Prisma.CorpusDocumentAvgOrderByAggregateInput
   _max?: Prisma.CorpusDocumentMaxOrderByAggregateInput
   _min?: Prisma.CorpusDocumentMinOrderByAggregateInput
+  _sum?: Prisma.CorpusDocumentSumOrderByAggregateInput
 }
 
 export type CorpusDocumentScalarWhereWithAggregatesInput = {
@@ -292,6 +361,9 @@ export type CorpusDocumentScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CorpusDocument"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CorpusDocument"> | Date | string
   candidatesProcessed?: Prisma.BoolWithAggregatesFilter<"CorpusDocument"> | boolean
+  sourceUrl?: Prisma.StringNullableWithAggregatesFilter<"CorpusDocument"> | string | null
+  externalId?: Prisma.StringNullableWithAggregatesFilter<"CorpusDocument"> | string | null
+  sourceRevisionId?: Prisma.IntNullableWithAggregatesFilter<"CorpusDocument"> | number | null
 }
 
 export type CorpusDocumentCreateInput = {
@@ -305,6 +377,9 @@ export type CorpusDocumentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
@@ -321,6 +396,9 @@ export type CorpusDocumentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
@@ -337,6 +415,9 @@ export type CorpusDocumentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
@@ -353,6 +434,9 @@ export type CorpusDocumentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
@@ -369,6 +453,9 @@ export type CorpusDocumentCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
 }
 
 export type CorpusDocumentUpdateManyMutationInput = {
@@ -382,6 +469,9 @@ export type CorpusDocumentUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CorpusDocumentUncheckedUpdateManyInput = {
@@ -395,6 +485,9 @@ export type CorpusDocumentUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CorpusDocumentCountOrderByAggregateInput = {
@@ -408,6 +501,13 @@ export type CorpusDocumentCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   candidatesProcessed?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  sourceRevisionId?: Prisma.SortOrder
+}
+
+export type CorpusDocumentAvgOrderByAggregateInput = {
+  sourceRevisionId?: Prisma.SortOrder
 }
 
 export type CorpusDocumentMaxOrderByAggregateInput = {
@@ -421,6 +521,9 @@ export type CorpusDocumentMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   candidatesProcessed?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  sourceRevisionId?: Prisma.SortOrder
 }
 
 export type CorpusDocumentMinOrderByAggregateInput = {
@@ -434,6 +537,13 @@ export type CorpusDocumentMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   candidatesProcessed?: Prisma.SortOrder
+  sourceUrl?: Prisma.SortOrder
+  externalId?: Prisma.SortOrder
+  sourceRevisionId?: Prisma.SortOrder
+}
+
+export type CorpusDocumentSumOrderByAggregateInput = {
+  sourceRevisionId?: Prisma.SortOrder
 }
 
 export type CorpusDocumentScalarRelationFilter = {
@@ -455,6 +565,14 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type CorpusDocumentCreateNestedOneWithoutSegmentsInput = {
@@ -510,6 +628,9 @@ export type CorpusDocumentCreateWithoutSegmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
 }
@@ -525,6 +646,9 @@ export type CorpusDocumentUncheckedCreateWithoutSegmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
   sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
 }
@@ -556,6 +680,9 @@ export type CorpusDocumentUpdateWithoutSegmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
 }
@@ -571,6 +698,9 @@ export type CorpusDocumentUncheckedUpdateWithoutSegmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
   sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
 }
@@ -586,6 +716,9 @@ export type CorpusDocumentCreateWithoutSentencesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
 }
@@ -601,6 +734,9 @@ export type CorpusDocumentUncheckedCreateWithoutSentencesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   tokens?: Prisma.CorpusTokenUncheckedCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
 }
@@ -632,6 +768,9 @@ export type CorpusDocumentUpdateWithoutSentencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
 }
@@ -647,6 +786,9 @@ export type CorpusDocumentUncheckedUpdateWithoutSentencesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tokens?: Prisma.CorpusTokenUncheckedUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
@@ -662,6 +804,9 @@ export type CorpusDocumentCreateWithoutTokensInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   sentences?: Prisma.CorpusSentenceCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentCreateNestedManyWithoutDocumentInput
 }
@@ -677,6 +822,9 @@ export type CorpusDocumentUncheckedCreateWithoutTokensInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   candidatesProcessed?: boolean
+  sourceUrl?: string | null
+  externalId?: string | null
+  sourceRevisionId?: number | null
   sentences?: Prisma.CorpusSentenceUncheckedCreateNestedManyWithoutDocumentInput
   segments?: Prisma.CorpusSegmentUncheckedCreateNestedManyWithoutDocumentInput
 }
@@ -708,6 +856,9 @@ export type CorpusDocumentUpdateWithoutTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sentences?: Prisma.CorpusSentenceUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUpdateManyWithoutDocumentNestedInput
 }
@@ -723,6 +874,9 @@ export type CorpusDocumentUncheckedUpdateWithoutTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   candidatesProcessed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sourceUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceRevisionId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sentences?: Prisma.CorpusSentenceUncheckedUpdateManyWithoutDocumentNestedInput
   segments?: Prisma.CorpusSegmentUncheckedUpdateManyWithoutDocumentNestedInput
 }
@@ -787,6 +941,9 @@ export type CorpusDocumentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   createdAt?: boolean
   updatedAt?: boolean
   candidatesProcessed?: boolean
+  sourceUrl?: boolean
+  externalId?: boolean
+  sourceRevisionId?: boolean
   tokens?: boolean | Prisma.CorpusDocument$tokensArgs<ExtArgs>
   sentences?: boolean | Prisma.CorpusDocument$sentencesArgs<ExtArgs>
   segments?: boolean | Prisma.CorpusDocument$segmentsArgs<ExtArgs>
@@ -804,6 +961,9 @@ export type CorpusDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   createdAt?: boolean
   updatedAt?: boolean
   candidatesProcessed?: boolean
+  sourceUrl?: boolean
+  externalId?: boolean
+  sourceRevisionId?: boolean
 }, ExtArgs["result"]["corpusDocument"]>
 
 export type CorpusDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -817,6 +977,9 @@ export type CorpusDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   createdAt?: boolean
   updatedAt?: boolean
   candidatesProcessed?: boolean
+  sourceUrl?: boolean
+  externalId?: boolean
+  sourceRevisionId?: boolean
 }, ExtArgs["result"]["corpusDocument"]>
 
 export type CorpusDocumentSelectScalar = {
@@ -830,9 +993,12 @@ export type CorpusDocumentSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   candidatesProcessed?: boolean
+  sourceUrl?: boolean
+  externalId?: boolean
+  sourceRevisionId?: boolean
 }
 
-export type CorpusDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "rawText" | "language" | "genre" | "createdAt" | "updatedAt" | "candidatesProcessed", ExtArgs["result"]["corpusDocument"]>
+export type CorpusDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "rawText" | "language" | "genre" | "createdAt" | "updatedAt" | "candidatesProcessed" | "sourceUrl" | "externalId" | "sourceRevisionId", ExtArgs["result"]["corpusDocument"]>
 export type CorpusDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tokens?: boolean | Prisma.CorpusDocument$tokensArgs<ExtArgs>
   sentences?: boolean | Prisma.CorpusDocument$sentencesArgs<ExtArgs>
@@ -860,6 +1026,9 @@ export type $CorpusDocumentPayload<ExtArgs extends runtime.Types.Extensions.Inte
     createdAt: Date
     updatedAt: Date
     candidatesProcessed: boolean
+    sourceUrl: string | null
+    externalId: string | null
+    sourceRevisionId: number | null
   }, ExtArgs["result"]["corpusDocument"]>
   composites: {}
 }
@@ -1296,6 +1465,9 @@ export interface CorpusDocumentFieldRefs {
   readonly createdAt: Prisma.FieldRef<"CorpusDocument", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CorpusDocument", 'DateTime'>
   readonly candidatesProcessed: Prisma.FieldRef<"CorpusDocument", 'Boolean'>
+  readonly sourceUrl: Prisma.FieldRef<"CorpusDocument", 'String'>
+  readonly externalId: Prisma.FieldRef<"CorpusDocument", 'String'>
+  readonly sourceRevisionId: Prisma.FieldRef<"CorpusDocument", 'Int'>
 }
     
 

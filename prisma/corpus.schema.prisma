@@ -14,10 +14,18 @@ model CorpusDocument {
   author        String?
   rawText       String         // Полный текст для быстрого чтения/отображения
   language      String         @default("is") // Межславянский диалект/версия
-  genre         String         @default("fiction") // Жанр/субкорпус: fiction, news, publicistic, social_media
+  genre         String         @default("fiction") // Жанр/субкорпус: fiction, news, publicistic, social_media, encyclopedic
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   candidatesProcessed Boolean  @default(false) // Собраны ли слова-кандидаты
+
+  // Метки происхождения для внешних источников (напр. краулер Вікипедии).
+  // externalId — стабильный тег источника (напр. "iswiki:2034" = pageid на isv.wikipedia.org),
+  // не меняется при переименовании страницы. Позволяет краулеру находить и
+  // обновлять уже загруженный документ вместо создания дубликата при повторном запуске.
+  sourceUrl        String?
+  externalId       String?      @unique
+  sourceRevisionId Int?         // ID ревизии источника (напр. MediaWiki revid) для обнаружения изменений без перезагрузки текста
 
   // Связи
   tokens        CorpusToken[]

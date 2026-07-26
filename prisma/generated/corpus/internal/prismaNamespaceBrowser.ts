@@ -82,7 +82,10 @@ export const CorpusDocumentScalarFieldEnum = {
   genre: 'genre',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  candidatesProcessed: 'candidatesProcessed'
+  candidatesProcessed: 'candidatesProcessed',
+  sourceUrl: 'sourceUrl',
+  externalId: 'externalId',
+  sourceRevisionId: 'sourceRevisionId'
 } as const
 
 export type CorpusDocumentScalarFieldEnum = (typeof CorpusDocumentScalarFieldEnum)[keyof typeof CorpusDocumentScalarFieldEnum]
