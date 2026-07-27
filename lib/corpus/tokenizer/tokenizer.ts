@@ -6,8 +6,14 @@ import { CollocationMatcher } from './collocationMatcher';
 
 const SEGMENT_SPLIT = /\n\s*\n/;
 const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
-const TOKEN_PATTERN = /[\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+|[^\s\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+/gi;
-const PUNCTUATION_TEST = /^[^\wа-яёѕєіјљњћџѫѭѣžčšěŽČŠĚ]+$/;
+// \p{L} — буква любого письма (покрывает всю латиницу ISV с диакритикой: ę,
+// ų, ć, đ, ľ, ń, ś, ź, ť, ď, á, é, í, ó, ú, ý, ȯ, ě, ž, č, š, ... — а не
+// вручную поддерживаемый список конкретных букв, из которого ę/ų когда-то
+// выпали, разрывая токены вроде "atomų" на "atom"+"ų"); \p{M} — комбинируемые
+// диакритические знаки (тоновые акценты, см. ACCENT_CHARS в engine.ts);
+// \p{N} — цифры любого письма (супернабор старого \d из \w).
+const TOKEN_PATTERN = /[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]+/gu;
+const PUNCTUATION_TEST = /^[^\p{L}\p{M}\p{N}_]+$/u;
 
 export class Tokenizer {
     public static splitIntoSegments(rawText: string): string[] {

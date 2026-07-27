@@ -58,7 +58,11 @@ function isCyrillic(word: string): boolean {
 }
 
 function normalizeWord(word: string): string {
-    return word.toLowerCase().replace(/[^a-zа-яёѕєіјљњћџѫѭѣžčšě]/gi, '');
+    // \p{L}/\p{M} вместо руками перечисленного списка латинских/кириллических
+    // букв — тот же класс бага, что и в TOKEN_PATTERN (lib/corpus/tokenizer/
+    // tokenizer.ts): список не включал ę/ų/ć/đ/ľ/ń/ś/ź/ť/ď/á/é/í/ó/ú/ý/ȯ,
+    // из-за чего они молча вырезались из леммы неопознанных слов.
+    return word.toLowerCase().replace(/[^\p{L}\p{M}]/gu, '');
 }
 
 function applyHeuristics(clean: string): MorphoAnalysis | null {

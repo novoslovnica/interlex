@@ -2,86 +2,86 @@
   "common": {
     "title": "Medžuslověnsky lexikon",
     "navigation": {
-      "toggleMenu": "Perključiti menju",
-      "lexicon": "Leksikon",
+      "toggleMenu": "Prěključiti menju",
+      "lexicon": "Lexikon",
       "translate": "Prěvod",
       "library": "Biblioteka",
-      "tools": "Orudja",
+      "tools": "Orųdia",
       "transliterator": "Transliterator",
       "avatar": "Avatar",
       "profile": "Profil",
-      "settings": "Nastajenja",
-      "admin": "Administracija (tezaurus)",
-      "adminPlatform": "Administracija (platforma)",
-      "adminCorpus": "Administracija (korpus)",
-      "logout": "Vyjti",
-      "login": "Vniti"
+      "settings": "Nastavljenja",
+      "admin": "Administracia (tezaurus)",
+      "adminPlatform": "Administracia (platforma)",
+      "adminCorpus": "Administracia (korpus)",
+      "logout": "Izidti",
+      "login": "Vnidti"
     },
     "footer": {
-      "protoslavic": "Prěslověnsky",
+      "protoslavic": "Praslověnsky",
       "library": "Biblioteka",
       "textbook": "Učebnik",
-      "about": "O projektu",
-      "versionHistory": "Istorija versij"
+      "about": "O projektě",
+      "versionHistory": "Historia versij"
     }
   },
   "main": {
-    "title": "Glavna",
-    "description": "Interslavic Lexicon — medžuslovjansky leksikon. Iskanje, gramatika, prěvod i učebne materialy.",
-    "badge": "🌍 Digitalny leksikon",
-    "heading": "Medžuslovjansky lingvističny korpus i leksikon",
-    "subtitle": "Integrovana naučno-istraživatelska platforma za avtomatizovanu obrabotku prirodnogo jezyka (NLP) i komparativny analiz slověnskyh jezykovyh sistem. Sjedinjaje v sebě verificirovanny leksikon prěslověnskyh korenjev, mnogojęzyčny paralelny korpus i semantičny graf otnošenij.",
-    "featuresTitle": "Osnovne možnosti platformy",
+    "title": "Glåvna",
+    "description": "Interslavic Lexicon — medžuslověnsky lexikon. Iskanje, gramatika (molvnica), prěvod i učebni materialy.",
+    "badge": "🌍 Digitalny lexikon",
+    "heading": "Medžuslověnsky języčny korpus i lexikon",
+    "subtitle": "Integrovana naučno-istraživatelska platforma za automatizovanu obrabotku prirodnago języka (NLP) i komparativny analiz slověnskyh językovyh system. Sodrži v sebě verificirovanny lexikon praslověnskyh korenjev, mnogojęzyčny paralelny korpus i semantičny graf odnošenj.",
+    "featuresTitle": "Osnovni možnosti platformy",
     "features": {
       "orthography": {
-        "title": "Mnogopisjmennaja ortografična konversija",
-        "description": "Dinamična transliteracija tekstovyh masivov medžu kirilicom i latinicej (naučna isv-notacija) grafičnimi sistemami. Modul obezpečaje avtomatičnu adaptaciju vizualizacije leksem i fonetičnoj transkripcije (IPA) pod lokalne metadaty uživatelja."
+        "title": "Mnogopisemnaja ortografična konversija",
+        "description": "Dynamična transliteracija tekstovyh masivov medžu kirilicojų i latinicejų (naučna isv-notacija) grafičnymi systemami. Modul obezpěčaje automatičnu adaptaciu vizualizaciji lexem i fonetičnoj transkripciji (IPA) pod lokalni metadaty uživatelja."
       },
       "morpheme": {
         "title": "Morfemno-semantično kartiranje",
-        "description": "Dekompozicija leksem na derivacijne morfemy i integracija v mnogourovnevy graf znanija. Sistema ustanovljaje vage sinonimičnoj, antonimičnoj i korennoj blizosti entitetov, vizualizujuči klastery kognatov i prěslověnskyh etimologičnyh svęzej."
+        "description": "Dekompozicija lexem na derivacijni morfemy i integracija v mnogouråvnevy graf znania. Systema ustanovljaje vagy sinonimičnoj, antonimičnoj i koręnoj blizosti entitetov, vizualizujųči klastery kognatov i praslověnskyh etymologičnyh svęzej."
       },
       "crosslingual": {
-        "title": "Kros-jezykovo leksično poravnanje",
-        "description": "Komparativny analiz i semantično sopostavjenje medžuslovjanskyh leksem s paralelnymi denotatami v 16 živyh slověnskyh jezykah. Arhitektura poddržaje strogu relacionu verifikaciju i validaciju prěvodnyh ekvivalentov ekspertnym soobščestvom."
+        "title": "Kros-językovo leksično poråvnanje",
+        "description": "Komparativny analiz i semantično sopostavljenje medžuslověnskyh lexem s paralelnymi denotatami v 16 živyh slověnskyh językah. Arhitektura poddržaje strogu relacijnu verifikaciju i validaciju prěvodnyh ekvivalentov expertnym soobščestvom."
       },
       "corpus": {
         "title": "Paralelny lingvističny korpus",
-        "description": "Polnotekstovo i leksiko-sintaksično iskanje po segmentirovanym tekstovym masivam (KWIC). Sistema poddržaje morfologičnu razmětku (POS-tagging) i učityvaje statistične metrikę čestotnosti upotreby slovoform dlja precisijnogo rangirovanja vydači."
+        "description": "Polnotekstovo i lexiko-sintaxično iskanje po segmentirovanym tekstovym masivam (KWIC). Systema poddržaje mortologičnu razmětku (POS-tagging) i učityvaje statistične metriky čęstotnosti upotrěby slovoform dlja precisijnago ranžirovanja vydači."
       }
     },
     "stats": {
-      "ariaLabel": "Statistika leksikona",
+      "ariaLabel": "Statistika lexikona",
       "totalWords": "Vsego slov",
       "translationLanguages": "Językov prěvoda",
       "uniqueRoots": "Unikalnyh korenjev",
-      "meanings": "Smyslovyh značenij",
+      "meanings": "Smyslovyh značenj",
       "flavorizations": "Flavorizacij",
       "corpusTokens": "Tokenov v korpusu",
       "zipfAlpha": "Zipf Alpha",
-      "lexiconCoverage": "Pokrytije leksikona"
+      "lexiconCoverage": "Pokrytje lexikona"
     },
     "cta": {
-      "title": "Hočete vnesti vklad v razvitije leksikona?",
-      "description": "Registrujte se v sistemě, aby dostali dostup k bazovym funkcijam ili zaprositi prava moderatora.",
+      "title": "Hočete li vnesti vklad v råzvitje lexikona?",
+      "description": "Registrujte sę v sistemě, aby dostali dostųp k bazovym funkcijam ili zaprosili prava moderatora.",
       "textbook": "Čitati učebnik",
-      "search": "Perejti k iskanju 🔍",
-      "translate": "Perejti k prěvodniku ⚡"
+      "search": "Prěidti k iskanju 🔍",
+      "translate": "Prěidti k prěvodniku ⚡"
     },
     "wordOfTheDay": {
       "badge": "Slovo dnja",
       "meaning": "Značenje",
-      "openArticle": "Otvori ti statju"
+      "openArticle": "Otvoriti statju"
     }
   },
   "lexicon": {
-    "title": "Leksikon",
+    "title": "Lexikon",
     "description": "Iskanje po slovniku medžuslovjanskogo jezyka. Značenja, prěvody, gramatične formy, etimologija i jednokorenne slova.",
     "searchPlaceholder": "Vvedite tekst dlja iskanja...",
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
     "noResults": "Ničego ne najdeno",
     "loading": "Načitanje...",
-    "loadMore": "Pokazati veče"
+    "loadMore": "Pokazati veči"
   },
   "translate": {
     "title": "Prěvod",
