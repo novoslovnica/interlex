@@ -103,12 +103,14 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                 where: { lexemeId: parsedId, flavorId: flavor.id, type: "standard" },
             })
             const oldValue = existing?.value ?? null
+            const oldVerified = existing?.verified ?? null
 
             if (existing) {
                 await prisma.lexemeAllophone.update({
                     where: { id: existing.id },
                     data: {
                         value: newValue,
+                        ...(verified !== undefined ? { verified } : {}),
                     },
                 })
             } else {
@@ -118,13 +120,16 @@ export const updateField = async (wordId: string, field: string, newValue: strin
                         flavorId: flavor.id,
                         type: "standard",
                         value: newValue,
+                        ...(verified !== undefined ? { verified } : {}),
                     },
                 })
             }
 
-            await logAudit(session?.user, "Lexeme", parsedId, [
-                { field, oldValue, newValue },
-            ])
+            const changes = [{ field, oldValue, newValue }]
+            if (verified !== undefined && verified !== oldVerified) {
+                changes.push({ field: `${field}.verified`, oldValue: oldVerified, newValue: verified })
+            }
+            await logAudit(session?.user, "Lexeme", parsedId, changes)
         } else {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
             const oldValue = (current as Record<string, unknown> | null)?.[field] ?? null

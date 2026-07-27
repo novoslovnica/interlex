@@ -20,6 +20,8 @@ import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
 import BookmarkButton from "@/components/BookmarkButton";
+import ShareButton from "@/components/ShareButton";
+import AccentLegend from "@/components/AccentLegend";
 import {ScriptMode} from "@/lib/script-mode";
 
 const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[] }) => {
@@ -237,6 +239,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: 
                             {t("codification.notCodified")}
                         </span>
                     )}
+                    <ShareButton />
                     <BookmarkButton wordId={item.id} />
                 </div>
             </header>
@@ -367,6 +370,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: 
                                 : isAdv ? t("paradigmButtons.adverb")
                                 : t("paradigmButtons.default")
                             }
+                            <AccentLegend />
                         </span>
                             <span className={`transform transition-transform duration-200 ${showParadigm ? 'rotate-180' : ''}`}>
                             ▼

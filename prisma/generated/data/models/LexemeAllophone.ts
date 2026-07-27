@@ -30,12 +30,14 @@ export type LexemeAllophoneAvgAggregateOutputType = {
   id: number | null
   lexemeId: number | null
   flavorId: number | null
+  verified: number | null
 }
 
 export type LexemeAllophoneSumAggregateOutputType = {
   id: number | null
   lexemeId: number | null
   flavorId: number | null
+  verified: number | null
 }
 
 export type LexemeAllophoneMinAggregateOutputType = {
@@ -44,6 +46,7 @@ export type LexemeAllophoneMinAggregateOutputType = {
   value: string | null
   flavorId: number | null
   type: string | null
+  verified: number | null
 }
 
 export type LexemeAllophoneMaxAggregateOutputType = {
@@ -52,6 +55,7 @@ export type LexemeAllophoneMaxAggregateOutputType = {
   value: string | null
   flavorId: number | null
   type: string | null
+  verified: number | null
 }
 
 export type LexemeAllophoneCountAggregateOutputType = {
@@ -60,6 +64,7 @@ export type LexemeAllophoneCountAggregateOutputType = {
   value: number
   flavorId: number
   type: number
+  verified: number
   _all: number
 }
 
@@ -68,12 +73,14 @@ export type LexemeAllophoneAvgAggregateInputType = {
   id?: true
   lexemeId?: true
   flavorId?: true
+  verified?: true
 }
 
 export type LexemeAllophoneSumAggregateInputType = {
   id?: true
   lexemeId?: true
   flavorId?: true
+  verified?: true
 }
 
 export type LexemeAllophoneMinAggregateInputType = {
@@ -82,6 +89,7 @@ export type LexemeAllophoneMinAggregateInputType = {
   value?: true
   flavorId?: true
   type?: true
+  verified?: true
 }
 
 export type LexemeAllophoneMaxAggregateInputType = {
@@ -90,6 +98,7 @@ export type LexemeAllophoneMaxAggregateInputType = {
   value?: true
   flavorId?: true
   type?: true
+  verified?: true
 }
 
 export type LexemeAllophoneCountAggregateInputType = {
@@ -98,6 +107,7 @@ export type LexemeAllophoneCountAggregateInputType = {
   value?: true
   flavorId?: true
   type?: true
+  verified?: true
   _all?: true
 }
 
@@ -193,6 +203,7 @@ export type LexemeAllophoneGroupByOutputType = {
   value: string
   flavorId: number
   type: string
+  verified: number | null
   _count: LexemeAllophoneCountAggregateOutputType | null
   _avg: LexemeAllophoneAvgAggregateOutputType | null
   _sum: LexemeAllophoneSumAggregateOutputType | null
@@ -224,6 +235,7 @@ export type LexemeAllophoneWhereInput = {
   value?: Prisma.StringFilter<"LexemeAllophone"> | string
   flavorId?: Prisma.IntFilter<"LexemeAllophone"> | number
   type?: Prisma.StringFilter<"LexemeAllophone"> | string
+  verified?: Prisma.IntNullableFilter<"LexemeAllophone"> | number | null
   lexeme?: Prisma.XOR<Prisma.LexemeScalarRelationFilter, Prisma.LexemeWhereInput>
   flavor?: Prisma.XOR<Prisma.AllophoneFlavorScalarRelationFilter, Prisma.AllophoneFlavorWhereInput>
 }
@@ -234,6 +246,7 @@ export type LexemeAllophoneOrderByWithRelationInput = {
   value?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  verified?: Prisma.SortOrderInput | Prisma.SortOrder
   lexeme?: Prisma.LexemeOrderByWithRelationInput
   flavor?: Prisma.AllophoneFlavorOrderByWithRelationInput
 }
@@ -248,6 +261,7 @@ export type LexemeAllophoneWhereUniqueInput = Prisma.AtLeast<{
   value?: Prisma.StringFilter<"LexemeAllophone"> | string
   flavorId?: Prisma.IntFilter<"LexemeAllophone"> | number
   type?: Prisma.StringFilter<"LexemeAllophone"> | string
+  verified?: Prisma.IntNullableFilter<"LexemeAllophone"> | number | null
   lexeme?: Prisma.XOR<Prisma.LexemeScalarRelationFilter, Prisma.LexemeWhereInput>
   flavor?: Prisma.XOR<Prisma.AllophoneFlavorScalarRelationFilter, Prisma.AllophoneFlavorWhereInput>
 }, "id" | "lexemeId_flavorId_type">
@@ -258,6 +272,7 @@ export type LexemeAllophoneOrderByWithAggregationInput = {
   value?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  verified?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LexemeAllophoneCountOrderByAggregateInput
   _avg?: Prisma.LexemeAllophoneAvgOrderByAggregateInput
   _max?: Prisma.LexemeAllophoneMaxOrderByAggregateInput
@@ -274,11 +289,13 @@ export type LexemeAllophoneScalarWhereWithAggregatesInput = {
   value?: Prisma.StringWithAggregatesFilter<"LexemeAllophone"> | string
   flavorId?: Prisma.IntWithAggregatesFilter<"LexemeAllophone"> | number
   type?: Prisma.StringWithAggregatesFilter<"LexemeAllophone"> | string
+  verified?: Prisma.IntNullableWithAggregatesFilter<"LexemeAllophone"> | number | null
 }
 
 export type LexemeAllophoneCreateInput = {
   value: string
   type?: string
+  verified?: number | null
   lexeme: Prisma.LexemeCreateNestedOneWithoutLexemeAllophonesInput
   flavor: Prisma.AllophoneFlavorCreateNestedOneWithoutLexemeAllophonesInput
 }
@@ -289,11 +306,13 @@ export type LexemeAllophoneUncheckedCreateInput = {
   value: string
   flavorId: number
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lexeme?: Prisma.LexemeUpdateOneRequiredWithoutLexemeAllophonesNestedInput
   flavor?: Prisma.AllophoneFlavorUpdateOneRequiredWithoutLexemeAllophonesNestedInput
 }
@@ -304,6 +323,7 @@ export type LexemeAllophoneUncheckedUpdateInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   flavorId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneCreateManyInput = {
@@ -312,11 +332,13 @@ export type LexemeAllophoneCreateManyInput = {
   value: string
   flavorId: number
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneUpdateManyMutationInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneUncheckedUpdateManyInput = {
@@ -325,6 +347,7 @@ export type LexemeAllophoneUncheckedUpdateManyInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   flavorId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneListRelationFilter = {
@@ -349,12 +372,14 @@ export type LexemeAllophoneCountOrderByAggregateInput = {
   value?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
 }
 
 export type LexemeAllophoneAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lexemeId?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
 }
 
 export type LexemeAllophoneMaxOrderByAggregateInput = {
@@ -363,6 +388,7 @@ export type LexemeAllophoneMaxOrderByAggregateInput = {
   value?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
 }
 
 export type LexemeAllophoneMinOrderByAggregateInput = {
@@ -371,12 +397,14 @@ export type LexemeAllophoneMinOrderByAggregateInput = {
   value?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
   type?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
 }
 
 export type LexemeAllophoneSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lexemeId?: Prisma.SortOrder
   flavorId?: Prisma.SortOrder
+  verified?: Prisma.SortOrder
 }
 
 export type LexemeAllophoneCreateNestedManyWithoutLexemeInput = {
@@ -466,6 +494,7 @@ export type LexemeAllophoneUncheckedUpdateManyWithoutFlavorNestedInput = {
 export type LexemeAllophoneCreateWithoutLexemeInput = {
   value: string
   type?: string
+  verified?: number | null
   flavor: Prisma.AllophoneFlavorCreateNestedOneWithoutLexemeAllophonesInput
 }
 
@@ -474,6 +503,7 @@ export type LexemeAllophoneUncheckedCreateWithoutLexemeInput = {
   value: string
   flavorId: number
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneCreateOrConnectWithoutLexemeInput = {
@@ -510,11 +540,13 @@ export type LexemeAllophoneScalarWhereInput = {
   value?: Prisma.StringFilter<"LexemeAllophone"> | string
   flavorId?: Prisma.IntFilter<"LexemeAllophone"> | number
   type?: Prisma.StringFilter<"LexemeAllophone"> | string
+  verified?: Prisma.IntNullableFilter<"LexemeAllophone"> | number | null
 }
 
 export type LexemeAllophoneCreateWithoutFlavorInput = {
   value: string
   type?: string
+  verified?: number | null
   lexeme: Prisma.LexemeCreateNestedOneWithoutLexemeAllophonesInput
 }
 
@@ -523,6 +555,7 @@ export type LexemeAllophoneUncheckedCreateWithoutFlavorInput = {
   lexemeId: number
   value: string
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneCreateOrConnectWithoutFlavorInput = {
@@ -555,11 +588,13 @@ export type LexemeAllophoneCreateManyLexemeInput = {
   value: string
   flavorId: number
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneUpdateWithoutLexemeInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   flavor?: Prisma.AllophoneFlavorUpdateOneRequiredWithoutLexemeAllophonesNestedInput
 }
 
@@ -568,6 +603,7 @@ export type LexemeAllophoneUncheckedUpdateWithoutLexemeInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   flavorId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneUncheckedUpdateManyWithoutLexemeInput = {
@@ -575,6 +611,7 @@ export type LexemeAllophoneUncheckedUpdateManyWithoutLexemeInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   flavorId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneCreateManyFlavorInput = {
@@ -582,11 +619,13 @@ export type LexemeAllophoneCreateManyFlavorInput = {
   lexemeId: number
   value: string
   type?: string
+  verified?: number | null
 }
 
 export type LexemeAllophoneUpdateWithoutFlavorInput = {
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   lexeme?: Prisma.LexemeUpdateOneRequiredWithoutLexemeAllophonesNestedInput
 }
 
@@ -595,6 +634,7 @@ export type LexemeAllophoneUncheckedUpdateWithoutFlavorInput = {
   lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type LexemeAllophoneUncheckedUpdateManyWithoutFlavorInput = {
@@ -602,6 +642,7 @@ export type LexemeAllophoneUncheckedUpdateManyWithoutFlavorInput = {
   lexemeId?: Prisma.IntFieldUpdateOperationsInput | number
   value?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -612,6 +653,7 @@ export type LexemeAllophoneSelect<ExtArgs extends runtime.Types.Extensions.Inter
   value?: boolean
   flavorId?: boolean
   type?: boolean
+  verified?: boolean
   lexeme?: boolean | Prisma.LexemeDefaultArgs<ExtArgs>
   flavor?: boolean | Prisma.AllophoneFlavorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lexemeAllophone"]>
@@ -622,6 +664,7 @@ export type LexemeAllophoneSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   value?: boolean
   flavorId?: boolean
   type?: boolean
+  verified?: boolean
   lexeme?: boolean | Prisma.LexemeDefaultArgs<ExtArgs>
   flavor?: boolean | Prisma.AllophoneFlavorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lexemeAllophone"]>
@@ -632,6 +675,7 @@ export type LexemeAllophoneSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   value?: boolean
   flavorId?: boolean
   type?: boolean
+  verified?: boolean
   lexeme?: boolean | Prisma.LexemeDefaultArgs<ExtArgs>
   flavor?: boolean | Prisma.AllophoneFlavorDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lexemeAllophone"]>
@@ -642,9 +686,10 @@ export type LexemeAllophoneSelectScalar = {
   value?: boolean
   flavorId?: boolean
   type?: boolean
+  verified?: boolean
 }
 
-export type LexemeAllophoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lexemeId" | "value" | "flavorId" | "type", ExtArgs["result"]["lexemeAllophone"]>
+export type LexemeAllophoneOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lexemeId" | "value" | "flavorId" | "type" | "verified", ExtArgs["result"]["lexemeAllophone"]>
 export type LexemeAllophoneInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lexeme?: boolean | Prisma.LexemeDefaultArgs<ExtArgs>
   flavor?: boolean | Prisma.AllophoneFlavorDefaultArgs<ExtArgs>
@@ -670,6 +715,7 @@ export type $LexemeAllophonePayload<ExtArgs extends runtime.Types.Extensions.Int
     value: string
     flavorId: number
     type: string
+    verified: number | null
   }, ExtArgs["result"]["lexemeAllophone"]>
   composites: {}
 }
@@ -1100,6 +1146,7 @@ export interface LexemeAllophoneFieldRefs {
   readonly value: Prisma.FieldRef<"LexemeAllophone", 'String'>
   readonly flavorId: Prisma.FieldRef<"LexemeAllophone", 'Int'>
   readonly type: Prisma.FieldRef<"LexemeAllophone", 'String'>
+  readonly verified: Prisma.FieldRef<"LexemeAllophone", 'Int'>
 }
     
 

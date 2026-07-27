@@ -235,7 +235,8 @@ export const LexemeAllophoneScalarFieldEnum = {
   lexemeId: 'lexemeId',
   value: 'value',
   flavorId: 'flavorId',
-  type: 'type'
+  type: 'type',
+  verified: 'verified'
 } as const
 
 export type LexemeAllophoneScalarFieldEnum = (typeof LexemeAllophoneScalarFieldEnum)[keyof typeof LexemeAllophoneScalarFieldEnum]

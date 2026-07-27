@@ -221,6 +221,9 @@ model LexemeAllophone {
   value    String
   flavorId Int
   type     String          @default("standard")
+  // Верификация конкретной флаворизации (напр. CORE) модератором — см.
+  // /admin/word-cards, аналог Translation.verified, но per-флавор.
+  verified Int?
   lexeme   Lexeme          @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
   flavor   AllophoneFlavor @relation(fields: [flavorId], references: [id], onDelete: Cascade)
 
