@@ -55,6 +55,7 @@ model CorpusSentence {
   document      CorpusDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
   segment       CorpusSegment  @relation(fields: [segmentId], references: [id], onDelete: Cascade)
   tokens        CorpusToken[]
+  dependencies  CorpusDependency[]
 
   @@index([documentSlug, position])
 }
@@ -93,6 +94,61 @@ model CorpusToken {
   @@index([documentSlug, wordIndex])
 
   @@index([wordSlug])
+
+  dependencyAsHead CorpusDependency[] @relation("DependencyHead")
+  dependencyAsDep  CorpusDependency?  @relation("DependencyDependent")
+}
+
+// Синтаксический разбор (Фаза 1 см. AGENTS.md "Syntax Parser"): одно ребро
+// dependency-графа на зависимый токен — headTokenId null только у корня
+// клаузы. relation хранит канонические имена Universal Dependencies
+// (nsubj, obj, obl, amod, mark, advcl, conj, ...) — см. lib/corpus/syntax/.
+// Таблица создаётся вручную сырым SQL (scripts/db/2026-07-27-add-corpus-syntax-tables.ts),
+// не через `prisma migrate dev` — та же причина, что и у остальных индексов
+// в corpus.db (нет _prisma_migrations, см. CLAUDE.md). "id" объявлен как
+// BigInt для типизации (по аналогии с CorpusToken.id — рёбер будет
+// столько же, сколько токенов), но реальная DDL использует
+// "INTEGER PRIMARY KEY AUTOINCREMENT" — SQLite не считает "BIGINT PRIMARY KEY"
+// алиасом rowid (проверено эмпирически), поэтому только буквальный
+// "INTEGER PRIMARY KEY" даёт настоящий автоинкремент без ручной генерации id.
+model CorpusDependency {
+  id          BigInt   @id @default(autoincrement())
+  sentenceId  String
+  headTokenId BigInt?  // null только для root
+  depTokenId  BigInt   @unique // у токена ровно одна голова — гарантия дерева
+  relation    String   // канонический UD deprel: nsubj, obj, obl, amod, mark, advcl, conj, root, ...
+  confidence  String   // 'rule' | 'heuristic' | 'unresolved' — по аналогии со светофором DbAnalyzer
+  source      String   @default("auto") // 'auto' | 'manual' — ручные правки в админке не должны затираться реимпортом
+  createdAt   DateTime @default(now())
+
+  sentence  CorpusSentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+  headToken CorpusToken?   @relation("DependencyHead", fields: [headTokenId], references: [id], onDelete: Cascade)
+  depToken  CorpusToken    @relation("DependencyDependent", fields: [depTokenId], references: [id], onDelete: Cascade)
+
+  @@index([sentenceId])
+  @@index([headTokenId])
+}
+
+// Управление падежом: какой падеж требует глагол (или частица-возвратность
+// sę меняет управление, ср. "bojati sę" + gen). В отличие от предложного
+// управления (lib/corpus/syntax/government.ts, PREPOSITION_GOVERNMENT —
+// хардкод, стабилен) глагольное управление специфично для каждой лексемы
+// и должно проверяться лингвистом перед вводом — таблица намеренно
+// стартует пустой, заполняется через будущую админку (см. Фазу 5 плана),
+// а не хардкодом с непроверенными фактами.
+model VerbGovernment {
+  id           Int      @id @default(autoincrement())
+  verbLemma    String
+  reflexive    Boolean  @default(false) // sę меняет управление у части глаголов
+  requiredCase String   // GrammaticalCase: nom/acc/gen/dat/loc/ins/voc
+  role         String   @default("obj") // UD deprel: obj | iobj | obl
+  priority     Int      @default(0) // порядок предпочтения при нескольких допустимых падежах
+  note         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([verbLemma, requiredCase, reflexive])
+  @@index([verbLemma])
 }
 
 // prisma/analytics.schema

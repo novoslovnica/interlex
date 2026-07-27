@@ -38,6 +38,16 @@ export type CorpusSentence = Prisma.CorpusSentenceModel
  */
 export type CorpusToken = Prisma.CorpusTokenModel
 /**
+ * Model CorpusDependency
+ * 
+ */
+export type CorpusDependency = Prisma.CorpusDependencyModel
+/**
+ * Model VerbGovernment
+ * 
+ */
+export type VerbGovernment = Prisma.VerbGovernmentModel
+/**
  * Model WordFormPriority
  * 
  */

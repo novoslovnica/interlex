@@ -274,6 +274,8 @@ export type CorpusTokenWhereInput = {
   matchCount?: Prisma.IntFilter<"CorpusToken"> | number
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
   sentence?: Prisma.XOR<Prisma.CorpusSentenceScalarRelationFilter, Prisma.CorpusSentenceWhereInput>
+  dependencyAsHead?: Prisma.CorpusDependencyListRelationFilter
+  dependencyAsDep?: Prisma.XOR<Prisma.CorpusDependencyNullableScalarRelationFilter, Prisma.CorpusDependencyWhereInput> | null
 }
 
 export type CorpusTokenOrderByWithRelationInput = {
@@ -290,6 +292,8 @@ export type CorpusTokenOrderByWithRelationInput = {
   matchCount?: Prisma.SortOrder
   document?: Prisma.CorpusDocumentOrderByWithRelationInput
   sentence?: Prisma.CorpusSentenceOrderByWithRelationInput
+  dependencyAsHead?: Prisma.CorpusDependencyOrderByRelationAggregateInput
+  dependencyAsDep?: Prisma.CorpusDependencyOrderByWithRelationInput
 }
 
 export type CorpusTokenWhereUniqueInput = Prisma.AtLeast<{
@@ -309,6 +313,8 @@ export type CorpusTokenWhereUniqueInput = Prisma.AtLeast<{
   matchCount?: Prisma.IntFilter<"CorpusToken"> | number
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
   sentence?: Prisma.XOR<Prisma.CorpusSentenceScalarRelationFilter, Prisma.CorpusSentenceWhereInput>
+  dependencyAsHead?: Prisma.CorpusDependencyListRelationFilter
+  dependencyAsDep?: Prisma.XOR<Prisma.CorpusDependencyNullableScalarRelationFilter, Prisma.CorpusDependencyWhereInput> | null
 }, "id">
 
 export type CorpusTokenOrderByWithAggregationInput = {
@@ -359,6 +365,8 @@ export type CorpusTokenCreateInput = {
   matchCount?: number
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
+  dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenUncheckedCreateInput = {
@@ -373,6 +381,8 @@ export type CorpusTokenUncheckedCreateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenUpdateInput = {
@@ -387,6 +397,8 @@ export type CorpusTokenUpdateInput = {
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
+  dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenUncheckedUpdateInput = {
@@ -401,6 +413,8 @@ export type CorpusTokenUncheckedUpdateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenCreateManyInput = {
@@ -507,6 +521,16 @@ export type CorpusTokenSumOrderByAggregateInput = {
   matchCount?: Prisma.SortOrder
 }
 
+export type CorpusTokenNullableScalarRelationFilter = {
+  is?: Prisma.CorpusTokenWhereInput | null
+  isNot?: Prisma.CorpusTokenWhereInput | null
+}
+
+export type CorpusTokenScalarRelationFilter = {
+  is?: Prisma.CorpusTokenWhereInput
+  isNot?: Prisma.CorpusTokenWhereInput
+}
+
 export type CorpusTokenCreateNestedManyWithoutDocumentInput = {
   create?: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDocumentInput, Prisma.CorpusTokenUncheckedCreateWithoutDocumentInput> | Prisma.CorpusTokenCreateWithoutDocumentInput[] | Prisma.CorpusTokenUncheckedCreateWithoutDocumentInput[]
   connectOrCreate?: Prisma.CorpusTokenCreateOrConnectWithoutDocumentInput | Prisma.CorpusTokenCreateOrConnectWithoutDocumentInput[]
@@ -599,6 +623,36 @@ export type BigIntFieldUpdateOperationsInput = {
   divide?: bigint | number
 }
 
+export type CorpusTokenCreateNestedOneWithoutDependencyAsHeadInput = {
+  create?: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput>
+  connectOrCreate?: Prisma.CorpusTokenCreateOrConnectWithoutDependencyAsHeadInput
+  connect?: Prisma.CorpusTokenWhereUniqueInput
+}
+
+export type CorpusTokenCreateNestedOneWithoutDependencyAsDepInput = {
+  create?: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsDepInput>
+  connectOrCreate?: Prisma.CorpusTokenCreateOrConnectWithoutDependencyAsDepInput
+  connect?: Prisma.CorpusTokenWhereUniqueInput
+}
+
+export type CorpusTokenUpdateOneWithoutDependencyAsHeadNestedInput = {
+  create?: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput>
+  connectOrCreate?: Prisma.CorpusTokenCreateOrConnectWithoutDependencyAsHeadInput
+  upsert?: Prisma.CorpusTokenUpsertWithoutDependencyAsHeadInput
+  disconnect?: Prisma.CorpusTokenWhereInput | boolean
+  delete?: Prisma.CorpusTokenWhereInput | boolean
+  connect?: Prisma.CorpusTokenWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CorpusTokenUpdateToOneWithWhereWithoutDependencyAsHeadInput, Prisma.CorpusTokenUpdateWithoutDependencyAsHeadInput>, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsHeadInput>
+}
+
+export type CorpusTokenUpdateOneRequiredWithoutDependencyAsDepNestedInput = {
+  create?: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsDepInput>
+  connectOrCreate?: Prisma.CorpusTokenCreateOrConnectWithoutDependencyAsDepInput
+  upsert?: Prisma.CorpusTokenUpsertWithoutDependencyAsDepInput
+  connect?: Prisma.CorpusTokenWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CorpusTokenUpdateToOneWithWhereWithoutDependencyAsDepInput, Prisma.CorpusTokenUpdateWithoutDependencyAsDepInput>, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsDepInput>
+}
+
 export type CorpusTokenCreateWithoutDocumentInput = {
   id?: bigint | number
   tokenIndex: number
@@ -610,6 +664,8 @@ export type CorpusTokenCreateWithoutDocumentInput = {
   wordSlug?: string | null
   matchCount?: number
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
+  dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenUncheckedCreateWithoutDocumentInput = {
@@ -623,6 +679,8 @@ export type CorpusTokenUncheckedCreateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenCreateOrConnectWithoutDocumentInput = {
@@ -678,6 +736,8 @@ export type CorpusTokenCreateWithoutSentenceInput = {
   wordSlug?: string | null
   matchCount?: number
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
+  dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenUncheckedCreateWithoutSentenceInput = {
@@ -691,6 +751,8 @@ export type CorpusTokenUncheckedCreateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
 }
 
 export type CorpusTokenCreateOrConnectWithoutSentenceInput = {
@@ -718,6 +780,158 @@ export type CorpusTokenUpdateManyWithWhereWithoutSentenceInput = {
   data: Prisma.XOR<Prisma.CorpusTokenUpdateManyMutationInput, Prisma.CorpusTokenUncheckedUpdateManyWithoutSentenceInput>
 }
 
+export type CorpusTokenCreateWithoutDependencyAsHeadInput = {
+  id?: bigint | number
+  tokenIndex: number
+  wordIndex: number
+  surfaceForm: string
+  lemma: string
+  pos: string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: string | null
+  matchCount?: number
+  document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
+  sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
+  dependencyAsDep?: Prisma.CorpusDependencyCreateNestedOneWithoutDepTokenInput
+}
+
+export type CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput = {
+  id?: bigint | number
+  documentSlug: string
+  sentenceId: string
+  tokenIndex: number
+  wordIndex: number
+  surfaceForm: string
+  lemma: string
+  pos: string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: string | null
+  matchCount?: number
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
+}
+
+export type CorpusTokenCreateOrConnectWithoutDependencyAsHeadInput = {
+  where: Prisma.CorpusTokenWhereUniqueInput
+  create: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput>
+}
+
+export type CorpusTokenCreateWithoutDependencyAsDepInput = {
+  id?: bigint | number
+  tokenIndex: number
+  wordIndex: number
+  surfaceForm: string
+  lemma: string
+  pos: string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: string | null
+  matchCount?: number
+  document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
+  sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
+  dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
+}
+
+export type CorpusTokenUncheckedCreateWithoutDependencyAsDepInput = {
+  id?: bigint | number
+  documentSlug: string
+  sentenceId: string
+  tokenIndex: number
+  wordIndex: number
+  surfaceForm: string
+  lemma: string
+  pos: string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: string | null
+  matchCount?: number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
+}
+
+export type CorpusTokenCreateOrConnectWithoutDependencyAsDepInput = {
+  where: Prisma.CorpusTokenWhereUniqueInput
+  create: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsDepInput>
+}
+
+export type CorpusTokenUpsertWithoutDependencyAsHeadInput = {
+  update: Prisma.XOR<Prisma.CorpusTokenUpdateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsHeadInput>
+  create: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput>
+  where?: Prisma.CorpusTokenWhereInput
+}
+
+export type CorpusTokenUpdateToOneWithWhereWithoutDependencyAsHeadInput = {
+  where?: Prisma.CorpusTokenWhereInput
+  data: Prisma.XOR<Prisma.CorpusTokenUpdateWithoutDependencyAsHeadInput, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsHeadInput>
+}
+
+export type CorpusTokenUpdateWithoutDependencyAsHeadInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  tokenIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  wordIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  surfaceForm?: Prisma.StringFieldUpdateOperationsInput | string
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  pos?: Prisma.StringFieldUpdateOperationsInput | string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
+  sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUpdateOneWithoutDepTokenNestedInput
+}
+
+export type CorpusTokenUncheckedUpdateWithoutDependencyAsHeadInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  sentenceId?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  wordIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  surfaceForm?: Prisma.StringFieldUpdateOperationsInput | string
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  pos?: Prisma.StringFieldUpdateOperationsInput | string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
+}
+
+export type CorpusTokenUpsertWithoutDependencyAsDepInput = {
+  update: Prisma.XOR<Prisma.CorpusTokenUpdateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsDepInput>
+  create: Prisma.XOR<Prisma.CorpusTokenCreateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedCreateWithoutDependencyAsDepInput>
+  where?: Prisma.CorpusTokenWhereInput
+}
+
+export type CorpusTokenUpdateToOneWithWhereWithoutDependencyAsDepInput = {
+  where?: Prisma.CorpusTokenWhereInput
+  data: Prisma.XOR<Prisma.CorpusTokenUpdateWithoutDependencyAsDepInput, Prisma.CorpusTokenUncheckedUpdateWithoutDependencyAsDepInput>
+}
+
+export type CorpusTokenUpdateWithoutDependencyAsDepInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  tokenIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  wordIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  surfaceForm?: Prisma.StringFieldUpdateOperationsInput | string
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  pos?: Prisma.StringFieldUpdateOperationsInput | string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
+  sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
+  dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
+}
+
+export type CorpusTokenUncheckedUpdateWithoutDependencyAsDepInput = {
+  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  documentSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  sentenceId?: Prisma.StringFieldUpdateOperationsInput | string
+  tokenIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  wordIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  surfaceForm?: Prisma.StringFieldUpdateOperationsInput | string
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  pos?: Prisma.StringFieldUpdateOperationsInput | string
+  feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
+}
+
 export type CorpusTokenCreateManyDocumentInput = {
   id?: bigint | number
   sentenceId: string
@@ -742,6 +956,8 @@ export type CorpusTokenUpdateWithoutDocumentInput = {
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
+  dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenUncheckedUpdateWithoutDocumentInput = {
@@ -755,6 +971,8 @@ export type CorpusTokenUncheckedUpdateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenUncheckedUpdateManyWithoutDocumentInput = {
@@ -794,6 +1012,8 @@ export type CorpusTokenUpdateWithoutSentenceInput = {
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
+  dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenUncheckedUpdateWithoutSentenceInput = {
@@ -807,6 +1027,8 @@ export type CorpusTokenUncheckedUpdateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
+  dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
 }
 
 export type CorpusTokenUncheckedUpdateManyWithoutSentenceInput = {
@@ -823,6 +1045,35 @@ export type CorpusTokenUncheckedUpdateManyWithoutSentenceInput = {
 }
 
 
+/**
+ * Count Type CorpusTokenCountOutputType
+ */
+
+export type CorpusTokenCountOutputType = {
+  dependencyAsHead: number
+}
+
+export type CorpusTokenCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  dependencyAsHead?: boolean | CorpusTokenCountOutputTypeCountDependencyAsHeadArgs
+}
+
+/**
+ * CorpusTokenCountOutputType without action
+ */
+export type CorpusTokenCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CorpusTokenCountOutputType
+   */
+  select?: Prisma.CorpusTokenCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CorpusTokenCountOutputType without action
+ */
+export type CorpusTokenCountOutputTypeCountDependencyAsHeadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CorpusDependencyWhereInput
+}
+
 
 export type CorpusTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -838,6 +1089,9 @@ export type CorpusTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   matchCount?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
+  dependencyAsHead?: boolean | Prisma.CorpusToken$dependencyAsHeadArgs<ExtArgs>
+  dependencyAsDep?: boolean | Prisma.CorpusToken$dependencyAsDepArgs<ExtArgs>
+  _count?: boolean | Prisma.CorpusTokenCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["corpusToken"]>
 
 export type CorpusTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -890,6 +1144,9 @@ export type CorpusTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type CorpusTokenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
+  dependencyAsHead?: boolean | Prisma.CorpusToken$dependencyAsHeadArgs<ExtArgs>
+  dependencyAsDep?: boolean | Prisma.CorpusToken$dependencyAsDepArgs<ExtArgs>
+  _count?: boolean | Prisma.CorpusTokenCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CorpusTokenIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
@@ -905,6 +1162,8 @@ export type $CorpusTokenPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     document: Prisma.$CorpusDocumentPayload<ExtArgs>
     sentence: Prisma.$CorpusSentencePayload<ExtArgs>
+    dependencyAsHead: Prisma.$CorpusDependencyPayload<ExtArgs>[]
+    dependencyAsDep: Prisma.$CorpusDependencyPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
@@ -1314,6 +1573,8 @@ export interface Prisma__CorpusTokenClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   document<T extends Prisma.CorpusDocumentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusDocumentDefaultArgs<ExtArgs>>): Prisma.Prisma__CorpusDocumentClient<runtime.Types.Result.GetResult<Prisma.$CorpusDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sentence<T extends Prisma.CorpusSentenceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusSentenceDefaultArgs<ExtArgs>>): Prisma.Prisma__CorpusSentenceClient<runtime.Types.Result.GetResult<Prisma.$CorpusSentencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  dependencyAsHead<T extends Prisma.CorpusToken$dependencyAsHeadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusToken$dependencyAsHeadArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CorpusDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dependencyAsDep<T extends Prisma.CorpusToken$dependencyAsDepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CorpusToken$dependencyAsDepArgs<ExtArgs>>): Prisma.Prisma__CorpusDependencyClient<runtime.Types.Result.GetResult<Prisma.$CorpusDependencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1750,6 +2011,49 @@ export type CorpusTokenDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many CorpusTokens to delete.
    */
   limit?: number
+}
+
+/**
+ * CorpusToken.dependencyAsHead
+ */
+export type CorpusToken$dependencyAsHeadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CorpusDependency
+   */
+  select?: Prisma.CorpusDependencySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CorpusDependency
+   */
+  omit?: Prisma.CorpusDependencyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CorpusDependencyInclude<ExtArgs> | null
+  where?: Prisma.CorpusDependencyWhereInput
+  orderBy?: Prisma.CorpusDependencyOrderByWithRelationInput | Prisma.CorpusDependencyOrderByWithRelationInput[]
+  cursor?: Prisma.CorpusDependencyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CorpusDependencyScalarFieldEnum | Prisma.CorpusDependencyScalarFieldEnum[]
+}
+
+/**
+ * CorpusToken.dependencyAsDep
+ */
+export type CorpusToken$dependencyAsDepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CorpusDependency
+   */
+  select?: Prisma.CorpusDependencySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CorpusDependency
+   */
+  omit?: Prisma.CorpusDependencyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CorpusDependencyInclude<ExtArgs> | null
+  where?: Prisma.CorpusDependencyWhereInput
 }
 
 /**

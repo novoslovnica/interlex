@@ -388,6 +388,8 @@ export const ModelName = {
   CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
+  CorpusDependency: 'CorpusDependency',
+  VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
   CorpusConfig: 'CorpusConfig'
 } as const
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "wordFormPriority" | "corpusConfig"
+    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusDependency" | "verbGovernment" | "wordFormPriority" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -705,6 +707,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CorpusDependency: {
+      payload: Prisma.$CorpusDependencyPayload<ExtArgs>
+      fields: Prisma.CorpusDependencyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusDependencyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusDependencyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusDependencyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusDependencyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        findMany: {
+          args: Prisma.CorpusDependencyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>[]
+        }
+        create: {
+          args: Prisma.CorpusDependencyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        createMany: {
+          args: Prisma.CorpusDependencyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusDependencyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusDependencyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        update: {
+          args: Prisma.CorpusDependencyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusDependencyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusDependencyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusDependencyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusDependencyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusDependencyPayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusDependencyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusDependency>
+        }
+        groupBy: {
+          args: Prisma.CorpusDependencyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusDependencyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusDependencyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusDependencyCountAggregateOutputType> | number
+        }
+      }
+    }
+    VerbGovernment: {
+      payload: Prisma.$VerbGovernmentPayload<ExtArgs>
+      fields: Prisma.VerbGovernmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VerbGovernmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VerbGovernmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        findFirst: {
+          args: Prisma.VerbGovernmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VerbGovernmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        findMany: {
+          args: Prisma.VerbGovernmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>[]
+        }
+        create: {
+          args: Prisma.VerbGovernmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        createMany: {
+          args: Prisma.VerbGovernmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VerbGovernmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>[]
+        }
+        delete: {
+          args: Prisma.VerbGovernmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        update: {
+          args: Prisma.VerbGovernmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.VerbGovernmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VerbGovernmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VerbGovernmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.VerbGovernmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerbGovernmentPayload>
+        }
+        aggregate: {
+          args: Prisma.VerbGovernmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVerbGovernment>
+        }
+        groupBy: {
+          args: Prisma.VerbGovernmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VerbGovernmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VerbGovernmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VerbGovernmentCountAggregateOutputType> | number
+        }
+      }
+    }
     WordFormPriority: {
       payload: Prisma.$WordFormPriorityPayload<ExtArgs>
       fields: Prisma.WordFormPriorityFieldRefs
@@ -944,6 +1094,35 @@ export const CorpusTokenScalarFieldEnum = {
 } as const
 
 export type CorpusTokenScalarFieldEnum = (typeof CorpusTokenScalarFieldEnum)[keyof typeof CorpusTokenScalarFieldEnum]
+
+
+export const CorpusDependencyScalarFieldEnum = {
+  id: 'id',
+  sentenceId: 'sentenceId',
+  headTokenId: 'headTokenId',
+  depTokenId: 'depTokenId',
+  relation: 'relation',
+  confidence: 'confidence',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type CorpusDependencyScalarFieldEnum = (typeof CorpusDependencyScalarFieldEnum)[keyof typeof CorpusDependencyScalarFieldEnum]
+
+
+export const VerbGovernmentScalarFieldEnum = {
+  id: 'id',
+  verbLemma: 'verbLemma',
+  reflexive: 'reflexive',
+  requiredCase: 'requiredCase',
+  role: 'role',
+  priority: 'priority',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerbGovernmentScalarFieldEnum = (typeof VerbGovernmentScalarFieldEnum)[keyof typeof VerbGovernmentScalarFieldEnum]
 
 
 export const WordFormPriorityScalarFieldEnum = {
@@ -1189,6 +1368,8 @@ export type GlobalOmitConfig = {
   corpusSegment?: Prisma.CorpusSegmentOmit
   corpusSentence?: Prisma.CorpusSentenceOmit
   corpusToken?: Prisma.CorpusTokenOmit
+  corpusDependency?: Prisma.CorpusDependencyOmit
+  verbGovernment?: Prisma.VerbGovernmentOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit
   corpusConfig?: Prisma.CorpusConfigOmit
 }

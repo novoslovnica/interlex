@@ -55,6 +55,8 @@ export const ModelName = {
   CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
+  CorpusDependency: 'CorpusDependency',
+  VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
   CorpusConfig: 'CorpusConfig'
 } as const
@@ -127,6 +129,35 @@ export const CorpusTokenScalarFieldEnum = {
 } as const
 
 export type CorpusTokenScalarFieldEnum = (typeof CorpusTokenScalarFieldEnum)[keyof typeof CorpusTokenScalarFieldEnum]
+
+
+export const CorpusDependencyScalarFieldEnum = {
+  id: 'id',
+  sentenceId: 'sentenceId',
+  headTokenId: 'headTokenId',
+  depTokenId: 'depTokenId',
+  relation: 'relation',
+  confidence: 'confidence',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type CorpusDependencyScalarFieldEnum = (typeof CorpusDependencyScalarFieldEnum)[keyof typeof CorpusDependencyScalarFieldEnum]
+
+
+export const VerbGovernmentScalarFieldEnum = {
+  id: 'id',
+  verbLemma: 'verbLemma',
+  reflexive: 'reflexive',
+  requiredCase: 'requiredCase',
+  role: 'role',
+  priority: 'priority',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerbGovernmentScalarFieldEnum = (typeof VerbGovernmentScalarFieldEnum)[keyof typeof VerbGovernmentScalarFieldEnum]
 
 
 export const WordFormPriorityScalarFieldEnum = {
