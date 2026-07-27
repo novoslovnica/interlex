@@ -48,6 +48,12 @@ model Lexeme {
   // Имя собственное / нарицательное
   properNoun Boolean @default(false)
 
+  // Многословная единица без единой парадигмы (устойчивое словосочетание/идиома).
+  // НЕ ставится на "глагол + sę/se" и "глагол + предлог" — это регулярно
+  // спрягаемые конструкции, обрабатываются в lib/grammar/morphology/processors.ts
+  // (processVerb) сшивкой головы с неизменяемым хвостом, а не заморозкой.
+  isCollocation Boolean @default(false)
+
   // Маркер аномалий флексий
   hasAnomalies Boolean @default(false)
 

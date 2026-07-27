@@ -59,6 +59,26 @@ export function RelationsTab({ wordId, wordValue, meanings }: RelationsTabProps)
   const [selectedMeaningId, setSelectedMeaningId] = useState<number>(meanings[0]?.id ?? 0)
   const [saving, setSaving] = useState<Record<string, boolean>>({})
   const [, startTransition] = useTransition()
+  const [ruwordnetStatus, setRuwordnetStatus] = useState<{ type: "idle" | "loading" | "success" | "error"; message: string }>({ type: "idle", message: "" })
+
+  const handleMatchRuwordnet = async () => {
+    setRuwordnetStatus({ type: "loading", message: "" })
+    try {
+      const res = await fetch(`/api/admin/words/${wordId}/match-ruwordnet`, { method: "POST" })
+      const data = await res.json()
+      if (!res.ok) {
+        setRuwordnetStatus({ type: "error", message: data.error || "Ошибка сопоставления" })
+        return
+      }
+      const total = (data.results ?? []).reduce((sum: number, r: { relationsInserted: number }) => sum + r.relationsInserted, 0)
+      setRuwordnetStatus({
+        type: "success",
+        message: `Готово: обработано значений — ${data.results?.length ?? 0}, добавлено/обновлено связей — ${total}. Обновите страницу, чтобы увидеть их.`,
+      })
+    } catch {
+      setRuwordnetStatus({ type: "error", message: "Ошибка сети" })
+    }
+  }
 
   const [localRelations, setLocalRelations] = useState<Record<string, RelationInfo[]>>({})
 
@@ -130,11 +150,29 @@ export function RelationsTab({ wordId, wordValue, meanings }: RelationsTabProps)
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-bold">Управление отношениями</h2>
-        <p className="text-sm text-muted-foreground">
-          Слово: <span className="font-semibold text-foreground">{wordValue}</span> (ID: {wordId})
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-bold">Управление отношениями</h2>
+          <p className="text-sm text-muted-foreground">
+            Слово: <span className="font-semibold text-foreground">{wordValue}</span> (ID: {wordId})
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={handleMatchRuwordnet}
+            disabled={ruwordnetStatus.type === "loading"}
+            className="px-3 py-1.5 text-xs font-medium rounded-md border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+          >
+            {ruwordnetStatus.type === "loading" ? "Сопоставляю..." : "Сопоставить с RuWordNet"}
+          </button>
+          {ruwordnetStatus.type === "success" && (
+            <p className="text-[11px] text-green-600 max-w-[280px] text-right">{ruwordnetStatus.message}</p>
+          )}
+          {ruwordnetStatus.type === "error" && (
+            <p className="text-[11px] text-destructive max-w-[280px] text-right">{ruwordnetStatus.message}</p>
+          )}
+        </div>
       </div>
 
       {meanings.length > 1 && (

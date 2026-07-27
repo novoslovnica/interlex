@@ -4,6 +4,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {useTranslations} from "next-intl";
 import {extractProtoStems, conjugateFullVerb} from "@/lib/grammar/verb";
+import {splitMechanicalVerbTail, appendTailToConjugation} from "@/lib/grammar/verb/mechanicalTail";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
 import {NounDeclensionTables} from "@/app/words/[id]/NounDeclensionTables";
 import {AdjectiveDeclensionTables} from "@/app/words/[id]/AdjectiveDeclensionTables";
@@ -21,7 +22,7 @@ import SynonymGraph from "@/app/words/[id]/SynonymGraph";
 import BookmarkButton from "@/components/BookmarkButton";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null }) => {
+const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[] }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -57,14 +58,19 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
     const isNum = meta.partOfSpeech === PosType.NUM;
     const isPron = meta.partOfSpeech === PosType.PRON;
     const isAdv = meta.partOfSpeech === PosType.ADV;
-    const hasParadigm = isVerb || isNoun || isAdj || isNum || isPron || isAdv;
+    const isCollocation = !!item.isCollocation;
+    const hasParadigm = (isVerb || isNoun || isAdj || isNum || isPron || isAdv) && !isCollocation;
 
     let verbData = null;
-    if (isVerb) {
+    if (isVerb && !isCollocation) {
         try {
-            const stems = extractProtoStems(item.value);
-            verbData = conjugateFullVerb({
-                infinitive: item.value,
+            // "Механический хвост" (глагол + sę/se и/или известный предлог) —
+            // спрягается только head, tailSuffix приклеивается ко всем формам.
+            // См. lib/grammar/verb/mechanicalTail.ts.
+            const { head, tailSuffix } = splitMechanicalVerbTail(item.value, knownPrepositions ?? []);
+            const stems = extractProtoStems(head);
+            verbData = appendTailToConjugation(conjugateFullVerb({
+                infinitive: head,
                 infStem: stems.infStem,
                 presentStem: stems.presentStem,
                 aoristStem: stems.aoristStem,
@@ -72,7 +78,7 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
                 verbClass: stems.verbClass,
                 aspect: (meta.aspect as VerbalAspect) || VerbalAspect.IPF,
                 paradigm: (item.paradigm as AccentParadigm) || AccentParadigm.A,
-            });
+            }), tailSuffix);
         } catch (e) {
             console.error("Error generating verb paradigm:", e);
         }
@@ -338,6 +344,12 @@ const Word = ({ item, currentScript, nounParadigm }: { item: any; currentScript:
             </div>
 
             <ComprehensionWidget comprehensionData={item.intelligibility} />
+
+            {isCollocation && (
+                <div className="mb-6 p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 text-sm">
+                    🔗 {t("collocationNote")}
+                </div>
+            )}
 
             {(hasParadigm) && (
                 <div className="mb-6 border-b border-slate-100 pb-6">

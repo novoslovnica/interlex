@@ -64,6 +64,9 @@ export enum SystemFeature {
 
     // Базовая лексика (список Сводеша-100 / Лейпциг-Джакарта)
     CoreVocabularyManage = "core_vocabulary_manage",
+
+    // Живое сопоставление одного слова с RuWordNet (см. AGENTS.md "Semantic Network")
+    RuwordnetMatch = "ruwordnet_match",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -351,6 +354,13 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CoreVocabularyManage]: {
         label: "Управление базовой лексикой",
         description: "Привязка межславянских значений к понятиям из списков Сводеша-100 и Лейпциг-Джакарта",
+        category: "Семантика",
+    },
+
+    // Живое сопоставление с RuWordNet
+    [SystemFeature.RuwordnetMatch]: {
+        label: "Сопоставление с RuWordNet",
+        description: "Живой запуск сопоставления одного слова с RuWordNet прямо из карточки слова",
         category: "Семантика",
     },
 };

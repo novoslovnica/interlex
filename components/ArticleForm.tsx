@@ -133,6 +133,11 @@ const PROPER_NOUN_OPTIONS = [
   { value: "no", label: "Нет" },
 ]
 
+const IS_COLLOCATION_OPTIONS = [
+  { value: "yes", label: "Да" },
+  { value: "no", label: "Нет" },
+]
+
 const FLAVOR_OPTIONS = [
   { value: "CORE", label: "CORE" },
   { value: "NSL", label: "NSL" },
@@ -256,6 +261,7 @@ interface ArticleFormProps {
     secondaryStem?: string | null
     tertiaryStem?: string | null
     properNoun?: boolean
+    isCollocation?: boolean
     external_id?: number | null
     isPublic?: boolean
   }
@@ -370,6 +376,7 @@ export default function ArticleForm({
   const [changedHomonyms, setChangedHomonyms] = useState<Set<string>>(new Set())
   const [hasAnomalies, setHasAnomalies] = useState(initialData?.hasAnomalies || false)
   const [properNoun, setProperNoun] = useState(initialData?.properNoun || false)
+  const [isCollocation, setIsCollocation] = useState(initialData?.isCollocation || false)
   const [isPublic, setIsPublic] = useState(initialData?.isPublic ?? true)
   const [inflectionAnomalies, setInflectionAnomalies] = useState<InflectionAnomalyItem[]>(
     initialData?.inflectionAnomalies || []
@@ -765,6 +772,7 @@ export default function ArticleForm({
         homonymBases,
         hasAnomalies,
         properNoun,
+        isCollocation,
         isPublic,
         etymology,
         intelligibility: intelligibilityStr,
@@ -1009,6 +1017,7 @@ export default function ArticleForm({
                     return elements
                   })()}
                   <SelectField label="Имя собственное" value={properNoun ? "yes" : "no"} options={PROPER_NOUN_OPTIONS} onChange={(v) => setProperNoun(v === "yes")} />
+                  <SelectField label="Словосочетание (без единой парадигмы)" value={isCollocation ? "yes" : "no"} options={IS_COLLOCATION_OPTIONS} onChange={(v) => setIsCollocation(v === "yes")} />
                   <SelectField label="Тип употребления" value={grammar.usageType} options={USAGE_TYPE_OPTIONS} onChange={(v) => setGram("usageType", v)} />
                   <SelectField label="Основная категория" value={grammar.mainCategory} options={MAIN_CATEGORY_OPTIONS} onChange={(v) => setGram("mainCategory", v)} />
                 </div>

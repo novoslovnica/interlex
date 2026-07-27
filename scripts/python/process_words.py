@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from ruwordnet import RuWordNet
 
 # Инициализируем тезаурус (при первом запуске скачаются файлы базы данных)
@@ -186,6 +187,32 @@ def get_synsets_for_word(senses):
     return synsets_data
 
 
+def process_item(item: dict) -> dict:
+    """Обогащает один объект {meaningId, wordId, isvWord, translation} данными
+    RuWordNet — общая логика, используемая и батч-режимом (main), и
+    single-режимом (main_single) для живого сопоставления одного слова
+    из админки."""
+    word_value = item.get("translation", "")
+    synonyms, antonyms, senses, synset_data_list = get_synonyms_and_antonyms(word_value)
+
+    item["synonyms"] = synonyms
+    item["antonyms"] = antonyms
+    item["synsets"] = get_synsets_for_word(senses)
+    item["synset_data_list"] = synset_data_list
+    return item
+
+
+def main_single():
+    """Режим одного слова: читает {meaningId, wordId, isvWord, translation}
+    из stdin, пишет одну обогащённую запись в stdout — для живой кнопки
+    "Сопоставить с RuWordNet" в админке (app/api/admin/words/[id]/
+    match-ruwordnet/route.ts), без обращения к words.json/words_enriched.json."""
+    raw = sys.stdin.read()
+    item = json.loads(raw)
+    result = process_item(item)
+    print(json.dumps(result, ensure_ascii=False))
+
+
 def main():
     if not os.path.exists(INPUT_FILE):
         print(f"Ошибка: Файл '{INPUT_FILE}' не найден в текущей директории.")
@@ -207,15 +234,8 @@ def main():
     print(f"Успешно загружено объектов: {total_words}. Начинаем обработку...")
 
     for index, item in enumerate(data, 1):
-        word_value = item.get("translation", "")
-        print(word_value)
-
-        synonyms, antonyms, senses, synset_data_list = get_synonyms_and_antonyms(word_value)
-
-        item["synonyms"] = synonyms
-        item["antonyms"] = antonyms
-        item["synsets"] = get_synsets_for_word(senses)
-        item["synset_data_list"] = synset_data_list
+        print(item.get("translation", ""))
+        process_item(item)
 
         if index % 2000 == 0 or index == total_words:
             print(f"Обработано объектов: {index}/{total_words}")
@@ -228,4 +248,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--single-word":
+        main_single()
+    else:
+        main()

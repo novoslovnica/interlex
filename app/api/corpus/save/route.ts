@@ -1,82 +1,21 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { prismaCorpus, prismaData } from "@/lib/prisma"
+import { prismaCorpus } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { randomUUID } from "crypto"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
-import { DbAnalyzer, WordBaseRecord } from "@/lib/corpus/tokenizer/dbAnalyzer"
+import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
+import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
 import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
 import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
+import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 
-async function buildValidEndings(): Promise<Set<string>> {
-    const rows = await prismaData.endingAllophone.findMany({
-        select: { value: true },
-    })
-    const endings = new Set<string>(rows.map(r => r.value))
-    endings.add('')
-    return endings
-}
-
-const analyzerPromise = buildValidEndings().then((validEndings) =>
-    new DbAnalyzer(async (bases): Promise<WordBaseRecord[]> => {
-        const homonyms = await prismaData.baseHomonym.findMany({
-            where: { base: { in: bases } },
-        })
-
-        const lexemeFlavors = new Map<number, string>()
-        for (const h of homonyms) {
-            const parsed = JSON.parse(h.wordIds)
-            if (Array.isArray(parsed)) {
-                if (parsed.length > 0 && typeof parsed[0] === 'number') {
-                    for (const id of parsed as number[]) {
-                        lexemeFlavors.set(id, 'CORE')
-                    }
-                } else {
-                    for (const item of parsed as Array<{ id: number; flavor?: string }>) {
-                        lexemeFlavors.set(item.id, item.flavor || 'CORE')
-                    }
-                }
-            }
-        }
-
-        const ids = [...lexemeFlavors.keys()]
-        if (ids.length === 0) return []
-
-        const rows = await prismaData.lexeme.findMany({
-            where: { id: { in: ids } },
-            select: {
-                id: true,
-                slug: true,
-                value: true,
-                pos: true,
-                protoStemClass: true,
-                stemExtension: true,
-                paradigm: true,
-                stem: true,
-                gender: true,
-                animacy: true,
-            },
-        })
-        return rows.map((r) => ({
-            id: r.id,
-            slug: r.slug,
-            isv: r.value,
-            pos: r.pos,
-            protoStemClass: r.protoStemClass,
-            stemExtension: r.stemExtension,
-            paradigm: r.paradigm,
-            stem: r.stem,
-            gender: r.gender,
-            animacy: r.animacy,
-            base: null,
-            alternationType: null,
-            fleetingVowelAt: null,
-            flavor: lexemeFlavors.get(r.id) ?? 'CORE',
-        }))
-    }, validEndings)
+const analyzerPromise = Promise.all([buildValidEndings(), buildKnownPrepositions()]).then(
+    ([validEndings, knownPrepositions]) => new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions)
 )
+const collocationMatcherPromise = buildCollocationRecords().then((records) => new CollocationMatcher(records))
 
 export async function POST(request: NextRequest) {
     const session = await auth()
@@ -95,7 +34,8 @@ export async function POST(request: NextRequest) {
     }
 
     const analyzer = await analyzerPromise
-    const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer)
+    const collocationMatcher = await collocationMatcherPromise
+    const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer, collocationMatcher)
 
     const maxIdResult = await prismaCorpus.corpusToken.findFirst({ orderBy: { id: "desc" }, select: { id: true } })
     let nextTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1

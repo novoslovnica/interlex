@@ -402,6 +402,7 @@
       "default": "Pokazati paradigmu"
     },
     "paradigmError": "Ošibka nagruženja danyh form slova.",
+    "collocationNote": "Ustaljeno slovosočetanje — nezměnna forma, bez paradigmy sklonjenja/sprjaženja",
     "sections": {
       "cognates": "Jednokorenne slova",
       "meanings": "Značenja",

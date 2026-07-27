@@ -284,6 +284,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
                   homonymBases: initialHomonymBases,
                   hasAnomalies: wordData.hasAnomalies,
                   properNoun: wordData.properNoun,
+                  isCollocation: wordData.isCollocation,
                   isPublic: wordData.isPublic,
                   inflectionAnomalies: currentAnomalies,
                   attachedRoots,

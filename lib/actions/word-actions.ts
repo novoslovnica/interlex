@@ -32,6 +32,9 @@ export async function updateWord(formData: any) {
   if (currentWord?.properNoun !== (formData.properNoun === true)) {
     wordChanges.push({ field: "properNoun", oldValue: currentWord?.properNoun, newValue: formData.properNoun === true })
   }
+  if (currentWord?.isCollocation !== (formData.isCollocation === true)) {
+    wordChanges.push({ field: "isCollocation", oldValue: currentWord?.isCollocation, newValue: formData.isCollocation === true })
+  }
   if (currentWord?.isPublic !== (formData.isPublic !== false)) {
     wordChanges.push({ field: "isPublic", oldValue: currentWord?.isPublic, newValue: formData.isPublic !== false })
   }
@@ -74,6 +77,7 @@ export async function updateWord(formData: any) {
       stem: stemValue,
       hasAnomalies: formData.hasAnomalies === true,
       properNoun: formData.properNoun === true,
+      isCollocation: formData.isCollocation === true,
       isPublic: formData.isPublic !== false,
       ...grammarData,
       ...(newSlug ? { slug: newSlug } : {}),
@@ -283,6 +287,7 @@ export async function createWord(formData: any) {
       slug,
       stem: stemValue,
       hasAnomalies: formData.hasAnomalies === true,
+      isCollocation: formData.isCollocation === true,
       external_id: formData.external_id ?? null,
       isPublic: formData.isPublic !== false,
     },
@@ -291,6 +296,7 @@ export async function createWord(formData: any) {
     { field: "value", oldValue: null, newValue: formData.word },
     { field: "stem", oldValue: null, newValue: stemValue },
     { field: "hasAnomalies", oldValue: null, newValue: formData.hasAnomalies === true },
+    { field: "isCollocation", oldValue: null, newValue: formData.isCollocation === true },
     { field: "external_id", oldValue: null, newValue: formData.external_id ?? null },
     { field: "isPublic", oldValue: null, newValue: formData.isPublic !== false },
   ])

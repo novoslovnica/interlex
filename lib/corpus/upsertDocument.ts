@@ -2,6 +2,7 @@ import { randomUUID } from "crypto"
 import { prismaCorpus } from "@/lib/prisma"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
+import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
 
 export interface UpsertDocumentPayload {
@@ -31,6 +32,7 @@ export type UpsertDocumentResult =
 export async function upsertCorpusDocument(
     payload: UpsertDocumentPayload,
     analyzer: DbAnalyzer,
+    collocationMatcher?: CollocationMatcher,
 ): Promise<UpsertDocumentResult> {
     const { title, rawText, author, language = "is", genre } = payload
 
@@ -48,7 +50,7 @@ export async function upsertCorpusDocument(
 
     const slug = existing?.slug ?? payload.slug
 
-    const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer)
+    const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer, collocationMatcher)
 
     const maxIdResult = await prismaCorpus.corpusToken.findFirst({ orderBy: { id: "desc" }, select: { id: true } })
     let nextTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1

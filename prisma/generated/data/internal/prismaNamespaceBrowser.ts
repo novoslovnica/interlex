@@ -124,6 +124,7 @@ export const LexemeScalarFieldEnum = {
   conjugation: 'conjugation',
   stressPosition: 'stressPosition',
   properNoun: 'properNoun',
+  isCollocation: 'isCollocation',
   hasAnomalies: 'hasAnomalies',
   isPublic: 'isPublic',
   corpusFrequency: 'corpusFrequency',

@@ -1,5 +1,6 @@
 import { prismaData } from "@/lib/prisma"
 import { DbAnalyzer, WordBaseRecord } from "./dbAnalyzer"
+import { CollocationRecord } from "./collocationMatcher"
 
 export async function buildValidEndings(): Promise<Set<string>> {
   const rows = await prismaData.endingAllophone.findMany({
@@ -8,6 +9,30 @@ export async function buildValidEndings(): Promise<Set<string>> {
   const endings = new Set<string>(rows.map((r) => r.value))
   endings.add("")
   return endings
+}
+
+// Однословные предлоги (pos=ADP) — для распознавания "механического хвоста"
+// многословных глаголов ("глагол + sę/se"/"предлог") в lib/grammar/verb/mechanicalTail.ts.
+export async function buildKnownPrepositions(): Promise<string[]> {
+  const rows = await prismaData.lexeme.findMany({
+    where: { pos: "ADP" },
+    select: { value: true },
+  })
+  return rows
+    .map((r) => r.value)
+    .filter((v): v is string => !!v && !v.includes(" "))
+}
+
+// Многословные лексемы (Lexeme.isCollocation=true) — для точного
+// сопоставления фраз в токенизаторе (lib/corpus/tokenizer/collocationMatcher.ts).
+export async function buildCollocationRecords(): Promise<CollocationRecord[]> {
+  const rows = await prismaData.lexeme.findMany({
+    where: { isCollocation: true },
+    select: { slug: true, value: true, pos: true },
+  })
+  return rows
+    .filter((r): r is { slug: string; value: string; pos: string } => !!r.value && !!r.pos)
+    .map((r) => ({ wordSlug: r.slug, lemma: r.value, pos: r.pos }))
 }
 
 export function createQueryWordsByBase(): (
@@ -50,6 +75,7 @@ export function createQueryWordsByBase(): (
         stem: true,
         gender: true,
         animacy: true,
+        isCollocation: true,
       },
     })
     return rows.map((r) => ({
@@ -67,6 +93,7 @@ export function createQueryWordsByBase(): (
       alternationType: null,
       fleetingVowelAt: null,
       flavor: lexemeFlavors.get(r.id) ?? "CORE",
+      isCollocation: r.isCollocation,
     }))
   }
 }

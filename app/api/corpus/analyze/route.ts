@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { prismaData } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
-import { DbAnalyzer, WordBaseRecord } from "@/lib/corpus/tokenizer/dbAnalyzer"
+import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
+import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
+import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 
 interface TokenResult {
     surfaceForm: string
@@ -39,76 +40,20 @@ interface Stats {
     punctuationCount: number
 }
 
-async function buildValidEndings(): Promise<Set<string>> {
-    const rows = await prismaData.endingAllophone.findMany({
-        select: { value: true },
-    })
-    const endings = new Set<string>(rows.map(r => r.value))
-    endings.add('')
-    return endings
-}
-
 let analyzer: DbAnalyzer | null = null
 async function getAnalyzer(): Promise<DbAnalyzer> {
     if (analyzer) return analyzer
     const validEndings = await buildValidEndings()
-    analyzer = new DbAnalyzer(async (bases): Promise<WordBaseRecord[]> => {
-        const homonyms = await prismaData.baseHomonym.findMany({
-            where: { base: { in: bases } },
-        })
-
-        const lexemeFlavors = new Map<number, string>()
-        for (const h of homonyms) {
-            const parsed = JSON.parse(h.wordIds)
-            if (Array.isArray(parsed)) {
-                if (parsed.length > 0 && typeof parsed[0] === 'number') {
-                    for (const id of parsed as number[]) {
-                        lexemeFlavors.set(id, 'CORE')
-                    }
-                } else {
-                    for (const item of parsed as Array<{ id: number; flavor?: string }>) {
-                        lexemeFlavors.set(item.id, item.flavor || 'CORE')
-                    }
-                }
-            }
-        }
-
-        const ids = [...lexemeFlavors.keys()]
-        if (ids.length === 0) return []
-
-        const rows = await prismaData.lexeme.findMany({
-            where: { id: { in: ids } },
-            select: {
-                id: true,
-                slug: true,
-                value: true,
-                pos: true,
-                protoStemClass: true,
-                stemExtension: true,
-                paradigm: true,
-                stem: true,
-                gender: true,
-                animacy: true,
-            },
-        })
-        return rows.map((r) => ({
-            id: r.id,
-            slug: r.slug,
-            isv: r.value,
-            pos: r.pos,
-            protoStemClass: r.protoStemClass,
-            stemExtension: r.stemExtension,
-            paradigm: r.paradigm,
-            stem: r.stem,
-            gender: r.gender,
-            animacy: r.animacy,
-            base: null,
-            alternationType: null,
-            fleetingVowelAt: null,
-            flavor: lexemeFlavors.get(r.id) ?? 'CORE',
-        }))
-    }, validEndings)
+    const knownPrepositions = await buildKnownPrepositions()
+    analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions)
     return analyzer
+}
+
+let collocationMatcher: CollocationMatcher | null = null
+async function getCollocationMatcher(): Promise<CollocationMatcher> {
+    if (collocationMatcher) return collocationMatcher
+    collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
+    return collocationMatcher
 }
 
 export async function POST(request: NextRequest) {
@@ -123,6 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     const theAnalyzer = await getAnalyzer()
+    const theCollocationMatcher = await getCollocationMatcher()
     const rawSegments = Tokenizer.splitIntoSegments(text)
     const segments: SegmentResult[] = []
     const stats: Stats = { totalTokens: 0, recognizedWords: 0, unrecognizedWords: 0, punctuationCount: 0 }
@@ -132,7 +78,7 @@ export async function POST(request: NextRequest) {
         const sentences: SentenceResult[] = []
 
         for (let pos = 0; pos < rawSentences.length; pos++) {
-            const tokens = await Tokenizer.tokenizeSentence(rawSentences[pos], theAnalyzer)
+            const tokens = await Tokenizer.tokenizeSentence(rawSentences[pos], theAnalyzer, theCollocationMatcher)
 
             const tokenResults: TokenResult[] = tokens.map((t) => {
                 const a = t.analysis

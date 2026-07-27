@@ -19,6 +19,7 @@ export interface WordBaseRecord {
     alternationType: string | null;
     fleetingVowelAt: number | null;
     flavor?: string;
+    isCollocation?: boolean | null;
 }
 
 type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;
@@ -29,7 +30,8 @@ const MIN_STEM_LEN = 2;
 export class DbAnalyzer {
     constructor(
         private queryWordsByBase: WordQueryFn,
-        private validEndings: Set<string>
+        private validEndings: Set<string>,
+        private knownPrepositions: string[] = []
     ) {}
 
     async analyzeWord(surfaceForm: string): Promise<MorphoAnalysis | null> {
@@ -129,6 +131,8 @@ export class DbAnalyzer {
                 alternationType: word.alternationType,
                 fleetingVowelAt: word.fleetingVowelAt,
                 flavor: word.flavor || 'CORE',
+                isCollocation: word.isCollocation ?? false,
+                knownPrepositions: this.knownPrepositions,
             };
 
             const forms = generateWordForms(engineInput, true);

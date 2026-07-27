@@ -402,6 +402,7 @@
       "default": "Show paradigm"
     },
     "paradigmError": "Error loading word form data.",
+    "collocationNote": "Fixed collocation — invariant form, no declension/conjugation paradigm",
     "sections": {
       "cognates": "Cognate words",
       "meanings": "Meanings",

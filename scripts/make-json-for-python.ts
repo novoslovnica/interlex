@@ -30,7 +30,6 @@ async function main() {
             select: {
                 id: true,
                 value: true,
-                isv: true,
                 meanings: {
                     select: {
                         id: true,
@@ -55,7 +54,7 @@ async function main() {
                     allTranslations.push({
                         meaningId: meaning.id,
                         wordId: word.id,
-                        isvWord: word.value || word.isv || '',
+                        isvWord: word.value || '',
                         translation: val,
                     })
                 }

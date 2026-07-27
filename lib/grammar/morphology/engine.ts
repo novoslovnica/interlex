@@ -14,6 +14,14 @@ export function generateWordForms(word: EngineWordInput, stripAccents?: boolean)
         return [{ surfaceForm: stripAccents ? stripCombiningAccents(word.isv || '') : (word.isv || ''), feats: {} }];
     }
 
+    // Коллокации (устойчивые словосочетания/идиомы) не имеют единой парадигмы —
+    // рендерятся инвариантно. "Глагол + sę/se/предлог" сюда не попадает (см.
+    // scripts/db/2026-07-28-backfill-collocation-flag.ts) — такие случаи
+    // регулярно спрягаются в processVerb.
+    if (word.isCollocation) {
+        return [{ surfaceForm: stripAccents ? stripCombiningAccents(word.isv) : word.isv, feats: {} }];
+    }
+
     const posTag = word.pos.toUpperCase();
 
     if (!isValidPos(posTag)) {

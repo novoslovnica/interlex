@@ -60,14 +60,16 @@ async function loadKnownRevisions(
 async function main() {
     const { prismaCorpus } = await importPrisma()
     const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer")
-    const { buildValidEndings, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
     const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
     const { computeCefrLevels } = await import("@/lib/corpus/frequencies/compute-cefr-levels")
 
     console.log("Собираю список статей isv.wikipedia.org...")
 
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings())
+    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions())
+    const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     let seen = 0
     let created = 0
@@ -115,6 +117,7 @@ async function main() {
                         sourceRevisionId: article.revisionId,
                     },
                     analyzer,
+                    collocationMatcher,
                 )
 
                 if (result.status === "created") {

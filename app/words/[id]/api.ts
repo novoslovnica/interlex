@@ -2,6 +2,16 @@ import {init} from "@/lib/sqlite";
 import {fetchSymmetricSemanticRelations} from "@/lib/relations";
 import {fetchTranslationsForLexeme} from "@/lib/translations";
 
+// Однословные предлоги (pos=ADP) — используются для распознавания
+// "механического хвоста" многословных глаголов (see lib/grammar/verb/mechanicalTail.ts):
+// "глагол + sę/se"/"глагол + предлог" спрягается регулярно, а не замораживается
+// как коллокация.
+export const getKnownPrepositions = async (): Promise<string[]> => {
+  const db = await init();
+  const rows = db.prepare(`SELECT DISTINCT value FROM lexemes WHERE pos = 'ADP' AND value NOT LIKE '% %'`).all() as { value: string }[];
+  return rows.map(r => r.value);
+};
+
 export const getItem = async (id: string) => {
   const db = await init();
 

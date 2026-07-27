@@ -1,7 +1,8 @@
 import { PosType } from '@/lib/grammar/common';
-import { TokenPayload, TokenizerResult, SentencePayload, CorpusTokenInput, SegmentPayload } from './types';
+import { TokenPayload, TokenizerResult, SentencePayload, CorpusTokenInput, SegmentPayload, MorphoAnalysis } from './types';
 import { analyzeWord } from './morphology';
 import { DbAnalyzer } from './dbAnalyzer';
+import { CollocationMatcher } from './collocationMatcher';
 
 const SEGMENT_SPLIT = /\n\s*\n/;
 const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
@@ -25,15 +26,40 @@ export class Tokenizer {
 
     public static async tokenizeSentence(
         sentenceText: string,
-        analyzer?: DbAnalyzer
+        analyzer?: DbAnalyzer,
+        collocationMatcher?: CollocationMatcher
     ): Promise<TokenPayload[]> {
         const rawTokens = sentenceText.match(TOKEN_PATTERN) || [];
         const results: TokenPayload[] = [];
 
-        for (const t of rawTokens) {
+        let i = 0;
+        while (i < rawTokens.length) {
+            const t = rawTokens[i];
             const isPunct = PUNCTUATION_TEST.test(t);
-            let analysis;
 
+            // Жадный проход по фразам: до 4 идущих подряд токенов, точное
+            // совпадение с многословной лексемой (см. collocationMatcher.ts).
+            // Без него такие лексемы никогда не находятся по-токенному
+            // анализатором ниже.
+            if (!isPunct && collocationMatcher) {
+                const match = collocationMatcher.matchAt(rawTokens, i);
+                if (match) {
+                    const analysis: MorphoAnalysis = {
+                        lemma: match.record.lemma,
+                        pos: match.record.pos as PosType,
+                        wordSlug: match.record.wordSlug,
+                        feats: {},
+                        matchCount: 1,
+                    };
+                    for (let k = 0; k < match.length; k++) {
+                        results.push({ surfaceForm: rawTokens[i + k], isPunctuation: false, analysis });
+                    }
+                    i += match.length;
+                    continue;
+                }
+            }
+
+            let analysis;
             if (isPunct) {
                 analysis = { lemma: t, pos: PosType.PUNCT, wordSlug: null, feats: {} };
             } else if (analyzer) {
@@ -48,6 +74,7 @@ export class Tokenizer {
                 isPunctuation: isPunct,
                 analysis,
             });
+            i++;
         }
 
         return results;
@@ -57,7 +84,8 @@ export class Tokenizer {
         documentSlug: string,
         rawText: string,
         idGenerator: () => string,
-        analyzer?: DbAnalyzer
+        analyzer?: DbAnalyzer,
+        collocationMatcher?: CollocationMatcher
     ): Promise<{ segments: SegmentPayload[]; sentences: SentencePayload[]; tokenInputs: CorpusTokenInput[] }> {
         const rawSegments = this.splitIntoSegments(rawText);
 
@@ -94,7 +122,7 @@ export class Tokenizer {
                 });
                 globalSentenceIdx++;
 
-                const sentenceTokens = await this.tokenizeSentence(sentenceText, analyzer);
+                const sentenceTokens = await this.tokenizeSentence(sentenceText, analyzer, collocationMatcher);
 
                 for (const t of sentenceTokens) {
                     tokenInputs.push({

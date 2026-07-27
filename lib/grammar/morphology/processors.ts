@@ -19,6 +19,7 @@ import {
     VerbModel,
     FullParadigm
 } from '../verb';
+import { splitMechanicalVerbTail, appendTailToConjugation } from '../verb/mechanicalTail';
 import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType } from '../adjective';
 import { generatePronounForm, EnhancedPronounDbItem, PronounClass } from '../pronoun';
 
@@ -121,21 +122,30 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
 
     const results: GeneratedForm[] = [];
 
+    // 0. Механический хвост: "глагол + sę/se" и/или "глагол + известный предлог"
+    // (напр. "zaruciti se", "bazovati na", "bazovati se na") — регулярно
+    // спрягаемая конструкция, а не идиома. Спрягаем только голову (verbHead),
+    // неизменяемый хвост приклеиваем в конце ко всем сгенерированным формам
+    // через appendTailToConjugation. Лексемы, где хвост НЕ распознан как
+    // механический, помечаются Lexeme.isCollocation и сюда вообще не доходят
+    // (гейт в engine.ts).
+    const { head: verbHead, tailSuffix } = splitMechanicalVerbTail(word.isv, word.knownPrepositions ?? []);
+
     // 1. Сначала добавляем сам инфинитив как базовую форму
     results.push({
-        surfaceForm: word.isv,
+        surfaceForm: verbHead + tailSuffix,
         feats: { verbForm: 'inf' }
     });
 
     // 2. Автоматически восстанавливаем праславянские основы по Лескину (инфинитив, презенс, аорист)
-    const stems = extractProtoStems(word.isv);
+    const stems = extractProtoStems(verbHead);
 
     // 3. Если есть secondaryStem (из колонки addition в CSV), используем его как presentStem
     const presentStem = word.secondaryStem || stems.presentStem;
 
     // 4. Формируем строгую модель VerbModel для передачи в акцентологический калькулятор
     const verbModel: VerbModel = {
-        infinitive: word.isv,
+        infinitive: verbHead,
         infStem: stems.infStem,
         presentStem: presentStem,
         aoristStem: stems.aoristStem,
@@ -148,7 +158,7 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     };
 
     // 4. Запускаем генерацию полной глагольной матрицы
-    const conj = conjugateFullVerb(verbModel);
+    const conj = appendTailToConjugation(conjugateFullVerb(verbModel), tailSuffix);
 
     // 5. Плоское уплотнение (Flattening) результатов с заполнением грамматического атласа feats
 

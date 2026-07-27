@@ -1,4 +1,4 @@
-import {getItem} from "@/app/words/[id]/api";
+import {getItem, getKnownPrepositions} from "@/app/words/[id]/api";
 import {Suspense} from "react";
 import Word from "@/app/words/[id]/Word";
 import './word-page.css';
@@ -41,11 +41,12 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const item = await getItem(id);
     const currentScript = await getUserScript();
+    const knownPrepositions = item?.pos === PosType.VERB ? await getKnownPrepositions() : [];
 
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
 
     let nounParadigm: { singular: Record<string, string>; dual: Record<string, string>; plural: Record<string, string> } | null = null;
-    if (item?.pos === PosType.NOUN) {
+    if (item?.pos === PosType.NOUN && !item?.isCollocation) {
       const CASES_LIST = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'locative', 'vocative'] as const;
       const NUMBERS_LIST = ['singular', 'dual', 'plural'] as const;
 
@@ -98,7 +99,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             )}
             <div className="scroll-container w-full pt-6 px-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} />
+                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} />
                 </Suspense>
             </div>
         </main>
