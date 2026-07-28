@@ -2491,6 +2491,7 @@ export const ValencyArgumentScalarFieldEnum = {
   role: 'role',
   case: 'case',
   preposition: 'preposition',
+  prepositionLexemeId: 'prepositionLexemeId',
   isOptional: 'isOptional',
   sortOrder: 'sortOrder'
 } as const

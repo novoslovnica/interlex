@@ -6,6 +6,7 @@ export interface ValencyArgumentInput {
   id: number
   case: string
   preposition: string
+  prepositionLexemeId: number | null
   role: string
   isOptional: boolean
 }
@@ -18,7 +19,7 @@ export interface ValencyFrameInput {
 
 function snapshot(db: Database.Database, meaningId: number): string {
   const rows = db.prepare(`
-    SELECT vf.id AS frameId, vf.label, va.id AS argId, va.role, va."case" AS "case", va.preposition, va.isOptional
+    SELECT vf.id AS frameId, vf.label, va.id AS argId, va.role, va."case" AS "case", va.preposition, va.prepositionLexemeId, va.isOptional
     FROM valency_frames vf
     LEFT JOIN valency_arguments va ON va.frameId = vf.id
     WHERE vf.meaningId = ?
@@ -53,11 +54,11 @@ export function syncValencyFramesForMeaning(
   const insertFrame = db.prepare(`INSERT INTO valency_frames (meaningId, label, sortOrder) VALUES (?, ?, ?)`)
   const updateFrame = db.prepare(`UPDATE valency_frames SET label = ?, sortOrder = ? WHERE id = ?`)
   const insertArg = db.prepare(`
-    INSERT INTO valency_arguments (frameId, role, "case", preposition, isOptional, sortOrder)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO valency_arguments (frameId, role, "case", preposition, prepositionLexemeId, isOptional, sortOrder)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `)
   const updateArg = db.prepare(`
-    UPDATE valency_arguments SET role = ?, "case" = ?, preposition = ?, isOptional = ?, sortOrder = ? WHERE id = ?
+    UPDATE valency_arguments SET role = ?, "case" = ?, preposition = ?, prepositionLexemeId = ?, isOptional = ?, sortOrder = ? WHERE id = ?
   `)
 
   frames.forEach((frame, frameIdx) => {
@@ -84,12 +85,13 @@ export function syncValencyFramesForMeaning(
     frame.arguments.forEach((arg, argIdx) => {
       if (!isValidCase(arg.case)) return
       const preposition = arg.preposition?.trim() || null
+      const prepositionLexemeId = arg.prepositionLexemeId ?? null
       const role = arg.role?.trim() || null
       const isOptional = arg.isOptional ? 1 : 0
       if (arg.id > 0 && existingArgIds.has(arg.id)) {
-        updateArg.run(role, arg.case, preposition, isOptional, argIdx, arg.id)
+        updateArg.run(role, arg.case, preposition, prepositionLexemeId, isOptional, argIdx, arg.id)
       } else {
-        insertArg.run(frameId, role, arg.case, preposition, isOptional, argIdx)
+        insertArg.run(frameId, role, arg.case, preposition, prepositionLexemeId, isOptional, argIdx)
       }
     })
   })

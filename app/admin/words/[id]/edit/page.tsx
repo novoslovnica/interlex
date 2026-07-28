@@ -179,6 +179,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
         id: a.id,
         case: a.case,
         preposition: a.preposition ?? "",
+        prepositionLexemeId: a.prepositionLexemeId ?? null,
         role: a.role ?? "",
         isOptional: a.isOptional,
       })),

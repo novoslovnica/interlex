@@ -29,12 +29,14 @@ export type AggregateValencyArgument = {
 export type ValencyArgumentAvgAggregateOutputType = {
   id: number | null
   frameId: number | null
+  prepositionLexemeId: number | null
   sortOrder: number | null
 }
 
 export type ValencyArgumentSumAggregateOutputType = {
   id: number | null
   frameId: number | null
+  prepositionLexemeId: number | null
   sortOrder: number | null
 }
 
@@ -44,6 +46,7 @@ export type ValencyArgumentMinAggregateOutputType = {
   role: string | null
   case: string | null
   preposition: string | null
+  prepositionLexemeId: number | null
   isOptional: boolean | null
   sortOrder: number | null
 }
@@ -54,6 +57,7 @@ export type ValencyArgumentMaxAggregateOutputType = {
   role: string | null
   case: string | null
   preposition: string | null
+  prepositionLexemeId: number | null
   isOptional: boolean | null
   sortOrder: number | null
 }
@@ -64,6 +68,7 @@ export type ValencyArgumentCountAggregateOutputType = {
   role: number
   case: number
   preposition: number
+  prepositionLexemeId: number
   isOptional: number
   sortOrder: number
   _all: number
@@ -73,12 +78,14 @@ export type ValencyArgumentCountAggregateOutputType = {
 export type ValencyArgumentAvgAggregateInputType = {
   id?: true
   frameId?: true
+  prepositionLexemeId?: true
   sortOrder?: true
 }
 
 export type ValencyArgumentSumAggregateInputType = {
   id?: true
   frameId?: true
+  prepositionLexemeId?: true
   sortOrder?: true
 }
 
@@ -88,6 +95,7 @@ export type ValencyArgumentMinAggregateInputType = {
   role?: true
   case?: true
   preposition?: true
+  prepositionLexemeId?: true
   isOptional?: true
   sortOrder?: true
 }
@@ -98,6 +106,7 @@ export type ValencyArgumentMaxAggregateInputType = {
   role?: true
   case?: true
   preposition?: true
+  prepositionLexemeId?: true
   isOptional?: true
   sortOrder?: true
 }
@@ -108,6 +117,7 @@ export type ValencyArgumentCountAggregateInputType = {
   role?: true
   case?: true
   preposition?: true
+  prepositionLexemeId?: true
   isOptional?: true
   sortOrder?: true
   _all?: true
@@ -205,6 +215,7 @@ export type ValencyArgumentGroupByOutputType = {
   role: string | null
   case: string
   preposition: string | null
+  prepositionLexemeId: number | null
   isOptional: boolean
   sortOrder: number
   _count: ValencyArgumentCountAggregateOutputType | null
@@ -238,9 +249,11 @@ export type ValencyArgumentWhereInput = {
   role?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
   case?: Prisma.StringFilter<"ValencyArgument"> | string
   preposition?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
+  prepositionLexemeId?: Prisma.IntNullableFilter<"ValencyArgument"> | number | null
   isOptional?: Prisma.BoolFilter<"ValencyArgument"> | boolean
   sortOrder?: Prisma.IntFilter<"ValencyArgument"> | number
   frame?: Prisma.XOR<Prisma.ValencyFrameScalarRelationFilter, Prisma.ValencyFrameWhereInput>
+  prepositionLexeme?: Prisma.XOR<Prisma.LexemeNullableScalarRelationFilter, Prisma.LexemeWhereInput> | null
 }
 
 export type ValencyArgumentOrderByWithRelationInput = {
@@ -249,9 +262,11 @@ export type ValencyArgumentOrderByWithRelationInput = {
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   case?: Prisma.SortOrder
   preposition?: Prisma.SortOrderInput | Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrderInput | Prisma.SortOrder
   isOptional?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   frame?: Prisma.ValencyFrameOrderByWithRelationInput
+  prepositionLexeme?: Prisma.LexemeOrderByWithRelationInput
 }
 
 export type ValencyArgumentWhereUniqueInput = Prisma.AtLeast<{
@@ -263,9 +278,11 @@ export type ValencyArgumentWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
   case?: Prisma.StringFilter<"ValencyArgument"> | string
   preposition?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
+  prepositionLexemeId?: Prisma.IntNullableFilter<"ValencyArgument"> | number | null
   isOptional?: Prisma.BoolFilter<"ValencyArgument"> | boolean
   sortOrder?: Prisma.IntFilter<"ValencyArgument"> | number
   frame?: Prisma.XOR<Prisma.ValencyFrameScalarRelationFilter, Prisma.ValencyFrameWhereInput>
+  prepositionLexeme?: Prisma.XOR<Prisma.LexemeNullableScalarRelationFilter, Prisma.LexemeWhereInput> | null
 }, "id">
 
 export type ValencyArgumentOrderByWithAggregationInput = {
@@ -274,6 +291,7 @@ export type ValencyArgumentOrderByWithAggregationInput = {
   role?: Prisma.SortOrderInput | Prisma.SortOrder
   case?: Prisma.SortOrder
   preposition?: Prisma.SortOrderInput | Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrderInput | Prisma.SortOrder
   isOptional?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   _count?: Prisma.ValencyArgumentCountOrderByAggregateInput
@@ -292,6 +310,7 @@ export type ValencyArgumentScalarWhereWithAggregatesInput = {
   role?: Prisma.StringNullableWithAggregatesFilter<"ValencyArgument"> | string | null
   case?: Prisma.StringWithAggregatesFilter<"ValencyArgument"> | string
   preposition?: Prisma.StringNullableWithAggregatesFilter<"ValencyArgument"> | string | null
+  prepositionLexemeId?: Prisma.IntNullableWithAggregatesFilter<"ValencyArgument"> | number | null
   isOptional?: Prisma.BoolWithAggregatesFilter<"ValencyArgument"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"ValencyArgument"> | number
 }
@@ -303,6 +322,7 @@ export type ValencyArgumentCreateInput = {
   isOptional?: boolean
   sortOrder?: number
   frame: Prisma.ValencyFrameCreateNestedOneWithoutArgumentsInput
+  prepositionLexeme?: Prisma.LexemeCreateNestedOneWithoutValencyArgumentsAsPrepositionInput
 }
 
 export type ValencyArgumentUncheckedCreateInput = {
@@ -311,6 +331,7 @@ export type ValencyArgumentUncheckedCreateInput = {
   role?: string | null
   case: string
   preposition?: string | null
+  prepositionLexemeId?: number | null
   isOptional?: boolean
   sortOrder?: number
 }
@@ -322,6 +343,7 @@ export type ValencyArgumentUpdateInput = {
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   frame?: Prisma.ValencyFrameUpdateOneRequiredWithoutArgumentsNestedInput
+  prepositionLexeme?: Prisma.LexemeUpdateOneWithoutValencyArgumentsAsPrepositionNestedInput
 }
 
 export type ValencyArgumentUncheckedUpdateInput = {
@@ -330,6 +352,7 @@ export type ValencyArgumentUncheckedUpdateInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   case?: Prisma.StringFieldUpdateOperationsInput | string
   preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepositionLexemeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -340,6 +363,7 @@ export type ValencyArgumentCreateManyInput = {
   role?: string | null
   case: string
   preposition?: string | null
+  prepositionLexemeId?: number | null
   isOptional?: boolean
   sortOrder?: number
 }
@@ -358,6 +382,7 @@ export type ValencyArgumentUncheckedUpdateManyInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   case?: Prisma.StringFieldUpdateOperationsInput | string
   preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepositionLexemeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -378,6 +403,7 @@ export type ValencyArgumentCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   case?: Prisma.SortOrder
   preposition?: Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
@@ -385,6 +411,7 @@ export type ValencyArgumentCountOrderByAggregateInput = {
 export type ValencyArgumentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   frameId?: Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
 
@@ -394,6 +421,7 @@ export type ValencyArgumentMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   case?: Prisma.SortOrder
   preposition?: Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
@@ -404,6 +432,7 @@ export type ValencyArgumentMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   case?: Prisma.SortOrder
   preposition?: Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrder
   isOptional?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
 }
@@ -411,7 +440,50 @@ export type ValencyArgumentMinOrderByAggregateInput = {
 export type ValencyArgumentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   frameId?: Prisma.SortOrder
+  prepositionLexemeId?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+}
+
+export type ValencyArgumentCreateNestedManyWithoutPrepositionLexemeInput = {
+  create?: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput> | Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput[] | Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput[]
+  connectOrCreate?: Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput | Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput[]
+  createMany?: Prisma.ValencyArgumentCreateManyPrepositionLexemeInputEnvelope
+  connect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+}
+
+export type ValencyArgumentUncheckedCreateNestedManyWithoutPrepositionLexemeInput = {
+  create?: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput> | Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput[] | Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput[]
+  connectOrCreate?: Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput | Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput[]
+  createMany?: Prisma.ValencyArgumentCreateManyPrepositionLexemeInputEnvelope
+  connect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+}
+
+export type ValencyArgumentUpdateManyWithoutPrepositionLexemeNestedInput = {
+  create?: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput> | Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput[] | Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput[]
+  connectOrCreate?: Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput | Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput[]
+  upsert?: Prisma.ValencyArgumentUpsertWithWhereUniqueWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpsertWithWhereUniqueWithoutPrepositionLexemeInput[]
+  createMany?: Prisma.ValencyArgumentCreateManyPrepositionLexemeInputEnvelope
+  set?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  disconnect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  delete?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  connect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  update?: Prisma.ValencyArgumentUpdateWithWhereUniqueWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpdateWithWhereUniqueWithoutPrepositionLexemeInput[]
+  updateMany?: Prisma.ValencyArgumentUpdateManyWithWhereWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpdateManyWithWhereWithoutPrepositionLexemeInput[]
+  deleteMany?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
+}
+
+export type ValencyArgumentUncheckedUpdateManyWithoutPrepositionLexemeNestedInput = {
+  create?: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput> | Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput[] | Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput[]
+  connectOrCreate?: Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput | Prisma.ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput[]
+  upsert?: Prisma.ValencyArgumentUpsertWithWhereUniqueWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpsertWithWhereUniqueWithoutPrepositionLexemeInput[]
+  createMany?: Prisma.ValencyArgumentCreateManyPrepositionLexemeInputEnvelope
+  set?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  disconnect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  delete?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  connect?: Prisma.ValencyArgumentWhereUniqueInput | Prisma.ValencyArgumentWhereUniqueInput[]
+  update?: Prisma.ValencyArgumentUpdateWithWhereUniqueWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpdateWithWhereUniqueWithoutPrepositionLexemeInput[]
+  updateMany?: Prisma.ValencyArgumentUpdateManyWithWhereWithoutPrepositionLexemeInput | Prisma.ValencyArgumentUpdateManyWithWhereWithoutPrepositionLexemeInput[]
+  deleteMany?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
 }
 
 export type ValencyArgumentCreateNestedManyWithoutFrameInput = {
@@ -456,7 +528,18 @@ export type ValencyArgumentUncheckedUpdateManyWithoutFrameNestedInput = {
   deleteMany?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
 }
 
-export type ValencyArgumentCreateWithoutFrameInput = {
+export type ValencyArgumentCreateWithoutPrepositionLexemeInput = {
+  role?: string | null
+  case: string
+  preposition?: string | null
+  isOptional?: boolean
+  sortOrder?: number
+  frame: Prisma.ValencyFrameCreateNestedOneWithoutArgumentsInput
+}
+
+export type ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput = {
+  id?: number
+  frameId: number
   role?: string | null
   case: string
   preposition?: string | null
@@ -464,11 +547,60 @@ export type ValencyArgumentCreateWithoutFrameInput = {
   sortOrder?: number
 }
 
+export type ValencyArgumentCreateOrConnectWithoutPrepositionLexemeInput = {
+  where: Prisma.ValencyArgumentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput>
+}
+
+export type ValencyArgumentCreateManyPrepositionLexemeInputEnvelope = {
+  data: Prisma.ValencyArgumentCreateManyPrepositionLexemeInput | Prisma.ValencyArgumentCreateManyPrepositionLexemeInput[]
+}
+
+export type ValencyArgumentUpsertWithWhereUniqueWithoutPrepositionLexemeInput = {
+  where: Prisma.ValencyArgumentWhereUniqueInput
+  update: Prisma.XOR<Prisma.ValencyArgumentUpdateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedUpdateWithoutPrepositionLexemeInput>
+  create: Prisma.XOR<Prisma.ValencyArgumentCreateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedCreateWithoutPrepositionLexemeInput>
+}
+
+export type ValencyArgumentUpdateWithWhereUniqueWithoutPrepositionLexemeInput = {
+  where: Prisma.ValencyArgumentWhereUniqueInput
+  data: Prisma.XOR<Prisma.ValencyArgumentUpdateWithoutPrepositionLexemeInput, Prisma.ValencyArgumentUncheckedUpdateWithoutPrepositionLexemeInput>
+}
+
+export type ValencyArgumentUpdateManyWithWhereWithoutPrepositionLexemeInput = {
+  where: Prisma.ValencyArgumentScalarWhereInput
+  data: Prisma.XOR<Prisma.ValencyArgumentUpdateManyMutationInput, Prisma.ValencyArgumentUncheckedUpdateManyWithoutPrepositionLexemeInput>
+}
+
+export type ValencyArgumentScalarWhereInput = {
+  AND?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
+  OR?: Prisma.ValencyArgumentScalarWhereInput[]
+  NOT?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
+  id?: Prisma.IntFilter<"ValencyArgument"> | number
+  frameId?: Prisma.IntFilter<"ValencyArgument"> | number
+  role?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
+  case?: Prisma.StringFilter<"ValencyArgument"> | string
+  preposition?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
+  prepositionLexemeId?: Prisma.IntNullableFilter<"ValencyArgument"> | number | null
+  isOptional?: Prisma.BoolFilter<"ValencyArgument"> | boolean
+  sortOrder?: Prisma.IntFilter<"ValencyArgument"> | number
+}
+
+export type ValencyArgumentCreateWithoutFrameInput = {
+  role?: string | null
+  case: string
+  preposition?: string | null
+  isOptional?: boolean
+  sortOrder?: number
+  prepositionLexeme?: Prisma.LexemeCreateNestedOneWithoutValencyArgumentsAsPrepositionInput
+}
+
 export type ValencyArgumentUncheckedCreateWithoutFrameInput = {
   id?: number
   role?: string | null
   case: string
   preposition?: string | null
+  prepositionLexemeId?: number | null
   isOptional?: boolean
   sortOrder?: number
 }
@@ -498,17 +630,43 @@ export type ValencyArgumentUpdateManyWithWhereWithoutFrameInput = {
   data: Prisma.XOR<Prisma.ValencyArgumentUpdateManyMutationInput, Prisma.ValencyArgumentUncheckedUpdateManyWithoutFrameInput>
 }
 
-export type ValencyArgumentScalarWhereInput = {
-  AND?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
-  OR?: Prisma.ValencyArgumentScalarWhereInput[]
-  NOT?: Prisma.ValencyArgumentScalarWhereInput | Prisma.ValencyArgumentScalarWhereInput[]
-  id?: Prisma.IntFilter<"ValencyArgument"> | number
-  frameId?: Prisma.IntFilter<"ValencyArgument"> | number
-  role?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
-  case?: Prisma.StringFilter<"ValencyArgument"> | string
-  preposition?: Prisma.StringNullableFilter<"ValencyArgument"> | string | null
-  isOptional?: Prisma.BoolFilter<"ValencyArgument"> | boolean
-  sortOrder?: Prisma.IntFilter<"ValencyArgument"> | number
+export type ValencyArgumentCreateManyPrepositionLexemeInput = {
+  id?: number
+  frameId: number
+  role?: string | null
+  case: string
+  preposition?: string | null
+  isOptional?: boolean
+  sortOrder?: number
+}
+
+export type ValencyArgumentUpdateWithoutPrepositionLexemeInput = {
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  case?: Prisma.StringFieldUpdateOperationsInput | string
+  preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  frame?: Prisma.ValencyFrameUpdateOneRequiredWithoutArgumentsNestedInput
+}
+
+export type ValencyArgumentUncheckedUpdateWithoutPrepositionLexemeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  frameId?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  case?: Prisma.StringFieldUpdateOperationsInput | string
+  preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type ValencyArgumentUncheckedUpdateManyWithoutPrepositionLexemeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  frameId?: Prisma.IntFieldUpdateOperationsInput | number
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  case?: Prisma.StringFieldUpdateOperationsInput | string
+  preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ValencyArgumentCreateManyFrameInput = {
@@ -516,6 +674,7 @@ export type ValencyArgumentCreateManyFrameInput = {
   role?: string | null
   case: string
   preposition?: string | null
+  prepositionLexemeId?: number | null
   isOptional?: boolean
   sortOrder?: number
 }
@@ -526,6 +685,7 @@ export type ValencyArgumentUpdateWithoutFrameInput = {
   preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  prepositionLexeme?: Prisma.LexemeUpdateOneWithoutValencyArgumentsAsPrepositionNestedInput
 }
 
 export type ValencyArgumentUncheckedUpdateWithoutFrameInput = {
@@ -533,6 +693,7 @@ export type ValencyArgumentUncheckedUpdateWithoutFrameInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   case?: Prisma.StringFieldUpdateOperationsInput | string
   preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepositionLexemeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -542,6 +703,7 @@ export type ValencyArgumentUncheckedUpdateManyWithoutFrameInput = {
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   case?: Prisma.StringFieldUpdateOperationsInput | string
   preposition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  prepositionLexemeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isOptional?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -554,9 +716,11 @@ export type ValencyArgumentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   role?: boolean
   case?: boolean
   preposition?: boolean
+  prepositionLexemeId?: boolean
   isOptional?: boolean
   sortOrder?: boolean
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }, ExtArgs["result"]["valencyArgument"]>
 
 export type ValencyArgumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -565,9 +729,11 @@ export type ValencyArgumentSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   role?: boolean
   case?: boolean
   preposition?: boolean
+  prepositionLexemeId?: boolean
   isOptional?: boolean
   sortOrder?: boolean
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }, ExtArgs["result"]["valencyArgument"]>
 
 export type ValencyArgumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -576,9 +742,11 @@ export type ValencyArgumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   role?: boolean
   case?: boolean
   preposition?: boolean
+  prepositionLexemeId?: boolean
   isOptional?: boolean
   sortOrder?: boolean
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }, ExtArgs["result"]["valencyArgument"]>
 
 export type ValencyArgumentSelectScalar = {
@@ -587,25 +755,30 @@ export type ValencyArgumentSelectScalar = {
   role?: boolean
   case?: boolean
   preposition?: boolean
+  prepositionLexemeId?: boolean
   isOptional?: boolean
   sortOrder?: boolean
 }
 
-export type ValencyArgumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "frameId" | "role" | "case" | "preposition" | "isOptional" | "sortOrder", ExtArgs["result"]["valencyArgument"]>
+export type ValencyArgumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "frameId" | "role" | "case" | "preposition" | "prepositionLexemeId" | "isOptional" | "sortOrder", ExtArgs["result"]["valencyArgument"]>
 export type ValencyArgumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }
 export type ValencyArgumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }
 export type ValencyArgumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   frame?: boolean | Prisma.ValencyFrameDefaultArgs<ExtArgs>
+  prepositionLexeme?: boolean | Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>
 }
 
 export type $ValencyArgumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ValencyArgument"
   objects: {
     frame: Prisma.$ValencyFramePayload<ExtArgs>
+    prepositionLexeme: Prisma.$LexemePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -613,6 +786,7 @@ export type $ValencyArgumentPayload<ExtArgs extends runtime.Types.Extensions.Int
     role: string | null
     case: string
     preposition: string | null
+    prepositionLexemeId: number | null
     isOptional: boolean
     sortOrder: number
   }, ExtArgs["result"]["valencyArgument"]>
@@ -1010,6 +1184,7 @@ readonly fields: ValencyArgumentFieldRefs;
 export interface Prisma__ValencyArgumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   frame<T extends Prisma.ValencyFrameDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ValencyFrameDefaultArgs<ExtArgs>>): Prisma.Prisma__ValencyFrameClient<runtime.Types.Result.GetResult<Prisma.$ValencyFramePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  prepositionLexeme<T extends Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ValencyArgument$prepositionLexemeArgs<ExtArgs>>): Prisma.Prisma__LexemeClient<runtime.Types.Result.GetResult<Prisma.$LexemePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1044,6 +1219,7 @@ export interface ValencyArgumentFieldRefs {
   readonly role: Prisma.FieldRef<"ValencyArgument", 'String'>
   readonly case: Prisma.FieldRef<"ValencyArgument", 'String'>
   readonly preposition: Prisma.FieldRef<"ValencyArgument", 'String'>
+  readonly prepositionLexemeId: Prisma.FieldRef<"ValencyArgument", 'Int'>
   readonly isOptional: Prisma.FieldRef<"ValencyArgument", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"ValencyArgument", 'Int'>
 }
@@ -1442,6 +1618,25 @@ export type ValencyArgumentDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many ValencyArguments to delete.
    */
   limit?: number
+}
+
+/**
+ * ValencyArgument.prepositionLexeme
+ */
+export type ValencyArgument$prepositionLexemeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lexeme
+   */
+  select?: Prisma.LexemeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lexeme
+   */
+  omit?: Prisma.LexemeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LexemeInclude<ExtArgs> | null
+  where?: Prisma.LexemeWhereInput
 }
 
 /**

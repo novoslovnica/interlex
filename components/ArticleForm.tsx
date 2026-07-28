@@ -184,8 +184,15 @@ interface ValencyArgumentData {
   id: number
   case: string
   preposition: string
+  prepositionLexemeId: number | null
   role: string
   isOptional: boolean
+}
+
+interface PrepositionOption {
+  id: number
+  slug: string
+  value: string
 }
 
 interface ValencyFrameData {
@@ -309,6 +316,82 @@ function SelectField({
           </option>
         ))}
       </select>
+    </div>
+  )
+}
+
+// Список предлогов небольшой (десятки лексем pos=ADP) — фильтруется на
+// клиенте по уже загруженному целиком списку, без отдельного
+// debounce-поиска на сервере (см. GET /api/lexicon/prepositions).
+function PrepositionPicker({
+  value,
+  options,
+  onChange,
+}: {
+  value: { id: number | null; text: string }
+  options: PrepositionOption[]
+  onChange: (opt: PrepositionOption | null) => void
+}) {
+  const [query, setQuery] = useState(value.text)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setQuery(value.text)
+  }, [value.text])
+
+  const filtered = query.trim()
+    ? options.filter((o) => o.value.toLowerCase().includes(query.trim().toLowerCase()))
+    : options
+
+  return (
+    <div className="relative w-28">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value)
+          setOpen(true)
+        }}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        className="w-full px-2 py-1 border rounded bg-background text-xs"
+        placeholder="предлог"
+      />
+      {open && (
+        <div className="absolute z-20 mt-0.5 w-40 max-h-48 overflow-y-auto border rounded bg-background shadow-lg">
+          <button
+            type="button"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              onChange(null)
+              setQuery("")
+              setOpen(false)
+            }}
+            className="w-full text-left px-2 py-1 text-xs text-muted-foreground hover:bg-muted/30"
+          >
+            — без предлога —
+          </button>
+          {filtered.length === 0 ? (
+            <div className="px-2 py-1 text-xs text-muted-foreground">Не найдено</div>
+          ) : (
+            filtered.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  onChange(opt)
+                  setQuery(opt.value)
+                  setOpen(false)
+                }}
+                className="w-full text-left px-2 py-1 text-xs hover:bg-muted/30"
+              >
+                {opt.value}
+              </button>
+            ))
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -479,6 +562,14 @@ export default function ArticleForm({
     initialData?.attachedRoots || []
   )
   const [newRoots, setNewRoots] = useState<string[]>([])
+
+  const [prepositionOptions, setPrepositionOptions] = useState<PrepositionOption[]>([])
+  useEffect(() => {
+    fetch("/api/lexicon/prepositions")
+      .then((res) => (res.ok ? res.json() : { prepositions: [] }))
+      .then((data) => setPrepositionOptions(data.prepositions ?? []))
+      .catch(() => setPrepositionOptions([]))
+  }, [])
 
   const [rejectDialog, setRejectDialog] = useState<{
     meaningIdx: number
@@ -710,7 +801,7 @@ export default function ArticleForm({
           valencyFrames: m.valencyFrames.map((f, j) =>
             j !== frameIdx
               ? f
-              : { ...f, arguments: [...f.arguments, { id: 0, case: GrammaticalCase.GEN, preposition: "", role: "", isOptional: false }] }
+              : { ...f, arguments: [...f.arguments, { id: 0, case: GrammaticalCase.GEN, preposition: "", prepositionLexemeId: null, role: "", isOptional: false }] }
           ),
         }
       })
@@ -741,6 +832,32 @@ export default function ArticleForm({
             j !== frameIdx
               ? f
               : { ...f, arguments: f.arguments.map((a, k) => (k === argIdx ? { ...a, [field]: value } : a)) }
+          ),
+        }
+      })
+    )
+  }
+
+  // Отдельно от updateValencyArgument — выбор предлога из списка меняет
+  // сразу два поля (текстовый кэш для отображения + id связанной лексемы),
+  // а не одно.
+  function selectValencyPreposition(frameIdx: number, argIdx: number, opt: PrepositionOption | null) {
+    setMeanings((prev) =>
+      prev.map((m, i) => {
+        if (i !== selectedMeaningIdx) return m
+        return {
+          ...m,
+          valencyFrames: m.valencyFrames.map((f, j) =>
+            j !== frameIdx
+              ? f
+              : {
+                  ...f,
+                  arguments: f.arguments.map((a, k) =>
+                    k === argIdx
+                      ? { ...a, preposition: opt?.value ?? "", prepositionLexemeId: opt?.id ?? null }
+                      : a
+                  ),
+                }
           ),
         }
       })
@@ -1257,12 +1374,10 @@ export default function ArticleForm({
                               options={VALENCY_CASE_OPTIONS}
                               onChange={(v) => updateValencyArgument(frameIdx, argIdx, "case", v as string)}
                             />
-                            <input
-                              type="text"
-                              value={arg.preposition}
-                              onChange={(e) => updateValencyArgument(frameIdx, argIdx, "preposition", e.target.value)}
-                              className="w-24 px-2 py-1 border rounded bg-background text-xs"
-                              placeholder="предлог"
+                            <PrepositionPicker
+                              value={{ id: arg.prepositionLexemeId, text: arg.preposition }}
+                              options={prepositionOptions}
+                              onChange={(opt) => selectValencyPreposition(frameIdx, argIdx, opt)}
                             />
                             <input
                               type="text"

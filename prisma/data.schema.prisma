@@ -76,6 +76,8 @@ model Lexeme {
   lexemes_morphemes LexemeMorpheme[]
   anomalies         InflectionAnomaly[]
   lexemeAllophones  LexemeAllophone[]
+  // Аргументы валентности (в т.ч. чужих слов), где эта лексема выбрана как предлог
+  valencyArgumentsAsPreposition ValencyArgument[] @relation("ValencyArgumentPreposition")
 
   @@index([slug])
   @@index([value])
@@ -526,12 +528,25 @@ model ValencyArgument {
   frameId     Int
   role        String? // свободный текст: "адресат", "прямое дополнение" и т.п.
   case        String
-  preposition String? // null = управление без предлога (голым падежом)
+  // Текстовый кэш для отображения (Word.tsx и т.п. читают это поле
+  // напрямую без джойна) — синхронизируется с prepositionLexeme.value при
+  // выборе из списка (lib/valency.ts). null = управление без предлога
+  // (голым падежом). Остаётся источником истины только для старых строк,
+  // у которых prepositionLexemeId ещё не проставлен — см.
+  // scripts/db/2026-07-29-add-valency-preposition-lexeme-fk.ts.
+  preposition String?
+  // Связь на реальную лексему предлога (Lexeme.pos='ADP') — заведена
+  // 2026-07-29, чтобы поле "предлог" было выбором из списка, а не
+  // произвольным текстом. onDelete SetNull — удаление лексемы предлога не
+  // должно каскадно удалять аргумент валентности, только снимать связь.
+  prepositionLexemeId Int?
   isOptional  Boolean @default(false)
   sortOrder   Int     @default(0)
 
-  frame ValencyFrame @relation(fields: [frameId], references: [id], onDelete: Cascade)
+  frame             ValencyFrame @relation(fields: [frameId], references: [id], onDelete: Cascade)
+  prepositionLexeme Lexeme?      @relation("ValencyArgumentPreposition", fields: [prepositionLexemeId], references: [id], onDelete: SetNull)
 
   @@index([frameId])
+  @@index([prepositionLexemeId])
   @@map("valency_arguments")
 }
