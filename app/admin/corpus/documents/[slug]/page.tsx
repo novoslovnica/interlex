@@ -49,12 +49,15 @@ const CorpusDocumentPageWrapper = async ({
 
   const totalTokens = document._count.tokens
 
-  const [punctCount, oovCount] = await Promise.all([
+  const [punctCount, oovCount, dependencyCount] = await Promise.all([
     prismaCorpus.corpusToken.count({
       where: { documentSlug: slug, wordIndex: -1 },
     }),
     prismaCorpus.corpusToken.count({
       where: { documentSlug: slug, wordIndex: { gte: 0 }, pos: "X", wordSlug: null },
+    }),
+    prismaCorpus.corpusDependency.count({
+      where: { sentence: { documentSlug: slug } },
     }),
   ])
 
@@ -76,6 +79,7 @@ const CorpusDocumentPageWrapper = async ({
         punctCount,
         nonPunctTokens,
         whitespaceWords,
+        dependencyCount,
       }}
     />
   )

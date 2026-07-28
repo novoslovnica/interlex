@@ -52,6 +52,9 @@ export enum SystemFeature {
     // Конструктор корпуса
     CorpusBuilder = "corpus_builder",
 
+    // Синтаксический разбор корпуса (dependency-граф, см. lib/corpus/syntax/)
+    CorpusSyntaxEdit = "corpus_syntax_edit",
+
     // Консолидированная семантическая сеть (2026-07-23) — новые типы отношений
     PosSynonymsEdit = "pos_synonyms_edit",
     InstanceOfEdit = "instance_of_edit",
@@ -313,6 +316,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CorpusBuilder]: {
         label: "Конструктор корпуса",
         description: "Разметка текстов и сохранение в корпус",
+        category: "Корпус",
+    },
+    [SystemFeature.CorpusSyntaxEdit]: {
+        label: "Синтаксический разбор корпуса",
+        description: "Запуск разбора и ручная правка dependency-графа предложений",
         category: "Корпус",
     },
 

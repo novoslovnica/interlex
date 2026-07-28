@@ -28,6 +28,7 @@ interface Metrics {
   punctCount: number
   nonPunctTokens: number
   whitespaceWords: number
+  dependencyCount: number
 }
 
 export default function CorpusDocumentEditPage({
@@ -48,6 +49,8 @@ export default function CorpusDocumentEditPage({
 
   const [reanalyzing, setReanalyzing] = useState(false)
   const [reanalysisResult, setReanalysisResult] = useState<string | null>(null)
+  const [parsingSyntax, setParsingSyntax] = useState(false)
+  const [syntaxResult, setSyntaxResult] = useState<string | null>(null)
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === "ADMIN"
 
@@ -94,6 +97,26 @@ export default function CorpusDocumentEditPage({
     }
   }, [document.slug, router])
 
+  const handleParseSyntax = useCallback(async () => {
+    setParsingSyntax(true)
+    setSyntaxResult(null)
+    setMessage(null)
+    try {
+      const res = await fetch(`/api/admin/corpus/documents/${document.slug}/parse-syntax`, { method: "POST" })
+      const data = await res.json()
+      if (data.ok) {
+        setSyntaxResult(`Предложений: ${data.sentencesProcessed}, рёбер: ${data.edgesWritten}`)
+        router.refresh()
+      } else {
+        setSyntaxResult(`Ошибка: ${data.error}`)
+      }
+    } catch (e) {
+      setSyntaxResult(`Ошибка запроса: ${e instanceof Error ? e.message : "Unknown"}`)
+    } finally {
+      setParsingSyntax(false)
+    }
+  }, [document.slug, router])
+
   const tokenChecksumOk = metrics.nonPunctTokens === metrics.whitespaceWords
 
   return (
@@ -101,12 +124,12 @@ export default function CorpusDocumentEditPage({
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <a
+            <Link
               href="/admin/corpus/documents"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Назад к документам
-            </a>
+            </Link>
             <h1 className="text-2xl font-bold mt-1">Редактирование документа</h1>
           </div>
           <div className="flex gap-2">
@@ -117,6 +140,15 @@ export default function CorpusDocumentEditPage({
                 className="px-4 py-2 text-sm font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
               >
                 {reanalyzing ? "Анализ..." : "Пересчитать POS-tagging"}
+              </button>
+            )}
+            {isAdmin && document._count.tokens > 0 && (
+              <button
+                onClick={handleParseSyntax}
+                disabled={parsingSyntax}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+              >
+                {parsingSyntax ? "Разбор..." : "Разобрать синтаксис"}
               </button>
             )}
             <button
@@ -144,6 +176,12 @@ export default function CorpusDocumentEditPage({
           {reanalysisResult && (
             <div className="mb-4 p-3 rounded-lg text-sm bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
               {reanalysisResult}
+            </div>
+          )}
+
+          {syntaxResult && (
+            <div className="mb-4 p-3 rounded-lg text-sm bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
+              {syntaxResult}
             </div>
           )}
 
@@ -237,6 +275,13 @@ export default function CorpusDocumentEditPage({
             </div>
             <div className="text-xs text-muted-foreground mt-1">Кандидаты</div>
           </div>
+          <Link
+            href={`/admin/corpus/documents/${document.slug}/syntax`}
+            className="rounded-lg border p-4 text-center hover:bg-muted/20 transition-colors cursor-pointer"
+          >
+            <div className="text-2xl font-bold">{metrics.dependencyCount}</div>
+            <div className="text-xs text-muted-foreground mt-1">Синт. связей</div>
+          </Link>
         </div>
 
         <div className="rounded-lg border overflow-hidden">
