@@ -35,6 +35,7 @@ export async function GET(
         where: { documentSlug: slug },
         orderBy: { tokenIndex: "asc" },
         select: {
+          id: true,
           surfaceForm: true,
           lemma: true,
           pos: true,
@@ -58,6 +59,7 @@ export async function GET(
         const isPunctuation = t.wordIndex === -1
         const isRecognized = !isPunctuation && t.wordSlug !== null
         return {
+          id: t.id.toString(),
           surfaceForm: t.surfaceForm,
           isPunctuation,
           isRecognized,

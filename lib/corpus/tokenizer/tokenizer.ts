@@ -3,6 +3,7 @@ import { TokenPayload, TokenizerResult, SentencePayload, CorpusTokenInput, Segme
 import { analyzeWord } from './morphology';
 import { DbAnalyzer } from './dbAnalyzer';
 import { CollocationMatcher } from './collocationMatcher';
+import { applyDocumentFlavorBias } from './flavorBias';
 
 const SEGMENT_SPLIT = /\n\s*\n/;
 const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
@@ -56,6 +57,14 @@ export class Tokenizer {
                         wordSlug: match.record.wordSlug,
                         feats: {},
                         matchCount: 1,
+                        candidates: [{
+                            wordSlug: match.record.wordSlug,
+                            lemma: match.record.lemma,
+                            pos: match.record.pos as PosType,
+                            feats: {},
+                            score: 1,
+                            source: 'collocation',
+                        }],
                     };
                     for (let k = 0; k < match.length; k++) {
                         results.push({ surfaceForm: rawTokens[i + k], isPunctuation: false, analysis });
@@ -69,7 +78,8 @@ export class Tokenizer {
             if (isPunct) {
                 analysis = { lemma: t, pos: PosType.PUNCT, wordSlug: null, feats: {} };
             } else if (analyzer) {
-                const dbResult = await analyzer.analyzeWord(t);
+                const leftNeighbor = i > 0 ? rawTokens[i - 1] : undefined;
+                const dbResult = await analyzer.analyzeWord(t, { leftNeighbor });
                 analysis = dbResult ?? analyzeWord(t);
             } else {
                 analysis = analyzeWord(t);
@@ -142,6 +152,7 @@ export class Tokenizer {
                         wordSlug: t.analysis.wordSlug,
                         matchCount: t.analysis.matchCount ?? 0,
                         feats: t.analysis.feats,
+                        candidates: t.analysis.candidates ?? [],
                     });
 
                     globalTokenIndex++;
@@ -151,6 +162,18 @@ export class Tokenizer {
                 }
             }
         }
+
+        applyDocumentFlavorBias(
+            tokenInputs,
+            (t) => t.candidates,
+            (t) => t.matchCount,
+            (t, winner) => {
+                t.wordSlug = winner.wordSlug;
+                t.lemma = winner.lemma;
+                t.pos = winner.pos;
+                t.feats = winner.feats;
+            },
+        );
 
         return { segments, sentences, tokenInputs };
     }

@@ -388,6 +388,7 @@ export const ModelName = {
   CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
+  CorpusTokenCandidate: 'CorpusTokenCandidate',
   CorpusDependency: 'CorpusDependency',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusDependency" | "verbGovernment" | "wordFormPriority" | "corpusConfig"
+    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusTokenCandidate" | "corpusDependency" | "verbGovernment" | "wordFormPriority" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -704,6 +705,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CorpusTokenCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CorpusTokenCountAggregateOutputType> | number
+        }
+      }
+    }
+    CorpusTokenCandidate: {
+      payload: Prisma.$CorpusTokenCandidatePayload<ExtArgs>
+      fields: Prisma.CorpusTokenCandidateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusTokenCandidateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusTokenCandidateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusTokenCandidateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusTokenCandidateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        findMany: {
+          args: Prisma.CorpusTokenCandidateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>[]
+        }
+        create: {
+          args: Prisma.CorpusTokenCandidateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        createMany: {
+          args: Prisma.CorpusTokenCandidateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusTokenCandidateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusTokenCandidateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        update: {
+          args: Prisma.CorpusTokenCandidateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusTokenCandidateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusTokenCandidateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusTokenCandidateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusTokenCandidateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusTokenCandidatePayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusTokenCandidateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusTokenCandidate>
+        }
+        groupBy: {
+          args: Prisma.CorpusTokenCandidateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusTokenCandidateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusTokenCandidateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusTokenCandidateCountAggregateOutputType> | number
         }
       }
     }
@@ -1090,10 +1165,28 @@ export const CorpusTokenScalarFieldEnum = {
   pos: 'pos',
   feats: 'feats',
   wordSlug: 'wordSlug',
-  matchCount: 'matchCount'
+  matchCount: 'matchCount',
+  resolutionSource: 'resolutionSource'
 } as const
 
 export type CorpusTokenScalarFieldEnum = (typeof CorpusTokenScalarFieldEnum)[keyof typeof CorpusTokenScalarFieldEnum]
+
+
+export const CorpusTokenCandidateScalarFieldEnum = {
+  id: 'id',
+  tokenId: 'tokenId',
+  wordSlug: 'wordSlug',
+  lemma: 'lemma',
+  pos: 'pos',
+  feats: 'feats',
+  flavor: 'flavor',
+  score: 'score',
+  source: 'source',
+  rank: 'rank',
+  createdAt: 'createdAt'
+} as const
+
+export type CorpusTokenCandidateScalarFieldEnum = (typeof CorpusTokenCandidateScalarFieldEnum)[keyof typeof CorpusTokenCandidateScalarFieldEnum]
 
 
 export const CorpusDependencyScalarFieldEnum = {
@@ -1368,6 +1461,7 @@ export type GlobalOmitConfig = {
   corpusSegment?: Prisma.CorpusSegmentOmit
   corpusSentence?: Prisma.CorpusSentenceOmit
   corpusToken?: Prisma.CorpusTokenOmit
+  corpusTokenCandidate?: Prisma.CorpusTokenCandidateOmit
   corpusDependency?: Prisma.CorpusDependencyOmit
   verbGovernment?: Prisma.VerbGovernmentOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit

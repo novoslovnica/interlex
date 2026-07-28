@@ -55,6 +55,7 @@ export const ModelName = {
   CorpusSegment: 'CorpusSegment',
   CorpusSentence: 'CorpusSentence',
   CorpusToken: 'CorpusToken',
+  CorpusTokenCandidate: 'CorpusTokenCandidate',
   CorpusDependency: 'CorpusDependency',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
@@ -125,10 +126,28 @@ export const CorpusTokenScalarFieldEnum = {
   pos: 'pos',
   feats: 'feats',
   wordSlug: 'wordSlug',
-  matchCount: 'matchCount'
+  matchCount: 'matchCount',
+  resolutionSource: 'resolutionSource'
 } as const
 
 export type CorpusTokenScalarFieldEnum = (typeof CorpusTokenScalarFieldEnum)[keyof typeof CorpusTokenScalarFieldEnum]
+
+
+export const CorpusTokenCandidateScalarFieldEnum = {
+  id: 'id',
+  tokenId: 'tokenId',
+  wordSlug: 'wordSlug',
+  lemma: 'lemma',
+  pos: 'pos',
+  feats: 'feats',
+  flavor: 'flavor',
+  score: 'score',
+  source: 'source',
+  rank: 'rank',
+  createdAt: 'createdAt'
+} as const
+
+export type CorpusTokenCandidateScalarFieldEnum = (typeof CorpusTokenCandidateScalarFieldEnum)[keyof typeof CorpusTokenCandidateScalarFieldEnum]
 
 
 export const CorpusDependencyScalarFieldEnum = {

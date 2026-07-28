@@ -30,6 +30,24 @@ interface LexemeInfo {
   corpusHapax: boolean | null
 }
 
+interface CandidateItem {
+  id: number
+  wordSlug: string
+  lemma: string
+  pos: string
+  feats: Record<string, string>
+  flavor: string | null
+  score: number
+  source: string
+  rank: number
+}
+
+interface LexemeSearchResult {
+  slug: string
+  value: string | null
+  pos: string | null
+}
+
 const FEAT_LABELS: Record<string, string> = {
   nom: "Именительный", gen: "Родительный", dat: "Дательный", acc: "Винительный",
   ins: "Творительный", loc: "Местный", voc: "Звательный",
@@ -58,16 +76,48 @@ const FEAT_ORDER = [
   { key: "aspect", label: "Вид" },
 ]
 
+// Короткие коды — та же конвенция, что использует сам FEAT_LABELS выше и
+// CASE_WEIGHTS/GrammaticalCase (lib/grammar/common/case.ts). Значения,
+// сгенерированные грамматическим движком автоматически, на деле хранятся
+// полным словом ('nominative') — известная предсуществующая нестыковка
+// (см. lib/corpus/tokenizer/caseNormalize.ts), не по теме этой формы;
+// ручной ввод сознательно использует "правильную" короткую конвенцию.
+const CASE_OPTIONS = ["nom", "gen", "dat", "acc", "ins", "loc", "voc"]
+const NUMBER_OPTIONS = ["sg", "du", "pl"]
+const GENDER_OPTIONS = ["masc", "fem", "neut"]
+
 export default function TokenSidebar({
   token,
+  documentSlug = "",
   onClose,
+  onResolved,
 }: {
   token: TokenResult | null
+  // Не передаётся из корпус-билдера (app/admin/corpus-builder) — там
+  // документ ещё не сохранён, у токенов нет id, и весь код ниже, что
+  // использует documentSlug, уже защищён проверкой token?.id.
+  documentSlug?: string
   onClose: () => void
+  onResolved?: () => void
 }) {
   const [lexeme, setLexeme] = useState<LexemeInfo | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const [candidates, setCandidates] = useState<CandidateItem[]>([])
+  const [candidatesLoading, setCandidatesLoading] = useState(false)
+  const [resolvingId, setResolvingId] = useState<number | "manual" | null>(null)
+  const [resolveError, setResolveError] = useState<string | null>(null)
+  const [resolveSuccess, setResolveSuccess] = useState(false)
+
+  const [manualOpen, setManualOpen] = useState(false)
+  const [manualQuery, setManualQuery] = useState("")
+  const [manualResults, setManualResults] = useState<LexemeSearchResult[]>([])
+  const [manualSearching, setManualSearching] = useState(false)
+  const [manualSelected, setManualSelected] = useState<LexemeSearchResult | null>(null)
+  const [manualCase, setManualCase] = useState("")
+  const [manualNumber, setManualNumber] = useState("")
+  const [manualGender, setManualGender] = useState("")
 
   const fetchLexeme = useCallback(async (slug: string) => {
     setLoading(true)
@@ -89,6 +139,20 @@ export default function TokenSidebar({
     }
   }, [])
 
+  const fetchCandidates = useCallback(async (tokenId: string) => {
+    setCandidatesLoading(true)
+    try {
+      const res = await fetch(`/api/admin/corpus/documents/${documentSlug}/tokens/${tokenId}/candidates`)
+      if (!res.ok) throw new Error("Failed to fetch")
+      const data = await res.json()
+      setCandidates(data.candidates ?? [])
+    } catch {
+      setCandidates([])
+    } finally {
+      setCandidatesLoading(false)
+    }
+  }, [documentSlug])
+
   useEffect(() => {
     if (token?.wordSlug) {
       fetchLexeme(token.wordSlug)
@@ -97,7 +161,48 @@ export default function TokenSidebar({
       setError(null)
       setLoading(false)
     }
-  }, [token, fetchLexeme])
+
+    if (token?.id) {
+      fetchCandidates(token.id)
+    } else {
+      setCandidates([])
+    }
+
+    setManualOpen(false)
+    setManualQuery("")
+    setManualResults([])
+    setManualSelected(null)
+    setManualCase("")
+    setManualNumber("")
+    setManualGender("")
+    setResolveError(null)
+    setResolveSuccess(false)
+  }, [token, fetchLexeme, fetchCandidates])
+
+  useEffect(() => {
+    if (!manualOpen || manualQuery.trim().length < 2) {
+      setManualResults([])
+      return
+    }
+    const handle = setTimeout(async () => {
+      setManualSearching(true)
+      try {
+        const res = await fetch(`/api/lexicon?search=${encodeURIComponent(manualQuery.trim())}&limit=8`)
+        if (res.ok) {
+          const data = await res.json()
+          const items = Array.isArray(data) ? data : []
+          setManualResults(items.map((r: { slug: string; value: string | null; pos: string | null }) => ({
+            slug: r.slug, value: r.value, pos: r.pos,
+          })))
+        }
+      } catch {
+        setManualResults([])
+      } finally {
+        setManualSearching(false)
+      }
+    }, 300)
+    return () => clearTimeout(handle)
+  }, [manualQuery, manualOpen])
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -107,9 +212,63 @@ export default function TokenSidebar({
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [onClose])
 
+  const afterResolveSuccess = useCallback(() => {
+    setResolveSuccess(true)
+    setTimeout(() => {
+      onResolved?.()
+      onClose()
+    }, 700)
+  }, [onResolved, onClose])
+
+  const handleSelectCandidate = useCallback(async (candidateId: number) => {
+    if (!token?.id) return
+    setResolvingId(candidateId)
+    setResolveError(null)
+    try {
+      const res = await fetch(`/api/admin/corpus/documents/${documentSlug}/tokens/${token.id}/resolve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidateId }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Ошибка сохранения")
+      afterResolveSuccess()
+    } catch (e) {
+      setResolveError(e instanceof Error ? e.message : "Ошибка запроса")
+    } finally {
+      setResolvingId(null)
+    }
+  }, [token, documentSlug, afterResolveSuccess])
+
+  const handleManualSubmit = useCallback(async () => {
+    if (!token?.id || !manualSelected) return
+    setResolvingId("manual")
+    setResolveError(null)
+    try {
+      const feats: Record<string, string> = {}
+      if (manualCase) feats.case = manualCase
+      if (manualNumber) feats.number = manualNumber
+      if (manualGender) feats.gender = manualGender
+
+      const res = await fetch(`/api/admin/corpus/documents/${documentSlug}/tokens/${token.id}/resolve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wordSlug: manualSelected.slug, feats }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error ?? "Ошибка сохранения")
+      afterResolveSuccess()
+    } catch (e) {
+      setResolveError(e instanceof Error ? e.message : "Ошибка запроса")
+    } finally {
+      setResolvingId(null)
+    }
+  }, [token, documentSlug, manualSelected, manualCase, manualNumber, manualGender, afterResolveSuccess])
+
   if (!token) return null
 
   const hasHomonymy = token.matchCount > 1
+  const isManuallyResolved = candidates.some((c) => c.source === "manual")
 
   return (
     <>
@@ -166,6 +325,9 @@ export default function TokenSidebar({
                   {token.isPartialMatch && (
                     <span className="ml-2 text-xs text-yellow-500">основа найдена</span>
                   )}
+                  {isManuallyResolved && (
+                    <span className="ml-2 text-xs text-teal-600 dark:text-teal-400">разрешено вручную</span>
+                  )}
                 </div>
               </div>
 
@@ -202,19 +364,137 @@ export default function TokenSidebar({
               )}
 
               {hasHomonymy && (
-                <div className="rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 p-3">
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 overflow-hidden">
+                  <div className="flex items-center gap-2 px-3 py-2">
                     <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
-                      Неразрешённая омонимия
+                      Неразрешённая омонимия — {token.matchCount} вариантов
                     </span>
                   </div>
-                  <p className="text-xs text-amber-600 dark:text-amber-400">
-                    Найдено {token.matchCount} возможных лексем. Первая выбрана автоматически.
-                  </p>
+
+                  {candidatesLoading ? (
+                    <div className="px-3 pb-3 text-xs text-amber-600 dark:text-amber-400 animate-pulse">Загрузка кандидатов...</div>
+                  ) : candidates.length === 0 ? (
+                    <div className="px-3 pb-3 text-xs text-amber-600 dark:text-amber-400">Не удалось загрузить кандидатов</div>
+                  ) : (
+                    <div className="divide-y divide-amber-200 dark:divide-amber-800">
+                      {candidates.map((c, idx) => {
+                        const isCurrent = idx === 0
+                        const featsStr = Object.entries(c.feats)
+                          .map(([k, v]) => FEAT_LABELS[v] ?? v)
+                          .join(", ")
+                        return (
+                          <div key={c.id} className="px-3 py-2 flex items-center justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono text-xs truncate">{c.lemma}</span>
+                                <span className="text-[10px] text-muted-foreground">{c.pos}</span>
+                                {isCurrent && (
+                                  <span className="text-[10px] px-1 rounded bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200">текущий</span>
+                                )}
+                              </div>
+                              {featsStr && <div className="text-[11px] text-muted-foreground truncate">{featsStr}</div>}
+                            </div>
+                            <button
+                              onClick={() => handleSelectCandidate(c.id)}
+                              disabled={resolvingId !== null || isCurrent}
+                              className="shrink-0 px-2 py-1 text-[11px] font-medium rounded-md bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                            >
+                              {resolvingId === c.id ? "..." : isCurrent ? "выбран" : "Выбрать"}
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
+              )}
+
+              {token.id && (
+                <div className="rounded-lg border border-border overflow-hidden">
+                  <button
+                    onClick={() => setManualOpen((v) => !v)}
+                    className="w-full px-3 py-2 bg-muted/30 text-xs font-medium text-muted-foreground text-left hover:bg-muted/50 transition-colors flex items-center justify-between"
+                  >
+                    <span>Указать вручную</span>
+                    <span>{manualOpen ? "−" : "+"}</span>
+                  </button>
+                  {manualOpen && (
+                    <div className="p-3 space-y-2">
+                      <input
+                        type="text"
+                        value={manualQuery}
+                        onChange={(e) => { setManualQuery(e.target.value); setManualSelected(null) }}
+                        placeholder="Поиск лексемы..."
+                        className="w-full px-2 py-1.5 text-xs rounded-md border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                      {manualSearching && <div className="text-[11px] text-muted-foreground">Поиск...</div>}
+                      {!manualSelected && manualResults.length > 0 && (
+                        <div className="border rounded-md divide-y divide-border max-h-40 overflow-y-auto">
+                          {manualResults.map((r) => (
+                            <button
+                              key={r.slug}
+                              onClick={() => { setManualSelected(r); setManualQuery(r.value ?? r.slug); setManualResults([]) }}
+                              className="w-full text-left px-2 py-1.5 text-xs hover:bg-muted/30 transition-colors flex items-center justify-between"
+                            >
+                              <span className="font-mono">{r.value ?? r.slug}</span>
+                              <span className="text-[10px] text-muted-foreground">{r.pos}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {manualSelected && (
+                        <div className="text-[11px] text-teal-600 dark:text-teal-400">
+                          Выбрано: <span className="font-mono">{manualSelected.value ?? manualSelected.slug}</span> ({manualSelected.pos})
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-3 gap-1.5">
+                        <select
+                          value={manualCase}
+                          onChange={(e) => setManualCase(e.target.value)}
+                          className="px-1.5 py-1 text-[11px] rounded-md border bg-background text-foreground"
+                        >
+                          <option value="">Падеж — </option>
+                          {CASE_OPTIONS.map((v) => <option key={v} value={v}>{FEAT_LABELS[v]}</option>)}
+                        </select>
+                        <select
+                          value={manualNumber}
+                          onChange={(e) => setManualNumber(e.target.value)}
+                          className="px-1.5 py-1 text-[11px] rounded-md border bg-background text-foreground"
+                        >
+                          <option value="">Число — </option>
+                          {NUMBER_OPTIONS.map((v) => <option key={v} value={v}>{FEAT_LABELS[v]}</option>)}
+                        </select>
+                        <select
+                          value={manualGender}
+                          onChange={(e) => setManualGender(e.target.value)}
+                          className="px-1.5 py-1 text-[11px] rounded-md border bg-background text-foreground"
+                        >
+                          <option value="">Род — </option>
+                          {GENDER_OPTIONS.map((v) => <option key={v} value={v}>{FEAT_LABELS[v]}</option>)}
+                        </select>
+                      </div>
+
+                      <button
+                        onClick={handleManualSubmit}
+                        disabled={!manualSelected || resolvingId !== null}
+                        className="w-full px-2 py-1.5 text-xs font-medium rounded-md bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                      >
+                        {resolvingId === "manual" ? "Сохранение..." : "Сохранить"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {resolveError && (
+                <div className="text-xs text-red-500 text-center py-1">{resolveError}</div>
+              )}
+              {resolveSuccess && (
+                <div className="text-xs text-teal-600 dark:text-teal-400 text-center py-1">Сохранено</div>
               )}
 
               {token.isRecognized && lexeme && (

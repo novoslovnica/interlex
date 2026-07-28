@@ -53,7 +53,11 @@ export async function upsertCorpusDocument(
     const { segments, sentences, tokenInputs } = await Tokenizer.tokenizeDocument(slug, rawText, randomUUID, analyzer, collocationMatcher)
 
     const maxIdResult = await prismaCorpus.corpusToken.findFirst({ orderBy: { id: "desc" }, select: { id: true } })
-    let nextTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1
+    const startTokenId = maxIdResult ? Number(maxIdResult.id) + 1 : 1
+    // Предвычисляем id заранее (а не мутируем счётчик внутри .map), чтобы
+    // тот же id можно было использовать и для CorpusToken, и для его
+    // CorpusTokenCandidate — им нужно совпадать.
+    const tokenIds = tokenInputs.map((_, idx) => BigInt(startTokenId + idx))
 
     await prismaCorpus.$transaction(async (tx) => {
         if (existing) {
@@ -113,9 +117,10 @@ export async function upsertCorpusDocument(
         const chunkSize = 5000
         for (let i = 0; i < tokenInputs.length; i += chunkSize) {
             const chunk = tokenInputs.slice(i, i + chunkSize)
+            const chunkIds = tokenIds.slice(i, i + chunkSize)
             await tx.corpusToken.createMany({
-                data: chunk.map((t: CorpusTokenInput) => ({
-                    id: BigInt(nextTokenId++),
+                data: chunk.map((t: CorpusTokenInput, idx) => ({
+                    id: chunkIds[idx],
                     documentSlug: slug,
                     sentenceId: t.sentenceId,
                     tokenIndex: t.tokenIndex,
@@ -128,6 +133,23 @@ export async function upsertCorpusDocument(
                     feats: t.feats as Record<string, string>,
                 })),
             })
+
+            const candidateRows = chunk.flatMap((t: CorpusTokenInput, idx) =>
+                t.candidates.map((c, rank) => ({
+                    tokenId: chunkIds[idx],
+                    wordSlug: c.wordSlug,
+                    lemma: c.lemma,
+                    pos: c.pos,
+                    feats: c.feats as Record<string, string>,
+                    flavor: c.flavor,
+                    score: c.score,
+                    source: c.source,
+                    rank,
+                })),
+            )
+            if (candidateRows.length > 0) {
+                await tx.corpusTokenCandidate.createMany({ data: candidateRows })
+            }
         }
     })
 

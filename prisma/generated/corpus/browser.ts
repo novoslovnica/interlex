@@ -38,6 +38,11 @@ export type CorpusSentence = Prisma.CorpusSentenceModel
  */
 export type CorpusToken = Prisma.CorpusTokenModel
 /**
+ * Model CorpusTokenCandidate
+ * 
+ */
+export type CorpusTokenCandidate = Prisma.CorpusTokenCandidateModel
+/**
  * Model CorpusDependency
  * 
  */

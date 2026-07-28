@@ -55,6 +55,9 @@ export enum SystemFeature {
     // Синтаксический разбор корпуса (dependency-граф, см. lib/corpus/syntax/)
     CorpusSyntaxEdit = "corpus_syntax_edit",
 
+    // Разрешение омонимии токенов корпуса (см. lib/corpus/disambiguation/)
+    CorpusTokenDisambiguate = "corpus_token_disambiguate",
+
     // Консолидированная семантическая сеть (2026-07-23) — новые типы отношений
     PosSynonymsEdit = "pos_synonyms_edit",
     InstanceOfEdit = "instance_of_edit",
@@ -321,6 +324,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CorpusSyntaxEdit]: {
         label: "Синтаксический разбор корпуса",
         description: "Запуск разбора и ручная правка dependency-графа предложений",
+        category: "Корпус",
+    },
+    [SystemFeature.CorpusTokenDisambiguate]: {
+        label: "Разрешение омонимии токенов",
+        description: "Просмотр кандидатов и ручной выбор леммы/граммемы для неоднозначных токенов",
         category: "Корпус",
     },
 

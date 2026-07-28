@@ -1,6 +1,10 @@
 "use client"
 
 export interface TokenResult {
+    // Только у токенов из сохранённого документа (segments API) — превью
+    // /api/corpus/analyze показывает ещё не сохранённые токены, id для них
+    // не существует, ручное разрешение омонима там недоступно.
+    id?: string
     surfaceForm: string
     isPunctuation: boolean
     isRecognized: boolean

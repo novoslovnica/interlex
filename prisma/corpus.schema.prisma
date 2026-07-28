@@ -82,6 +82,11 @@ model CorpusToken {
   wordSlug      String?
   matchCount    Int               @default(1) // Количество омонимов (0 — не найдено, 1 — один вариант, >1 — омонимия)
 
+  // 'auto' | 'manual' — тот же паттерн, что у CorpusDependency.source: ручной
+  // выбор омонима модератором (см. CorpusTokenCandidate) не должен
+  // затираться повторным "Пересчитать POS-tagging" (см. reanalyze route).
+  resolutionSource String         @default("auto")
+
   // Индексы для мгновенного поиска (B-Tree)
   @@index([lemma])
   @@index([pos])
@@ -97,6 +102,35 @@ model CorpusToken {
 
   dependencyAsHead CorpusDependency[] @relation("DependencyHead")
   dependencyAsDep  CorpusDependency?  @relation("DependencyDependent")
+  candidates       CorpusTokenCandidate[]
+}
+
+// Полный набор кандидатов-омонимов на токен (план "разрешение омонимии",
+// Фаза 1). До этого DbAnalyzer.analyzeWord отбрасывал все варианты кроме
+// произвольного (DB-order) победителя, оставляя только CorpusToken.matchCount
+// как голое число — разрешать омонимию было не из чего. Таблица создаётся
+// вручную сырым SQL (scripts/db/2026-07-28-add-corpus-token-candidates.ts),
+// не через `prisma migrate dev` — та же причина, что и у CorpusDependency/
+// VerbGovernment выше (в corpus.db нет _prisma_migrations, см. CLAUDE.md).
+// "id" объявлен как Int (реальная DDL — "INTEGER PRIMARY KEY AUTOINCREMENT",
+// настоящий rowid-алиас SQLite), в отличие от CorpusToken.id, для которого
+// id вычисляется приложением заранее (см. upsertDocument.ts).
+model CorpusTokenCandidate {
+  id        Int      @id @default(autoincrement())
+  tokenId   BigInt
+  wordSlug  String
+  lemma     String
+  pos       String
+  feats     Json?
+  flavor    String?
+  score     Float    @default(0)
+  source    String   @default("form_freq") // 'form_freq' | 'context_gov' | 'flavor' | 'synset' | 'manual'
+  rank      Int      @default(0)
+  createdAt DateTime @default(now())
+
+  token CorpusToken @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+
+  @@index([tokenId])
 }
 
 // Синтаксический разбор (Фаза 1 см. AGENTS.md "Syntax Parser"): одно ребро

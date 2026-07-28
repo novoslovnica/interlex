@@ -1,8 +1,16 @@
 import { generateWordForms } from '@/lib/grammar/morphology/engine';
-import { EngineWordInput, GeneratedForm } from '@/lib/grammar/morphology';
+import { EngineWordInput, GeneratedForm, MorphoGrammarFeats } from '@/lib/grammar/morphology';
 import { PosType, isValidPos } from '@/lib/grammar/common';
-import { MorphoAnalysis } from './types';
+import { MorphoAnalysis, MorphoCandidate, MorphoCandidateSource } from './types';
 import { etymCyrToEtymLat } from '@/lib/transliteration';
+import { getExpectedCasesForPreposition } from '@/lib/corpus/syntax/government';
+import { CASE_WEIGHTS } from '@/lib/corpus/priorities/types';
+import { normalizeCaseValue } from './caseNormalize';
+
+// Управление предлога слева — почти жёсткое грамматическое правило (не
+// статистическая склонность), поэтому перевешивает частотность с большим
+// запасом вместо тонкой подстройки веса.
+const GOVERNMENT_BONUS = 1_000_000;
 
 export interface WordBaseRecord {
     id: number;
@@ -20,9 +28,15 @@ export interface WordBaseRecord {
     fleetingVowelAt: number | null;
     flavor?: string;
     isCollocation?: boolean | null;
+    corpusFrequencyPerMln?: number | null;
 }
 
 type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;
+
+export interface AnalyzeContext {
+    /** Сырой предыдущий токен в предложении (может быть предлогом) — единственный сигнал контекста Фазы 2. */
+    leftNeighbor?: string;
+}
 
 const MAX_END_LEN = 4;
 const MIN_STEM_LEN = 2;
@@ -34,7 +48,7 @@ export class DbAnalyzer {
         private knownPrepositions: string[] = []
     ) {}
 
-    async analyzeWord(surfaceForm: string): Promise<MorphoAnalysis | null> {
+    async analyzeWord(surfaceForm: string, context?: AnalyzeContext): Promise<MorphoAnalysis | null> {
         let clean = surfaceForm.toLowerCase().trim();
         if (!clean) return null;
 
@@ -51,8 +65,19 @@ export class DbAnalyzer {
         const exactMatches = this.matchForms(clean, words);
 
         if (exactMatches.length > 0) {
-            const result = this.toAnalysis(exactMatches[0].word, exactMatches[0].form);
-            result.matchCount = exactMatches.length;
+            // Полный набор омонимов ранжируется по частотности леммы
+            // (Lexeme.corpusFrequencyPerMln) с весом по падежу (CASE_WEIGHTS)
+            // и, если слева стоит известный предлог, корректируется его
+            // управлением (см. scoreMatch) — вместо произвольного DB-order
+            // выбора, который был в Фазе 1. Флавор/синсеты — следующие фазы.
+            const scored = exactMatches
+                .map((m) => ({ ...m, ...this.scoreMatch(m.word, m.form.feats, context?.leftNeighbor) }))
+                .sort((a, b) => b.score - a.score);
+
+            const winner = scored[0];
+            const result = this.toAnalysis(winner.word, winner.form);
+            result.matchCount = scored.length;
+            result.candidates = scored.map((m) => this.toCandidate(m.word, m.form, m.score, m.source));
             return result;
         }
 
@@ -69,7 +94,36 @@ export class DbAnalyzer {
             matchCount: 0,
             isPartialMatch: true,
             flavor: words[0].flavor,
+            candidates: [this.toCandidate(words[0], { surfaceForm: words[0].isv ?? clean, feats: {} }, 0, 'form_freq')],
         };
+    }
+
+    /**
+     * Score = частотность леммы * вес падежа, скорректированная управлением
+     * предлога слева. Управление — почти жёсткое правило, поэтому при его
+     * срабатывании перевешивает частотность (см. GOVERNMENT_BONUS), а не
+     * тонко подмешивается к ней.
+     */
+    private scoreMatch(
+        word: WordBaseRecord,
+        feats: MorphoGrammarFeats,
+        leftNeighbor?: string,
+    ): { score: number; source: MorphoCandidateSource } {
+        const caseValue = normalizeCaseValue(feats.case);
+        const freq = word.corpusFrequencyPerMln ?? 0;
+        const caseWeight = caseValue ? (CASE_WEIGHTS[caseValue] ?? 0.1) : 1;
+        let score = freq * caseWeight;
+        let source: MorphoCandidateSource = 'form_freq';
+
+        if (leftNeighbor && caseValue) {
+            const expectedCases = getExpectedCasesForPreposition(leftNeighbor);
+            if (expectedCases.length > 0) {
+                score += expectedCases.includes(caseValue) ? GOVERNMENT_BONUS : -GOVERNMENT_BONUS;
+                source = 'context_gov';
+            }
+        }
+
+        return { score, source };
     }
 
     private generateHypotheticalBases(clean: string): string[] {
@@ -185,14 +239,24 @@ export class DbAnalyzer {
 
         const bestPos = best.word.pos!;
         const posTag = bestPos.toUpperCase();
+        const resolvedPos = isValidPos(posTag) ? posTag : PosType.X;
         return {
             lemma: best.word.slug,
-            pos: isValidPos(posTag) ? posTag : PosType.X,
+            pos: resolvedPos,
             wordSlug: best.word.slug,
             feats: {},
             matchCount: 1,
             isPartialMatch: true,
             flavor: best.word.flavor,
+            candidates: [{
+                wordSlug: best.word.slug,
+                lemma: best.word.slug,
+                pos: resolvedPos,
+                feats: {},
+                flavor: best.word.flavor,
+                score: 0,
+                source: 'form_freq',
+            }],
         };
     }
 
@@ -204,6 +268,24 @@ export class DbAnalyzer {
             wordSlug: word.slug,
             feats: form.feats,
             flavor: word.flavor,
+        };
+    }
+
+    private toCandidate(
+        word: WordBaseRecord,
+        form: GeneratedForm,
+        score: number = 0,
+        source: MorphoCandidateSource = 'form_freq',
+    ): MorphoCandidate {
+        const pos = (word.pos?.toUpperCase() as PosType) || PosType.X;
+        return {
+            wordSlug: word.slug,
+            lemma: word.slug,
+            pos: isValidPos(pos) ? pos : PosType.X,
+            feats: form.feats,
+            flavor: word.flavor,
+            score,
+            source,
         };
     }
 }

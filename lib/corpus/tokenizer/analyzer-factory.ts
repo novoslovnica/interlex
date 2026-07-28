@@ -76,6 +76,7 @@ export function createQueryWordsByBase(): (
         gender: true,
         animacy: true,
         isCollocation: true,
+        corpusFrequencyPerMln: true,
       },
     })
     return rows.map((r) => ({
@@ -94,6 +95,7 @@ export function createQueryWordsByBase(): (
       fleetingVowelAt: null,
       flavor: lexemeFlavors.get(r.id) ?? "CORE",
       isCollocation: r.isCollocation,
+      corpusFrequencyPerMln: r.corpusFrequencyPerMln,
     }))
   }
 }

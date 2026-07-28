@@ -245,7 +245,12 @@ export default function CorpusSegmentsPage({
         </div>
       </div>
 
-      <TokenSidebar token={sidebarToken} onClose={() => setSidebarToken(null)} />
+      <TokenSidebar
+        token={sidebarToken}
+        documentSlug={document.slug}
+        onClose={() => setSidebarToken(null)}
+        onResolved={() => { if (selectedPos !== null) fetchSegment(selectedPos) }}
+      />
     </div>
   )
 }

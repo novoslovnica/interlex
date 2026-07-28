@@ -51,6 +51,8 @@ export default function CorpusDocumentEditPage({
   const [reanalysisResult, setReanalysisResult] = useState<string | null>(null)
   const [parsingSyntax, setParsingSyntax] = useState(false)
   const [syntaxResult, setSyntaxResult] = useState<string | null>(null)
+  const [resolvingHomonyms, setResolvingHomonyms] = useState(false)
+  const [homonymResolveResult, setHomonymResolveResult] = useState<string | null>(null)
   const { data: session } = useSession()
   const isAdmin = session?.user?.role === "ADMIN"
 
@@ -117,6 +119,26 @@ export default function CorpusDocumentEditPage({
     }
   }, [document.slug, router])
 
+  const handleResolveHomonymsSyntax = useCallback(async () => {
+    setResolvingHomonyms(true)
+    setHomonymResolveResult(null)
+    setMessage(null)
+    try {
+      const res = await fetch(`/api/admin/corpus/documents/${document.slug}/resolve-homonyms-syntax`, { method: "POST" })
+      const data = await res.json()
+      if (data.ok) {
+        setHomonymResolveResult(`Омонимов: ${data.ambiguousTotal}, синт. связей учтено: ${data.dependencyEdgesConsidered}, изменено: ${data.winnersChanged}`)
+        router.refresh()
+      } else {
+        setHomonymResolveResult(`Ошибка: ${data.error}`)
+      }
+    } catch (e) {
+      setHomonymResolveResult(`Ошибка запроса: ${e instanceof Error ? e.message : "Unknown"}`)
+    } finally {
+      setResolvingHomonyms(false)
+    }
+  }, [document.slug, router])
+
   const tokenChecksumOk = metrics.nonPunctTokens === metrics.whitespaceWords
 
   return (
@@ -151,6 +173,15 @@ export default function CorpusDocumentEditPage({
                 {parsingSyntax ? "Разбор..." : "Разобрать синтаксис"}
               </button>
             )}
+            {isAdmin && document._count.tokens > 0 && (
+              <button
+                onClick={handleResolveHomonymsSyntax}
+                disabled={resolvingHomonyms}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+              >
+                {resolvingHomonyms ? "Разрешение..." : "Разрешить омонимы (синтаксис)"}
+              </button>
+            )}
             <button
               onClick={handleSave}
               disabled={saving || !title.trim()}
@@ -182,6 +213,12 @@ export default function CorpusDocumentEditPage({
           {syntaxResult && (
             <div className="mb-4 p-3 rounded-lg text-sm bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
               {syntaxResult}
+            </div>
+          )}
+
+          {homonymResolveResult && (
+            <div className="mb-4 p-3 rounded-lg text-sm bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300">
+              {homonymResolveResult}
             </div>
           )}
 
