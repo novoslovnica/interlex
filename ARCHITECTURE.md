@@ -165,22 +165,28 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │                         CORPUS / KWIC SEARCH (/corpus)                      │
 └─────────────────────────────────────────────────────────────────────────────┘
                                         │
-                    ┌───────────────────┼───────────────────┐
-                    ▼                   ▼                   ▼
-        ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐
-        │   KWIC Search UI  │ │   Tokenizer       │ │   API Endpoints   │
-        │   (/corpus)       │ │   (DbAnalyzer +   │ │   /api/corpus/    │
-        │                   │ │   Tokenizer, see  │ │   analyze, /save  │
-        │ • CQL-style query │ │   lib/corpus/)    │ │                   │
-        └───────────────────┘ └───────────────────┘ └───────────────────┘
-                              │
-                              ▼
-                    ┌───────────────────┐
-                    │   CORPUS DATABASE │
-                    │   (corpus.db)     │
-                    │ • Document/Segment│
-                    │ • Sentence/Token  │
-                    └───────────────────┘
+                    ┌───────────────────┼───────────────────┬───────────────────┐
+                    ▼                   ▼                   ▼                   ▼
+        ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐
+        │   KWIC Search UI  │ │   Tokenizer       │ │  Syntax Parser    │ │   Homonym          │
+        │   (/corpus)       │ │   (DbAnalyzer +   │ │  (UD dep. graph,  │ │   Disambiguation   │
+        │                   │ │   Tokenizer, see  │ │  lib/corpus/      │ │   (CorpusToken-    │
+        │ • CQL-style query │ │   lib/corpus/)    │ │  syntax/, admin   │ │   Candidate, see   │
+        └───────────────────┘ └───────────────────┘ │  /documents/      │ │   AGENTS.md)       │
+                                                       │  [slug]/syntax)   │ └───────────────────┘
+                                                       └───────────────────┘
+                              │                               │                   │
+                              └───────────────────────────────┼───────────────────┘
+                                                                ▼
+                                                      ┌───────────────────┐
+                                                      │   CORPUS DATABASE │
+                                                      │   (corpus.db)     │
+                                                      │ • Document/Segment│
+                                                      │ • Sentence/Token  │
+                                                      │ • Dependency/     │
+                                                      │   VerbGovernment  │
+                                                      │ • TokenCandidate  │
+                                                      └───────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    TRANSLITERATION (/transliteration)                       │
@@ -300,18 +306,49 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │  (frequency/CEFR   │        ▼
 │   already shipped, │  ┌──────────────────┐
 │   NOT a future TODO)│  │ LexemeMorpheme  │
-└──────────────────┘        │ • lexemeId       │
-         │                  │ • morphemeId     │
-         │ 1:N               └──────────────────┘
+│ • isCollocation    │  │ • lexemeId       │
+│   (2026-07-27 —    │  │ • morphemeId     │
+│   multi-word idiom,│  └──────────────────┘
+│   invariant; see   │
+│   AGENTS.md "Corpus │
+│   Crawlers &        │
+│   Collocations")    │
+└──────────────────┘
+         │
+         │ 1:N
          ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  Synonym / Antonym / Hypernym / Hyponym / Meronym / Holonym /        │
-│  RelatedWord / Cause / Effect / Premise / Conclusion (11 tables)     │
+│  SemanticRelation (@@map semantic_relations) — 2026-07-23             │
 │                                                                        │
-│  Each: id, sourceId → Meaning, targetId → Meaning, proximity          │
-│  onDelete: Cascade on both FKs (DB-level cascade delete exists).      │
-│  ⚠ Writes are one-directional (sourceId→targetId only) — linking      │
-│    A→B does NOT create a reverse B→A row. See "Known Issues" below.   │
+│  Replaces the old 11 near-identical tables (Synonym/Antonym/         │
+│  Hypernym/Hyponym/Meronym/Holonym/RelatedWord/Cause/Effect/Premise/   │
+│  Conclusion — all now DROPPED) with one table + a relationType        │
+│  column: synonym|antonym|related|pos_synonym (symmetric) and          │
+│  hypernymy|meronymy|causation|entailment|instance_of|derivation       │
+│  (directional). sourceId/targetId → Meaning, proximity, source        │
+│  ('manual'|'ruwordnet_auto' — scopes reimport deletes so hand edits   │
+│  survive re-running the RuWordNet upload). Symmetric types normalize  │
+│  sourceId=min/targetId=max on write so the unique index dedupes.      │
+│  See "Semantic Network" in AGENTS.md for full history/rationale.      │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────┐  ┌──────────────────┐
+│  SemanticPrime   │  │  PrimeExponent   │  NSM's 64 semantic primes
+│ (64 seeded rows, │─▶│ (moderator-edited│  (Goddard 2011) + their
+│  read-only)      │  │  ISV exponents)  │  ISV realizations — /admin/primes
+└──────────────────┘  └──────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│  ValencyFrame → ValencyArgument (2026-07-25, preposition FK 2026-07-29)│
+│                                                                        │
+│  ValencyFrame: meaningId → Meaning, label, sortOrder                  │
+│  ValencyArgument: frameId, role, case (GrammaticalCase short code),   │
+│    preposition (text cache), prepositionLexemeId → Lexeme             │
+│    (onDelete SetNull), isOptional, sortOrder                          │
+│  Replaced the old Lexeme.governsCase (int, verb/preposition only) —   │
+│  a lexeme's government is now per-Meaning and can have a real         │
+│  preposition-word link instead of embedding it in the lexeme's own    │
+│  value text. Edited via ArticleForm's "Валентность" panel.            │
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
@@ -319,11 +356,15 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │ (CORE/NSL/EAST/  │  │ • lexemeId       │  │ • stemType,      │
 │  WEST/SOUTH)     │  │ • flavorId       │  │   grammeme, value│
 └──────────────────┘  │ • value, type    │  │ • flavorId       │
-                       └──────────────────┘  │ (seeded FROM the │
-                                              │  same hardcoded  │
-                                              │  registries — see│
-                                              │  AGENTS.md)       │
-                                              └──────────────────┘
+                       │ • verified Int?  │  │ (seeded FROM the │
+                       │   (2026-07-28 —  │  │  same hardcoded  │
+                       │   per-flavor      │  │  registries — see│
+                       │   analog of        │  │  AGENTS.md)       │
+                       │   Translation.     │  └──────────────────┘
+                       │   verified;        │
+                       │   moderated via     │
+                       │   /admin/word-cards)│
+                       └──────────────────┘
 
 ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
 │ BaseHomonym      │  │InflectionAnomaly │  │ ProtoSlavicWord  │
@@ -372,14 +413,43 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │ CorpusDocument   │──▶│ CorpusSegment    │──▶│ CorpusSentence   │
 │                  │1:N│                  │1:N│                  │
 └──────────────────┘   └──────────────────┘   └────────┬─────────┘
-                                                          │ 1:N
+CorpusDocument also has sourceUrl/externalId (@unique)/sourceRevisionId
+(2026-07-27, crawler idempotency — see AGENTS.md "Corpus Crawlers &
+Collocations"). CorpusSentence fans out to both CorpusToken (1:N) and
+CorpusDependency (1:N, one edge per non-root token):
+                                                          │
                                                           ▼
-                                               ┌──────────────────┐
-                                               │  CorpusToken     │
-                                               │ • lemma, pos     │
-                                               │ • feats (JSON)   │
-                                               │ • matchCount      │
-                                               └──────────────────┘
+                                    ┌──────────────────┐
+                                    │  CorpusToken     │
+                                    │ • lemma, pos      │
+                                    │ • feats (JSON)    │
+                                    │ • matchCount       │
+                                    │ • resolutionSource │  ('auto'|'manual',
+                                    └────────┬───────────┘   2026-07-28)
+                                             │ 1:N
+                                             ▼
+                                    ┌──────────────────┐
+                                    │CorpusTokenCandidate│  (2026-07-28 — full
+                                    │ • wordSlug/lemma/  │   homonym set per
+                                    │   pos/feats/flavor │   token, not just the
+                                    │ • score/source/rank│   winner; see AGENTS.md
+                                    └──────────────────┘   "Corpus Homonym
+                                                            Disambiguation")
+
+┌──────────────────┐         ┌──────────────────┐
+│CorpusDependency  │         │ VerbGovernment   │
+│ (UD dep. graph,  │         │ (2026-07-27,     │
+│  2026-07-27/28)  │         │  seeded EMPTY —  │
+│ • headTokenId/    │         │  see AGENTS.md   │
+│   depTokenId       │         │  "Corpus Syntax  │
+│   (unique)          │         │  Parser")        │
+│ • relation (UD)      │        │ • verbLemma,     │
+│ • confidence          │        │   reflexive,     │
+│   (rule/heuristic/     │        │   requiredCase,  │
+│   unresolved)           │        │   role, priority │
+│ • source (auto/manual)   │       └──────────────────┘
+└──────────────────┘
+
 Plus WordFormPriority and CorpusConfig for tokenizer tuning.
 ```
 
@@ -443,6 +513,9 @@ USER ATTEMPTS LOGIN
 │    effects/premises/conclusions_edit (per-relation-type)             │
 │  • roots_*, endings_*, candidates_*, deduplication_manage           │
 │  • library_manage, corpus_builder                                    │
+│  • corpus_syntax_edit (2026-07-27), corpus_token_disambiguate       │
+│    (2026-07-28) — narrower than corpus_builder, gate the syntax     │
+│    parser and homonym-resolution admin actions specifically          │
 │  • translate_<lang> — one per translation language                  │
 └───────────────────────────────────────────────────────────────────┘
          │
@@ -496,6 +569,9 @@ USER ATTEMPTS LOGIN
 └── POST /api/corpus/save         -- persist analyzed segments,
     requires Feature.CorpusBuilder (already gated)
 
+/api/lexicon/prepositions         -- GET, full pos=ADP lexeme list for
+    the ArticleForm preposition picker (2026-07-29)
+
 /api/proto
 └── GET /api/proto                -- ESSJa proto-Slavic search
 
@@ -509,7 +585,26 @@ USER ATTEMPTS LOGIN
 
 /api/library/search, /api/library/[slug]/download
 
-/api/admin/corpus/documents/[slug](/reanalyze|/segments/[position]|/tei)
+/api/admin/corpus/documents/[slug]
+├── /reanalyze                    -- POST, re-tokenize+POS-tag (skips
+│   resolutionSource='manual' tokens, see AGENTS.md "Corpus Homonym
+│   Disambiguation")
+├── /segments/[position]          -- GET, token view for one paragraph
+├── /tei                          -- TEI export
+├── /parse-syntax                 -- POST, builds the UD dependency
+│   graph over already-tagged tokens, Feature.CorpusSyntaxEdit
+│   (2026-07-27, see AGENTS.md "Corpus Syntax Parser")
+├── /resolve-homonyms-syntax      -- POST, re-scores still-ambiguous
+│   tokens using real CorpusDependency edges + VerbGovernment,
+│   Feature.CorpusTokenDisambiguate (2026-07-28)
+└── /tokens/[tokenId]
+    ├── /candidates               -- GET, CorpusTokenCandidate list
+    └── /resolve                  -- POST, manual homonym resolution
+        (by candidateId or free-form wordSlug+feats)
+
+/api/admin/corpus/syntax/edge     -- PUT, manual single dependency-edge
+    edit, Feature.CorpusSyntaxEdit, writes source='manual'
+
 /api/admin/library/upload
 /api/admin/recompute-frequencies  -- recomputes Lexeme.corpusFrequency/
     corpusRank/cefrLevel (see scripts/compute-lexicon-frequency.ts)
@@ -662,7 +757,7 @@ UI Update (Table refresh)
 
 2. **Role-Based Access Control (RBAC)**: Granular permission system with USER/MODERATOR/ADMIN roles and ~60 feature-specific permission keys, checked per-route (no central middleware — see Authentication section)
 
-3. **Relations are symmetric, stored as one undirected edge per pair** (fixed 2026-07-22): Synonym/Antonym/Hypernym/.../Conclusion tables store `sourceId`/`targetId` as storage detail only — `lib/relations.ts` (`fetchSymmetricRelations`/`saveSymmetricRelation`) treats them as unordered everywhere. Reads match `sourceId = ? OR targetId = ?` and resolve "the other side" in JS; writes diff the target list against existing edges (found via the same OR match) and add/remove exactly the edges that changed, storing each pair once regardless of which column ends up holding which id. This means legacy one-directional rows from historical bulk imports (~41% of the `synonyms` table before the fix) are automatically picked up correctly on read with no backfill needed, and editing from either endpoint (word A's page or word B's page) correctly finds and removes the same edge. Previously, write paths only inserted the forward `sourceId → targetId` row and reads only matched `sourceId`, so linking A→B did not make B show A back — see the git history / prior audit note for the original bug description.
+3. **Semantic relations consolidated into one table, symmetric ones stored as one undirected edge per pair.** Originally fixed 2026-07-22 as a bidirectionality bug across 11 separate near-identical tables (Synonym/Antonym/.../Conclusion); those 11 tables were then **dropped entirely on 2026-07-23** and replaced by a single `SemanticRelation` table with a `relationType` column (see the Database Schema Architecture diagram above and AGENTS.md's "Semantic Network" for the full history). `lib/relations.ts` now exposes `fetchSymmetricSemanticRelations`/`saveSymmetricSemanticRelation` (symmetric types: synonym/antonym/related/pos_synonym — order-independent, `sourceId=min`/`targetId=max` normalized on write) and `fetchOutgoingSemanticRelations`/`fetchIncomingSemanticRelations`/`saveDirectionalSemanticRelation` (directional types: hypernymy/meronymy/causation/entailment/instance_of/derivation — source=specific/dependent side, target=general/governing side by convention). The original bidirectionality fix's reasoning (reads match either column, writes diff-and-update the edge set) still applies, just against one table instead of eleven; the old `fetchSymmetricRelations`/`saveSymmetricRelation` functions were deleted once every caller migrated.
 
 4. **Language-Agnostic Schema**: 18 per-language Prisma models (En, Ru, Mk, Sr, Uk, Bg, Pl, Be, Cs, Sk, Sl, Hr, Hsb, Dsb, Cu, De, Nl, Eo) with identical structure for easy extension; none currently have `@@index` on their `wordId`/`meaningId` foreign keys
 
@@ -698,3 +793,7 @@ A security/architecture audit on 2026-07-22 found the following; items marked �
 - ⬜ **N+1 queries on `/words/[id]`** — `app/words/[id]/api.ts` issues one query per language table (not batched) and `getItem()` runs twice per page load (`generateMetadata` + the page itself) with no `React.cache`.
 - ⬜ **Widespread `any` usage** despite the project's "avoid `any`" rule (100+ occurrences across `app/`/`lib/`).
 - ⚠️ **Prisma migration history has drifted from the live `interlex.db`** (discovered 2026-07-22 while adding the indexes below): `prisma migrate dev` reports unrecorded schema changes on `morpheme_allophones` and `proto_slavic_words` that predate this audit and aren't in any migration file. Running `prisma migrate dev` against this database will prompt for a full reset (data loss) — do **not** run it until the drift is reconciled (e.g. via `prisma migrate diff` + a manual baseline migration). New DDL was applied in the meantime via direct SQL against `interlex.db`, bypassing `prisma migrate`.
+- ⬜ **Two parallel case-naming conventions coexist** (found 2026-07-29 while building homonym-disambiguation scoring): the grammar engine emits grammatical case as long-form English words at runtime (`'nominative'`, from `lib/grammar/endingsRegistry.ts`'s `Case` const), while `lib/grammar/common/case.ts`'s `GrammaticalCase` enum (and everything keyed off it — `CASE_WEIGHTS`, `PREPOSITION_GOVERNMENT`, `VerbGovernment.requiredCase`) uses short codes (`'nom'`). Worked around locally in the corpus disambiguation code (`lib/corpus/tokenizer/caseNormalize.ts`) but not unified project-wide — also causes a latent display bug in `TokenSidebar`/`CorpusTokenDisplay`'s `FEAT_LABELS` maps, which only recognize the short codes, so case is likely displayed as a raw English word instead of a translated label wherever it comes straight from the grammar engine.
+- ⬜ **`lib/dedup/mergeLexemes.ts`'s `base_homonyms` cleanup only understands the old `wordIds` format** (found 2026-07-29): assumes a flat `number[]`, but 4 of 33,746 real rows already use the newer `{id, flavor}[]` format (added for the flavor system, see "Flavor System" under "Corpus Tokenizer" in AGENTS.md) — merging away a lexeme referenced only in one of those 4 rows silently leaves a stale id behind. `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts` handles both formats; the admin-UI merge path (`app/admin/deduplication/actions.ts`) does not yet.
+- ⬜ **`CollocationMatcher` (`lib/corpus/tokenizer/collocationMatcher.ts`, 2026-07-28) only matches a collocation's exact normalized surface form** — it does not account for inflection of the phrase's internal components, so a set phrase whose non-final word should decline mid-idiom won't be recognized in its inflected form. The `isCollocation` backfill (`scripts/db/2026-07-28-backfill-collocation-flag.ts`) also explicitly wasn't manually reviewed for false positives after running.
+- ⬜ **`VerbGovernment` (corpus.db) and per-word `preposition`/`prepositionLexemeId` links (interlex.db) are both intentionally seeded near-empty** — by design (see AGENTS.md "Corpus Syntax Parser"/"Valency Preposition Links": neither script fabricates a verb's governed case), but it means the corresponding disambiguation/parsing paths that depend on them (Pass C in `resolveHomonymsViaSyntax.ts`, clause-role labeling in `lib/corpus/syntax/clause.ts`) are currently no-ops on production data. Populating these (via a moderator UI or a linguist-verified import) is the natural next step, not a bug to fix in code.

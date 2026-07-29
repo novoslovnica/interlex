@@ -279,3 +279,150 @@ A full audit found and fixed the following (Phase 1 — see [ARCHITECTURE.md](AR
 - Non-constant-time HMAC comparison in Telegram auth (`auth.config.ts`, now uses `crypto.timingSafeEqual`).
 
 When adding new API routes that mutate lexical or relation data, follow the pattern in `app/api/roots/[id]/route.ts` or `app/api/endings/route.ts`: `auth()` + `checkPermission(session, Feature.X)` returning `403`, not just a session-presence check.
+
+---
+
+## Corpus Syntax Parser (UD dependency graph, 2026-07-27/28)
+
+Builds a Universal Dependencies–style dependency graph over already-tokenized corpus sentences — one edge per non-root token (`headTokenId=null` marks the clause root), stored in `CorpusDependency` (`corpus.db`). Deliberately a *separate* pass from POS-tagging/reanalysis: it reads existing `CorpusToken.lemma/pos/feats` and only builds edges, so it's much cheaper to re-run and doesn't retag anything.
+
+**Schema** (`prisma/corpus.schema.prisma`, raw-SQL migration `scripts/db/2026-07-27-add-corpus-syntax-tables.ts` — same reason as always, no `_prisma_migrations` table in `corpus.db`):
+- `CorpusDependency`: `sentenceId`, `headTokenId` (nullable, null only for root), `depTokenId` (`@unique` — a token has exactly one head, this is the tree-shape guarantee), `relation` (canonical UD deprel string), `confidence` (`'rule'|'heuristic'|'unresolved'` — same traffic-light naming convention as `DbAnalyzer`'s green/yellow/red), `source` (`'auto'|'manual'`).
+- `VerbGovernment`: `verbLemma`, `reflexive`, `requiredCase`, `role` (`'obj'|'iobj'|'obl'`), `priority`. **Intentionally seeded empty** — same principle as the endings work: "a verb X governs case Y" is a linguistic fact that isn't fabricated by a script, only entered by a moderator (future admin) or a verified import. `getVerbGovernment()` (`lib/corpus/syntax/government.ts`) lazily loads it from `corpus.db` via `better-sqlite3` (guarded by a `typeof window` check, safe to import from client code) and falls back to an empty `VERB_GOVERNMENT_FALLBACK` map — so today every government-dependent code path (clause-role labeling, the homonym-disambiguation Pass C below) degrades gracefully to a weaker heuristic rather than fabricating case facts.
+
+**Build order, one deprel set per phase** (`lib/corpus/syntax/deprel.ts`'s `UD_DEPREL` is the *only* place deprel string literals should exist — everything else imports from it):
+- Phase 2 (`parser.ts`/`npChunker.ts`/`prepPhrase.ts`/`clause.ts`): NP-internal (`amod`/`nmod`/`det`/`nummod`/`case`) and adposition attachment always run; clause-level roles (`root`/`nsubj`/`obj`/`iobj`/`obl`/`advmod`/`aux`/`cop`/`expl`/`discourse`/`punct`) only for `isSimpleClause` sentences (no `SCONJ`, see below).
+- Phase 3 (`coordination.ts`): `cc`/`conj` — sentence-level predicate/argument coordination.
+- Phase 4 (`complexSentence.ts`, `parseComplexSentence`): subordination — `mark`/`advcl`/`ccomp`/`acl`. **Not recursive**: all found subordinate clauses attach as siblings under the *main* clause's root, nested subordination (a clause inside a clause) isn't modeled — known MVP limitation.
+- `dedupeByDepToken` (`parser.ts`) is a safety net: since `depTokenId` is unique and different rule modules assign edges independently, a token could in principle get two edges (already happened once during dev, see the `selectRoot` comment in `clause.ts`) — it keeps the first, logs a warning, rather than letting the `INSERT` throw.
+
+**Two data-quality findings baked into the Phase 4 logic, not fixed upstream** (`complexSentence.ts` top-of-file comment has the full investigation):
+- **`pos='SCONJ'` never occurs in the live corpus at all** — confirmed 0 of 0 tokens across 300 documents/10,594 sentences, and `interlex.db` has 0 lexemes tagged `SCONJ` (59 are `CCONJ`, including semantically-subordinating words like `dabi`/`da`/`kȯgda`/`jestli`). A literal `pos === SCONJ` check would never fire. Fixed *locally* in the parser with a curated `SUBORDINATOR_LEMMAS` lemma set (only unambiguous subordinators — `ako`/`li`/`koliko` deliberately excluded as context-dependent) rather than upstream in the dictionary, since re-tagging ~59 lexemes is a linguist-reviewed data change, not a parser bug fix (same "don't fabricate linguistic facts" principle as `VerbGovernment` above).
+- Reflexive `sę`/`se` is matched by **surface form**, not lemma/POS — real data tags `sę` as `PRON` (lemma `se-PRON`) and the undiacriticized `se` isn't recognized by the analyzer at all (`pos=X`), so a POS/lemma check would silently miss it.
+- Relative clauses (`acl`) are detected structurally (pronoun immediately after a comma, with a `VERB` before the next clause boundary), not from a relative-pronoun dictionary — `ktory`/`kto` etc. exist as *both* `ADJ` and `PRON` lexemes in `interlex.db` (the same homonymy pattern documented elsewhere for corpus tokens), so pattern-matching by POS alone would lose about half of real relative clauses.
+
+**Manual editing**: `PUT /api/admin/corpus/syntax/edge/route.ts`, gated by `Feature.CorpusSyntaxEdit`, writes `source='manual'`. `saveDependencies` (`lib/corpus/syntax/persist.ts`) only ever deletes+recreates `source='auto'` rows on re-parse — manual edges survive re-running `POST .../parse-syntax`, same reimport-safety pattern as `semantic_relations`'s `ruwordnet_auto` scoping.
+
+### Key Files
+- `lib/corpus/syntax/index.ts` — barrel export, the only import path other modules should use
+- `lib/corpus/syntax/deprel.ts` — `UD_DEPREL` canonical relation names
+- `lib/corpus/syntax/government.ts` — `PREPOSITION_GOVERNMENT` (hardcoded, stable, populated) + `getVerbGovernment` (DB-backed, empty by design)
+- `lib/corpus/syntax/clause.ts`, `complexSentence.ts`, `npChunker.ts`, `prepPhrase.ts`, `coordination.ts` — the parsing rules themselves, by phase
+- `lib/corpus/syntax/persist.ts` — `saveDependencies`, the `source='auto'`-only reimport guard
+- `app/api/admin/corpus/documents/[slug]/parse-syntax/route.ts` — runs the parser over an already-tokenized document
+- `app/api/admin/corpus/syntax/edge/route.ts` — manual single-edge edit
+- `app/admin/corpus/documents/[slug]/syntax/` — admin UI
+- `scripts/db/2026-07-27-add-corpus-syntax-tables.ts` — idempotent raw-SQL migration
+
+---
+
+## Corpus Homonym Disambiguation (2026-07-28/29, Phases 1–5)
+
+Before this work, `DbAnalyzer.analyzeWord` (see "Corpus Tokenizer: DbAnalyzer Architecture" above) found every grammatically-possible lexeme for an ambiguous surface form (`matchCount > 1`) but kept only an arbitrary DB-order winner — the other candidates were computed and immediately discarded, so there was nothing to disambiguate *against* later, and no way to review or correct a wrong pick short of re-running the whole analyzer. Real scale at the time this was built: 636,724 corpus tokens, 143,949 of them ambiguous (`matchCount > 1`).
+
+**Phase 1 — persist the full candidate set.** New `CorpusTokenCandidate` table (`tokenId`, `wordSlug`, `lemma`, `pos`, `feats`, `flavor`, `score`, `source`, `rank`), one row per grammatically-possible reading, written alongside the winning `CorpusToken` row at every write site (`upsertDocument.ts`, `app/api/corpus/save/route.ts`, `lib/corpus/reanalyzeDocument.ts`). `CorpusToken.resolutionSource` (`'auto'|'manual'`) added as the same reimport-safety guard used elsewhere (`CorpusDependency.source`, `semantic_relations.source`) — reanalysis skips any token a moderator has already resolved by hand, including refusing to retag a whole collocation span if any member token in it is `'manual'`. Migration: `scripts/db/2026-07-28-add-corpus-token-candidates.ts`.
+
+**Phase 2 — rank candidates instead of picking DB order.** `DbAnalyzer.analyzeWord` now takes an optional `{leftNeighbor}` context (threaded from the previous raw token in `tokenizer.ts`/`reanalyzeDocument.ts`) and scores every candidate: `Lexeme.corpusFrequencyPerMln * CASE_WEIGHTS[case]`, plus a ±1,000,000 bonus/penalty if the immediately preceding word is a known preposition and the candidate's case does/doesn't match its government (`getExpectedCasesForPreposition`) — government is treated as near-grammatical-law, so it dominates frequency rather than blending with it. Two pre-existing gotchas found and worked around, **not fixed** (both out of scope, bigger blast radius):
+- `lib/corpus/priorities/{coldStart,hotUpdate,dictionaryLoader}.ts` (an earlier, unfinished attempt at frequency-based ranking) turned out to be **non-functional** — `import { PrismaClient } from '@prisma/client'` doesn't resolve at all in this project's four-separate-generated-clients setup (confirmed: `require('@prisma/client')` throws `Cannot find module '.prisma/client/default'`). Bypassed entirely in favor of the already-shipped `Lexeme.corpusFrequencyPerMln`, which also sidesteps a circularity `hotUpdate.ts` would have had (it computed frequency from `CorpusToken.lemma`, i.e. from the very same arbitrary winners being replaced).
+- The grammar engine emits case values as **long-form English words at runtime** (`'nominative'`, via `lib/grammar/endingsRegistry.ts`'s `Case` const), while `CASE_WEIGHTS`/`PREPOSITION_GOVERNMENT`/`GrammaticalCase` (`lib/grammar/common/case.ts`) use **short codes** (`'nom'`). Two parallel case-naming conventions coexist in this codebase (also visible as a latent display bug in `TokenSidebar`/`CorpusTokenDisplay`'s `FEAT_LABELS`, which only recognize the short codes). Not unified here — normalized locally via `lib/corpus/tokenizer/caseNormalize.ts`'s `normalizeCaseValue`, used by both `DbAnalyzer` and the syntax-based Pass C below.
+- Verified effect on real data: re-running reanalysis changed the winner on 5,980 of 143,949 ambiguous tokens (~4.2%), 0 previously-unambiguous tokens affected. Sample flips were linguistically sound (e.g. `byla`/`bylo` "was" now resolves to the verb `byti` instead of an unrelated `ADJ` homograph that used to win on DB order).
+
+**Phase 3 — document-level flavor bias.** `lib/corpus/tokenizer/flavorBias.ts`'s `applyDocumentFlavorBias`: tallies flavor across a document's *unambiguous* tokens, and if one non-`CORE` flavor dominates, gives its matching candidates a +10,000 bonus (weaker than the government bonus above, stronger than raw frequency) and re-ranks. Currently near-inert in production — `interlex.db` has only 3 non-`CORE` flavor tags total (all on one lexeme), nowhere near enough for any real document to have a "dominant" non-CORE flavor yet — but verified correct against synthetic data (5 unambiguous WEST tokens flip an ambiguous candidate's ranking; a control with only CORE tokens is a no-op).
+
+**Phase 4 — resolve via real syntax, not just the left neighbor.** `lib/corpus/resolveHomonymsViaSyntax.ts`: for tokens still ambiguous after Phases 2–3, looks up their `CorpusDependency` edge (if `relation` is `obj`/`iobj`/`obl`), resolves the governing verb's lemma + reflexivity (via an `expl`-relation edge pointing at it), and re-scores candidates against `getVerbGovernment()` — the same ±1,000,000 government bonus pattern as Phase 2, just driven by a real parsed head-dependent edge instead of "whatever token happens to be immediately to the left." Requires syntax parsing (see previous section) to have already run. Currently a no-op on real data too, for the same reason `VerbGovernment` is empty by design — verified against a real document's 400 `CorpusDependency` edges (37 `obj`/`iobj`/`obl` roles correctly found and traced to their governing verbs) and against a synthetic injected `VerbGovernment` rule (via `loadVerbGovernmentOverridesSync`) to confirm the rescoring itself works.
+
+**Phase 5 — manual resolution UI.** `TokenSidebar.tsx`'s homonymy panel now lists real `CorpusTokenCandidate` rows (lemma/POS/feats/score/source) with a "Выбрать" action per candidate, plus a collapsible free-form "Указать вручную" section (lexeme search via the existing public `/api/lexicon?search=`, plus case/number/gender dropdowns) for assigning a lexeme+grammeme combination that isn't among the generated candidates at all. Both paths hit `POST .../tokens/[tokenId]/resolve` (logic in `lib/corpus/resolveTokenHomonym.ts`, following the Phase-1 pattern of keeping route handlers thin so the business logic is directly testable), which sets `matchCount=1`, `resolutionSource='manual'`, marks the chosen candidate `source='manual'`/`rank=0` and **does not delete the other candidate rows** (kept for audit/history). New `Feature.CorpusTokenDisambiguate` permission gates both the resolve route and its companion `GET .../tokens/[tokenId]/candidates` read route.
+
+**Bulk scripts** (build the analyzer/collocation-matcher once, loop every document — rebuilding per-document would repeatedly re-scan the whole lexicon): `scripts/db/2026-07-28-reanalyze-all-documents.ts`, `scripts/db/2026-07-28-resolve-homonyms-syntax-all-documents.ts`.
+
+**Deployment gotcha, hit for real**: after running a schema migration against `corpus.db`/`interlex.db`, a **process restart is required**, not just a code/file deploy — a long-running `next dev`/`next start` process keeps the previously-loaded Prisma client (built from the pre-migration schema) in memory, so a query referencing a just-added column throws `Unknown argument <column>` even though the column genuinely exists on disk and the generated client source files are up to date. Always restart the app process as a distinct step after any raw-SQL schema migration script, before running any code path that depends on the new column/table.
+
+### Key Files
+- `prisma/corpus.schema.prisma` — `CorpusTokenCandidate` model, `CorpusToken.resolutionSource`
+- `scripts/db/2026-07-28-add-corpus-token-candidates.ts` — idempotent raw-SQL migration
+- `lib/corpus/tokenizer/dbAnalyzer.ts` — `scoreMatch`, `AnalyzeContext`, candidate ranking
+- `lib/corpus/tokenizer/caseNormalize.ts` — long-form ↔ short-code case normalization
+- `lib/corpus/tokenizer/flavorBias.ts` — `applyDocumentFlavorBias`
+- `lib/corpus/resolveHomonymsViaSyntax.ts` — Pass C
+- `lib/corpus/resolveTokenHomonym.ts` — manual resolve business logic
+- `lib/corpus/reanalyzeDocument.ts` — shared reanalysis logic (used by both the single-document admin button and the bulk script)
+- `components/TokenSidebar.tsx` — manual resolution UI
+- `config/features.ts` — `Feature.CorpusTokenDisambiguate`
+
+---
+
+## Valency Preposition Links (2026-07-29)
+
+`ValencyArgument.preposition` (free-text `String?`, part of the multi-valency model added 2026-07-25 — see `ValencyFrame`/`ValencyArgument` in `prisma/data.schema.prisma`) had no structural link to an actual preposition lexeme — moderators typed it, or (more commonly, since the field was never actually used — confirmed 0 of 203 existing `valency_arguments` rows had any `preposition` text at all) the preposition stayed embedded directly in the lexeme's own `value` instead (e.g. a `VERB` lexeme literally valued `"pristupati do"`, a separate lexeme `"pristupati k"` for the other government pattern — an artifact of the earlier `Lexeme.governsCase` → `ValencyFrame` migration, which only carried over the bare case, never the preposition text, since the legacy data never captured it structurally).
+
+**New FK**: `ValencyArgument.prepositionLexemeId` (→ `Lexeme.id`, `onDelete: SetNull`) — migration `scripts/db/2026-07-29-add-valency-preposition-lexeme-fk.ts`. `preposition` (text) is kept, now as a display-text cache synced whenever a link is chosen, so existing read paths (`Word.tsx`, `app/words/[id]/api.ts`) needed zero changes.
+
+**UI**: `ArticleForm.tsx`'s `PrepositionPicker` replaces the old free-text `<input>` — fetches the full `pos=ADP` lexeme list once (`GET /api/lexicon/prepositions`, alphabetical), filters client-side as you type (the list is small, no server-side search needed), selecting an option sets `prepositionLexemeId` + the synced display text together via a dedicated `selectValencyPreposition` handler (not the generic single-field `updateValencyArgument`, since a selection changes two fields atomically).
+
+**Two-script migration pipeline, run in this order** (both dry-run by default, `--apply` to write, per-lexeme audit-logged):
+1. `scripts/db/2026-07-29-extract-embedded-preposition-from-lexeme-value.ts` — finds `VERB`/`ADJ` lexemes whose `value`'s trailing word matches a known preposition surface form, and **only auto-processes the unambiguous case**: exactly one `Meaning` → one `ValencyFrame` → one `ValencyArgument` (the bare-case row left over from the `governsCase` migration) to attach the preposition to. Lexemes with **zero** existing valency frames are deliberately left untouched and only listed in the report — inferring what case they govern would mean fabricating a linguistic fact, the same principle as `VerbGovernment` being seeded empty (see Syntax Parser section). Lexemes whose `value` contains a comma (bundled spelling variants, e.g. `"sȯocati se s, suocati se s"`) are also flagged rather than guessed at. Real run: 33 auto-extracted, 19 flagged (no frame), 2 flagged (comma variants).
+2. `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts` — finds `(value, pos)` groups of 2+ lexemes where at least one member has a preposition link, picks the richest member (most non-null grammar fields, tie-break lowest id) as merge target, and moves every other member's `Meaning` rows onto it — **preserving each `Meaning` as its own row** rather than collapsing them into one. This is the key difference from `lib/dedup/mergeLexemes.ts` (the existing `/admin/deduplication` merge, which finds/creates a single target `Meaning` and deletes the rest) — that function would have destroyed exactly the per-preposition distinction this feature exists to capture, so a new, narrower merge routine was written instead of reusing it. Since meanings keep their own row, `translations`/`semantic_relations` (both `meaningId`-scoped) need zero rewiring — only `lexemes_morphemes`, `inflection_anomalies`, `lexeme_allophones` (via `UPDATE OR IGNORE`, unique-constraint collisions left for cascade cleanup on delete) and `base_homonyms.wordIds` membership move to the target. `slug` is deliberately **not** renamed on merge, to keep existing `/words/<slug>` links stable, even though the target's slug may no longer textually match its post-extraction `value`. Real run: 13 lexemes merged into 12 targets (0 orphaned meanings, 0 dangling FK refs afterward).
+
+**Bug found and flagged, not fixed** (out of scope, own follow-up task): `lib/dedup/mergeLexemes.ts`'s `base_homonyms` cleanup assumes `wordIds` is always the old flat `number[]` format; 4 of 33,746 real rows already use the newer `{id, flavor}[]` format (see the Flavor System note under "Corpus Tokenizer" above) and are silently skipped by that cleanup. The new merge script above handles both formats.
+
+### Key Files
+- `prisma/data.schema.prisma` — `ValencyArgument.prepositionLexemeId`, `Lexeme.valencyArgumentsAsPreposition`
+- `scripts/db/2026-07-29-add-valency-preposition-lexeme-fk.ts` — idempotent raw-SQL migration
+- `app/api/lexicon/prepositions/route.ts` — full ADP lexeme list
+- `components/ArticleForm.tsx` — `PrepositionPicker`, `selectValencyPreposition`
+- `lib/valency.ts` — `syncValencyFramesForMeaning`, now also persists `prepositionLexemeId`
+- `scripts/db/2026-07-29-extract-embedded-preposition-from-lexeme-value.ts` — dry-run/`--apply` extraction
+- `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts` — dry-run/`--apply` merge (meanings preserved, not collapsed)
+
+---
+
+## RESOLVED (2026-07-25/26/27): Noun Declension Had Two Parallel Engines, Now One
+
+Three consecutive commits (`declension fixes`, `accentology fix`, `canonical gender animacy`) each had to fix the *same* bug twice, in two different files, because noun declension existed as two independently-maintained implementations: **"Stack A"** (`lib/grammar/declineNoun.ts` + `lib/grammar/stemClassifier.ts` + `lib/grammar/fourTonesGenerator.ts`, used by the live word page) and **"Stack B"** (the old `lib/grammar/noun/index.ts`, used only by the corpus tokenizer's `processNoun()`).
+
+**Bugs fixed in both stacks along the way:**
+- `identifyStemTypeByDb()` compared `protoStemClass`/`stemExtension` against the TS enum's descriptive uppercase values (`ProtoStemClass.O_SHORT`), but the DB stores short lowercase Slavistic codes (`'o'`, `'jo'`, `'consonant'`...) — **the comparison never matched a single real word**, silently falling through to defaults every time. Fixed by lowercasing both sides before comparing.
+- `Lexeme.animacy` was stored `'ANIM'` (uppercase) but the ending-override lookup (`ending_allophones`, keyed by UD grammeme strings like `'Animacy=Anim'`) expected `'Anim'` — **every animate-masculine noun's accusative singular silently fell back to the inanimate ending** (e.g. "vlk" instead of "vlka"). Fixed by canonicalizing `GrammaticalGender`/gender+animacy values to UD casing (`'Masc'/'Fem'/'Neut'`, `'Anim'/'Inan'`) project-wide, plus a one-time data migration (`scripts/db/2026-07-26-canonicalize-gender-animacy.ts`, idempotent, auto-backs-up to `interlex.db.backup-before-gender-animacy-canonicalization`) rewriting existing `lexemes.gender`/`animacy` values (including nulling out the non-UD `gender='verb'` on 804 verb rows).
+- Two new noun classes added — `consonant_ent` (young-animal nouns, *telę*→stem *telent-*) and `consonant_er` (kinship terms, *mati*→stem *mater-*) — via a shared `stemWithExtension()` helper that inserts the historical stem augment between stem and ending outside nom./acc./voc. singular.
+- Sonorants `r/l/n` before `j` were falling through to the wrong iotation rule (labial `+lj` or a generic table) instead of the correct `+j` (no epenthetic `l`) — added an explicit `SONORANTS_APPEND_J` branch in `lib/grammar/morphonology.ts`/`verb/index.ts::applyIotation`, verified against "govoriti"→"govorjut" etc.
+- `processNoun()` (the corpus-engine path) was passing the full citation form as the declension root — for stem types where the citation form already contains the nominative ending (neuter o-stems like "selo"), this double-appended the ending ("seloo"). Fixed by passing `word.stem || word.isv`, matching the convention Stack A already used.
+
+**Resolution**: `lib/grammar/noun/index.ts` (383 lines) was deleted outright once `processors.ts::processNoun` was switched to call `declineWordAutomatically` (Stack A) directly. **There is now exactly one noun declension engine** — any future noun-declension change only needs to touch `declineNoun.ts`/`stemClassifier.ts`/`fourTonesGenerator.ts`, not two places.
+
+**Also from this batch, an ongoing pattern worth knowing**: `lib/grammar/stress.ts::resolveStressOverride()` is now the single entry point for per-lexeme (`stressPosition`) and per-morpheme (stressed-suffix) accent overrides, threaded through *every* POS generator (noun, verb — including participles, which previously got no accent marks at all — adjective, pronoun, numeral cardinal/collective/ordinal, determiner). A new word class's generator needs to call this to respect stress overrides, or loanword accentuation will silently use hardcoded defaults. Also fixed in the same pass: verb paradigm-C present-tense retraction was using tone `'short'`/`'grave'` instead of `'neoacute'` (Dybo's law + Ivšić's law actually produce neo-acute — `lib/grammar/verb/index.ts::conjugateFullVerb`).
+
+### Key Files
+- `lib/grammar/declineNoun.ts`, `lib/grammar/stemClassifier.ts`, `lib/grammar/fourTonesGenerator.ts` — the single noun engine
+- `lib/grammar/common/gender.ts` — canonical UD gender values
+- `scripts/db/2026-07-26-canonicalize-gender-animacy.ts` — one-time data migration, idempotent
+- `lib/grammar/stress.ts` — `resolveStressOverride`
+- `lib/grammar/adjective/index.ts::classifyAdjectiveType` — also unified (was duplicated inline in both stacks)
+
+---
+
+## Corpus Crawlers & Collocations (2026-07-27/28)
+
+**Crawler pattern**: `lib/corpus/upsertDocument.ts::upsertCorpusDocument()` is the shared idempotent primitive behind four corpus crawlers (`scripts/crawl-isv-wikipedia.ts`, `crawl-interslavic-news.ts`, `crawl-izvesti-info.ts`, `crawl-kolozor.ts`, each with a matching `lib/corpus/{wikipedia,sources}/*Client.ts`). Each `CorpusDocument` carries `externalId` (e.g. `"iswiki:<pageId>"`, `@unique`) and `sourceRevisionId` — re-running a crawler skips pages whose source revision hasn't changed; a changed/new page's `segments`/`sentences`/`tokens` are deleted and recreated in one transaction, so tokens never accumulate across re-runs. Notable source-specific quirks handled in `lib/corpus/sources/`: `mojibake.ts::repairMojibakeUtf8` fixes interslavic.news's Windows-1252-in-UTF-8 mangling (affected ~75% of sampled articles), `htmlText.ts::filterLatinParagraphs` drops paragraphs where Cyrillic characters outnumber Latin ones (izvesti.info publishes parallel Latin/Cyrillic text, and the grammar engine only understands Latin orthography).
+
+**Collocations**: `Lexeme.isCollocation` marks multi-word lexemes without a single inflectional paradigm (idioms/set phrases) as invariant. `lib/corpus/tokenizer/collocationMatcher.ts::CollocationMatcher` greedily matches 2–4-token phrases *before* the per-token analyzer runs. **Known limitation**: matches only the exact normalized surface form — does not account for inflection of the phrase's internal components (e.g. a phrase with a noun that should decline mid-idiom won't be matched in its declined form). Backfilled onto existing data via `scripts/db/2026-07-28-backfill-collocation-flag.ts` (explicitly recommends manual review afterward via `/admin/words` for false positives — not fully verified).
+
+**Important carve-out — NOT collocations**: multi-word *verbs* whose tail is only `se`/`sę` and/or a known preposition (e.g. "zaruciti se", "bazovati na" — see "Valency Preposition Links" above for more on this exact pattern) conjugate normally on the head word; `lib/grammar/verb/mechanicalTail.ts` mechanically appends the tail to every generated form instead. Shared between the corpus engine (`processors.ts::processVerb`) and the word page (`Word.tsx`) so the two can't diverge on what counts as "mechanical" vs. a true frozen collocation.
+
+**Tokenizer regex bug, exposed by the wikipedia crawler's prose** (`corpus fixes`, 2026-07-28): `lib/corpus/tokenizer/tokenizer.ts`'s token-splitting regexes were a hand-maintained character whitelist missing several ISV Latin diacritics (`ę, ų, ć, đ, ľ, ń, ś, ź, ť, ď, á, é, í, ó, ú, ý, ȯ`), splitting tokens like "atomų" into "atom"+"ų". Fixed by switching to Unicode property escapes (`\p{L}\p{M}\p{N}_`) instead of an enumerated charset — **don't reintroduce a hand-maintained character-class regex anywhere in the tokenizer**. All existing corpus documents were force-retokenized via `scripts/db/2026-07-28-retokenize-all-corpus-documents.ts` (re-runs `upsertCorpusDocument` on stored `rawText`, omitting `sourceRevisionId` from the payload to deliberately bypass the idempotency skip).
+
+**RuWordNet: found a silent staleness bug, added a live per-word re-fetch.** `scripts/db/upload-ruwordnet.ts` (the batch pipeline) was still querying a standalone `ru` table that no longer existed after the 18-per-language-table→single-`translations`-table consolidation — meaning **the batch RuWordNet upload had been silently running against stale/broken data** until fixed (now queries `translations WHERE language='ru'`). Also added `lib/ruwordnet/applyEntry.ts` (shared, side-effect-free relation-computation logic extracted from the batch script) and a live "Сопоставить с RuWordNet" button (`app/api/admin/words/[id]/match-ruwordnet/route.ts`, `Feature.RuwordnetMatch`) that re-matches one word at a time — its relation writes are scoped to that one meaning's edges only (`source='ruwordnet_auto' AND (sourceId=meaningId OR targetId=meaningId)`), unlike the batch script's full-table delete+reinsert.
+
+### Key Files
+- `lib/corpus/upsertDocument.ts` — shared crawler idempotency primitive
+- `lib/corpus/tokenizer/collocationMatcher.ts`, `lib/grammar/verb/mechanicalTail.ts`
+- `lib/corpus/tokenizer/tokenizer.ts` — `TOKEN_PATTERN`/`PUNCTUATION_TEST`, now Unicode-property-based
+- `lib/ruwordnet/applyEntry.ts`, `app/api/admin/words/[id]/match-ruwordnet/route.ts`
+- `scripts/db/2026-07-27-add-corpus-source-fields.ts`, `2026-07-28-add-lexeme-collocation-field.ts`, `2026-07-28-backfill-collocation-flag.ts`, `2026-07-28-retokenize-all-corpus-documents.ts`
+
+---
+
+## Smaller changes from the same week, briefly
+
+- **React remount-on-every-keystroke bug** (`article form fix`, 2026-07-26): `ArticleForm.tsx` had `SelectField`/`TextField`/`NumberField` defined *inside* the parent component's function body — a new component identity every render, so React unmounted/remounted the inputs (and lost focus/local state) on every keystroke. Moved to module scope. Generic React pitfall worth checking for if similar symptoms show up elsewhere.
+- **Per-flavor verification tool**: `LexemeAllophone.verified` (`Int?`, migration `scripts/db/2026-07-28-add-lexeme-allophone-verified-field.ts`) plus a Tinder-style admin card UI (`/admin/word-cards`) for moderators to approve/reject a lexeme's CORE flavorization one at a time — explicitly modeled as the per-flavor analog of the existing `Translation.verified` / `/admin/translation-cards` flow.
+- `components/ShareButton.tsx` (copy-link, on the word page) and `components/AccentLegend.tsx` (four-tone accent system explainer popover — rendered as `<span role="button">` rather than `<button>` because it's nested inside another button in `Word.tsx`, and nested `<button>`s are invalid HTML) — small, self-contained UI additions, no architectural follow-up.
