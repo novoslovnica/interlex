@@ -20,10 +20,10 @@ async function main() {
     const { prismaCorpus } = await import("@/lib/prisma")
     const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer")
     const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
-    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
 
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions())
+    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions(), await buildInflectionAnomalyIndex())
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     const documents = await prismaCorpus.corpusDocument.findMany({

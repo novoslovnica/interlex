@@ -10,10 +10,10 @@ import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
 import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
 import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 
-const analyzerPromise = Promise.all([buildValidEndings(), buildKnownPrepositions()]).then(
-    ([validEndings, knownPrepositions]) => new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions)
+const analyzerPromise = Promise.all([buildValidEndings(), buildKnownPrepositions(), buildInflectionAnomalyIndex()]).then(
+    ([validEndings, knownPrepositions, inflectionAnomalies]) => new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
 )
 const collocationMatcherPromise = buildCollocationRecords().then((records) => new CollocationMatcher(records))
 

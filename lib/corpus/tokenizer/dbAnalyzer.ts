@@ -38,6 +38,25 @@ export interface AnalyzeContext {
     leftNeighbor?: string;
 }
 
+// Одна суппletивная/нерегулярная форма конкретной лексемы из
+// InflectionAnomaly ("jest"/"sųt" у "byti" — не раскладывается на стем+
+// окончание вообще, это другой корень). grammeme — сырой, слабо
+// структурированный тег из этой таблицы ("PRES"/"L_PART"/"FUT"/"PL_GEN"/...),
+// не полноценная UD-граммема — сюда не мапится в MorphoGrammarFeats,
+// поэтому feats у таких совпадений всегда {} (см. analyzeWord).
+export interface AnomalyMatch {
+    wordSlug: string;
+    lemma: string;
+    pos: PosType;
+    grammeme: string;
+    corpusFrequencyPerMln: number | null;
+}
+
+// Ключ — нормализованная (lowercase + этим. кир.→лат., см.
+// normalizeSurfaceForm в lib/corpus/candidates/reconstruct.ts) форма
+// InflectionAnomaly.inflection.
+export type InflectionAnomalyIndex = Map<string, AnomalyMatch[]>;
+
 const MAX_END_LEN = 4;
 const MIN_STEM_LEN = 2;
 
@@ -45,7 +64,8 @@ export class DbAnalyzer {
     constructor(
         private queryWordsByBase: WordQueryFn,
         private validEndings: Set<string>,
-        private knownPrepositions: string[] = []
+        private knownPrepositions: string[] = [],
+        private inflectionAnomalies: InflectionAnomalyIndex = new Map()
     ) {}
 
     async analyzeWord(surfaceForm: string, context?: AnalyzeContext): Promise<MorphoAnalysis | null> {
@@ -56,35 +76,59 @@ export class DbAnalyzer {
             clean = etymCyrToEtymLat(clean);
         }
 
+        const anomalyEntries = this.inflectionAnomalies.get(clean) ?? [];
+
         const candidateBases = this.generateHypotheticalBases(clean);
-        if (candidateBases.length === 0) return null;
+        const words = candidateBases.length > 0 ? await this.queryWordsByBase(candidateBases) : [];
 
-        const words = await this.queryWordsByBase(candidateBases);
-        if (words.length === 0) return null;
+        const exactMatches = words.length > 0 ? this.matchForms(clean, words) : [];
+        // Стем-префиксный фоллбек — как и раньше, только когда точной формы
+        // вообще не нашлось (тот же приоритет, что был в старом коде: он
+        // никогда не конкурировал с exactMatches, только подменял их
+        // отсутствие). Теперь его кандидат тоже участвует в общем пуле
+        // омонимов вместе с аномалиями — раньше он "терялся", если для того
+        // же слова находилась ещё и аномальная форма (см. случай "sųt":
+        // и byti-VERB через аномалию, и sut-AUX через стем-префикс — оба
+        // реальные представления одного и того же слова в словаре).
+        const stemPrefixWord = exactMatches.length === 0 && words.length > 0
+            ? this.findBestStemPrefixWord(clean, words)
+            : null;
 
-        const exactMatches = this.matchForms(clean, words);
+        if (exactMatches.length > 0 || anomalyEntries.length > 0 || stemPrefixWord) {
+            // Точные совпадения, аномальные (суппletивные) формы и лучший
+            // стем-префиксный кандидат объединяются в один пул омонимов и
+            // ранжируются одинаково (см. scoreMatch) — аномалия не
+            // изобретена регулярной морфологией, но для целей "какая
+            // лексема это слово" она так же авторитетна, как точное
+            // совпадение парадигмы; стем-префиксный кандидат остаётся
+            // самым слабым (isPartial), как и раньше.
+            type Candidate = { word: WordBaseRecord; form: GeneratedForm; forcedSource?: MorphoCandidateSource; isPartial?: boolean };
+            const combined: Candidate[] = [
+                ...exactMatches,
+                ...anomalyEntries.map((a): Candidate => ({
+                    word: this.anomalyToWordRecord(a),
+                    form: { surfaceForm: clean, feats: {} },
+                    forcedSource: 'anomaly',
+                })),
+                ...(stemPrefixWord ? [{ word: stemPrefixWord, form: { surfaceForm: clean, feats: {} }, isPartial: true }] : []),
+            ];
 
-        if (exactMatches.length > 0) {
-            // Полный набор омонимов ранжируется по частотности леммы
-            // (Lexeme.corpusFrequencyPerMln) с весом по падежу (CASE_WEIGHTS)
-            // и, если слева стоит известный предлог, корректируется его
-            // управлением (см. scoreMatch) — вместо произвольного DB-order
-            // выбора, который был в Фазе 1. Флавор/синсеты — следующие фазы.
-            const scored = exactMatches
-                .map((m) => ({ ...m, ...this.scoreMatch(m.word, m.form.feats, context?.leftNeighbor) }))
+            const scored = combined
+                .map((m) => {
+                    const scoreResult = this.scoreMatch(m.word, m.form.feats, context?.leftNeighbor);
+                    return { ...m, ...scoreResult, source: m.forcedSource ?? scoreResult.source };
+                })
                 .sort((a, b) => b.score - a.score);
 
             const winner = scored[0];
             const result = this.toAnalysis(winner.word, winner.form);
             result.matchCount = scored.length;
+            result.isPartialMatch = !!winner.isPartial;
             result.candidates = scored.map((m) => this.toCandidate(m.word, m.form, m.score, m.source));
             return result;
         }
 
-        const stemMatch = this.matchByStemPrefix(clean, words);
-        if (stemMatch) {
-            return stemMatch;
-        }
+        if (words.length === 0) return null;
 
         return {
             lemma: words[0].slug,
@@ -95,6 +139,27 @@ export class DbAnalyzer {
             isPartialMatch: true,
             flavor: words[0].flavor,
             candidates: [this.toCandidate(words[0], { surfaceForm: words[0].isv ?? clean, feats: {} }, 0, 'form_freq')],
+        };
+    }
+
+    private anomalyToWordRecord(a: AnomalyMatch): WordBaseRecord {
+        return {
+            id: -1,
+            slug: a.wordSlug,
+            isv: a.lemma,
+            pos: a.pos,
+            protoStemClass: null,
+            stemExtension: null,
+            paradigm: null,
+            stem: null,
+            base: null,
+            gender: null,
+            animacy: null,
+            alternationType: null,
+            fleetingVowelAt: null,
+            flavor: 'CORE',
+            isCollocation: false,
+            corpusFrequencyPerMln: a.corpusFrequencyPerMln,
         };
     }
 
@@ -207,10 +272,17 @@ export class DbAnalyzer {
         return matches;
     }
 
-    private matchByStemPrefix(
+    /**
+     * Лучший кандидат по совпадению стема-префикса (когда движок не
+     * сгенерировал точную форму, но известный стем — префикс словоформы).
+     * Раньше собирал сразу целый MorphoAnalysis с единственным кандидатом;
+     * теперь возвращает только победителя, чтобы analyzeWord() мог смешать
+     * его с точными и аномальными кандидатами в один пул омонимов.
+     */
+    private findBestStemPrefixWord(
         clean: string,
         words: WordBaseRecord[]
-    ): MorphoAnalysis | null {
+    ): WordBaseRecord | null {
         let best: { word: WordBaseRecord; stemLen: number } | null = null;
 
         for (const word of words) {
@@ -235,29 +307,7 @@ export class DbAnalyzer {
             }
         }
 
-        if (!best) return null;
-
-        const bestPos = best.word.pos!;
-        const posTag = bestPos.toUpperCase();
-        const resolvedPos = isValidPos(posTag) ? posTag : PosType.X;
-        return {
-            lemma: best.word.slug,
-            pos: resolvedPos,
-            wordSlug: best.word.slug,
-            feats: {},
-            matchCount: 1,
-            isPartialMatch: true,
-            flavor: best.word.flavor,
-            candidates: [{
-                wordSlug: best.word.slug,
-                lemma: best.word.slug,
-                pos: resolvedPos,
-                feats: {},
-                flavor: best.word.flavor,
-                score: 0,
-                source: 'form_freq',
-            }],
-        };
+        return best?.word ?? null;
     }
 
     private toAnalysis(word: WordBaseRecord, form: GeneratedForm): MorphoAnalysis {

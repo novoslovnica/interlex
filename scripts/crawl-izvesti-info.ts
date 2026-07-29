@@ -21,13 +21,13 @@ const CRAWL_LIMIT = process.env.CRAWL_LIMIT ? Number(process.env.CRAWL_LIMIT) : 
 async function main() {
     const { prismaCorpus } = await import("@/lib/prisma")
     const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer")
-    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
     const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
     const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
     const { computeCefrLevels } = await import("@/lib/corpus/frequencies/compute-cefr-levels")
 
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions())
+    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions(), await buildInflectionAnomalyIndex())
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     console.log(`Сканирую izvesti.info (id 1..${MAX_ARTICLE_ID_SCAN})...`)

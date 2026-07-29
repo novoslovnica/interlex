@@ -5,9 +5,13 @@ import { PosType, GrammaticalCase, GrammaticalNumber, GrammaticalGender, MorphoG
 // вес падежа (CASE_WEIGHTS); 'context_gov': скорректирован управлением
 // предлога слева (см. lib/corpus/syntax/government.ts); 'collocation':
 // точное совпадение многословной лексемы — ранжирование не применимо, один
-// кандидат; 'flavor'/'synset'/'manual' зарезервированы для следующих фаз
+// кандидат; 'anomaly': точное совпадение с InflectionAnomaly.inflection
+// (см. buildInflectionAnomalyIndex в analyzer-factory.ts) — форма не
+// раскладывается на стем+окончание вообще (суппletивные формы вроде "jest"/
+// "sųt" у "byti"), поэтому обычный hypothetical-base путь её в принципе не
+// нашёл бы; 'flavor'/'synset'/'manual' зарезервированы для следующих фаз
 // плана разрешения омонимии.
-export type MorphoCandidateSource = 'form_freq' | 'context_gov' | 'flavor' | 'synset' | 'collocation' | 'manual';
+export type MorphoCandidateSource = 'form_freq' | 'context_gov' | 'flavor' | 'synset' | 'collocation' | 'anomaly' | 'manual';
 
 // Один вариант омонимии — соответствует строке CorpusTokenCandidate.
 // wordSlug/lemma/pos/feats здесь всегда заполнены (в отличие от

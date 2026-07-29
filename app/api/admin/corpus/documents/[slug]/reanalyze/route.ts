@@ -4,7 +4,7 @@ import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { reanalyzeCorpusDocument } from "@/lib/corpus/reanalyzeDocument"
 
 export async function POST(
@@ -21,7 +21,8 @@ export async function POST(
   try {
     const validEndings = await buildValidEndings()
     const knownPrepositions = await buildKnownPrepositions()
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions)
+    const inflectionAnomalies = await buildInflectionAnomalyIndex()
+    const analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     const result = await reanalyzeCorpusDocument(slug, analyzer, collocationMatcher)

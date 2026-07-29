@@ -5,7 +5,7 @@ import { Feature } from "@/config/features"
 import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 
 interface TokenResult {
     surfaceForm: string
@@ -45,7 +45,8 @@ async function getAnalyzer(): Promise<DbAnalyzer> {
     if (analyzer) return analyzer
     const validEndings = await buildValidEndings()
     const knownPrepositions = await buildKnownPrepositions()
-    analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions)
+    const inflectionAnomalies = await buildInflectionAnomalyIndex()
+    analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
     return analyzer
 }
 

@@ -1,6 +1,56 @@
 import { prismaData } from "@/lib/prisma"
-import { DbAnalyzer, WordBaseRecord } from "./dbAnalyzer"
+import { DbAnalyzer, WordBaseRecord, AnomalyMatch, InflectionAnomalyIndex } from "./dbAnalyzer"
 import { CollocationRecord } from "./collocationMatcher"
+import { normalizeSurfaceForm } from "@/lib/corpus/candidates/reconstruct"
+import { isValidPos } from "@/lib/grammar/common"
+
+// InflectionAnomaly (`inflection_anomalies`, data.db) хранит суппletивные/
+// нерегулярные формы конкретных лексем (напр. "jest"/"sųt" у "byti" — не
+// раскладываются на стем+окончание вообще, это не "неправильное окончание",
+// а другой корень). До этой функции таблица была write-only: заполнялась
+// через /admin/words редактирование, но ни один код распознавания/генерации
+// форм её не читал — DbAnalyzer никогда не находил такие токены (см. AGENTS.md
+// "Corpus Candidate Proposals", находка при разборе почему "jest"/"sut"
+// красные). Ключ — та же нормализация (lowercase + этимологический
+// кир.→лат.), что и у самого surface form в DbAnalyzer.analyzeWord, чтобы
+// совпадать с уже приведённым к этому виду токеном.
+export async function buildInflectionAnomalyIndex(): Promise<InflectionAnomalyIndex> {
+  const rows = await prismaData.inflectionAnomaly.findMany({
+    select: {
+      inflection: true,
+      grammeme: true,
+      lexeme: { select: { slug: true, value: true, pos: true, corpusFrequencyPerMln: true } },
+    },
+  })
+  const map: InflectionAnomalyIndex = new Map()
+  // 16 из 237 строк inflection_anomalies на момент написания — точные
+  // дубликаты (тот же lexemeId+inflection+grammeme дважды, напр. у "byti") —
+  // без дедупликации это удвоило бы matchCount у затронутых слов на пустом
+  // месте. Ключ дедупликации — то же (wordSlug, grammeme), а не сырая
+  // строка целиком, чтобы устоять и к будущим дублям с чуть другим
+  // написанием inflection, но той же граммемой.
+  const seenPerKey = new Set<string>()
+  for (const r of rows) {
+    const pos = r.lexeme.pos?.toUpperCase()
+    if (!pos || !isValidPos(pos)) continue
+    const key = normalizeSurfaceForm(r.inflection)
+    if (!key) continue
+    const dedupeKey = `${key}|${r.lexeme.slug}|${r.grammeme}`
+    if (seenPerKey.has(dedupeKey)) continue
+    seenPerKey.add(dedupeKey)
+    const entry: AnomalyMatch = {
+      wordSlug: r.lexeme.slug,
+      lemma: r.lexeme.value ?? r.lexeme.slug,
+      pos,
+      grammeme: r.grammeme,
+      corpusFrequencyPerMln: r.lexeme.corpusFrequencyPerMln,
+    }
+    const arr = map.get(key)
+    if (arr) arr.push(entry)
+    else map.set(key, [entry])
+  }
+  return map
+}
 
 export async function buildValidEndings(): Promise<Set<string>> {
   const rows = await prismaData.endingAllophone.findMany({
