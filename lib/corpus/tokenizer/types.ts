@@ -74,6 +74,12 @@ export interface CorpusTokenInput {
     pos: string;
     wordSlug: string | null;
     matchCount: number;
+    // Персистентная копия MorphoAnalysis.isPartialMatch — без неё "жёлтый"
+    // (matchByStemPrefix, matchCount=1) неотличим задним числом от настоящего
+    // "зелёного" (matchCount=1 от точного совпадения формы): оба выглядят
+    // одинаково в хранимых колонках. Нужно для плана автогенерации
+    // кандидатов из красных/жёлтых токенов (см. lib/corpus/candidates/).
+    isPartialMatch: boolean;
     feats: MorphoGrammarFeats;
     candidates: MorphoCandidate[];
 }

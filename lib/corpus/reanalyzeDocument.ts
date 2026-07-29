@@ -6,7 +6,7 @@ import { applyDocumentFlavorBias } from "@/lib/corpus/tokenizer/flavorBias"
 
 interface TokenUpdate {
   id: bigint
-  data: { lemma: string; pos: string; wordSlug: string | null; matchCount: number; feats: Record<string, string> }
+  data: { lemma: string; pos: string; wordSlug: string | null; matchCount: number; isPartialMatch: boolean; feats: Record<string, string> }
   candidates: MorphoCandidate[]
 }
 
@@ -72,7 +72,7 @@ export async function reanalyzeCorpusDocument(
       }
 
       if (token.wordIndex === -1) {
-        updates.push({ id: token.id, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, feats: {} }, candidates: [] })
+        updates.push({ id: token.id, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, isPartialMatch: false, feats: {} }, candidates: [] })
         i++
         continue
       }
@@ -98,6 +98,7 @@ export async function reanalyzeCorpusDocument(
               pos: collocationMatch.record.pos,
               wordSlug: collocationMatch.record.wordSlug,
               matchCount: 1,
+              isPartialMatch: false,
               feats: {},
             },
             candidates: [{
@@ -119,7 +120,7 @@ export async function reanalyzeCorpusDocument(
 
       if (!analysis) {
         failed++
-        updates.push({ id: token.id, data: { pos: "X", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, feats: {} }, candidates: [] })
+        updates.push({ id: token.id, data: { pos: "X", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, isPartialMatch: false, feats: {} }, candidates: [] })
       } else {
         analyzed++
         updates.push({
@@ -129,6 +130,7 @@ export async function reanalyzeCorpusDocument(
             pos: analysis.pos,
             wordSlug: analysis.wordSlug,
             matchCount: analysis.matchCount ?? 0,
+            isPartialMatch: !!analysis.isPartialMatch,
             feats: analysis.feats as Record<string, string>,
           },
           candidates: analysis.candidates ?? [],

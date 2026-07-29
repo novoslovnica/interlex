@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
                         pos: t.pos,
                         wordSlug: t.wordSlug,
                         matchCount: t.matchCount,
+                        isPartialMatch: t.isPartialMatch,
                         feats: t.feats as Record<string, string>,
                     })),
                 })

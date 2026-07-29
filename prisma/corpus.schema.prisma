@@ -82,6 +82,15 @@ model CorpusToken {
   wordSlug      String?
   matchCount    Int               @default(1) // Количество омонимов (0 — не найдено, 1 — один вариант, >1 — омонимия)
 
+  // Персистентная копия MorphoAnalysis.isPartialMatch (см. DbAnalyzer.matchByStemPrefix).
+  // Без этого поля "жёлтый" (стем совпал, флексия — нет, matchCount=1) на
+  // диске неотличим от настоящего "зелёного" (matchCount=1 от точного
+  // совпадения формы) — оба раньше писались с одинаковым matchCount и без
+  // этого флага. Добавлено вместе с CorpusCandidateProposal (план
+  // автогенерации кандидатов из красных/жёлтых токенов, 2026-07-29) —
+  // именно жёлтые тексты и нужно было научиться выбирать запросом.
+  isPartialMatch Boolean          @default(false)
+
   // 'auto' | 'manual' — тот же паттерн, что у CorpusDependency.source: ручной
   // выбор омонима модератором (см. CorpusTokenCandidate) не должен
   // затираться повторным "Пересчитать POS-tagging" (см. reanalyze route).
@@ -161,6 +170,54 @@ model CorpusDependency {
 
   @@index([sentenceId])
   @@index([headTokenId])
+}
+
+// План "автогенерация кандидатов из красных/жёлтых токенов" (см. обсуждение
+// в AGENTS.md-соседнем чате 2026-07-29). Один ряд — одна гипотеза
+// восстановления исходной словарной формы для группы токенов с одинаковой
+// нормализованной словоформой (clusterKey). Токен может дать несколько
+// гипотез (омонимичное окончание совпадает с разными классами основ) —
+// поэтому уникальность не на clusterKey, а на четвёрке ниже; повторный
+// прогон генерации обновляет только статистику (occurrenceCount/exampleTokenIds/
+// lastSeenAt), никогда не трогая status — тот же приём "не затирать ручное",
+// что и у CorpusToken.resolutionSource/CorpusDependency.source выше.
+//
+// Таблица живёт в corpus.db, а не в data.db: генерация — это full-scan по
+// CorpusToken (corpus.db), а Candidate (data.db) создаётся только один раз
+// на кластер при одобрении — тот самый нечастый случай, где cross-db связь
+// оправданно хранится как обычный Int без FK (candidateId), по аналогии с
+// CorpusToken.wordSlug/CorpusTokenCandidate.wordSlug, уже ссылающимися на
+// Lexeme.slug из другой базы без реального FK.
+model CorpusCandidateProposal {
+  id                 Int      @id @default(autoincrement())
+
+  clusterKey         String   // normalizeSurfaceForm(surfaceForm) — группирует все токены одного слова
+  ruleSource         String   // 'red_reverse_lookup' | 'yellow_stem_sibling'
+  guessedPos         String   // PosType: NOUN | ADJ | VERB
+  guessedStemType    String   // endingsRegistry StemType / AdjStemType / 'verb_lpart'
+  guessedGrammeme    String   // граммема совпавшего окончания (см. lib/grammar/grammemes.ts)
+  guessedStem        String
+  reconstructedForm  String   // предполагаемая словарная (цитатная) форма
+
+  siblingWordSlug    String?  // для 'yellow_stem_sibling' — лексема, чей стем совпал (matchByStemPrefix)
+  possibleEndingGap  Boolean  @default(false) // guessedStem совпал с стемом siblingWordSlug целиком — вероятно баг парадигмы, а не новое слово
+
+  rank               Int      @default(0) // 0 = самое специфичное совпадение (самое длинное окончание) в рамках своего clusterKey
+
+  occurrenceCount    Int      @default(1) // сколько токенов с этой словоформой сейчас matchCount=0 в корпусе — пересчитывается заново при каждом прогоне, не инкрементируется
+  exampleTokenIds    Json     // до 5 CorpusToken.id для примера в UI — не растёт неограниченно
+  firstSeenAt        DateTime @default(now())
+  lastSeenAt         DateTime @default(now())
+
+  status             String   @default("pending") // pending | rejected | promoted | merged_into_existing
+  resolutionNote     String?  // 'proper_noun' | 'typo' | 'foreign' | 'ending_gap' | 'other' — свободный текст модератора
+  candidateId        Int?     // Candidate.id из data.db после промоушена (без реального FK, кросс-база)
+  reviewedByEmail    String?
+  reviewedAt         DateTime?
+
+  @@unique([clusterKey, ruleSource, guessedStemType, guessedGrammeme])
+  @@index([clusterKey])
+  @@index([status, occurrenceCount])
 }
 
 // Управление падежом: какой падеж требует глагол (или частица-возвратность

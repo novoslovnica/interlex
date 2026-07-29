@@ -57,6 +57,7 @@ export const ModelName = {
   CorpusToken: 'CorpusToken',
   CorpusTokenCandidate: 'CorpusTokenCandidate',
   CorpusDependency: 'CorpusDependency',
+  CorpusCandidateProposal: 'CorpusCandidateProposal',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
   CorpusConfig: 'CorpusConfig'
@@ -127,6 +128,7 @@ export const CorpusTokenScalarFieldEnum = {
   feats: 'feats',
   wordSlug: 'wordSlug',
   matchCount: 'matchCount',
+  isPartialMatch: 'isPartialMatch',
   resolutionSource: 'resolutionSource'
 } as const
 
@@ -162,6 +164,32 @@ export const CorpusDependencyScalarFieldEnum = {
 } as const
 
 export type CorpusDependencyScalarFieldEnum = (typeof CorpusDependencyScalarFieldEnum)[keyof typeof CorpusDependencyScalarFieldEnum]
+
+
+export const CorpusCandidateProposalScalarFieldEnum = {
+  id: 'id',
+  clusterKey: 'clusterKey',
+  ruleSource: 'ruleSource',
+  guessedPos: 'guessedPos',
+  guessedStemType: 'guessedStemType',
+  guessedGrammeme: 'guessedGrammeme',
+  guessedStem: 'guessedStem',
+  reconstructedForm: 'reconstructedForm',
+  siblingWordSlug: 'siblingWordSlug',
+  possibleEndingGap: 'possibleEndingGap',
+  rank: 'rank',
+  occurrenceCount: 'occurrenceCount',
+  exampleTokenIds: 'exampleTokenIds',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt',
+  status: 'status',
+  resolutionNote: 'resolutionNote',
+  candidateId: 'candidateId',
+  reviewedByEmail: 'reviewedByEmail',
+  reviewedAt: 'reviewedAt'
+} as const
+
+export type CorpusCandidateProposalScalarFieldEnum = (typeof CorpusCandidateProposalScalarFieldEnum)[keyof typeof CorpusCandidateProposalScalarFieldEnum]
 
 
 export const VerbGovernmentScalarFieldEnum = {

@@ -51,6 +51,7 @@ export type CorpusTokenMinAggregateOutputType = {
   pos: string | null
   wordSlug: string | null
   matchCount: number | null
+  isPartialMatch: boolean | null
   resolutionSource: string | null
 }
 
@@ -65,6 +66,7 @@ export type CorpusTokenMaxAggregateOutputType = {
   pos: string | null
   wordSlug: string | null
   matchCount: number | null
+  isPartialMatch: boolean | null
   resolutionSource: string | null
 }
 
@@ -80,6 +82,7 @@ export type CorpusTokenCountAggregateOutputType = {
   feats: number
   wordSlug: number
   matchCount: number
+  isPartialMatch: number
   resolutionSource: number
   _all: number
 }
@@ -110,6 +113,7 @@ export type CorpusTokenMinAggregateInputType = {
   pos?: true
   wordSlug?: true
   matchCount?: true
+  isPartialMatch?: true
   resolutionSource?: true
 }
 
@@ -124,6 +128,7 @@ export type CorpusTokenMaxAggregateInputType = {
   pos?: true
   wordSlug?: true
   matchCount?: true
+  isPartialMatch?: true
   resolutionSource?: true
 }
 
@@ -139,6 +144,7 @@ export type CorpusTokenCountAggregateInputType = {
   feats?: true
   wordSlug?: true
   matchCount?: true
+  isPartialMatch?: true
   resolutionSource?: true
   _all?: true
 }
@@ -241,6 +247,7 @@ export type CorpusTokenGroupByOutputType = {
   feats: runtime.JsonValue | null
   wordSlug: string | null
   matchCount: number
+  isPartialMatch: boolean
   resolutionSource: string
   _count: CorpusTokenCountAggregateOutputType | null
   _avg: CorpusTokenAvgAggregateOutputType | null
@@ -279,6 +286,7 @@ export type CorpusTokenWhereInput = {
   feats?: Prisma.JsonNullableFilter<"CorpusToken">
   wordSlug?: Prisma.StringNullableFilter<"CorpusToken"> | string | null
   matchCount?: Prisma.IntFilter<"CorpusToken"> | number
+  isPartialMatch?: Prisma.BoolFilter<"CorpusToken"> | boolean
   resolutionSource?: Prisma.StringFilter<"CorpusToken"> | string
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
   sentence?: Prisma.XOR<Prisma.CorpusSentenceScalarRelationFilter, Prisma.CorpusSentenceWhereInput>
@@ -299,6 +307,7 @@ export type CorpusTokenOrderByWithRelationInput = {
   feats?: Prisma.SortOrderInput | Prisma.SortOrder
   wordSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   matchCount?: Prisma.SortOrder
+  isPartialMatch?: Prisma.SortOrder
   resolutionSource?: Prisma.SortOrder
   document?: Prisma.CorpusDocumentOrderByWithRelationInput
   sentence?: Prisma.CorpusSentenceOrderByWithRelationInput
@@ -322,6 +331,7 @@ export type CorpusTokenWhereUniqueInput = Prisma.AtLeast<{
   feats?: Prisma.JsonNullableFilter<"CorpusToken">
   wordSlug?: Prisma.StringNullableFilter<"CorpusToken"> | string | null
   matchCount?: Prisma.IntFilter<"CorpusToken"> | number
+  isPartialMatch?: Prisma.BoolFilter<"CorpusToken"> | boolean
   resolutionSource?: Prisma.StringFilter<"CorpusToken"> | string
   document?: Prisma.XOR<Prisma.CorpusDocumentScalarRelationFilter, Prisma.CorpusDocumentWhereInput>
   sentence?: Prisma.XOR<Prisma.CorpusSentenceScalarRelationFilter, Prisma.CorpusSentenceWhereInput>
@@ -342,6 +352,7 @@ export type CorpusTokenOrderByWithAggregationInput = {
   feats?: Prisma.SortOrderInput | Prisma.SortOrder
   wordSlug?: Prisma.SortOrderInput | Prisma.SortOrder
   matchCount?: Prisma.SortOrder
+  isPartialMatch?: Prisma.SortOrder
   resolutionSource?: Prisma.SortOrder
   _count?: Prisma.CorpusTokenCountOrderByAggregateInput
   _avg?: Prisma.CorpusTokenAvgOrderByAggregateInput
@@ -365,6 +376,7 @@ export type CorpusTokenScalarWhereWithAggregatesInput = {
   feats?: Prisma.JsonNullableWithAggregatesFilter<"CorpusToken">
   wordSlug?: Prisma.StringNullableWithAggregatesFilter<"CorpusToken"> | string | null
   matchCount?: Prisma.IntWithAggregatesFilter<"CorpusToken"> | number
+  isPartialMatch?: Prisma.BoolWithAggregatesFilter<"CorpusToken"> | boolean
   resolutionSource?: Prisma.StringWithAggregatesFilter<"CorpusToken"> | string
 }
 
@@ -378,6 +390,7 @@ export type CorpusTokenCreateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
@@ -398,6 +411,7 @@ export type CorpusTokenUncheckedCreateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
@@ -414,6 +428,7 @@ export type CorpusTokenUpdateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
@@ -434,6 +449,7 @@ export type CorpusTokenUncheckedUpdateInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
@@ -452,6 +468,7 @@ export type CorpusTokenCreateManyInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
 }
 
@@ -465,6 +482,7 @@ export type CorpusTokenUpdateManyMutationInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -480,6 +498,7 @@ export type CorpusTokenUncheckedUpdateManyInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -505,6 +524,7 @@ export type CorpusTokenCountOrderByAggregateInput = {
   feats?: Prisma.SortOrder
   wordSlug?: Prisma.SortOrder
   matchCount?: Prisma.SortOrder
+  isPartialMatch?: Prisma.SortOrder
   resolutionSource?: Prisma.SortOrder
 }
 
@@ -526,6 +546,7 @@ export type CorpusTokenMaxOrderByAggregateInput = {
   pos?: Prisma.SortOrder
   wordSlug?: Prisma.SortOrder
   matchCount?: Prisma.SortOrder
+  isPartialMatch?: Prisma.SortOrder
   resolutionSource?: Prisma.SortOrder
 }
 
@@ -540,6 +561,7 @@ export type CorpusTokenMinOrderByAggregateInput = {
   pos?: Prisma.SortOrder
   wordSlug?: Prisma.SortOrder
   matchCount?: Prisma.SortOrder
+  isPartialMatch?: Prisma.SortOrder
   resolutionSource?: Prisma.SortOrder
 }
 
@@ -706,6 +728,7 @@ export type CorpusTokenCreateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
   dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
@@ -724,6 +747,7 @@ export type CorpusTokenUncheckedCreateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
@@ -770,6 +794,7 @@ export type CorpusTokenScalarWhereInput = {
   feats?: Prisma.JsonNullableFilter<"CorpusToken">
   wordSlug?: Prisma.StringNullableFilter<"CorpusToken"> | string | null
   matchCount?: Prisma.IntFilter<"CorpusToken"> | number
+  isPartialMatch?: Prisma.BoolFilter<"CorpusToken"> | boolean
   resolutionSource?: Prisma.StringFilter<"CorpusToken"> | string
 }
 
@@ -783,6 +808,7 @@ export type CorpusTokenCreateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   dependencyAsHead?: Prisma.CorpusDependencyCreateNestedManyWithoutHeadTokenInput
@@ -801,6 +827,7 @@ export type CorpusTokenUncheckedCreateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
@@ -842,6 +869,7 @@ export type CorpusTokenCreateWithoutCandidatesInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
@@ -861,6 +889,7 @@ export type CorpusTokenUncheckedCreateWithoutCandidatesInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
@@ -892,6 +921,7 @@ export type CorpusTokenUpdateWithoutCandidatesInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
@@ -911,6 +941,7 @@ export type CorpusTokenUncheckedUpdateWithoutCandidatesInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
@@ -926,6 +957,7 @@ export type CorpusTokenCreateWithoutDependencyAsHeadInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
@@ -945,6 +977,7 @@ export type CorpusTokenUncheckedCreateWithoutDependencyAsHeadInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedCreateNestedOneWithoutDepTokenInput
   candidates?: Prisma.CorpusTokenCandidateUncheckedCreateNestedManyWithoutTokenInput
@@ -965,6 +998,7 @@ export type CorpusTokenCreateWithoutDependencyAsDepInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   document: Prisma.CorpusDocumentCreateNestedOneWithoutTokensInput
   sentence: Prisma.CorpusSentenceCreateNestedOneWithoutTokensInput
@@ -984,6 +1018,7 @@ export type CorpusTokenUncheckedCreateWithoutDependencyAsDepInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedCreateNestedManyWithoutHeadTokenInput
   candidates?: Prisma.CorpusTokenCandidateUncheckedCreateNestedManyWithoutTokenInput
@@ -1015,6 +1050,7 @@ export type CorpusTokenUpdateWithoutDependencyAsHeadInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
@@ -1034,6 +1070,7 @@ export type CorpusTokenUncheckedUpdateWithoutDependencyAsHeadInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
   candidates?: Prisma.CorpusTokenCandidateUncheckedUpdateManyWithoutTokenNestedInput
@@ -1060,6 +1097,7 @@ export type CorpusTokenUpdateWithoutDependencyAsDepInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
@@ -1079,6 +1117,7 @@ export type CorpusTokenUncheckedUpdateWithoutDependencyAsDepInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
   candidates?: Prisma.CorpusTokenCandidateUncheckedUpdateManyWithoutTokenNestedInput
@@ -1095,6 +1134,7 @@ export type CorpusTokenCreateManyDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
 }
 
@@ -1108,6 +1148,7 @@ export type CorpusTokenUpdateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   sentence?: Prisma.CorpusSentenceUpdateOneRequiredWithoutTokensNestedInput
   dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
@@ -1126,6 +1167,7 @@ export type CorpusTokenUncheckedUpdateWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
@@ -1143,6 +1185,7 @@ export type CorpusTokenUncheckedUpdateManyWithoutDocumentInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1157,6 +1200,7 @@ export type CorpusTokenCreateManySentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: string | null
   matchCount?: number
+  isPartialMatch?: boolean
   resolutionSource?: string
 }
 
@@ -1170,6 +1214,7 @@ export type CorpusTokenUpdateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.CorpusDocumentUpdateOneRequiredWithoutTokensNestedInput
   dependencyAsHead?: Prisma.CorpusDependencyUpdateManyWithoutHeadTokenNestedInput
@@ -1188,6 +1233,7 @@ export type CorpusTokenUncheckedUpdateWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
   dependencyAsHead?: Prisma.CorpusDependencyUncheckedUpdateManyWithoutHeadTokenNestedInput
   dependencyAsDep?: Prisma.CorpusDependencyUncheckedUpdateOneWithoutDepTokenNestedInput
@@ -1205,6 +1251,7 @@ export type CorpusTokenUncheckedUpdateManyWithoutSentenceInput = {
   feats?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   wordSlug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPartialMatch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   resolutionSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1260,6 +1307,7 @@ export type CorpusTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   feats?: boolean
   wordSlug?: boolean
   matchCount?: boolean
+  isPartialMatch?: boolean
   resolutionSource?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
@@ -1281,6 +1329,7 @@ export type CorpusTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   feats?: boolean
   wordSlug?: boolean
   matchCount?: boolean
+  isPartialMatch?: boolean
   resolutionSource?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
@@ -1298,6 +1347,7 @@ export type CorpusTokenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   feats?: boolean
   wordSlug?: boolean
   matchCount?: boolean
+  isPartialMatch?: boolean
   resolutionSource?: boolean
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
@@ -1315,10 +1365,11 @@ export type CorpusTokenSelectScalar = {
   feats?: boolean
   wordSlug?: boolean
   matchCount?: boolean
+  isPartialMatch?: boolean
   resolutionSource?: boolean
 }
 
-export type CorpusTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentSlug" | "sentenceId" | "tokenIndex" | "wordIndex" | "surfaceForm" | "lemma" | "pos" | "feats" | "wordSlug" | "matchCount" | "resolutionSource", ExtArgs["result"]["corpusToken"]>
+export type CorpusTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentSlug" | "sentenceId" | "tokenIndex" | "wordIndex" | "surfaceForm" | "lemma" | "pos" | "feats" | "wordSlug" | "matchCount" | "isPartialMatch" | "resolutionSource", ExtArgs["result"]["corpusToken"]>
 export type CorpusTokenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   document?: boolean | Prisma.CorpusDocumentDefaultArgs<ExtArgs>
   sentence?: boolean | Prisma.CorpusSentenceDefaultArgs<ExtArgs>
@@ -1357,6 +1408,7 @@ export type $CorpusTokenPayload<ExtArgs extends runtime.Types.Extensions.Interna
     feats: runtime.JsonValue | null
     wordSlug: string | null
     matchCount: number
+    isPartialMatch: boolean
     resolutionSource: string
   }, ExtArgs["result"]["corpusToken"]>
   composites: {}
@@ -1797,6 +1849,7 @@ export interface CorpusTokenFieldRefs {
   readonly feats: Prisma.FieldRef<"CorpusToken", 'Json'>
   readonly wordSlug: Prisma.FieldRef<"CorpusToken", 'String'>
   readonly matchCount: Prisma.FieldRef<"CorpusToken", 'Int'>
+  readonly isPartialMatch: Prisma.FieldRef<"CorpusToken", 'Boolean'>
   readonly resolutionSource: Prisma.FieldRef<"CorpusToken", 'String'>
 }
     

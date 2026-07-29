@@ -151,6 +151,7 @@ export class Tokenizer {
                         pos: t.analysis.pos,
                         wordSlug: t.analysis.wordSlug,
                         matchCount: t.analysis.matchCount ?? 0,
+                        isPartialMatch: !!t.analysis.isPartialMatch,
                         feats: t.analysis.feats,
                         candidates: t.analysis.candidates ?? [],
                     });

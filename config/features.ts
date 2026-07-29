@@ -58,6 +58,10 @@ export enum SystemFeature {
     // Разрешение омонимии токенов корпуса (см. lib/corpus/disambiguation/)
     CorpusTokenDisambiguate = "corpus_token_disambiguate",
 
+    // Ревью автосгенерированных кандидатов из красных/жёлтых токенов корпуса
+    // (см. lib/corpus/candidates/)
+    CorpusCandidatesReview = "corpus_candidates_review",
+
     // Консолидированная семантическая сеть (2026-07-23) — новые типы отношений
     PosSynonymsEdit = "pos_synonyms_edit",
     InstanceOfEdit = "instance_of_edit",
@@ -329,6 +333,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CorpusTokenDisambiguate]: {
         label: "Разрешение омонимии токенов",
         description: "Просмотр кандидатов и ручной выбор леммы/граммемы для неоднозначных токенов",
+        category: "Корпус",
+    },
+    [SystemFeature.CorpusCandidatesReview]: {
+        label: "Кандидаты из корпуса",
+        description: "Просмотр и модерация автосгенерированных кандидатов в лексемы из красных/жёлтых токенов корпуса",
         category: "Корпус",
     },
 
