@@ -494,7 +494,8 @@
         "root": "root",
         "prefix": "prefix",
         "suffix": "suffix",
-        "connective": "connective element"
+        "connective": "connective element",
+        "ending": "ending"
       }
     },
     "comprehension": {

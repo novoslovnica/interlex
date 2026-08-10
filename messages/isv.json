@@ -494,7 +494,8 @@
         "root": "korenj",
         "prefix": "pristavka",
         "suffix": "sufiks",
-        "connective": "sjedinitelny element"
+        "connective": "sjedinitelny element",
+        "ending": "okončenje"
       }
     },
     "comprehension": {
