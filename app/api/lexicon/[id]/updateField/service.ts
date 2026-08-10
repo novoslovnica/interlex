@@ -143,7 +143,7 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             ])
         }
 
-        return;
+        return { success: true };
     }
 
     const lang = field.toLowerCase();
