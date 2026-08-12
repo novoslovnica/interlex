@@ -41,12 +41,12 @@ describe('1. Существительные (NOUN)', () => {
     // Краткий циркумфлекс ̑ на корне в Nom.Sg (2026-07-24: окончание -ъ убрано —
     // совр. интерславянский, а не праслав. реконструкция, см. AGENTS.md)
     it('bob: Именительный ед.ч. несет краткий циркумфлекс (bȏb)', () => {
-        expect(findForm(bobForms, { case: 'nominative', number: 'sg' })).toBe('bȏb');
+        expect(findForm(bobForms, { case: 'nom', number: 'sg' })).toBe('bȏb');
     });
 
     // Восходящий акут на окончании в Gen.Sg
     it('bob: Родительный ед.ч. окситонируется на окончание (bobá)', () => {
-        expect(findForm(bobForms, { case: 'genitive', number: 'sg' })).toBe('bobá');
+        expect(findForm(bobForms, { case: 'gen', number: 'sg' })).toBe('bobá');
     });
 
     // Пример Б: "imę" (Консонантная n-основа, средний род, Парадигма C)
@@ -59,7 +59,7 @@ describe('1. Существительные (NOUN)', () => {
     // Средний род, парадигма C: ед.ч. всегда несёт краткий циркумфлекс на корне
     // (тот же принцип, что у tělo/bob) — наращение "en" при этом спаяно верно ("imene").
     it('imę: Наличие исторического наращения основы -en- в Gen.Sg (imene)', () => {
-        expect(findForm(imeForms, { case: 'genitive', number: 'sg' })).toBe('imȇne');
+        expect(findForm(imeForms, { case: 'gen', number: 'sg' })).toBe('imȇne');
     });
 });
 
@@ -130,7 +130,7 @@ describe('3. Прилагательные (ADJ)', () => {
     // (как и задумано комментарием выше), просто теперь корректно попадает на его
     // гласную 'ě' в полной, а не усечённой форме.
     it('novy: Компаратив образует суффикс -ějš- с мягким склонением (nově̂jši)', () => {
-        expect(findForm(novyForms, { case: 'nominative', number: 'sg', gender: 'masc', degree: 'comp' })).toBe('nově̂jši');
+        expect(findForm(novyForms, { case: 'nom', number: 'sg', gender: 'masc', degree: 'comp' })).toBe('nově̂jši');
     });
 
     // Пример Б: "kamienny" (Относительное прилагательное, Парадигма A)
@@ -152,7 +152,7 @@ describe('4. Числительные (NUM)', () => {
 
     // Ять (ě) верна — подтверждено пользователем и БД (ending_allophones), ошибался тест.
     it('dva: Родовое разведение в им.п. для женского/среднего рода (dvě̂)', () => {
-        expect(findForm(dvaForms, { case: 'nominative', gender: 'fem' })).toBe('dvě̂');
+        expect(findForm(dvaForms, { case: 'nom', gender: 'fem' })).toBe('dvě̂');
     });
 
     // Пример Б: "pęty" (Порядковое числительное, Парадигма A)
@@ -172,11 +172,11 @@ describe('5. Местоимения и Определители (PRON / DET)', (
     // Проверяем полную ударную форму и энклитическую безударную
     // Ять (ě) верна — подтверждено пользователем и БД, ошибался тест.
     it('ja: Наличие полной ударной формы в дат.п. (meně́)', () => {
-        expect(findForm(jaForms, { case: 'dative', number: 'sg', degree: 'full' as any })).toBe('meně́');
+        expect(findForm(jaForms, { case: 'dat', number: 'sg', degree: 'full' as any })).toBe('meně́');
     });
 
     it('ja: Наличие энклитической безударной формы в дат.п. без диакритики (mi)', () => {
-        expect(findForm(jaForms, { case: 'dative', number: 'sg', degree: 'short' as any })).toBe('mi');
+        expect(findForm(jaForms, { case: 'dat', number: 'sg', degree: 'short' as any })).toBe('mi');
     });
 });
 

@@ -1,23 +1,23 @@
 import { Case, NumberType } from './endingsRegistry';
 
 const UD_CASE: Record<Case, string> = {
-  nominative: 'Nom',
-  accusative: 'Acc',
-  genitive: 'Gen',
-  dative: 'Dat',
-  instrumental: 'Ins',
-  locative: 'Loc',
-  vocative: 'Voc',
+  nom: 'Nom',
+  acc: 'Acc',
+  gen: 'Gen',
+  dat: 'Dat',
+  ins: 'Ins',
+  loc: 'Loc',
+  voc: 'Voc',
 };
 
 const CASE_FROM_UD: Record<string, Case> = {
-  Nom: 'nominative',
-  Acc: 'accusative',
-  Gen: 'genitive',
-  Dat: 'dative',
-  Ins: 'instrumental',
-  Loc: 'locative',
-  Voc: 'vocative',
+  Nom: 'nom',
+  Acc: 'acc',
+  Gen: 'gen',
+  Dat: 'dat',
+  Ins: 'ins',
+  Loc: 'loc',
+  Voc: 'voc',
 };
 
 const UD_NUMBER: Record<NumberType, string> = {
@@ -62,7 +62,7 @@ export function parseGrammeme(g: Grammeme): { case: Case; number: NumberType } {
   const caseUD = feats['Case'];
   const numUD = feats['Number'];
   return {
-    case: CASE_FROM_UD[caseUD] || 'nominative',
+    case: CASE_FROM_UD[caseUD] || 'nom',
     number: NUMBER_FROM_UD[numUD] || 'singular',
   };
 }

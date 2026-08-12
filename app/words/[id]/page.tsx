@@ -47,7 +47,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
     let nounParadigm: { singular: Record<string, string>; dual: Record<string, string>; plural: Record<string, string> } | null = null;
     if (item?.pos === PosType.NOUN && !item?.isCollocation) {
-      const CASES_LIST = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'locative', 'vocative'] as const;
+      const CASES_LIST = ['nom', 'gen', 'dat', 'acc', 'ins', 'loc', 'voc'] as const;
       const NUMBERS_LIST = ['singular', 'dual', 'plural'] as const;
 
       nounParadigm = { singular: {}, dual: {}, plural: {} };

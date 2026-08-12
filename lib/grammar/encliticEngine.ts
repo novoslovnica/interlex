@@ -4,7 +4,7 @@ export interface EncliticRequest {
     preposition: string;      // Предлог, например: "na", "za", "po", "okolo"
     accentedNounForm: string; // Уже сгенерированная форма существительного (например: "rǫ́kǫ", "bóbъ")
     paradigm: 'A' | 'B' | 'C';
-    targetCase: 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative';
+    targetCase: 'nom' | 'acc' | 'gen' | 'dat' | 'ins' | 'loc';
     targetNumber: 'singular' | 'plural' | 'dual';
 }
 
@@ -46,23 +46,23 @@ export function applyPrepositionEnclitic(request: EncliticRequest): string {
     let shouldRetract = false;
 
     // А. Женский род (основы на -ā и -i) в винительном падеже ед. числа (Acc.Sg)
-    if (targetNumber === 'singular' && targetCase === 'accusative') {
+    if (targetNumber === 'singular' && targetCase === 'acc') {
         shouldRetract = true; // *nà rǫkǫ, *zà dǫšǫ, *nà kostь
     }
 
     // Б. Мужской и средний род (o-основы, консонантные) в винительном падеже ед. числа (Acc.Sg)
     // а также в Именительном/Винительном падеже для неодушевленных/среднего рода
-    if (targetNumber === 'singular' && (targetCase === 'accusative' || targetCase === 'nominative')) {
+    if (targetNumber === 'singular' && (targetCase === 'acc' || targetCase === 'nom')) {
         shouldRetract = true; // *nà bóbъ, *nà nebo, *pò dolo
     }
 
     // В. Местный падеж (Loc.Sg) для некоторых i-основ и u-основ
-    if (targetNumber === 'singular' && targetCase === 'locative') {
+    if (targetNumber === 'singular' && targetCase === 'loc') {
         shouldRetract = true; // *nà kosti, *pò synovju
     }
 
     // Г. Особое правило множественного числа: Винительный падеж мн. числа (Acc.Pl) мужского рода
-    if (targetNumber === 'plural' && targetCase === 'accusative') {
+    if (targetNumber === 'plural' && targetCase === 'acc') {
         shouldRetract = true; // *nà boby
     }
 
@@ -136,10 +136,10 @@ export function applyPrepositionEncliticWithFourTones(request: EncliticFourTones
 
     // Дополнительная проверка по сетке падежей (перестраховка для исключений)
     if (shouldRetract) {
-        const isAccusativeSg = targetNumber === 'singular' && targetCase === 'accusative';
-        const isNominativeSg = targetNumber === 'singular' && targetCase === 'nominative';
-        const isAccusativePl = targetNumber === 'plural' && targetCase === 'accusative';
-        const isLocativeSg = targetNumber === 'singular' && targetCase === 'locative';
+        const isAccusativeSg = targetNumber === 'singular' && targetCase === 'acc';
+        const isNominativeSg = targetNumber === 'singular' && targetCase === 'nom';
+        const isAccusativePl = targetNumber === 'plural' && targetCase === 'acc';
+        const isLocativeSg = targetNumber === 'singular' && targetCase === 'loc';
 
         shouldRetract = isAccusativeSg || isNominativeSg || isAccusativePl || isLocativeSg;
     }

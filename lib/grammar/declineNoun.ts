@@ -46,14 +46,14 @@ export function generateAccentedFormExtended(request: ExtendedWordFormRequest): 
         // --- ЛОГИКА ДЛЯ МУЖСКОГО РОДА ТИПА C ---
         if (isMasculine) {
             if (targetNumber === 'singular') {
-                if (targetCase === 'nominative' || targetCase === 'accusative') {
+                if (targetCase === 'nom' || targetCase === 'acc') {
                     return applyAccent(fullForm, 1); // Ударение на корень: bóbъ, bóbъ
                 }
                 return applyAccent(fullForm, 0);   // Косвенные падежи на окончание: bobá, bobú
             }
 
             if (targetNumber === 'plural') {
-                if (targetCase === 'accusative') {
+                if (targetCase === 'acc') {
                     return applyAccent(fullForm, 1); // Особое правило мужского рода: Acc.Pl на корень (bóby)
                 }
                 return applyAccent(fullForm, 0);   // Остальные на окончание (bobí, bobómъ)
@@ -82,7 +82,7 @@ export function generateAccentedFormExtended(request: ExtendedWordFormRequest): 
         // --- ЛОГИКА ДЛЯ i-ОСНОВ (kostь, gostь) ---
         if (stemType === 'i_basis') {
             if (targetNumber === 'singular') {
-                if (targetCase === 'nominative' || targetCase === 'accusative') {
+                if (targetCase === 'nom' || targetCase === 'acc') {
                     return applyAccent(fullForm, 1); // На корень: kóstь
                 }
                 return applyAccent(fullForm, 0);   // На флексию: kostí, kostьjǫ́
@@ -95,13 +95,13 @@ export function generateAccentedFormExtended(request: ExtendedWordFormRequest): 
         // --- ЛОГИКА ДЛЯ u-ОСНОВ (synъ, domъ) ---
         if (stemType === 'u_basis') {
             if (targetNumber === 'singular') {
-                if (targetCase === 'nominative' || targetCase === 'accusative') {
+                if (targetCase === 'nom' || targetCase === 'acc') {
                     return applyAccent(fullForm, 1); // sýnъ
                 }
                 return applyAccent(fullForm, 0);   // synú, synoví
             }
             if (targetNumber === 'plural') {
-                if (targetCase === 'nominative') {
+                if (targetCase === 'nom') {
                     // Ударение на суффикс наращения основы -ove
                     return applyAccent(fullForm, 1); // synov́e (предпоследний слог полной формы)
                 }
@@ -168,14 +168,14 @@ function generateBaseNounForm(request: IntegratedFormRequest): string {
         const isFeminine = stemType === 'i_basis' || stemType.startsWith('a_'); // грубое разделение для теста
 
         if (isFeminine) {
-            if (targetNumber === 'singular' && targetCase === 'accusative') return applyAccent(fullForm, 1); // rǫ́kۆ
+            if (targetNumber === 'singular' && targetCase === 'acc') return applyAccent(fullForm, 1); // rǫ́kۆ
             if (targetNumber === 'singular') return applyAccent(fullForm, 0); // ruký, rukě́
             return applyAccent(fullForm, 0); // во мн. и дв. числе уходит на флексию
         }
 
         if (isMasculine) {
-            if (targetNumber === 'singular' && (targetCase === 'nominative' || targetCase === 'accusative')) return applyAccent(fullForm, 1);
-            if (targetNumber === 'plural' && targetCase === 'accusative') return applyAccent(fullForm, 1); // bóby
+            if (targetNumber === 'singular' && (targetCase === 'nom' || targetCase === 'acc')) return applyAccent(fullForm, 1);
+            if (targetNumber === 'plural' && targetCase === 'acc') return applyAccent(fullForm, 1); // bóby
             return applyAccent(fullForm, 0); // косвенные падежи на окончание
         }
 
@@ -207,7 +207,7 @@ export function declineNoun(request: IntegratedFormRequest): string {
         preposition: request.preposition,
         accentedNounForm: accentedNoun,
         paradigm: request.paradigm,
-        targetCase: request.targetCase as 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative',
+        targetCase: request.targetCase as 'nom' | 'acc' | 'gen' | 'dat' | 'ins' | 'loc',
         targetNumber: request.targetNumber
     });
 }
@@ -251,7 +251,7 @@ export function declineNounWithFourTones(request: IntegratedNounRequest): string
 
 export interface FinalUserRequest {
     dbItem: EnhancedDbItem; // Передаем объект прямо из сгенерированного JSON
-    targetCase: 'nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative' | 'vocative';
+    targetCase: 'nom' | 'acc' | 'gen' | 'dat' | 'ins' | 'loc' | 'voc';
     targetNumber: 'singular' | 'plural' | 'dual';
     preposition?: string;
     flavor?: string; // Региональный/диалектный вариант окончаний (напр. NSL) — по умолчанию CORE

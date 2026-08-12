@@ -1,22 +1,21 @@
 import { GrammaticalCase } from '@/lib/grammar/common';
 
 /**
- * ВАЖНО, найдено при верификации Фазы 2 на реальных данных corpus.db:
+ * ИСТОРИЧЕСКИ (найдено при верификации Фазы 2 на реальных данных corpus.db):
  * `MorphoGrammarFeats.case` типизирован как GrammaticalCase (короткие коды
  * 'nom'/'acc'/'gen'/'dat'/'loc'/'ins'/'voc', lib/grammar/common/case.ts), но
- * в реальных строках CorpusToken.feats встречаются ОБА представления
- * одновременно — и короткие коды, и полные английские слова
- * ('nominative'/'accusative'/... из отдельного, второго enum `Case` в
- * lib/grammar/endingsRegistry.ts, который использует processors.ts/
- * generateWordForms — именно он реально пишет case в feats при разборе
- * корпуса). Это не ошибка Фазы 2 — рассогласование двух параллельных
- * case-enum'ов существовало до неё и, судя по всему, уже тихо ломает
- * PREPOSITION_GOVERNMENT/getExpectedCasesForPreposition (сравнение всегда
- * было против коротких кодов) и CASE_WEIGHTS/hotUpdate.ts в lib/corpus/priorities/
- * (сравнение по тем же коротким ключам). Здесь — только точечная нормализация
- * для модуля синтаксиса; переписывать сам движок (processors.ts) — отдельная,
- * более рискованная задача, требующая подтверждения мейнтейнера (по аналогии
- * с миграцией ǫ→ų), не входит в Фазу 2.
+ * в реальных строках CorpusToken.feats встречались ОБА представления
+ * одновременно — и короткие коды, и полные английские слова, потому что
+ * lib/grammar/endingsRegistry.ts's `Case` (использует processors.ts/
+ * generateWordForms — именно он пишет case в feats при разборе корпуса) сам
+ * хранил падеж полным словом. Рассогласование двух параллельных case-enum'ов
+ * уже тихо ломало PREPOSITION_GOVERNMENT/getExpectedCasesForPreposition и
+ * CASE_WEIGHTS/hotUpdate.ts (сравнение всегда шло против коротких кодов).
+ *
+ * ИСПРАВЛЕНО 2026-08-12: движок (endingsRegistry.ts's Case, по аналогии с
+ * миграцией ǫ→ų — с подтверждением мейнтейнера) переведён на те же короткие
+ * UD-коды. normalizeCase() здесь оставлен как страховка для уже сохранённых
+ * в corpus.db строк с длинными кодами (записаны до фикса), не для новых.
  */
 const CASE_ALIASES: Record<string, GrammaticalCase> = {
     nom: GrammaticalCase.NOM,

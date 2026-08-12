@@ -57,7 +57,7 @@ describe('declineNoun', () => {
         it(`generates a stable paradigm for ${testData.name}`, () => {
             const forms: Record<string, string> = {};
             for (const number of ['singular', 'plural', 'dual'] as const) {
-                for (const caseName of ['nominative', 'accusative', 'genitive', 'dative', 'instrumental', 'locative', 'vocative'] as const) {
+                for (const caseName of ['nom', 'acc', 'gen', 'dat', 'ins', 'loc', 'voc'] as const) {
                     const request: IntegratedFormRequest = {
                         interslavicWord: testData.word,
                         paradigm: testData.paradigm,

@@ -130,13 +130,13 @@ export function buildHypothesesForSurfaceForm(
     for (const m of matches) {
       if (NOUN_STEM_TYPES.has(m.stemType)) {
         for (const gender of citationGendersForNoun(m.stemType)) {
-          const citationEnding = getEnding(m.stemType, "singular", "nominative", "CORE", gender)
-          const guessedGrammeme = buildGrammeme("nominative", "singular", gender)
+          const citationEnding = getEnding(m.stemType, "singular", "nom", "CORE", gender)
+          const guessedGrammeme = buildGrammeme("nom", "singular", gender)
           addHypothesis(seen, PosType.NOUN, m.stemType, guessedGrammeme, stem, stem + citationEnding, rank)
         }
       } else if (ADJ_STEM_TYPES.has(m.stemType)) {
-        const citationEnding = getEnding(m.stemType, "singular", "nominative", "CORE", GrammaticalGender.MASC)
-        const guessedGrammeme = buildGrammeme("nominative", "singular", GrammaticalGender.MASC)
+        const citationEnding = getEnding(m.stemType, "singular", "nom", "CORE", GrammaticalGender.MASC)
+        const guessedGrammeme = buildGrammeme("nom", "singular", GrammaticalGender.MASC)
         addHypothesis(seen, PosType.ADJ, m.stemType, guessedGrammeme, stem, stem + citationEnding, rank)
       } else if (m.stemType === VERB_LPART_STEM_TYPE) {
         // Стандартная славянская эвристика: l-причастие minus l/la/lo/li/le

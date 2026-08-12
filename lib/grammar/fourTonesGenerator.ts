@@ -101,8 +101,8 @@ export function stemWithExtension(interslavicWord: string, stemType: StemType, t
     const extension = STEM_EXTENSIONS[stemType];
     if (!extension) return interslavicWord;
     const skipCases: Case[] = stemType === 'consonant_er'
-        ? ['nominative', 'vocative']
-        : ['nominative', 'accusative', 'vocative'];
+        ? ['nom', 'voc']
+        : ['nom', 'acc', 'voc'];
     if (targetNumber === 'singular' && skipCases.includes(targetCase)) return interslavicWord;
     const base = NOMINATIVE_BLANK_STEM_TYPES.includes(stemType) ? interslavicWord.slice(0, -1) : interslavicWord;
     return base + extension;
@@ -158,7 +158,7 @@ export function generateBaseNounFormWithFourTones(
 
         // --- А. ЖЕНСКИЙ РОД (Примеры: rų̂ka [долгий циркумфлекс] vs gorȃ [краткий циркумфлекс]) ---
         if (isFeminine) {
-            if (targetNumber === 'singular' && (targetCase === 'nominative' || targetCase === 'accusative')) {
+            if (targetNumber === 'singular' && (targetCase === 'nom' || targetCase === 'acc')) {
                 const idx = stressPosition ?? 1;
                 const toneType = getCircumflexToneType(fullForm, idx);
                 return applyFourTonesMark(fullForm, idx, toneType); // rų̂ka (долгий ̂) vs goȓa (краткий ̑)
@@ -171,7 +171,7 @@ export function generateBaseNounFormWithFourTones(
         // --- Б. МУЖСКОЙ РОД (Примеры: bоbъ -> bȏbъ [краткий циркумфлекс]) ---
         if (isMasculine) {
             if (targetNumber === 'singular') {
-                if (targetCase === 'nominative' || targetCase === 'accusative') {
+                if (targetCase === 'nom' || targetCase === 'acc') {
                     const idx = stressPosition ?? 1;
                     const toneType = getCircumflexToneType(fullForm, idx);
                     return applyFourTonesMark(fullForm, idx, toneType); // bȏbъ (краткий циркумфлекс U+0311 на 'o')
@@ -181,7 +181,7 @@ export function generateBaseNounFormWithFourTones(
                 return applyFourTonesMark(fullForm, idx, toneType); // bobá (косвенные падежи)
             }
             if (targetNumber === 'plural') {
-                if (targetCase === 'accusative') {
+                if (targetCase === 'acc') {
                     const idx = stressPosition ?? 1;
                     const toneType = getCircumflexToneType(fullForm, idx);
                     return applyFourTonesMark(fullForm, idx, toneType); // Acc.Pl уходит на корень: bȏby

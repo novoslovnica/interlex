@@ -23,13 +23,13 @@ export const NounDeclensionTables: React.FC<NounDeclensionTablesProps> = ({ data
     const cap = (s: string) => properNoun ? capitalize(s) : s;
 
     const CASES = [
-        { key: 'nominative', lookup: 'nominative' },
-        { key: 'genitive', lookup: 'genitive' },
-        { key: 'dative', lookup: 'dative' },
-        { key: 'accusative', lookup: 'accusative' },
-        { key: 'instrumental', lookup: 'instrumental' },
-        { key: 'locative', lookup: 'locative' },
-        { key: 'vocative', lookup: 'vocative' },
+        { key: 'nom', lookup: 'nominative' },
+        { key: 'gen', lookup: 'genitive' },
+        { key: 'dat', lookup: 'dative' },
+        { key: 'acc', lookup: 'accusative' },
+        { key: 'ins', lookup: 'instrumental' },
+        { key: 'loc', lookup: 'locative' },
+        { key: 'voc', lookup: 'vocative' },
     ] as const;
 
     const columns = [

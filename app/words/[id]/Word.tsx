@@ -93,13 +93,13 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: 
       } else {
         try {
             const CASES_LIST = [
-                { key: 'nominative' },
-                { key: 'genitive' },
-                { key: 'dative' },
-                { key: 'accusative' },
-                { key: 'instrumental' },
-                { key: 'locative' },
-                { key: 'vocative' },
+                { key: 'nom' },
+                { key: 'gen' },
+                { key: 'dat' },
+                { key: 'acc' },
+                { key: 'ins' },
+                { key: 'loc' },
+                { key: 'voc' },
             ] as const;
 
             const NUMBERS_LIST = [

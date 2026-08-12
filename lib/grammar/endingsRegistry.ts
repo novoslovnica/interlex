@@ -5,14 +5,28 @@
 // нужен для консолидации с noun/index.ts, чей Case/NumberType были настоящими TS enum'ами и
 // использовались как значения (Case.NOMINATIVE) в adjective/pronoun/numerals/*DeclensionTables.
 // Имя типа и имя константы не конфликтуют — они живут в разных TS-неймспейсах.
+//
+// 2026-08-12: значения переведены с длинных английских слов ('nominative') на
+// короткие UD-коды ('nom'), к которым уже давно приведена вторая, независимая
+// конвенция падежа в проекте — GrammaticalCase (lib/grammar/common/case.ts),
+// используемая CASE_WEIGHTS/PREPOSITION_GOVERNMENT/VerbGovernment.requiredCase
+// в корпусной подсистеме. Расхождение двух конвенций не было чисто
+// косметическим — оно уже тихо ломало сопоставление предложного управления и
+// весов падежа в дизамбигуации омонимов (см. lib/corpus/syntax/caseUtils.ts,
+// найдено при верификации Фазы 2 на реальных данных). MorphoGrammarFeats.case
+// был типизирован как GrammaticalCase с самого начала — теперь рантайм-
+// значение наконец соответствует объявленному типу. Имена свойств (NOMINATIVE
+// и т.д.) не менялись — только их строковые значения, поэтому любой код,
+// использующий Case.NOMINATIVE символически (adjective/pronoun/numerals/*,
+// processors.ts через ALL_CASES), обновился автоматически без правок.
 export const Case = {
-    NOMINATIVE: 'nominative',
-    ACCUSATIVE: 'accusative',
-    GENITIVE: 'genitive',
-    DATIVE: 'dative',
-    INSTRUMENTAL: 'instrumental',
-    LOCATIVE: 'locative',
-    VOCATIVE: 'vocative',
+    NOMINATIVE: 'nom',
+    ACCUSATIVE: 'acc',
+    GENITIVE: 'gen',
+    DATIVE: 'dat',
+    INSTRUMENTAL: 'ins',
+    LOCATIVE: 'loc',
+    VOCATIVE: 'voc',
 } as const;
 export type Case = typeof Case[keyof typeof Case];
 
@@ -61,31 +75,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     o_hard: {
         singular: {
-            nominative: '',     // vlk
-            accusative: '',     // vlk (для неодушевленных)
-            genitive: 'a',       // vlka
-            dative: 'u',         // vlku
-            instrumental: 'om', // vlkom
-            locative: 'ě',        // vlcě (первая палатализация k -> c)
-            vocative: 'e'        // vlke (звательная форма)
+            nom: '',     // vlk
+            acc: '',     // vlk (для неодушевленных)
+            gen: 'a',       // vlka
+            dat: 'u',         // vlku
+            ins: 'om', // vlkom
+            loc: 'ě',        // vlcě (первая палатализация k -> c)
+            voc: 'e'        // vlke (звательная форма)
         },
         plural: {
-            nominative: 'i',     // vlci
-            accusative: 'y',     // vlky
-            genitive: '',       // vlk
-            dative: 'om',       // vlkom
-            instrumental: 'y',   // vlky
-            locative: 'ěh',      // vlcěh
-            vocative: 'i'        // vlci (звательная форма во множественном числе)
+            nom: 'i',     // vlci
+            acc: 'y',     // vlky
+            gen: '',       // vlk
+            dat: 'om',       // vlkom
+            ins: 'y',   // vlky
+            loc: 'ěh',      // vlcěh
+            voc: 'i'        // vlci (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'a',     // vlka (два волка)
-            accusative: 'a',     // vlka
-            genitive: 'u',       // vlku
-            dative: 'oma',       // vlkoma
-            instrumental: 'oma', // vlkoma
-            locative: 'u',        // vlku
-            vocative: 'a'        // vlka (звательная форма в двойственном числе)
+            nom: 'a',     // vlka (два волка)
+            acc: 'a',     // vlka
+            gen: 'u',       // vlku
+            dat: 'oma',       // vlkoma
+            ins: 'oma', // vlkoma
+            loc: 'u',        // vlku
+            voc: 'a'        // vlka (звательная форма в двойственном числе)
         }
     },
 
@@ -94,31 +108,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     o_soft: {
         singular: {
-            nominative: 'j',     // końj
-            accusative: 'j',     // końj
-            genitive: 'a',       // końa
-            dative: 'ju',        // końju
-            instrumental: 'em', // końem (переход o -> e после мягкого)
-            locative: 'i',        // końi
-            vocative: 'ju'       // końju (звательная форма)
+            nom: 'j',     // końj
+            acc: 'j',     // końj
+            gen: 'a',       // końa
+            dat: 'ju',        // końju
+            ins: 'em', // końem (переход o -> e после мягкого)
+            loc: 'i',        // końi
+            voc: 'ju'       // końju (звательная форма)
         },
         plural: {
-            nominative: 'i',     // końi
-            accusative: 'ę',     // końę (вместо твердого y)
-            genitive: 'j',       // końj
-            dative: 'em',       // końem
-            instrumental: 'i',   // końi
-            locative: 'ih',      // końih
-            vocative: 'i'        // końi (звательная форма во множественном числе)
+            nom: 'i',     // końi
+            acc: 'ę',     // końę (вместо твердого y)
+            gen: 'j',       // końj
+            dat: 'em',       // końem
+            ins: 'i',   // końi
+            loc: 'ih',      // końih
+            voc: 'i'        // końi (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'a',     // końa
-            accusative: 'a',     // końa
-            genitive: 'u',       // końu
-            dative: 'ema',       // końema
-            instrumental: 'ema', // końema
-            locative: 'u',        // końu
-            vocative: 'a'        // końa (звательная форма в двойственном числе)
+            nom: 'a',     // końa
+            acc: 'a',     // końa
+            gen: 'u',       // końu
+            dat: 'ema',       // końema
+            ins: 'ema', // końema
+            loc: 'u',        // końu
+            voc: 'a'        // końa (звательная форма в двойственном числе)
         }
     },
 
@@ -128,31 +142,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // Примечание: Средний род во многом совпадает с мужским, кроме Nom/Acc
     a_hard: { // Используем ключ для среднего твердого (исторически близко к o)
         singular: {
-            nominative: 'o',     // tělo
-            accusative: 'o',     // tělo (закон совпадения Nom/Acc для среднего рода)
-            genitive: 'a',       // těla
-            dative: 'u',         // tělu
-            instrumental: 'om', // tělom
-            locative: 'ě',        // tělě
-            vocative: 'o'        // tělo (звательная форма совпадает с номинативом)
+            nom: 'o',     // tělo
+            acc: 'o',     // tělo (закон совпадения Nom/Acc для среднего рода)
+            gen: 'a',       // těla
+            dat: 'u',         // tělu
+            ins: 'om', // tělom
+            loc: 'ě',        // tělě
+            voc: 'o'        // tělo (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'a',     // těla (окна, тела)
-            accusative: 'a',     // těla
-            genitive: '',       // těl
-            dative: 'om',       // tělom
-            instrumental: 'y',   // těly
-            locative: 'ěh',      // tělěh
-            vocative: 'a'        // těla (звательная форма во множественном числе)
+            nom: 'a',     // těla (окна, тела)
+            acc: 'a',     // těla
+            gen: '',       // těl
+            dat: 'om',       // tělom
+            ins: 'y',   // těly
+            loc: 'ěh',      // tělěh
+            voc: 'a'        // těla (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'ě',     // tělě (два тела)
-            accusative: 'ě',     // tělě
-            genitive: 'u',       // tělu
-            dative: 'oma',       // těloma
-            instrumental: 'oma', // těloma
-            locative: 'u',        // tělu
-            vocative: 'ě'        // tělě (звательная форма в двойственном числе)
+            nom: 'ě',     // tělě (два тела)
+            acc: 'ě',     // tělě
+            gen: 'u',       // tělu
+            dat: 'oma',       // těloma
+            ins: 'oma', // těloma
+            loc: 'u',        // tělu
+            voc: 'ě'        // tělě (звательная форма в двойственном числе)
         }
     },
 
@@ -161,31 +175,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     a_soft: {
         singular: {
-            nominative: 'e',     // polje (переход o -> e)
-            accusative: 'e',     // polje
-            genitive: 'a',       // polja
-            dative: 'ju',        // polju
-            instrumental: 'em', // poljem
-            locative: 'i',        // polji
-            vocative: 'e'        // polje (звательная форма совпадает с номинативом)
+            nom: 'e',     // polje (переход o -> e)
+            acc: 'e',     // polje
+            gen: 'a',       // polja
+            dat: 'ju',        // polju
+            ins: 'em', // poljem
+            loc: 'i',        // polji
+            voc: 'e'        // polje (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'a',     // polja
-            accusative: 'a',     // polja
-            genitive: 'j',       // polj
-            dative: 'em',       // poljem
-            instrumental: 'i',   // polji
-            locative: 'ih',      // poljih
-            vocative: 'a'        // polja (звательная форма во множественном числе)
+            nom: 'a',     // polja
+            acc: 'a',     // polja
+            gen: 'j',       // polj
+            dat: 'em',       // poljem
+            ins: 'i',   // polji
+            loc: 'ih',      // poljih
+            voc: 'a'        // polja (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'i',     // polji
-            accusative: 'i',     // polji
-            genitive: 'u',       // polju
-            dative: 'ema',       // poljema
-            instrumental: 'ema', // poljema
-            locative: 'u',        // polju
-            vocative: 'i'        // polji (звательная форма в двойственном числе)
+            nom: 'i',     // polji
+            acc: 'i',     // polji
+            gen: 'u',       // polju
+            dat: 'ema',       // poljema
+            ins: 'ema', // poljema
+            loc: 'u',        // polju
+            voc: 'i'        // polji (звательная форма в двойственном числе)
         }
     },
 
@@ -194,31 +208,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     u_basis: {
         singular: {
-            nominative: '',     // syn
-            accusative: '',     // syn
-            genitive: 'u',       // synu (историческое окончание u-основы)
-            dative: 'ovi',       // synovi
-            instrumental: 'om', // synom
-            locative: 'u',        // synu
-            vocative: 'u'        // synu (звательная форма)
+            nom: '',     // syn
+            acc: '',     // syn
+            gen: 'u',       // synu (историческое окончание u-основы)
+            dat: 'ovi',       // synovi
+            ins: 'om', // synom
+            loc: 'u',        // synu
+            voc: 'u'        // synu (звательная форма)
         },
         plural: {
-            nominative: 'ove',    // synove
-            accusative: 'y',     // syny
-            genitive: 'ov',     // synov
-            dative: 'am',       // synam
-            instrumental: 'ami', // synami
-            locative: 'ěh',      // syněh
-            vocative: 'ove'      // synove (звательная форма во множественном числе)
+            nom: 'ove',    // synove
+            acc: 'y',     // syny
+            gen: 'ov',     // synov
+            dat: 'am',       // synam
+            ins: 'ami', // synami
+            loc: 'ěh',      // syněh
+            voc: 'ove'      // synove (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'y',     // syny
-            accusative: 'y',     // syny
-            genitive: 'ovu',     // synovu
-            dative: 'oma',       // synoma
-            instrumental: 'ama', // synama
-            locative: 'ovu',      // synovu
-            vocative: 'y'        // syny (звательная форма в двойственном числе)
+            nom: 'y',     // syny
+            acc: 'y',     // syny
+            gen: 'ovu',     // synovu
+            dat: 'oma',       // synoma
+            ins: 'ama', // synama
+            loc: 'ovu',      // synovu
+            voc: 'y'        // syny (звательная форма в двойственном числе)
         }
     },
 
@@ -227,31 +241,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     i_basis: {
         singular: {
-            nominative: 'j',     // kostj
-            accusative: 'j',     // kostj
-            genitive: 'i',       // kosti
-            dative: 'i',         // kosti
-            instrumental: 'ejų', // kostejų (для ж.р.) или em (для м.р. gostem)
-            locative: 'i',        // kosti
-            vocative: 'i'        // kosti (звательная форма)
+            nom: 'j',     // kostj
+            acc: 'j',     // kostj
+            gen: 'i',       // kosti
+            dat: 'i',         // kosti
+            ins: 'ejų', // kostejų (для ж.р.) или em (для м.р. gostem)
+            loc: 'i',        // kosti
+            voc: 'i'        // kosti (звательная форма)
         },
         plural: {
-            nominative: 'i',     // kosti
-            accusative: 'i',     // kosti
-            genitive: 'ej',     // kostej
-            dative: 'em',       // kostem
-            instrumental: 'emi', // kostemi
-            locative: 'eh',      // kosteh
-            vocative: 'i'        // kosti (звательная форма во множественном числе)
+            nom: 'i',     // kosti
+            acc: 'i',     // kosti
+            gen: 'ej',     // kostej
+            dat: 'em',       // kostem
+            ins: 'emi', // kostemi
+            loc: 'eh',      // kosteh
+            voc: 'i'        // kosti (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'i',     // kosti
-            accusative: 'i',     // kosti
-            genitive: 'eju',     // kosteju
-            dative: 'ema',       // kostema
-            instrumental: 'ema', // kostema
-            locative: 'eju',      // kosteju
-            vocative: 'i'        // kosti (звательная форма в двойственном числе)
+            nom: 'i',     // kosti
+            acc: 'i',     // kosti
+            gen: 'eju',     // kosteju
+            dat: 'ema',       // kostema
+            ins: 'ema', // kostema
+            loc: 'eju',      // kosteju
+            voc: 'i'        // kosti (звательная форма в двойственном числе)
         }
     },
 
@@ -261,31 +275,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // Важно: в коде интерславянское слово должно передаваться уже с суффиксом основы
     consonant_n: {
         singular: {
-            nominative: '',      // imę (суффикс -en скрыт в Nom/Acc, обрабатывается отдельно)
-            accusative: '',      // imę
-            genitive: 'e',       // imene
-            dative: 'i',         // imeni
-            instrumental: 'em', // imenem
-            locative: 'i',        // imeni
-            vocative: ''         // imę (звательная форма совпадает с номинативом)
+            nom: '',      // imę (суффикс -en скрыт в Nom/Acc, обрабатывается отдельно)
+            acc: '',      // imę
+            gen: 'e',       // imene
+            dat: 'i',         // imeni
+            ins: 'em', // imenem
+            loc: 'i',        // imeni
+            voc: ''         // imę (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'a',     // imena
-            accusative: 'a',     // imena
-            genitive: '',       // imen
-            dative: 'em',       // imenem
-            instrumental: 'y',   // imeny
-            locative: 'eh',      // imeneh
-            vocative: 'a'        // imena (звательная форма во множественном числе)
+            nom: 'a',     // imena
+            acc: 'a',     // imena
+            gen: '',       // imen
+            dat: 'em',       // imenem
+            ins: 'y',   // imeny
+            loc: 'eh',      // imeneh
+            voc: 'a'        // imena (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'i',     // imeni
-            accusative: 'i',     // imeni
-            genitive: 'u',       // imenu
-            dative: 'ema',       // imenema
-            instrumental: 'ema', // imenema
-            locative: 'u',        // imenu
-            vocative: 'i'        // imeni (звательная форма в двойственном числе)
+            nom: 'i',     // imeni
+            acc: 'i',     // imeni
+            gen: 'u',       // imenu
+            dat: 'ema',       // imenema
+            ins: 'ema', // imenema
+            loc: 'u',        // imenu
+            voc: 'i'        // imeni (звательная форма в двойственном числе)
         }
     },
 
@@ -294,31 +308,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     consonant_s: {
         singular: {
-            nominative: 'o',     // nebo
-            accusative: 'o',     // nebo
-            genitive: 'e',       // nebese
-            dative: 'i',         // nebesi
-            instrumental: 'em', // nebesem
-            locative: 'i',        // nebesi
-            vocative: 'o'        // nebo (звательная форма совпадает с номинативом)
+            nom: 'o',     // nebo
+            acc: 'o',     // nebo
+            gen: 'e',       // nebese
+            dat: 'i',         // nebesi
+            ins: 'em', // nebesem
+            loc: 'i',        // nebesi
+            voc: 'o'        // nebo (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'a',     // nebesa
-            accusative: 'a',     // nebesa
-            genitive: '',       // nebes
-            dative: 'em',       // nebesem
-            instrumental: 'y',   // nebesy
-            locative: 'eh',      // nebeseh
-            vocative: 'a'        // nebesa (звательная форма во множественном числе)
+            nom: 'a',     // nebesa
+            acc: 'a',     // nebesa
+            gen: '',       // nebes
+            dat: 'em',       // nebesem
+            ins: 'y',   // nebesy
+            loc: 'eh',      // nebeseh
+            voc: 'a'        // nebesa (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'ě',     // nebesě
-            accusative: 'ě',     // nebesě
-            genitive: 'u',       // nebesu
-            dative: 'ema',       // nebesema
-            instrumental: 'ema', // nebesema
-            locative: 'u',        // nebesu
-            vocative: 'ě'        // nebesě (звательная форма в двойственном числе)
+            nom: 'ě',     // nebesě
+            acc: 'ě',     // nebesě
+            gen: 'u',       // nebesu
+            dat: 'ema',       // nebesema
+            ins: 'ema', // nebesema
+            loc: 'u',        // nebesu
+            voc: 'ě'        // nebesě (звательная форма в двойственном числе)
         }
     },
 
@@ -328,31 +342,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     consonant_ent: {
         singular: {
-            nominative: '',      // telę
-            accusative: '',      // telę
-            genitive: 'e',       // telente
-            dative: 'i',         // telenti
-            instrumental: 'em', // telentem
-            locative: 'i',        // telenti
-            vocative: ''         // telę (звательная форма совпадает с номинативом)
+            nom: '',      // telę
+            acc: '',      // telę
+            gen: 'e',       // telente
+            dat: 'i',         // telenti
+            ins: 'em', // telentem
+            loc: 'i',        // telenti
+            voc: ''         // telę (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'a',     // telenta
-            accusative: 'a',     // telenta
-            genitive: '',       // telent
-            dative: 'em',       // telentem
-            instrumental: 'y',   // telenty
-            locative: 'eh',      // telenteh
-            vocative: 'a'        // telenta (звательная форма во множественном числе)
+            nom: 'a',     // telenta
+            acc: 'a',     // telenta
+            gen: '',       // telent
+            dat: 'em',       // telentem
+            ins: 'y',   // telenty
+            loc: 'eh',      // telenteh
+            voc: 'a'        // telenta (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'i',     // telenti
-            accusative: 'i',     // telenti
-            genitive: 'u',       // telentu
-            dative: 'ema',       // telentema
-            instrumental: 'ema', // telentema
-            locative: 'u',        // telentu
-            vocative: 'i'        // telenti (звательная форма в двойственном числе)
+            nom: 'i',     // telenti
+            acc: 'i',     // telenti
+            gen: 'u',       // telentu
+            dat: 'ema',       // telentema
+            ins: 'ema', // telentema
+            loc: 'u',        // telentu
+            voc: 'i'        // telenti (звательная форма в двойственном числе)
         }
     },
 
@@ -364,31 +378,31 @@ export const SLAVIC_ENDINGS_REGISTRY: Record<StemType, Record<NumberType, Record
     // =========================================================================
     consonant_er: {
         singular: {
-            nominative: 'i',     // mati (без наращения)
-            accusative: '',      // mater (с наращением, но с пустым окончанием)
-            genitive: 'e',       // matere
-            dative: 'i',         // materi
-            instrumental: 'em', // materem
-            locative: 'i',        // materi
-            vocative: 'i'        // mati (звательная форма совпадает с номинативом)
+            nom: 'i',     // mati (без наращения)
+            acc: '',      // mater (с наращением, но с пустым окончанием)
+            gen: 'e',       // matere
+            dat: 'i',         // materi
+            ins: 'em', // materem
+            loc: 'i',        // materi
+            voc: 'i'        // mati (звательная форма совпадает с номинативом)
         },
         plural: {
-            nominative: 'i',     // materi
-            accusative: 'i',     // materi
-            genitive: '',       // mater
-            dative: 'em',       // materem
-            instrumental: 'y',   // matery
-            locative: 'eh',      // matereh
-            vocative: 'i'        // materi (звательная форма во множественном числе)
+            nom: 'i',     // materi
+            acc: 'i',     // materi
+            gen: '',       // mater
+            dat: 'em',       // materem
+            ins: 'y',   // matery
+            loc: 'eh',      // matereh
+            voc: 'i'        // materi (звательная форма во множественном числе)
         },
         dual: {
-            nominative: 'i',     // materi
-            accusative: 'i',     // materi
-            genitive: 'u',       // materu
-            dative: 'ema',       // materema
-            instrumental: 'ema', // materema
-            locative: 'u',        // materu
-            vocative: 'i'        // materi (звательная форма в двойственном числе)
+            nom: 'i',     // materi
+            acc: 'i',     // materi
+            gen: 'u',       // materu
+            dat: 'ema',       // materema
+            ins: 'ema', // materema
+            loc: 'u',        // materu
+            voc: 'i'        // materi (звательная форма в двойственном числе)
         }
     },
 };

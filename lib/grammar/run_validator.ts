@@ -38,17 +38,17 @@ function validateWordParadigm(word: string, gender: 'masculine' | 'feminine' | '
     console.log(`${'Падеж'.padEnd(12)} | ${'Единственное (Sg)'.padEnd(20)} | ${'Множественное (Pl)'.padEnd(20)} | ${'Двойственное (Du)'.padEnd(20)}`);
     console.log(`-`.repeat(80));
 
-    const cases: ('nominative' | 'accusative' | 'genitive' | 'dative' | 'instrumental' | 'locative')[] = [
-        'nominative', 'accusative', 'genitive', 'dative', 'instrumental', 'locative'
+    const cases: ('nom' | 'acc' | 'gen' | 'dat' | 'ins' | 'loc')[] = [
+        'nom', 'acc', 'gen', 'dat', 'ins', 'loc'
     ];
 
     const caseLabels: Record<string, string> = {
-        nominative: 'Именит. (Nom)',
-        accusative: 'Винит.  (Acc)',
-        genitive: 'Родит.  (Gen)',
-        dative: 'Дател.  (Dat)',
-        instrumental: 'Творит. (Ins)',
-        locative: 'Местн.  (Loc)'
+        nom: 'Именит. (Nom)',
+        acc: 'Винит.  (Acc)',
+        gen: 'Родит.  (Gen)',
+        dat: 'Дател.  (Dat)',
+        ins: 'Творит. (Ins)',
+        loc: 'Местн.  (Loc)'
     };
 
     for (const c of cases) {

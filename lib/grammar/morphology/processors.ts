@@ -78,7 +78,7 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
             results.push({
                 surfaceForm: form,
                 feats: {
-                    case: cas, // 'nominative' | 'genitive' ...
+                    case: cas, // short UD codes since 2026-08-12: 'nom' | 'gen' | ...
                     number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
                     gender: genderFeat
                 }
