@@ -9,6 +9,23 @@ export function getDataDbPath(): string {
     })();
 }
 
+// base_homonyms.wordIds has two live formats: the original flat `number[]`
+// and a newer `{id, flavor}[]` (added for the flavor system - see
+// AGENTS.md's "Flavor System" section). 4 of ~33,746 rows use the newer
+// format as of 2026-07-29. Same dual-format handling already written for
+// scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts, ported here
+// so the admin-UI merge path (this file) stops silently leaving a stale id
+// behind in any {id, flavor}[]-format row (see ARCHITECTURE.md's "Known
+// Issues" for the bug this fixes).
+export function parseWordIds(raw: string): { ids: number[]; isObjFormat: boolean; original: unknown[] } {
+    const parsed = JSON.parse(raw) as unknown[];
+    const isObjFormat = parsed.length > 0 && typeof parsed[0] === "object" && parsed[0] !== null;
+    const ids = isObjFormat
+        ? (parsed as Array<{ id: number }>).map((p) => p.id)
+        : (parsed as number[]);
+    return { ids, isObjFormat, original: parsed };
+}
+
 export interface MergeUpdatedFields {
     value: string; isv: string; nsl: string; usageType: string; addition: string;
     stem?: string | null; pos?: string | null; gender?: string | null; declension?: number | null;
@@ -169,14 +186,17 @@ export function mergeLexemes(
 
     const allHomonyms = db.prepare(`SELECT * FROM base_homonyms`).all() as { id: number; wordIds: string }[];
     for (const h of allHomonyms) {
-        const ids: number[] = JSON.parse(h.wordIds);
-        if (ids.includes(sourceId)) {
-            const filtered = ids.filter((id: number) => id !== sourceId);
-            if (filtered.length === 0) {
-                db.prepare(`DELETE FROM base_homonyms WHERE id = ?`).run(h.id);
-            } else {
-                db.prepare(`UPDATE base_homonyms SET wordIds = ? WHERE id = ?`).run(JSON.stringify(filtered), h.id);
-            }
+        const { ids, isObjFormat, original } = parseWordIds(h.wordIds);
+        if (!ids.includes(sourceId)) continue;
+
+        const filtered = isObjFormat
+            ? (original as Array<{ id: number }>).filter((p) => p.id !== sourceId)
+            : (original as number[]).filter((id) => id !== sourceId);
+
+        if (filtered.length === 0) {
+            db.prepare(`DELETE FROM base_homonyms WHERE id = ?`).run(h.id);
+        } else {
+            db.prepare(`UPDATE base_homonyms SET wordIds = ? WHERE id = ?`).run(JSON.stringify(filtered), h.id);
         }
     }
 }
