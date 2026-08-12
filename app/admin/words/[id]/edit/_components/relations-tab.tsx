@@ -60,9 +60,11 @@ export function RelationsTab({ wordId, wordValue, meanings }: RelationsTabProps)
   const [saving, setSaving] = useState<Record<string, boolean>>({})
   const [, startTransition] = useTransition()
   const [ruwordnetStatus, setRuwordnetStatus] = useState<{ type: "idle" | "loading" | "success" | "error"; message: string }>({ type: "idle", message: "" })
+  const [fuzzyHints, setFuzzyHints] = useState<{ translation: string; fuzzyCandidates: string[] }[]>([])
 
   const handleMatchRuwordnet = async () => {
     setRuwordnetStatus({ type: "loading", message: "" })
+    setFuzzyHints([])
     try {
       const res = await fetch(`/api/admin/words/${wordId}/match-ruwordnet`, { method: "POST" })
       const data = await res.json()
@@ -70,11 +72,18 @@ export function RelationsTab({ wordId, wordValue, meanings }: RelationsTabProps)
         setRuwordnetStatus({ type: "error", message: data.error || "Ошибка сопоставления" })
         return
       }
-      const total = (data.results ?? []).reduce((sum: number, r: { relationsInserted: number }) => sum + r.relationsInserted, 0)
+      type MatchResult = { relationsInserted: number; synsetsMatched: number; translation: string; fuzzyCandidates?: string[] }
+      const results: MatchResult[] = data.results ?? []
+      const total = results.reduce((sum, r) => sum + r.relationsInserted, 0)
       setRuwordnetStatus({
         type: "success",
-        message: `Готово: обработано значений — ${data.results?.length ?? 0}, добавлено/обновлено связей — ${total}. Обновите страницу, чтобы увидеть их.`,
+        message: `Готово: обработано значений — ${results.length}, добавлено/обновлено связей — ${total}. Обновите страницу, чтобы увидеть их.`,
       })
+      setFuzzyHints(
+        results
+          .filter((r) => r.synsetsMatched === 0 && (r.fuzzyCandidates?.length ?? 0) > 0)
+          .map((r) => ({ translation: r.translation, fuzzyCandidates: r.fuzzyCandidates! })),
+      )
     } catch {
       setRuwordnetStatus({ type: "error", message: "Ошибка сети" })
     }
@@ -174,6 +183,19 @@ export function RelationsTab({ wordId, wordValue, meanings }: RelationsTabProps)
           )}
         </div>
       </div>
+
+      {fuzzyHints.length > 0 && (
+        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 space-y-1">
+          <p className="text-xs font-medium text-amber-700">
+            Точных совпадений в RuWordNet не найдено, но есть похожие леммы — возможно, опечатка или другая словоформа перевода. Ничего не применено автоматически.
+          </p>
+          {fuzzyHints.map((h) => (
+            <p key={h.translation} className="text-[11px] text-amber-700/90">
+              «{h.translation}» — похоже: {h.fuzzyCandidates.join(", ")}
+            </p>
+          ))}
+        </div>
+      )}
 
       {meanings.length > 1 && (
         <div className="flex flex-wrap gap-2">

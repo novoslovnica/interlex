@@ -8,6 +8,7 @@ import { Feature } from "@/config/features"
 import { init } from "@/lib/sqlite"
 import { fetchTranslationsForLexeme, TranslationRow } from "@/lib/translations"
 import { EnrichedEntry, computeEntryData, applySynsetsAndLinks, applyRelationsScoped } from "@/lib/ruwordnet/applyEntry"
+import { findFuzzyLemmaCandidates } from "@/lib/ruwordnet/fuzzyMatch"
 
 const PYTHON_DIR = path.resolve(process.cwd(), "scripts", "python")
 const VENV_PYTHON = path.join(PYTHON_DIR, ".venv", "bin", "python")
@@ -69,7 +70,7 @@ export async function POST(
     ruLookup.set(row.value, row.meaningId)
   }
 
-  const results: { meaningId: number; translation: string; synsetsMatched: number; relationsInserted: number }[] = []
+  const results: { meaningId: number; translation: string; synsetsMatched: number; relationsInserted: number; fuzzyCandidates: string[] }[] = []
 
   for (const t of ruTranslations) {
     const input = JSON.stringify({
@@ -98,12 +99,17 @@ export async function POST(
     const computed = computeEntryData(entry, ruLookup)
     applySynsetsAndLinks(db, computed.synsetRows, computed.linkRows)
     const inserted = applyRelationsScoped(db, entry.meaningId, computed.relationRows)
+    const synsetsMatched = entry.synsets?.length ?? 0
 
     results.push({
       meaningId: entry.meaningId,
       translation: t.value,
-      synsetsMatched: entry.synsets?.length ?? 0,
+      synsetsMatched,
       relationsInserted: inserted,
+      // Only worth computing when the exact lookup found nothing - a
+      // moderator can then judge whether it's a typo/wrong wordform in the
+      // translation itself, see lib/ruwordnet/fuzzyMatch.ts.
+      fuzzyCandidates: synsetsMatched === 0 ? findFuzzyLemmaCandidates(t.value) : [],
     })
   }
 
