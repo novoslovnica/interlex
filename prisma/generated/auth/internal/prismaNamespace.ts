@@ -391,7 +391,8 @@ export const ModelName = {
   FeaturePermission: 'FeaturePermission',
   UserSettings: 'UserSettings',
   UserWordCollection: 'UserWordCollection',
-  TelegramAuthNonce: 'TelegramAuthNonce'
+  TelegramAuthNonce: 'TelegramAuthNonce',
+  FlashcardProgress: 'FlashcardProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection" | "telegramAuthNonce"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection" | "telegramAuthNonce" | "flashcardProgress"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FlashcardProgress: {
+      payload: Prisma.$FlashcardProgressPayload<ExtArgs>
+      fields: Prisma.FlashcardProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FlashcardProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FlashcardProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.FlashcardProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FlashcardProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        findMany: {
+          args: Prisma.FlashcardProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>[]
+        }
+        create: {
+          args: Prisma.FlashcardProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        createMany: {
+          args: Prisma.FlashcardProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FlashcardProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.FlashcardProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        update: {
+          args: Prisma.FlashcardProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.FlashcardProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FlashcardProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FlashcardProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.FlashcardProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlashcardProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.FlashcardProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFlashcardProgress>
+        }
+        groupBy: {
+          args: Prisma.FlashcardProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlashcardProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FlashcardProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlashcardProgressCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1129,6 +1204,21 @@ export const TelegramAuthNonceScalarFieldEnum = {
 } as const
 
 export type TelegramAuthNonceScalarFieldEnum = (typeof TelegramAuthNonceScalarFieldEnum)[keyof typeof TelegramAuthNonceScalarFieldEnum]
+
+
+export const FlashcardProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  wordId: 'wordId',
+  easeFactor: 'easeFactor',
+  intervalDays: 'intervalDays',
+  repetitions: 'repetitions',
+  nextReviewAt: 'nextReviewAt',
+  lastReviewedAt: 'lastReviewedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type FlashcardProgressScalarFieldEnum = (typeof FlashcardProgressScalarFieldEnum)[keyof typeof FlashcardProgressScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1319,6 +1409,7 @@ export type GlobalOmitConfig = {
   userSettings?: Prisma.UserSettingsOmit
   userWordCollection?: Prisma.UserWordCollectionOmit
   telegramAuthNonce?: Prisma.TelegramAuthNonceOmit
+  flashcardProgress?: Prisma.FlashcardProgressOmit
 }
 
 /* Types for Logging */

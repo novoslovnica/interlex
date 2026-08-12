@@ -26,6 +26,7 @@ model User {
   permissions   FeaturePermission[]
   settings      UserSettings?
   collections   UserWordCollection[]
+  flashcardProgress FlashcardProgress[]
 }
 
 model Account {
@@ -130,4 +131,29 @@ model TelegramAuthNonce {
   usedAt    DateTime @default(now())
 
   @@map("telegram_auth_nonces")
+}
+
+// Per-user spaced-repetition state for the flashcard learning feature
+// (lib/srs/sm2.ts - classic SM-2). wordId is a plain Int, not a real FK -
+// same cross-database-reference convention as UserWordCollection.wordId
+// above (Lexeme lives in interlex.db, never joined with auth.db in one
+// query). One row per (user, word) the learner has started reviewing;
+// words never studied have no row at all and are picked as "new" cards by
+// lib/srs/fetchFlashcardSession.ts based on CEFR level instead.
+model FlashcardProgress {
+  id             String   @id @default(cuid())
+  userId         String
+  wordId         Int
+  easeFactor     Float    @default(2.5)
+  intervalDays   Int      @default(0)
+  repetitions    Int      @default(0)
+  nextReviewAt   DateTime @default(now())
+  lastReviewedAt DateTime?
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordId])
+  @@index([userId, nextReviewAt])
+  @@map("flashcard_progress")
 }

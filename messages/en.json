@@ -11,6 +11,7 @@
       "avatar": "Avatar",
       "settings": "Settings",
       "profile": "Profile",
+      "flashcards": "Flashcards",
       "admin": "Admin (Thesaurus)",
       "adminPlatform": "Admin (Platform)",
       "adminCorpus": "Admin (Corpus)",
@@ -249,6 +250,28 @@
       "language": "Failed to save language preference"
     },
     "saving": "Saving..."
+  },
+  "flashcards": {
+    "title": "Flashcards",
+    "description": "Review vocabulary with spaced repetition. Cards you know well appear less often; cards you struggle with come back sooner.",
+    "levelLabel": "Level",
+    "anyLevel": "Any level",
+    "start": "Start session",
+    "loading": "Loading cards...",
+    "empty": "No cards available for this level right now.",
+    "error": "Failed to load flashcard session. Please try again.",
+    "showAnswer": "Show answer",
+    "progress": "Card {current} of {total}",
+    "due": "Review",
+    "new": "New",
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "sessionComplete": "Session complete!",
+    "sessionCompleteDescription": "You reviewed {count} cards.",
+    "newSession": "Start another session",
+    "loginRequired": "Log in to track your flashcard progress."
   },
   "login": {
     "title": "Log In",

@@ -88,6 +88,11 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                     {t("settings")}
                                 </Link>
                             </li>
+                            <li>
+                                <Link href="/flashcards" className="nav-link" onClick={closeAll}>
+                                    {t("flashcards")}
+                                </Link>
+                            </li>
                             {["ADMIN", "MODERATOR"].includes(user?.role || "") && (
                                 <>
                                     <li>

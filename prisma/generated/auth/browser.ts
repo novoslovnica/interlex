@@ -57,3 +57,8 @@ export type UserWordCollection = Prisma.UserWordCollectionModel
  * 
  */
 export type TelegramAuthNonce = Prisma.TelegramAuthNonceModel
+/**
+ * Model FlashcardProgress
+ * 
+ */
+export type FlashcardProgress = Prisma.FlashcardProgressModel

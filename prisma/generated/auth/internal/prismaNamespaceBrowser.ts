@@ -58,7 +58,8 @@ export const ModelName = {
   FeaturePermission: 'FeaturePermission',
   UserSettings: 'UserSettings',
   UserWordCollection: 'UserWordCollection',
-  TelegramAuthNonce: 'TelegramAuthNonce'
+  TelegramAuthNonce: 'TelegramAuthNonce',
+  FlashcardProgress: 'FlashcardProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -164,6 +165,21 @@ export const TelegramAuthNonceScalarFieldEnum = {
 } as const
 
 export type TelegramAuthNonceScalarFieldEnum = (typeof TelegramAuthNonceScalarFieldEnum)[keyof typeof TelegramAuthNonceScalarFieldEnum]
+
+
+export const FlashcardProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  wordId: 'wordId',
+  easeFactor: 'easeFactor',
+  intervalDays: 'intervalDays',
+  repetitions: 'repetitions',
+  nextReviewAt: 'nextReviewAt',
+  lastReviewedAt: 'lastReviewedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type FlashcardProgressScalarFieldEnum = (typeof FlashcardProgressScalarFieldEnum)[keyof typeof FlashcardProgressScalarFieldEnum]
 
 
 export const SortOrder = {

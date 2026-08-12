@@ -10,6 +10,7 @@
       "transliterator": "Transliterator",
       "avatar": "Avatar",
       "profile": "Profil",
+      "flashcards": "Kartočky",
       "settings": "Nastavljenja",
       "admin": "Administracia (tezaurus)",
       "adminPlatform": "Administracia (platforma)",
@@ -249,6 +250,28 @@
       "language": "Ne udalo se sohraniti nastajenje jezyka"
     },
     "saving": "Sohranjaju..."
+  },
+  "flashcards": {
+    "title": "Kartočky",
+    "description": "Povtarjajte slova s pomoćų sistemy intervalnogo povtorenja. Dobro znane kartočky pojavjajų sę rěže, a te, ke su trudne — čęsťěje.",
+    "levelLabel": "Uroveń",
+    "anyLevel": "Vsaky uroveń",
+    "start": "Načęti sesiju",
+    "loading": "Gruzju kartočky...",
+    "empty": "Za tutu uroveń trenutno němaje dostupnyh kartočok.",
+    "error": "Ne udalo se gruziti kartočky. Poprobujte ješče råz.",
+    "showAnswer": "Pokazati otvět",
+    "progress": "Kartočka {current} z {total}",
+    "due": "Povtorenje",
+    "new": "Novo",
+    "again": "Snova",
+    "hard": "Trudno",
+    "good": "Dobro",
+    "easy": "Lehko",
+    "sessionComplete": "Sesija zaveršena!",
+    "sessionCompleteDescription": "Vy povtorili {count} kartočok.",
+    "newSession": "Načęti ješče jednu sesiju",
+    "loginRequired": "Vnidite v akkont, aby otslěživati napredek po kartočkah."
   },
   "login": {
     "title": "Vhod v akkont",
