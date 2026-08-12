@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { RateLimiter, getClientKey } from "@/lib/rateLimit";
 
 // Coarse gate for everything under /admin and /api/admin: role must be ADMIN
 // or MODERATOR. This does NOT replace the per-route checkPermission/
@@ -15,20 +16,49 @@ import { getToken } from "next-auth/jwt";
 // and cannot run in the Edge runtime middleware normally executes under.
 const ADMIN_ROLES = new Set(["ADMIN", "MODERATOR"]);
 
-export async function proxy(req: NextRequest) {
-    const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-    const role = token?.role as string | undefined;
+// Basic abuse protection for the public API surface - see lib/rateLimit.ts
+// for why an in-memory limiter is correct for this project's deployment.
+// 120 req/min per client is generous for normal UI use (search-as-you-type,
+// several widgets on one page) while still bounding scraping/abuse.
+const apiRateLimiter = new RateLimiter({ windowMs: 60_000, maxRequests: 120 });
 
-    if (!role || !ADMIN_ROLES.has(role)) {
-        if (req.nextUrl.pathname.startsWith("/api/admin")) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+export async function proxy(req: NextRequest) {
+    const { pathname } = req.nextUrl;
+
+    // NextAuth's own endpoints must stay unthrottled and ungated - hit
+    // repeatedly during normal page loads (session checks) and gate the
+    // login flow itself.
+    if (pathname.startsWith("/api/auth")) {
+        return NextResponse.next();
+    }
+
+    const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
+
+    if (isAdminRoute) {
+        const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+        const role = token?.role as string | undefined;
+
+        if (!role || !ADMIN_ROLES.has(role)) {
+            if (pathname.startsWith("/api/admin")) {
+                return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+            }
+            return NextResponse.redirect(new URL("/unauthorized", req.url));
         }
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+
+    if (pathname.startsWith("/api")) {
+        const { limited, retryAfterSeconds } = apiRateLimiter.check(getClientKey(req.headers));
+        if (limited) {
+            return NextResponse.json(
+                { error: "Too many requests" },
+                { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
+            );
+        }
     }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/api/admin/:path*"],
+    matcher: ["/admin/:path*", "/api/:path*"],
 };
