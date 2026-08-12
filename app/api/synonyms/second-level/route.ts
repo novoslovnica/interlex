@@ -1,13 +1,18 @@
 import {NextResponse} from "next/server";
 import {init} from "@/lib/sqlite";
-import {auth} from "@/auth";
 import {fetchSymmetricSemanticRelations} from "@/lib/relations";
 
+// Публичный, как и сама страница слова (app/words/[id]) и первый уровень
+// синонимов, который она уже показывает без авторизации — этот эндпоинт
+// добавляет только второй уровень той же самой read-only словарной
+// информации, без какой-либо новой asymmetry, которую стоило бы защищать.
+// Раньше требовал сессию (аудит 2026-07-22, тогда — по умолчанию для всех
+// ранее-неавторизованных write/analyze эндпоинтов, без отдельной оценки
+// именно этого read-only случая) — из-за этого граф синонимов падал с 401
+// и крашил компонент (SynonymGraph.tsx) для анонимных посетителей.
+// Rate limiting на /api/** (proxy.ts) уже защищает от злоупотребления.
 export async function POST(request: Request) {
     try {
-        const session = await auth();
-        if (!session) return NextResponse.json({error: "Unauthorized"}, {status: 401});
-
         const {lexemeIds} = await request.json() as { lexemeIds: number[] };
 
         if (!lexemeIds?.length) return NextResponse.json({});

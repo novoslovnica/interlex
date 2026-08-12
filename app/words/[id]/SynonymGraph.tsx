@@ -33,8 +33,12 @@ export default function SynonymGraph({word, wordId, currentScript, firstLevelSyn
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({lexemeIds: ids}),
         })
-            .then(r => r.json())
-            .then(data => setSecondLevelMap(data))
+            .then(r => r.ok ? r.json() : {})
+            // Второй уровень необязателен для отображения графа — при любом
+            // сбое (сеть, rate limit, неожиданный формат ответа) просто
+            // показываем первый уровень вместо падения всего компонента.
+            .then(data => setSecondLevelMap(data && typeof data === 'object' ? data : {}))
+            .catch(() => setSecondLevelMap({}))
             .finally(() => setLoading(false));
     }, []);
 
@@ -48,6 +52,7 @@ export default function SynonymGraph({word, wordId, currentScript, firstLevelSyn
     }
 
     for (const [parentId, synonyms] of Object.entries(secondLevelMap)) {
+        if (!Array.isArray(synonyms)) continue;
         const pid = Number(parentId);
         const existingIds = new Set(nodes.map(n => n.id));
         const filtered = synonyms.filter((s: any) => s.targetWordId !== wordId && !existingIds.has(s.targetWordId));
