@@ -1,15 +1,13 @@
-export interface MorphoGrammarFeats {
-    case?: 'nom' | 'gen' | 'dat' | 'acc' | 'ins' | 'loc' | 'voc';
-    number?: 'sg' | 'du' | 'pl';
-    gender?: 'masc' | 'fem' | 'neut';
-    animacy?: 'anim' | 'inanim';
-    person?: '1' | '2' | '3';
-    tense?: 'pres' | 'past' | 'fut' | 'aor' | 'impf';
-    mood?: 'ind' | 'imp' | 'sub';
-    voice?: 'act' | 'pass';
-    verbForm?: 'inf' | 'fin' | 'part' | 'ger';
-    degree?: 'pos' | 'comp' | 'sup';
-}
+// Раньше здесь было отдельное, дублирующее объявление того же интерфейса
+// (case/number/gender захардкожены строковыми литералами напрямую, без
+// импорта GrammaticalCase/GrammaticalNumber/GrammaticalGender) — оба
+// объявления занесены одним и тем же коммитом ("inject corpus", 2026-07-03),
+// который разом занёс и lib/grammar/morphology/, и lib/grammar/common/, не
+// связав их. Отсюда и импортируем единственное определение — re-export ниже
+// сохраняет `@/lib/grammar/morphology` как рабочий путь импорта для тех, кто
+// уже так делает (processors.ts, dbAnalyzer.ts, resolveHomonymsViaSyntax.ts).
+import type { MorphoGrammarFeats } from '@/lib/grammar/common';
+export type { MorphoGrammarFeats };
 
 export interface GeneratedForm {
     surfaceForm: string;

@@ -1,6 +1,8 @@
 import { EngineWordInput, GeneratedForm, MorphoGrammarFeats } from '@/lib/grammar/morphology';
 import {
     GrammaticalGender,
+    GrammaticalCase,
+    GrammaticalNumber,
     AccentParadigm,
     ProtoStemClass,
     VerbalAspect,
@@ -59,10 +61,10 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
     };
 
     // 2. Разворачиваем полную матрицу форм (7 падежей * 3 числа = 21 словоформа)
-    const cases = ALL_CASES;
+    const cases = ALL_CASES as GrammaticalCase[];
     const numbers = ALL_NUMBERS;
 
-    const genderFeat = dbItem.gender === 'masculine' ? 'masc' : dbItem.gender === 'feminine' ? 'fem' : 'neut';
+    const genderFeat = (dbItem.gender === 'masculine' ? 'Masc' : dbItem.gender === 'feminine' ? 'Fem' : 'Neut') as GrammaticalGender;
 
     for (const num of numbers) {
         for (const cas of cases) {
@@ -79,7 +81,7 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
                 surfaceForm: form,
                 feats: {
                     case: cas, // short UD codes since 2026-08-12: 'nom' | 'gen' | ...
-                    number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
+                    number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
                     gender: genderFeat
                 }
             });
@@ -102,7 +104,7 @@ function pushParadigmToResults(
         // Расшифровываем лицо и число из ключей ('1sg', '3pl', '2du' и т.д.)
         const person = key.charAt(0) as '1' | '2' | '3';
         const numMarker = key.substring(1);
-        const number = numMarker === 'sg' ? 'sg' : numMarker === 'pl' ? 'pl' : 'du';
+        const number = (numMarker === 'sg' ? 'sg' : numMarker === 'pl' ? 'pl' : 'du') as GrammaticalNumber;
 
         results.push({
             surfaceForm: paradigm[key],
@@ -196,7 +198,7 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     impKeys.forEach((key) => {
         const person = key.charAt(0) as '1' | '2' | '3';
         const numMarker = key.substring(1);
-        const number = numMarker === 'sg' ? 'sg' : numMarker === 'pl' ? 'pl' : 'du';
+        const number = (numMarker === 'sg' ? 'sg' : numMarker === 'pl' ? 'pl' : 'du') as GrammaticalNumber;
 
         results.push({
             surfaceForm: imp[key],
@@ -212,40 +214,40 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     // Д. L-причастия (Основа перфекта, плюсквамперфекта и кондиционала)
     const lp = conj.lParticiple;
     results.push(
-        { surfaceForm: lp.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'past' } },
-        { surfaceForm: lp.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'past' } },
-        { surfaceForm: lp.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'past' } },
-        { surfaceForm: lp.plural_masculine, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'past' } },
-        { surfaceForm: lp.plural_feminine_neuter, feats: { verbForm: 'part', gender: 'fem', number: 'pl', tense: 'past' } },
-        { surfaceForm: lp.dual_masculine, feats: { verbForm: 'part', gender: 'masc', number: 'du', tense: 'past' } },
-        { surfaceForm: lp.dual_feminine_neuter, feats: { verbForm: 'part', gender: 'fem', number: 'du', tense: 'past' } }
+        { surfaceForm: lp.masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.feminine, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.plural_masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.plural_feminine_neuter, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.dual_masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'du' as GrammaticalNumber, tense: 'past' } },
+        { surfaceForm: lp.dual_feminine_neuter, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'du' as GrammaticalNumber, tense: 'past' } }
     );
 
     // Е. Причастия: активные настоящего времени (-ǫšti/-ęťi)
     const pa = conj.participles.presentActive;
     results.push(
-        { surfaceForm: pa.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'pres', voice: 'act' } },
-        { surfaceForm: pa.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'pres', voice: 'act' } },
-        { surfaceForm: pa.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'pres', voice: 'act' } },
-        { surfaceForm: pa.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.feminine, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'act' } },
+        { surfaceForm: pa.plural, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'pres', voice: 'act' } },
     );
 
     // Ж. Причастия: пассивные настоящего времени (-omyj/-imyj)
     const pp = conj.participles.presentPassive;
     results.push(
-        { surfaceForm: pp.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'pres', voice: 'pass' } },
-        { surfaceForm: pp.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'pres', voice: 'pass' } },
-        { surfaceForm: pp.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'pres', voice: 'pass' } },
-        { surfaceForm: pp.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.feminine, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'pres', voice: 'pass' } },
+        { surfaceForm: pp.plural, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'pres', voice: 'pass' } },
     );
 
     // З. Причастия: пассивные прошедшего времени (-enyj/-tyj/-nyj)
     const ppa = conj.participles.pastPassive;
     results.push(
-        { surfaceForm: ppa.masculine, feats: { verbForm: 'part', gender: 'masc', number: 'sg', tense: 'past', voice: 'pass' } },
-        { surfaceForm: ppa.feminine, feats: { verbForm: 'part', gender: 'fem', number: 'sg', tense: 'past', voice: 'pass' } },
-        { surfaceForm: ppa.neuter, feats: { verbForm: 'part', gender: 'neut', number: 'sg', tense: 'past', voice: 'pass' } },
-        { surfaceForm: ppa.plural, feats: { verbForm: 'part', gender: 'masc', number: 'pl', tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.masculine, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.feminine, feats: { verbForm: 'part', gender: 'Fem' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
+        { surfaceForm: ppa.plural, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
     );
 
     return results;
@@ -284,9 +286,9 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = ALL_CASES;
+    const cases = ALL_CASES as GrammaticalCase[];
     const numbers = ALL_NUMBERS;
-    const genders = Object.values(GrammaticalGender);
+    const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
 
     // Определяем массив итерируемых степеней
     const degrees: ('pos' | 'comp' | 'sup')[] = adjClass === 'qualitative'
@@ -311,8 +313,8 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
                         surfaceForm: form,
                         feats: {
                             case: cas,
-                            number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
-                            gender: gen.toLowerCase() as 'masc' | 'fem' | 'neut',
+                            number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
+                            gender: gen,
                             degree: deg // Напрямую пишем 'pos' | 'comp' | 'sup' в аналитический атлас
                         }
                     });
@@ -354,9 +356,9 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = ALL_CASES;
+    const cases = ALL_CASES as GrammaticalCase[];
     const numbers = ALL_NUMBERS;
-    const genders = Object.values(GrammaticalGender);
+    const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
 
     // =========================================================================
     // СТРАТЕГИЯ 1: ЛИЧНЫЕ МЕСТОИМЕНИЯ 1-ГО И 2-ГО ЛИЦА (ja, ty)
@@ -370,7 +372,7 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
                     surfaceForm: fullForm,
                     feats: {
                         case: cas,
-                        number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
+                        number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
                         degree: 'full' as any
                     }
                 });
@@ -384,7 +386,7 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
                         surfaceForm: shortForm,
                         feats: {
                             case: cas,
-                            number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
+                            number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
                             degree: 'short' as any
                         }
                     });
@@ -409,8 +411,8 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
                     surfaceForm: form,
                     feats: {
                         case: cas,
-                        number: 'sg',
-                        gender: gen.toLowerCase() as 'masc' | 'fem' | 'neut'
+                        number: 'sg' as GrammaticalNumber,
+                        gender: gen
                     }
                 });
             }
@@ -448,9 +450,9 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
     }
 
     // Сетки итерирования для генератора полной матрицы форм
-    const cases = ALL_CASES;
+    const cases = ALL_CASES as GrammaticalCase[];
     const numbers = ALL_NUMBERS;
-    const genders = Object.values(GrammaticalGender);
+    const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
 
     // =========================================================================
     // СТРАТЕГИЯ 1: ПОРЯДКОВЫЕ ЧИСЛИТЕЛЬНЫЕ (Склоняются по родам, числам и падежам)
@@ -477,7 +479,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
 
                     results.push({
                         surfaceForm: form,
-                        feats: { case: cas, number: num, gender: gen.toLowerCase() as any }
+                        feats: { case: cas, number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber, gender: gen }
                     });
                 }
             }
@@ -507,7 +509,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
 
             results.push({
                 surfaceForm: form,
-                feats: { case: cas, number: NumberType.PLURAL } // Собирательные синтаксически множественны
+                feats: { case: cas, number: 'pl' as GrammaticalNumber } // Собирательные синтаксически множественны
             });
         }
         return results;
@@ -542,7 +544,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
                     });
                     results.push({
                         surfaceForm: form,
-                        feats: { case: cas, number: num, gender: gen.toLowerCase() as any }
+                        feats: { case: cas, number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber, gender: gen }
                     });
                 }
             }
@@ -559,7 +561,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
                 });
                 results.push({
                     surfaceForm: form,
-                    feats: { case: cas, gender: gen.toLowerCase() as any }
+                    feats: { case: cas, gender: gen }
                 });
             }
         }
@@ -573,7 +575,7 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
             });
             results.push({
                 surfaceForm: form,
-                feats: { case: cas, number: NumberType.SINGULAR }
+                feats: { case: cas, number: 'sg' as GrammaticalNumber }
             });
         }
     }
@@ -604,9 +606,9 @@ export function processDeterminer(word: EngineWordInput): GeneratedForm[] {
         morphemes: word.morphemes,
     };
 
-    const cases = ALL_CASES;
+    const cases = ALL_CASES as GrammaticalCase[];
     const numbers = ALL_NUMBERS;
-    const genders = Object.values(GrammaticalGender);
+    const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
 
     for (const num of numbers) {
         for (const gen of genders) {
@@ -622,8 +624,8 @@ export function processDeterminer(word: EngineWordInput): GeneratedForm[] {
                     surfaceForm: form,
                     feats: {
                         case: cas,
-                        number: num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du',
-                        gender: gen.toLowerCase() as 'masc' | 'fem' | 'neut'
+                        number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
+                        gender: gen
                     }
                 });
             }
@@ -693,7 +695,7 @@ export function processAuxiliary(word: EngineWordInput): GeneratedForm[] {
                         tense: tense as any,
                         mood: mood as any,
                         person: key.charAt(0) as any,
-                        number: key.substring(1) === 'sg' ? 'sg' : key.substring(1) === 'pl' ? 'pl' : 'du'
+                        number: (key.substring(1) === 'sg' ? 'sg' : key.substring(1) === 'pl' ? 'pl' : 'du') as GrammaticalNumber
                     }
                 });
             });

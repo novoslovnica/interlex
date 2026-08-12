@@ -41,7 +41,7 @@ export interface Stats {
 const FEAT_LABELS: Record<string, string> = {
     nom: "nom", gen: "gen", dat: "dat", acc: "acc", ins: "ins", loc: "loc", voc: "voc",
     sg: "sg", du: "du", pl: "pl",
-    masc: "m", fem: "f", neut: "n",
+    Masc: "m", Fem: "f", Neut: "n",
     anim: "anim", inanim: "inanim",
     pres: "pres", past: "past", fut: "fut", aor: "aor", impf: "impf",
     ind: "ind", imp: "imp", sub: "sub",
@@ -55,8 +55,14 @@ const FEAT_LABELS: Record<string, string> = {
 // нестыковка, что уже решена для скоринга омонимов в
 // lib/corpus/tokenizer/caseNormalize.ts. Переиспользуем ту же нормализацию
 // здесь вместо ещё одной копии таблицы соответствий.
+//
+// Род с 2026-08-12 отдаётся заглавной UD-формой ('Masc'), но уже
+// сохранённые в corpus.db записи (проанализированы до фикса) могут нести
+// старую строчную ('masc') — нормализуем регистр на отображении так же,
+// как и падеж, вместо перезаписи всего корпуса.
 export function normalizeFeatValue(key: string, value: string): string {
     if (key === "case") return normalizeCaseValue(value) ?? value
+    if (key === "gender") return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
     return value
 }
 

@@ -52,7 +52,7 @@ const FEAT_LABELS: Record<string, string> = {
   nom: "Именительный", gen: "Родительный", dat: "Дательный", acc: "Винительный",
   ins: "Творительный", loc: "Местный", voc: "Звательный",
   sg: "Единственное", du: "Двойственное", pl: "Множественное",
-  masc: "Мужской", fem: "Женский", neut: "Средний",
+  Masc: "Мужской", Fem: "Женский", Neut: "Средний",
   anim: "Одушевлённый", inanim: "Неодушевлённый",
   pres: "Настоящее", past: "Прошедшее", fut: "Будущее", aor: "Аорист", impf: "Имперфект",
   ind: "Изъявительное", imp: "Повелительное", sub: "Сослагательное",
@@ -76,15 +76,16 @@ const FEAT_ORDER = [
   { key: "aspect", label: "Вид" },
 ]
 
-// Короткие коды — та же конвенция, что использует сам FEAT_LABELS выше и
-// CASE_WEIGHTS/GrammaticalCase (lib/grammar/common/case.ts). Значения,
-// сгенерированные грамматическим движком автоматически, на деле хранятся
-// полным словом ('nominative') — нормализуется на отображении через
-// normalizeFeatValue (см. CorpusTokenDisplay.tsx); ручной ввод сознательно
-// использует "правильную" короткую конвенцию напрямую.
+// Короткие коды падежа/числа — та же конвенция, что использует сам
+// FEAT_LABELS выше и CASE_WEIGHTS/GrammaticalCase (lib/grammar/common/case.ts).
+// Род — заглавная UD-форма (GrammaticalGender.MASC='Masc' и т.д., см.
+// lib/grammar/common/gender.ts), с 2026-08-12 её же отдаёт и грамматический
+// движок (processors.ts). normalizeFeatValue (CorpusTokenDisplay.tsx)
+// подстраховывает уже сохранённые в corpus.db записи со старой строчной
+// формой рода/длинной формой падежа.
 const CASE_OPTIONS = ["nom", "gen", "dat", "acc", "ins", "loc", "voc"]
 const NUMBER_OPTIONS = ["sg", "du", "pl"]
-const GENDER_OPTIONS = ["masc", "fem", "neut"]
+const GENDER_OPTIONS = ["Masc", "Fem", "Neut"]
 
 export default function TokenSidebar({
   token,
@@ -514,7 +515,7 @@ export default function TokenSidebar({
                         <div className="flex items-center justify-between px-3 py-1.5">
                           <span className="text-muted-foreground text-xs">Род</span>
                           <span className="font-mono text-xs">
-                            {lexeme.gender === "masc" ? "Мужской" : lexeme.gender === "fem" ? "Женский" : lexeme.gender === "neut" ? "Средний" : lexeme.gender}
+                            {lexeme.gender === "Masc" ? "Мужской" : lexeme.gender === "Fem" ? "Женский" : lexeme.gender === "Neut" ? "Средний" : lexeme.gender}
                           </span>
                         </div>
                       )}

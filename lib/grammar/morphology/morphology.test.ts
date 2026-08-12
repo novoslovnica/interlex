@@ -88,7 +88,7 @@ describe('2. Глаголы (VERB)', () => {
     // Причастия раньше вообще не несли диакритики (generateParticiples не вызывал accentSyllable) —
     // не верифицированная деривация, просто проверяем наличие хоть какого-то знака ударения.
     it('nesti: Причастие наст. вр. действ. залога несёт знак ударения', () => {
-        const nestiPresActPart = findForm(nestiForms, { verbForm: 'part', tense: 'pres', voice: 'act', gender: 'masc', number: 'sg' });
+        const nestiPresActPart = findForm(nestiForms, { verbForm: 'part', tense: 'pres', voice: 'act', gender: 'Masc', number: 'sg' });
         expect(!!nestiPresActPart && /[̀́̂̑]/.test(nestiPresActPart!)).toBe(true);
     });
 
@@ -130,7 +130,7 @@ describe('3. Прилагательные (ADJ)', () => {
     // (как и задумано комментарием выше), просто теперь корректно попадает на его
     // гласную 'ě' в полной, а не усечённой форме.
     it('novy: Компаратив образует суффикс -ějš- с мягким склонением (nově̂jši)', () => {
-        expect(findForm(novyForms, { case: 'nom', number: 'sg', gender: 'masc', degree: 'comp' })).toBe('nově̂jši');
+        expect(findForm(novyForms, { case: 'nom', number: 'sg', gender: 'Masc', degree: 'comp' })).toBe('nově̂jši');
     });
 
     // Пример Б: "kamienny" (Относительное прилагательное, Парадигма A)
@@ -152,7 +152,7 @@ describe('4. Числительные (NUM)', () => {
 
     // Ять (ě) верна — подтверждено пользователем и БД (ending_allophones), ошибался тест.
     it('dva: Родовое разведение в им.п. для женского/среднего рода (dvě̂)', () => {
-        expect(findForm(dvaForms, { case: 'nom', gender: 'fem' })).toBe('dvě̂');
+        expect(findForm(dvaForms, { case: 'nom', gender: 'Fem' })).toBe('dvě̂');
     });
 
     // Пример Б: "pęty" (Порядковое числительное, Парадигма A)
