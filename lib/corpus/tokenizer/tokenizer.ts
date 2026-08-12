@@ -76,7 +76,15 @@ export class Tokenizer {
 
             let analysis;
             if (isPunct) {
-                analysis = { lemma: t, pos: PosType.PUNCT, wordSlug: null, feats: {} };
+                // matchCount must be a non-zero, unambiguous sentinel here -
+                // 0 is the "genuinely unrecognized word" signal (see
+                // AGENTS.md's traffic-light table), and punctuation
+                // defaulting to it made it indistinguishable from a real red
+                // token to any matchCount=0 query. Punctuation always
+                // "matches" itself deterministically, so 1 (not ambiguous,
+                // not partial) is the correct value, same convention as
+                // reanalyzeDocument.ts's punctuation branch.
+                analysis = { lemma: t, pos: PosType.PUNCT, wordSlug: null, feats: {}, matchCount: 1 };
             } else if (analyzer) {
                 const leftNeighbor = i > 0 ? rawTokens[i - 1] : undefined;
                 const dbResult = await analyzer.analyzeWord(t, { leftNeighbor });

@@ -72,7 +72,10 @@ export async function reanalyzeCorpusDocument(
       }
 
       if (token.wordIndex === -1) {
-        updates.push({ id: token.id, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, isPartialMatch: false, feats: {} }, candidates: [] })
+        // matchCount: 1, not 0 - see the matching comment in
+        // lib/corpus/tokenizer/tokenizer.ts's punctuation branch. 0 is
+        // reserved for "genuinely unrecognized word".
+        updates.push({ id: token.id, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 1, isPartialMatch: false, feats: {} }, candidates: [] })
         i++
         continue
       }
