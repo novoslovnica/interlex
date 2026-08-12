@@ -19,12 +19,13 @@ import {classifyAdjectiveType} from "@/lib/grammar/adjective/index";
 import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
+import type {CorpusExample} from "@/lib/corpus/fetchWordExamples";
 import BookmarkButton from "@/components/BookmarkButton";
 import ShareButton from "@/components/ShareButton";
 import AccentLegend from "@/components/AccentLegend";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[] }) => {
+const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[] }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -593,6 +594,40 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions }: { item: 
             </section>
 
             <CognateRadarChart item={item} />
+
+            {corpusExamples && corpusExamples.length > 0 && (
+                <section className="mt-8 pt-4 border-t border-slate-100">
+                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t("sections.corpusExamples")}</h2>
+                    <ul className="space-y-3">
+                        {corpusExamples.map((ex) => {
+                            const idx = ex.text.toLowerCase().indexOf(ex.surfaceForm.toLowerCase());
+                            return (
+                                <li key={ex.sentenceId} className="text-sm">
+                                    <p className="text-slate-700">
+                                        {idx === -1 ? ex.text : (
+                                            <>
+                                                {ex.text.slice(0, idx)}
+                                                <mark className="bg-blue-100 text-blue-900 rounded px-0.5">
+                                                    {ex.text.slice(idx, idx + ex.surfaceForm.length)}
+                                                </mark>
+                                                {ex.text.slice(idx + ex.surfaceForm.length)}
+                                            </>
+                                        )}
+                                    </p>
+                                    <p className="text-xs text-slate-400 mt-0.5">
+                                        {t("sections.corpusExamplesSource")}:{" "}
+                                        {ex.sourceUrl ? (
+                                            <a href={ex.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                                {ex.documentTitle}
+                                            </a>
+                                        ) : ex.documentTitle}
+                                    </p>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </section>
+            )}
 
             {etymologyLinks.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">

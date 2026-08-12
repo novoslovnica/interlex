@@ -413,6 +413,8 @@
       "synonymGraph": "Synonym graph",
       "graph": "Graph",
       "antonyms": "Antonyms",
+      "corpusExamples": "Corpus examples",
+      "corpusExamplesSource": "Source",
       "etymology": "Etymology and external links",
       "etymologyLink": "Etymology",
       "wiktionary": "Reconstruction (Wikipedia)"

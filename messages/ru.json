@@ -423,6 +423,8 @@
       "synonymGraph": "Граф синонимов",
       "graph": "Граф",
       "antonyms": "Антонимы",
+      "corpusExamples": "Примеры из корпуса",
+      "corpusExamplesSource": "Источник",
       "etymology": "Этимология и внешние ссылки",
       "etymologyLink": "Этимология",
       "wiktionary": "Реконструкция (Википедия)"
