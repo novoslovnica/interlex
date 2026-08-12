@@ -52,3 +52,8 @@ export type UserSettings = Prisma.UserSettingsModel
  * 
  */
 export type UserWordCollection = Prisma.UserWordCollectionModel
+/**
+ * Model TelegramAuthNonce
+ * 
+ */
+export type TelegramAuthNonce = Prisma.TelegramAuthNonceModel

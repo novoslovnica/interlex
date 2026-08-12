@@ -390,7 +390,8 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   FeaturePermission: 'FeaturePermission',
   UserSettings: 'UserSettings',
-  UserWordCollection: 'UserWordCollection'
+  UserWordCollection: 'UserWordCollection',
+  TelegramAuthNonce: 'TelegramAuthNonce'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection" | "telegramAuthNonce"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TelegramAuthNonce: {
+      payload: Prisma.$TelegramAuthNoncePayload<ExtArgs>
+      fields: Prisma.TelegramAuthNonceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TelegramAuthNonceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TelegramAuthNonceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        findFirst: {
+          args: Prisma.TelegramAuthNonceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TelegramAuthNonceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        findMany: {
+          args: Prisma.TelegramAuthNonceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>[]
+        }
+        create: {
+          args: Prisma.TelegramAuthNonceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        createMany: {
+          args: Prisma.TelegramAuthNonceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TelegramAuthNonceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>[]
+        }
+        delete: {
+          args: Prisma.TelegramAuthNonceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        update: {
+          args: Prisma.TelegramAuthNonceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        deleteMany: {
+          args: Prisma.TelegramAuthNonceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TelegramAuthNonceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TelegramAuthNonceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>[]
+        }
+        upsert: {
+          args: Prisma.TelegramAuthNonceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TelegramAuthNoncePayload>
+        }
+        aggregate: {
+          args: Prisma.TelegramAuthNonceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTelegramAuthNonce>
+        }
+        groupBy: {
+          args: Prisma.TelegramAuthNonceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelegramAuthNonceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TelegramAuthNonceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TelegramAuthNonceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1045,6 +1120,15 @@ export const UserWordCollectionScalarFieldEnum = {
 } as const
 
 export type UserWordCollectionScalarFieldEnum = (typeof UserWordCollectionScalarFieldEnum)[keyof typeof UserWordCollectionScalarFieldEnum]
+
+
+export const TelegramAuthNonceScalarFieldEnum = {
+  hash: 'hash',
+  authDate: 'authDate',
+  usedAt: 'usedAt'
+} as const
+
+export type TelegramAuthNonceScalarFieldEnum = (typeof TelegramAuthNonceScalarFieldEnum)[keyof typeof TelegramAuthNonceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1234,6 +1318,7 @@ export type GlobalOmitConfig = {
   featurePermission?: Prisma.FeaturePermissionOmit
   userSettings?: Prisma.UserSettingsOmit
   userWordCollection?: Prisma.UserWordCollectionOmit
+  telegramAuthNonce?: Prisma.TelegramAuthNonceOmit
 }
 
 /* Types for Logging */

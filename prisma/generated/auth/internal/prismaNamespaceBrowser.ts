@@ -57,7 +57,8 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   FeaturePermission: 'FeaturePermission',
   UserSettings: 'UserSettings',
-  UserWordCollection: 'UserWordCollection'
+  UserWordCollection: 'UserWordCollection',
+  TelegramAuthNonce: 'TelegramAuthNonce'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -154,6 +155,15 @@ export const UserWordCollectionScalarFieldEnum = {
 } as const
 
 export type UserWordCollectionScalarFieldEnum = (typeof UserWordCollectionScalarFieldEnum)[keyof typeof UserWordCollectionScalarFieldEnum]
+
+
+export const TelegramAuthNonceScalarFieldEnum = {
+  hash: 'hash',
+  authDate: 'authDate',
+  usedAt: 'usedAt'
+} as const
+
+export type TelegramAuthNonceScalarFieldEnum = (typeof TelegramAuthNonceScalarFieldEnum)[keyof typeof TelegramAuthNonceScalarFieldEnum]
 
 
 export const SortOrder = {

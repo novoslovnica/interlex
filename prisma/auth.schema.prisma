@@ -113,3 +113,21 @@ model UserWordCollection {
   @@unique([userId, wordId])
   @@map("user_word_collection")
 }
+
+// Replay protection for Telegram Credentials login (auth.config.ts). The
+// HMAC hash Telegram sends is already a unique, tamper-evident value per
+// login event (distinct auth_date + user data -> distinct hash), so it
+// doubles as the nonce itself - no separate nonce needs to be minted.
+// authorize() claims a hash via an insert (unique constraint violation =
+// replay detected) rather than check-then-insert, so the claim is atomic
+// under concurrent requests. Rows older than the 24h auth_date freshness
+// window (already enforced by verifyTelegramAuth's caller) are opportunistically
+// swept - a payload that old would already fail the freshness check, so
+// keeping its hash around forever serves no purpose.
+model TelegramAuthNonce {
+  hash      String   @id
+  authDate  Int
+  usedAt    DateTime @default(now())
+
+  @@map("telegram_auth_nonces")
+}

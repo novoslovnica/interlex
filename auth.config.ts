@@ -3,6 +3,7 @@ import type { NextAuthConfig } from "next-auth"
 import crypto from "crypto"
 import Yandex from "@auth/core/providers/yandex";
 import Google from "@auth/core/providers/google";
+import { claimTelegramAuthHash } from "@/lib/telegramAuthNonce";
 
 // Функция валидации данных от Telegram
 function verifyTelegramAuth(data: Record<string, any>, botToken: string): boolean {
@@ -53,10 +54,22 @@ export default {
                         return null;
                     }
 
-                    // 2. Проверяем актуальность данных (опционально, защита от старых запросов — 24 часа)
+                    // 2. Проверяем актуальность данных (защита от старых запросов — 24 часа)
                     const now = Math.floor(Date.now() / 1000);
-                    if (now - Number(tgUser.auth_date) > 86400) {
+                    const authDate = Number(tgUser.auth_date);
+                    if (now - authDate > 86400) {
                         console.error("Telegram auth validation failed: Outdated auth date");
+                        return null;
+                    }
+
+                    // 3. Защита от повторного воспроизведения (replay): HMAC-хэш уникален
+                    // для каждого события логина (различается по auth_date и данным
+                    // пользователя), поэтому сам служит nonce'ом — claimTelegramAuthHash
+                    // "застолбливает" его атомарно (INSERT OR IGNORE), возвращая false,
+                    // если этот хэш уже был использован.
+                    const claimed = await claimTelegramAuthHash(tgUser.hash, authDate, now);
+                    if (!claimed) {
+                        console.error("Telegram auth validation failed: replay detected (hash already used)");
                         return null;
                     }
 
