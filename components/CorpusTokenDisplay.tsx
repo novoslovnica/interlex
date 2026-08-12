@@ -1,5 +1,7 @@
 "use client"
 
+import { normalizeCaseValue } from "@/lib/corpus/tokenizer/caseNormalize"
+
 export interface TokenResult {
     // Только у токенов из сохранённого документа (segments API) — превью
     // /api/corpus/analyze показывает ещё не сохранённые токены, id для них
@@ -48,13 +50,23 @@ const FEAT_LABELS: Record<string, string> = {
     pos: "pos", comp: "comp", sup: "sup",
 }
 
+// Значения падежа приходят от грамматического движка полным словом
+// ('nominative'), а FEAT_LABELS ожидает короткие коды ('nom') — та же
+// нестыковка, что уже решена для скоринга омонимов в
+// lib/corpus/tokenizer/caseNormalize.ts. Переиспользуем ту же нормализацию
+// здесь вместо ещё одной копии таблицы соответствий.
+export function normalizeFeatValue(key: string, value: string): string {
+    if (key === "case") return normalizeCaseValue(value) ?? value
+    return value
+}
+
 function formatFeats(feats: Record<string, string>): string {
     const parts: string[] = []
     const order = ["case", "number", "gender", "person", "tense", "mood", "voice", "verbForm", "degree", "animacy"]
     for (const key of order) {
         const val = feats[key]
         if (val) {
-            parts.push(FEAT_LABELS[val] ?? val)
+            parts.push(FEAT_LABELS[normalizeFeatValue(key, val)] ?? val)
         }
     }
     return parts.join(" ")

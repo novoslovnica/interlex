@@ -21,10 +21,10 @@
 
 ## P2 — технический долг, повышающий вероятность будущих багов
 
-8. ⬜ Унифицировать нейминг падежей (`'nominative'` vs `'nom'`) — вызывает баг отображения в `TokenSidebar`/`CorpusTokenDisplay`.
-9. ⬜ `base_homonyms` формат в `app/admin/deduplication/actions.ts` не понимает новый `{id, flavor}[]` (4 из 33746 строк) — скопировать логику из `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts`.
-10. ⬜ N+1 на `/words/[id]` — батчить языковые таблицы, обернуть `getItem()` в `React.cache`.
-11. ⬜ Убрать `matchCount=0` неоднозначность у пунктуации в `tokenizer.ts`.
+8. ✅ **Унификация нейминга падежей на отображении** (2026-08-12) — не полная унификация движка (риск/объём непропорционален), а точечный фикс бага отображения: `CorpusTokenDisplay.tsx`/`TokenSidebar.tsx`'s `FEAT_LABELS` понимали только короткие коды (`nom`), а грамматический движок отдаёт падеж полным словом (`nominative`). Добавлен `normalizeFeatValue(key, value)` в `CorpusTokenDisplay.tsx` (переиспользует уже существующий `normalizeCaseValue` из `lib/corpus/tokenizer/caseNormalize.ts`, применяется только к `key === 'case'` — только падеж и задокументирован как расходящийся, остальные граммемы не трогал без подтверждённой причины), экспортирован и переиспользован в `TokenSidebar.tsx` в обоих местах лукапа. Тест на чистую функцию.
+9. ✅ **`base_homonyms` формат в `lib/dedup/mergeLexemes.ts`** (2026-08-12) — реальный баг был не в `app/admin/deduplication/actions.ts` (эта логика живёт в `lib/dedup/mergeLexemes.ts`, который `actions.ts` вызывает). Портирован `parseWordIds` из `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts` — понимает и `number[]`, и `{id,flavor}[]`. Тест на `parseWordIds`.
+10. ✅ **N+1 на `/words/[id]`** (2026-08-12) — половина проблемы (запрос на каждую языковую таблицу) уже была решена раньше при консолидации 18 таблиц в единую `translations` (документация не обновлена, не значилось как ✅). Актуальным оставался только двойной вызов `getItem()` (`generateMetadata` + сама страница) — обёрнут в `React.cache`. Проверено вживую (страница слова рендерится, без ошибок в консоли).
+11. ✅ **`matchCount=0` неоднозначность у пунктуации** (2026-08-12) — исправлено в `lib/corpus/tokenizer/tokenizer.ts` (основной путь — используется всеми crawler'ами, corpus-builder save и analyze) И отдельно в `lib/corpus/reanalyzeDocument.ts` (независимая дублирующая ветка, найдена при проверке всех реальных call site'ов, а не только документированного). Пунктуация теперь получает `matchCount: 1` (детерминированное, не омонимичное) вместо неявного `0` (зарезервировано за "не найдено в словаре"). Существующий защитный фильтр `wordIndex: { not: -1 }` в `generateCorpusCandidateProposals` не тронут — избыточен, но безвреден. Тест на `Tokenizer.tokenizeSentence`.
 12. ⬜ Сократить `any` (100+ мест) — постепенно, попутно с другими задачами.
 13. ⬜ AuditLog для `auth.db`/`corpus.db`/`library.db` — сейчас только `interlex.db`.
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import type { TokenResult } from "./CorpusTokenDisplay"
+import { normalizeFeatValue, type TokenResult } from "./CorpusTokenDisplay"
 
 interface LexemeInfo {
   slug: string
@@ -79,9 +79,9 @@ const FEAT_ORDER = [
 // Короткие коды — та же конвенция, что использует сам FEAT_LABELS выше и
 // CASE_WEIGHTS/GrammaticalCase (lib/grammar/common/case.ts). Значения,
 // сгенерированные грамматическим движком автоматически, на деле хранятся
-// полным словом ('nominative') — известная предсуществующая нестыковка
-// (см. lib/corpus/tokenizer/caseNormalize.ts), не по теме этой формы;
-// ручной ввод сознательно использует "правильную" короткую конвенцию.
+// полным словом ('nominative') — нормализуется на отображении через
+// normalizeFeatValue (см. CorpusTokenDisplay.tsx); ручной ввод сознательно
+// использует "правильную" короткую конвенцию напрямую.
 const CASE_OPTIONS = ["nom", "gen", "dat", "acc", "ins", "loc", "voc"]
 const NUMBER_OPTIONS = ["sg", "du", "pl"]
 const GENDER_OPTIONS = ["masc", "fem", "neut"]
@@ -347,7 +347,7 @@ export default function TokenSidebar({
                     {FEAT_ORDER.map(({ key, label }) => {
                       const val = token.feats![key]
                       if (!val) return null
-                      const displayVal = FEAT_LABELS[val] ?? val
+                      const displayVal = FEAT_LABELS[normalizeFeatValue(key, val)] ?? val
                       const displayKey =
                         key === "person" ? "Лицо" :
                         key === "verbForm" ? "Глагольная форма" :
@@ -383,7 +383,7 @@ export default function TokenSidebar({
                       {candidates.map((c, idx) => {
                         const isCurrent = idx === 0
                         const featsStr = Object.entries(c.feats)
-                          .map(([k, v]) => FEAT_LABELS[v] ?? v)
+                          .map(([k, v]) => FEAT_LABELS[normalizeFeatValue(k, v)] ?? v)
                           .join(", ")
                         return (
                           <div key={c.id} className="px-3 py-2 flex items-center justify-between gap-2">
