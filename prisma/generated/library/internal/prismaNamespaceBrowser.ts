@@ -93,6 +93,9 @@ export const LibraryEntryScalarFieldEnum = {
   views: 'views',
   isPublic: 'isPublic',
   parentId: 'parentId',
+  readabilityScore: 'readabilityScore',
+  readabilityLevel: 'readabilityLevel',
+  readabilityCoverage: 'readabilityCoverage',
   actionHistory: 'actionHistory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

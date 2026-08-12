@@ -33,6 +33,8 @@ export type LibraryEntryAvgAggregateOutputType = {
   yearTranslated: number | null
   views: number | null
   parentId: number | null
+  readabilityScore: number | null
+  readabilityCoverage: number | null
 }
 
 export type LibraryEntrySumAggregateOutputType = {
@@ -42,6 +44,8 @@ export type LibraryEntrySumAggregateOutputType = {
   yearTranslated: number | null
   views: number | null
   parentId: number | null
+  readabilityScore: number | null
+  readabilityCoverage: number | null
 }
 
 export type LibraryEntryMinAggregateOutputType = {
@@ -70,6 +74,9 @@ export type LibraryEntryMinAggregateOutputType = {
   views: number | null
   isPublic: boolean | null
   parentId: number | null
+  readabilityScore: number | null
+  readabilityLevel: string | null
+  readabilityCoverage: number | null
   actionHistory: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -101,6 +108,9 @@ export type LibraryEntryMaxAggregateOutputType = {
   views: number | null
   isPublic: boolean | null
   parentId: number | null
+  readabilityScore: number | null
+  readabilityLevel: string | null
+  readabilityCoverage: number | null
   actionHistory: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -132,6 +142,9 @@ export type LibraryEntryCountAggregateOutputType = {
   views: number
   isPublic: number
   parentId: number
+  readabilityScore: number
+  readabilityLevel: number
+  readabilityCoverage: number
   actionHistory: number
   createdAt: number
   updatedAt: number
@@ -146,6 +159,8 @@ export type LibraryEntryAvgAggregateInputType = {
   yearTranslated?: true
   views?: true
   parentId?: true
+  readabilityScore?: true
+  readabilityCoverage?: true
 }
 
 export type LibraryEntrySumAggregateInputType = {
@@ -155,6 +170,8 @@ export type LibraryEntrySumAggregateInputType = {
   yearTranslated?: true
   views?: true
   parentId?: true
+  readabilityScore?: true
+  readabilityCoverage?: true
 }
 
 export type LibraryEntryMinAggregateInputType = {
@@ -183,6 +200,9 @@ export type LibraryEntryMinAggregateInputType = {
   views?: true
   isPublic?: true
   parentId?: true
+  readabilityScore?: true
+  readabilityLevel?: true
+  readabilityCoverage?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -214,6 +234,9 @@ export type LibraryEntryMaxAggregateInputType = {
   views?: true
   isPublic?: true
   parentId?: true
+  readabilityScore?: true
+  readabilityLevel?: true
+  readabilityCoverage?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -245,6 +268,9 @@ export type LibraryEntryCountAggregateInputType = {
   views?: true
   isPublic?: true
   parentId?: true
+  readabilityScore?: true
+  readabilityLevel?: true
+  readabilityCoverage?: true
   actionHistory?: true
   createdAt?: true
   updatedAt?: true
@@ -363,6 +389,9 @@ export type LibraryEntryGroupByOutputType = {
   views: number
   isPublic: boolean
   parentId: number | null
+  readabilityScore: number | null
+  readabilityLevel: string | null
+  readabilityCoverage: number | null
   actionHistory: string | null
   createdAt: Date
   updatedAt: Date
@@ -417,6 +446,9 @@ export type LibraryEntryWhereInput = {
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  readabilityScore?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
+  readabilityLevel?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  readabilityCoverage?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
@@ -450,6 +482,9 @@ export type LibraryEntryOrderByWithRelationInput = {
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -486,6 +521,9 @@ export type LibraryEntryWhereUniqueInput = Prisma.AtLeast<{
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  readabilityScore?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
+  readabilityLevel?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  readabilityCoverage?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
@@ -519,6 +557,9 @@ export type LibraryEntryOrderByWithAggregationInput = {
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrderInput | Prisma.SortOrder
   actionHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -558,6 +599,9 @@ export type LibraryEntryScalarWhereWithAggregatesInput = {
   views?: Prisma.IntWithAggregatesFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolWithAggregatesFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableWithAggregatesFilter<"LibraryEntry"> | number | null
+  readabilityScore?: Prisma.FloatNullableWithAggregatesFilter<"LibraryEntry"> | number | null
+  readabilityLevel?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
+  readabilityCoverage?: Prisma.FloatNullableWithAggregatesFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableWithAggregatesFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LibraryEntry"> | Date | string
@@ -587,6 +631,9 @@ export type LibraryEntryCreateInput = {
   videoUrls?: string | null
   views?: number
   isPublic?: boolean
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -620,6 +667,9 @@ export type LibraryEntryUncheckedCreateInput = {
   views?: number
   isPublic?: boolean
   parentId?: number | null
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -650,6 +700,9 @@ export type LibraryEntryUpdateInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -683,6 +736,9 @@ export type LibraryEntryUncheckedUpdateInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -715,6 +771,9 @@ export type LibraryEntryCreateManyInput = {
   views?: number
   isPublic?: boolean
   parentId?: number | null
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -744,6 +803,9 @@ export type LibraryEntryUpdateManyMutationInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,6 +837,9 @@ export type LibraryEntryUncheckedUpdateManyInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +886,9 @@ export type LibraryEntryCountOrderByAggregateInput = {
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrder
+  readabilityLevel?: Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -833,6 +901,8 @@ export type LibraryEntryAvgOrderByAggregateInput = {
   yearTranslated?: Prisma.SortOrder
   views?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrder
 }
 
 export type LibraryEntryMaxOrderByAggregateInput = {
@@ -861,6 +931,9 @@ export type LibraryEntryMaxOrderByAggregateInput = {
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrder
+  readabilityLevel?: Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -892,6 +965,9 @@ export type LibraryEntryMinOrderByAggregateInput = {
   views?: Prisma.SortOrder
   isPublic?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrder
+  readabilityLevel?: Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrder
   actionHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -904,6 +980,8 @@ export type LibraryEntrySumOrderByAggregateInput = {
   yearTranslated?: Prisma.SortOrder
   views?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
+  readabilityScore?: Prisma.SortOrder
+  readabilityCoverage?: Prisma.SortOrder
 }
 
 export type LibraryEntryCreateNestedOneWithoutChildrenInput = {
@@ -952,6 +1030,14 @@ export type NullableIntFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -1020,6 +1106,9 @@ export type LibraryEntryCreateWithoutChildrenInput = {
   videoUrls?: string | null
   views?: number
   isPublic?: boolean
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1052,6 +1141,9 @@ export type LibraryEntryUncheckedCreateWithoutChildrenInput = {
   views?: number
   isPublic?: boolean
   parentId?: number | null
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1086,6 +1178,9 @@ export type LibraryEntryCreateWithoutParentInput = {
   videoUrls?: string | null
   views?: number
   isPublic?: boolean
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1117,6 +1212,9 @@ export type LibraryEntryUncheckedCreateWithoutParentInput = {
   videoUrls?: string | null
   views?: number
   isPublic?: boolean
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1167,6 +1265,9 @@ export type LibraryEntryUpdateWithoutChildrenInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1199,6 +1300,9 @@ export type LibraryEntryUncheckedUpdateWithoutChildrenInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1249,6 +1353,9 @@ export type LibraryEntryScalarWhereInput = {
   views?: Prisma.IntFilter<"LibraryEntry"> | number
   isPublic?: Prisma.BoolFilter<"LibraryEntry"> | boolean
   parentId?: Prisma.IntNullableFilter<"LibraryEntry"> | number | null
+  readabilityScore?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
+  readabilityLevel?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
+  readabilityCoverage?: Prisma.FloatNullableFilter<"LibraryEntry"> | number | null
   actionHistory?: Prisma.StringNullableFilter<"LibraryEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryEntry"> | Date | string
@@ -1279,6 +1386,9 @@ export type LibraryEntryCreateManyParentInput = {
   videoUrls?: string | null
   views?: number
   isPublic?: boolean
+  readabilityScore?: number | null
+  readabilityLevel?: string | null
+  readabilityCoverage?: number | null
   actionHistory?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1308,6 +1418,9 @@ export type LibraryEntryUpdateWithoutParentInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1339,6 +1452,9 @@ export type LibraryEntryUncheckedUpdateWithoutParentInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1370,6 +1486,9 @@ export type LibraryEntryUncheckedUpdateManyWithoutParentInput = {
   videoUrls?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   views?: Prisma.IntFieldUpdateOperationsInput | number
   isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  readabilityScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  readabilityLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  readabilityCoverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   actionHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1432,6 +1551,9 @@ export type LibraryEntrySelect<ExtArgs extends runtime.Types.Extensions.Internal
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
+  readabilityScore?: boolean
+  readabilityLevel?: boolean
+  readabilityCoverage?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1466,6 +1588,9 @@ export type LibraryEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
+  readabilityScore?: boolean
+  readabilityLevel?: boolean
+  readabilityCoverage?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1498,6 +1623,9 @@ export type LibraryEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
+  readabilityScore?: boolean
+  readabilityLevel?: boolean
+  readabilityCoverage?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1530,12 +1658,15 @@ export type LibraryEntrySelectScalar = {
   views?: boolean
   isPublic?: boolean
   parentId?: boolean
+  readabilityScore?: boolean
+  readabilityLevel?: boolean
+  readabilityCoverage?: boolean
   actionHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "genre" | "topic" | "flavor" | "body" | "bodyLength" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "audioFile" | "videoUrls" | "views" | "isPublic" | "parentId" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
+export type LibraryEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "author" | "genre" | "topic" | "flavor" | "body" | "bodyLength" | "source" | "yearWritten" | "yearTranslated" | "translator" | "addedById" | "addedBy" | "verified" | "verifiedBy" | "corpusSlug" | "summary" | "coverImage" | "audioFile" | "videoUrls" | "views" | "isPublic" | "parentId" | "readabilityScore" | "readabilityLevel" | "readabilityCoverage" | "actionHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryEntry"]>
 export type LibraryEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.LibraryEntry$parentArgs<ExtArgs>
   children?: boolean | Prisma.LibraryEntry$childrenArgs<ExtArgs>
@@ -1580,6 +1711,9 @@ export type $LibraryEntryPayload<ExtArgs extends runtime.Types.Extensions.Intern
     views: number
     isPublic: boolean
     parentId: number | null
+    readabilityScore: number | null
+    readabilityLevel: string | null
+    readabilityCoverage: number | null
     actionHistory: string | null
     createdAt: Date
     updatedAt: Date
@@ -2033,6 +2167,9 @@ export interface LibraryEntryFieldRefs {
   readonly views: Prisma.FieldRef<"LibraryEntry", 'Int'>
   readonly isPublic: Prisma.FieldRef<"LibraryEntry", 'Boolean'>
   readonly parentId: Prisma.FieldRef<"LibraryEntry", 'Int'>
+  readonly readabilityScore: Prisma.FieldRef<"LibraryEntry", 'Float'>
+  readonly readabilityLevel: Prisma.FieldRef<"LibraryEntry", 'String'>
+  readonly readabilityCoverage: Prisma.FieldRef<"LibraryEntry", 'Float'>
   readonly actionHistory: Prisma.FieldRef<"LibraryEntry", 'String'>
   readonly createdAt: Prisma.FieldRef<"LibraryEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LibraryEntry", 'DateTime'>

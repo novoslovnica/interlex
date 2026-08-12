@@ -235,6 +235,17 @@ export default async function LibraryReadingPage({ params }: PageProps) {
               <span>{t("readingTime", { min: Math.max(1, Math.round(bodyLength / 1000)) })}</span>
               <span>·</span>
               <span>{t("pages", { n: Math.max(1, Math.ceil(bodyLength / 1800)) })}</span>
+              {entry.readabilityLevel && (
+                <>
+                  <span>·</span>
+                  <span
+                    className="px-1.5 py-0.5 rounded bg-muted font-mono font-medium text-foreground/80"
+                    title="Približna CEFR-složnosť teksta (avtomatska ocena)"
+                  >
+                    {entry.readabilityLevel}
+                  </span>
+                </>
+              )}
               {entry.yearWritten && (
                 <>
                   <span>·</span>

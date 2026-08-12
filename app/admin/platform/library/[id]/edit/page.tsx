@@ -167,6 +167,21 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
     if (isPublic !== currentEntry.isPublic) changes.isPublic = { old: currentEntry.isPublic, new: isPublic }
     if (parentId !== currentEntry.parentId) changes.parentId = { old: currentEntry.parentId, new: parentId }
 
+    // Читабельность (roadmap п.42) пересчитывается только когда сам текст
+    // менялся — DbAnalyzer-проход по всему телу недешёвый (см.
+    // lib/library/computeReadability.ts), незачем гонять его на правку
+    // одних метаданных (автор, обложка и т.п.).
+    let readabilityScore = currentEntry.readabilityScore
+    let readabilityLevel = currentEntry.readabilityLevel
+    let readabilityCoverage = currentEntry.readabilityCoverage
+    if (body !== decompressedBody) {
+      const { computeReadability } = await import("@/lib/library/computeReadability")
+      const result = body ? await computeReadability(body) : { score: null, level: null, coverage: 0 }
+      readabilityScore = result.score
+      readabilityLevel = result.level
+      readabilityCoverage = result.coverage
+    }
+
     await db.libraryEntry.update({
       where: { id: entryId },
       data: {
@@ -185,6 +200,9 @@ export default async function EditLibraryPage({ params }: { params: Promise<{ id
         videoUrls,
         body: body ? compressBody(body) : null,
         bodyLength: body ? body.length : 0,
+        readabilityScore,
+        readabilityLevel,
+        readabilityCoverage,
         summary,
         corpusSlug,
         verified,

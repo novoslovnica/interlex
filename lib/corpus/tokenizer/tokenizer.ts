@@ -13,8 +13,8 @@ const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
 // выпали, разрывая токены вроде "atomų" на "atom"+"ų"); \p{M} — комбинируемые
 // диакритические знаки (тоновые акценты, см. ACCENT_CHARS в engine.ts);
 // \p{N} — цифры любого письма (супернабор старого \d из \w).
-const TOKEN_PATTERN = /[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]+/gu;
-const PUNCTUATION_TEST = /^[^\p{L}\p{M}\p{N}_]+$/u;
+export const TOKEN_PATTERN = /[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]+/gu;
+export const PUNCTUATION_TEST = /^[^\p{L}\p{M}\p{N}_]+$/u;
 
 export class Tokenizer {
     public static splitIntoSegments(rawText: string): string[] {

@@ -64,6 +64,7 @@ export default async function LibraryPage() {
       summary: true,
       views: true,
       bodyLength: true,
+      readabilityLevel: true,
       createdAt: true,
       isPublic: true,
       parentId: true,
@@ -97,6 +98,7 @@ export default async function LibraryPage() {
       summary: e.summary,
       views: e.views,
       bodyLength: aggregatedBodyLengths.get(e.id) ?? e.bodyLength,
+      readabilityLevel: e.readabilityLevel,
       date: e.createdAt.toISOString().slice(0, 10),
       isCollection: childCount > 0,
     }

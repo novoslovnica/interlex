@@ -43,6 +43,16 @@ body       String?
   parent      LibraryEntry?  @relation("CollectionChildren", fields: [parentId], references: [id])
   children    LibraryEntry[] @relation("CollectionChildren")
 
+  // Агрегированная CEFR-оценка читабельности текста (roadmap п.42) - null,
+  // пока не посчитана (см. lib/library/computeReadability.ts). score - средний
+  // порядковый уровень токенов, распознанных DbAnalyzer'ом (1=A1..6=C2);
+  // level - ближайший CEFR-бакет; coverage - доля токенов текста, для
+  // которых удалось получить cefrLevel (низкое покрытие => оценке не стоит
+  // доверять, см. UI-порог в lib/library/computeReadability.ts).
+  readabilityScore    Float?
+  readabilityLevel    String?
+  readabilityCoverage Float?
+
   actionHistory String?
 
   createdAt   DateTime @default(now())

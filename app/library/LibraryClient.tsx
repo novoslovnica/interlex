@@ -24,6 +24,7 @@ interface LibraryItem {
   summary: string | null
   views: number
   bodyLength: number
+  readabilityLevel: string | null
   date: string
   isCollection: boolean
 }
@@ -219,6 +220,14 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
                         <span>{item.views} 👁</span>
                         <span>{readingTimeText(item.bodyLength)}</span>
                         <span>{pageEstimateText(item.bodyLength)}</span>
+                        {item.readabilityLevel && (
+                          <span
+                            className="px-1.5 py-0.5 rounded bg-muted font-mono font-medium text-foreground/80"
+                            title="Približna CEFR-složnosť teksta (avtomatska ocena)"
+                          >
+                            {item.readabilityLevel}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </Link>

@@ -87,6 +87,11 @@ export default async function NewLibraryPage() {
       parentId: { old: null, new: parentId },
     }))
 
+    // Читабельность (roadmap п.42) - см. эквивалентный комментарий в
+    // [id]/edit/page.tsx.
+    const { computeReadability } = await import("@/lib/library/computeReadability")
+    const readability = body ? await computeReadability(body) : { score: null, level: null, coverage: 0 }
+
     const created = await db.libraryEntry.create({
       data: {
         slug,
@@ -103,6 +108,9 @@ export default async function NewLibraryPage() {
         videoUrls,
         body: body ? compressBody(body) : null,
         bodyLength: body ? body.length : 0,
+        readabilityScore: readability.score,
+        readabilityLevel: readability.level,
+        readabilityCoverage: readability.coverage,
         summary,
         corpusSlug,
         verified,
