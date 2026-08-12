@@ -196,6 +196,7 @@ export type UserWhereInput = {
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   collections?: Prisma.UserWordCollectionListRelationFilter
   flashcardProgress?: Prisma.FlashcardProgressListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -211,6 +212,7 @@ export type UserOrderByWithRelationInput = {
   settings?: Prisma.UserSettingsOrderByWithRelationInput
   collections?: Prisma.UserWordCollectionOrderByRelationAggregateInput
   flashcardProgress?: Prisma.FlashcardProgressOrderByRelationAggregateInput
+  apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -229,6 +231,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   settings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
   collections?: Prisma.UserWordCollectionListRelationFilter
   flashcardProgress?: Prisma.FlashcardProgressListRelationFilter
+  apiKeys?: Prisma.ApiKeyListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -268,6 +271,7 @@ export type UserCreateInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -283,6 +287,7 @@ export type UserUncheckedCreateInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -298,6 +303,7 @@ export type UserUpdateInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -313,6 +319,7 @@ export type UserUncheckedUpdateInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -474,6 +481,20 @@ export type UserUpdateOneRequiredWithoutFlashcardProgressNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFlashcardProgressInput, Prisma.UserUpdateWithoutFlashcardProgressInput>, Prisma.UserUncheckedUpdateWithoutFlashcardProgressInput>
 }
 
+export type UserCreateNestedOneWithoutApiKeysInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApiKeysInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutApiKeysNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApiKeysInput
+  upsert?: Prisma.UserUpsertWithoutApiKeysInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApiKeysInput, Prisma.UserUpdateWithoutApiKeysInput>, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -486,6 +507,7 @@ export type UserCreateWithoutAccountsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -500,6 +522,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -530,6 +553,7 @@ export type UserUpdateWithoutAccountsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -544,6 +568,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -558,6 +583,7 @@ export type UserCreateWithoutSessionsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -572,6 +598,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -602,6 +629,7 @@ export type UserUpdateWithoutSessionsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -616,6 +644,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPermissionsInput = {
@@ -630,6 +659,7 @@ export type UserCreateWithoutPermissionsInput = {
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPermissionsInput = {
@@ -644,6 +674,7 @@ export type UserUncheckedCreateWithoutPermissionsInput = {
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPermissionsInput = {
@@ -674,6 +705,7 @@ export type UserUpdateWithoutPermissionsInput = {
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPermissionsInput = {
@@ -688,6 +720,7 @@ export type UserUncheckedUpdateWithoutPermissionsInput = {
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -702,6 +735,7 @@ export type UserCreateWithoutSettingsInput = {
   permissions?: Prisma.FeaturePermissionCreateNestedManyWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -716,6 +750,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   permissions?: Prisma.FeaturePermissionUncheckedCreateNestedManyWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -746,6 +781,7 @@ export type UserUpdateWithoutSettingsInput = {
   permissions?: Prisma.FeaturePermissionUpdateManyWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -760,6 +796,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   permissions?: Prisma.FeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCollectionsInput = {
@@ -774,6 +811,7 @@ export type UserCreateWithoutCollectionsInput = {
   permissions?: Prisma.FeaturePermissionCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCollectionsInput = {
@@ -788,6 +826,7 @@ export type UserUncheckedCreateWithoutCollectionsInput = {
   permissions?: Prisma.FeaturePermissionUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCollectionsInput = {
@@ -818,6 +857,7 @@ export type UserUpdateWithoutCollectionsInput = {
   permissions?: Prisma.FeaturePermissionUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCollectionsInput = {
@@ -832,6 +872,7 @@ export type UserUncheckedUpdateWithoutCollectionsInput = {
   permissions?: Prisma.FeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFlashcardProgressInput = {
@@ -846,6 +887,7 @@ export type UserCreateWithoutFlashcardProgressInput = {
   permissions?: Prisma.FeaturePermissionCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFlashcardProgressInput = {
@@ -860,6 +902,7 @@ export type UserUncheckedCreateWithoutFlashcardProgressInput = {
   permissions?: Prisma.FeaturePermissionUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
   collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFlashcardProgressInput = {
@@ -890,6 +933,7 @@ export type UserUpdateWithoutFlashcardProgressInput = {
   permissions?: Prisma.FeaturePermissionUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFlashcardProgressInput = {
@@ -904,6 +948,83 @@ export type UserUncheckedUpdateWithoutFlashcardProgressInput = {
   permissions?: Prisma.FeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
   collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutApiKeysInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  permissions?: Prisma.FeaturePermissionCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  collections?: Prisma.UserWordCollectionCreateNestedManyWithoutUserInput
+  flashcardProgress?: Prisma.FlashcardProgressCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutApiKeysInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  role?: $Enums.Role
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  permissions?: Prisma.FeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  collections?: Prisma.UserWordCollectionUncheckedCreateNestedManyWithoutUserInput
+  flashcardProgress?: Prisma.FlashcardProgressUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutApiKeysInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+}
+
+export type UserUpsertWithoutApiKeysInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApiKeysInput, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApiKeysInput, Prisma.UserUncheckedCreateWithoutApiKeysInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApiKeysInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApiKeysInput, Prisma.UserUncheckedUpdateWithoutApiKeysInput>
+}
+
+export type UserUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.FeaturePermissionUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  collections?: Prisma.UserWordCollectionUpdateManyWithoutUserNestedInput
+  flashcardProgress?: Prisma.FlashcardProgressUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApiKeysInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  permissions?: Prisma.FeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  collections?: Prisma.UserWordCollectionUncheckedUpdateManyWithoutUserNestedInput
+  flashcardProgress?: Prisma.FlashcardProgressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -917,6 +1038,7 @@ export type UserCountOutputType = {
   permissions: number
   collections: number
   flashcardProgress: number
+  apiKeys: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -925,6 +1047,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   permissions?: boolean | UserCountOutputTypeCountPermissionsArgs
   collections?: boolean | UserCountOutputTypeCountCollectionsArgs
   flashcardProgress?: boolean | UserCountOutputTypeCountFlashcardProgressArgs
+  apiKeys?: boolean | UserCountOutputTypeCountApiKeysArgs
 }
 
 /**
@@ -972,6 +1095,13 @@ export type UserCountOutputTypeCountFlashcardProgressArgs<ExtArgs extends runtim
   where?: Prisma.FlashcardProgressWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApiKeyWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -986,6 +1116,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   collections?: boolean | Prisma.User$collectionsArgs<ExtArgs>
   flashcardProgress?: boolean | Prisma.User$flashcardProgressArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1024,6 +1155,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   collections?: boolean | Prisma.User$collectionsArgs<ExtArgs>
   flashcardProgress?: boolean | Prisma.User$flashcardProgressArgs<ExtArgs>
+  apiKeys?: boolean | Prisma.User$apiKeysArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1038,6 +1170,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     settings: Prisma.$UserSettingsPayload<ExtArgs> | null
     collections: Prisma.$UserWordCollectionPayload<ExtArgs>[]
     flashcardProgress: Prisma.$FlashcardProgressPayload<ExtArgs>[]
+    apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1446,6 +1579,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   collections<T extends Prisma.User$collectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$collectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserWordCollectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   flashcardProgress<T extends Prisma.User$flashcardProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$flashcardProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FlashcardProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  apiKeys<T extends Prisma.User$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2008,6 +2142,30 @@ export type User$flashcardProgressArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.FlashcardProgressScalarFieldEnum | Prisma.FlashcardProgressScalarFieldEnum[]
+}
+
+/**
+ * User.apiKeys
+ */
+export type User$apiKeysArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ApiKey
+   */
+  select?: Prisma.ApiKeySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ApiKey
+   */
+  omit?: Prisma.ApiKeyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ApiKeyInclude<ExtArgs> | null
+  where?: Prisma.ApiKeyWhereInput
+  orderBy?: Prisma.ApiKeyOrderByWithRelationInput | Prisma.ApiKeyOrderByWithRelationInput[]
+  cursor?: Prisma.ApiKeyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ApiKeyScalarFieldEnum | Prisma.ApiKeyScalarFieldEnum[]
 }
 
 /**

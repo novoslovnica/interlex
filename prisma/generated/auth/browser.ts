@@ -62,3 +62,8 @@ export type TelegramAuthNonce = Prisma.TelegramAuthNonceModel
  * 
  */
 export type FlashcardProgress = Prisma.FlashcardProgressModel
+/**
+ * Model ApiKey
+ * 
+ */
+export type ApiKey = Prisma.ApiKeyModel

@@ -23,6 +23,7 @@
       "library": "Biblioteka",
       "textbook": "Učebnik",
       "about": "O projektě",
+      "api": "API",
       "versionHistory": "Historia versij"
     }
   },
@@ -272,6 +273,76 @@
     "sessionCompleteDescription": "Vy povtorili {count} kartočok.",
     "newSession": "Načęti ješče jednu sesiju",
     "loginRequired": "Vnidite v akkont, aby otslěživati napredek po kartočkah."
+  },
+  "apiKeys": {
+    "title": "API-ključe",
+    "description": "Upravljajte ključami za publičny read-only API. Spisok endpointov i priměry — v dokumentaciji za razvijateljev.",
+    "linkCard": {
+      "title": "API-ključe",
+      "description": "Tvorite i upravljajte ključami za publičny read-only API.",
+      "cta": "Upravljati"
+    },
+    "createSection": "Tvoriti novy ključ",
+    "namePlaceholder": "Imě ključa (naprimer, «moj skript»)",
+    "createButton": "Tvoriti ključ",
+    "creating": "Tvorju...",
+    "listSection": "Vaši ključe",
+    "loading": "Gruzju...",
+    "empty": "Vy ješče němate API-ključev.",
+    "columns": {
+      "name": "Imě",
+      "prefix": "Ključ",
+      "requests": "Zapytov",
+      "lastUsed": "Poslědnje ispolzovanje",
+      "created": "Tvoreno",
+      "status": "Status"
+    },
+    "statusActive": "Aktivny",
+    "statusRevoked": "Otzvany",
+    "revokeButton": "Otzvati",
+    "revoking": "Otzyvaju...",
+    "revealOnce": {
+      "title": "Vaš novy API-ključ",
+      "description": "Kopěrujte ključ sejčas — povtorno on ne budet pokazany.",
+      "copy": "Kopěrovati",
+      "copied": "Skopěrovano!",
+      "dismiss": "Ja sohranil jego"
+    },
+    "errors": {
+      "load": "Ne udalo se gruziti ključe.",
+      "create": "Ne udalo se tvoriti ključ.",
+      "revoke": "Ne udalo se otzvati ključ."
+    }
+  },
+  "apiDocs": {
+    "title": "Dokumentacija API",
+    "description": "Dokumentacija publičnogo read-only API: autentifikacija, limity zapytov i endpointy.",
+    "intro": "Publičny read-only API medžuslověnskogo lexikona i praslověnskogo slovnika — za storonji integracije.",
+    "gettingStarted": {
+      "title": "Dostajanje ključa",
+      "body": "Vsaky zapyt trěbuje API-ključ. Tvorite jego bezplatno v vašem akkontě.",
+      "linkText": "Upravljati API-ključami"
+    },
+    "auth": {
+      "title": "Autentifikacija",
+      "body": "Peredavajte ključ kako Bearer-token v zaglavju Authorization v vsakem zapytu."
+    },
+    "rateLimits": {
+      "title": "Limity zapytov",
+      "body": "{limit} zapytov na minutu na jeden API-ključ."
+    },
+    "responseFormat": {
+      "title": "Format otvěta",
+      "listBody": "Endpointy spiskov vraćajų masiv data i objekt pagination.",
+      "errorBody": "Pogrěški vraćajų mašino-čitljivy code i člověko-čitljivo message."
+    },
+    "endpoints": {
+      "title": "Endpointy",
+      "wordsList": "Iskanje/spisok slov lexikona. Parametry: search, limit (po umolčanju {defaultLimit}, maksimum {maxLimit}), offset.",
+      "wordsDetail": "Polna informacija o jednom slově po slug: gramatičny polja, značenja i prěvody.",
+      "protoList": "Iskanje/spisok praslověnskogo slovnika (ESSJa). Parametry: search, limit, offset.",
+      "protoDetail": "Polna informacija o jednom praslověnskom slově po id, vključajų morfemy."
+    }
   },
   "login": {
     "title": "Vhod v akkont",

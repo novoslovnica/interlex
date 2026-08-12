@@ -13,6 +13,7 @@ export default async function Footer() {
                     <Link href="/library" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("library")}</Link>
                     <Link href="/textbook/ru" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("textbook")}</Link>
                     <Link href="/about" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("about")}</Link>
+                    <Link href="/api-docs" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("api")}</Link>
                 </nav>
                 <div className="flex items-center gap-3">
                     <Link

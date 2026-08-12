@@ -23,6 +23,7 @@
       "library": "Library",
       "textbook": "Textbook",
       "about": "About",
+      "api": "API",
       "versionHistory": "Version history"
     }
   },
@@ -272,6 +273,76 @@
     "sessionCompleteDescription": "You reviewed {count} cards.",
     "newSession": "Start another session",
     "loginRequired": "Log in to track your flashcard progress."
+  },
+  "apiKeys": {
+    "title": "API Keys",
+    "description": "Manage your keys for the public read-only API. See the developer docs for endpoints and usage.",
+    "linkCard": {
+      "title": "API Keys",
+      "description": "Create and manage keys for the public read-only API.",
+      "cta": "Manage"
+    },
+    "createSection": "Create a new key",
+    "namePlaceholder": "Key name (e.g. \"my script\")",
+    "createButton": "Create key",
+    "creating": "Creating...",
+    "listSection": "Your keys",
+    "loading": "Loading...",
+    "empty": "You don't have any API keys yet.",
+    "columns": {
+      "name": "Name",
+      "prefix": "Key",
+      "requests": "Requests",
+      "lastUsed": "Last used",
+      "created": "Created",
+      "status": "Status"
+    },
+    "statusActive": "Active",
+    "statusRevoked": "Revoked",
+    "revokeButton": "Revoke",
+    "revoking": "Revoking...",
+    "revealOnce": {
+      "title": "Your new API key",
+      "description": "Copy this key now — it won't be shown again.",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "dismiss": "I've saved it"
+    },
+    "errors": {
+      "load": "Failed to load API keys.",
+      "create": "Failed to create the key.",
+      "revoke": "Failed to revoke the key."
+    }
+  },
+  "apiDocs": {
+    "title": "API Documentation",
+    "description": "Documentation for the public read-only API: authentication, rate limits, and endpoints.",
+    "intro": "A public, read-only API for the Interslavic lexicon and Proto-Slavic dictionary, for third-party integrations.",
+    "gettingStarted": {
+      "title": "Getting a key",
+      "body": "Every request requires an API key. Create one for free from your account.",
+      "linkText": "Manage your API keys"
+    },
+    "auth": {
+      "title": "Authentication",
+      "body": "Pass your key as a Bearer token in the Authorization header on every request."
+    },
+    "rateLimits": {
+      "title": "Rate limits",
+      "body": "{limit} requests per minute per API key."
+    },
+    "responseFormat": {
+      "title": "Response format",
+      "listBody": "List endpoints return a data array with a pagination object.",
+      "errorBody": "Errors return a machine-readable code and a human-readable message."
+    },
+    "endpoints": {
+      "title": "Endpoints",
+      "wordsList": "Search/list lexicon words. Params: search, limit (default {defaultLimit}, max {maxLimit}), offset.",
+      "wordsDetail": "Full detail for one word by slug: grammar fields, meanings, and translations.",
+      "protoList": "Search/list the Proto-Slavic (ESSJa) dictionary. Params: search, limit, offset.",
+      "protoDetail": "Full detail for one Proto-Slavic word by id, including its morphemes."
+    }
   },
   "login": {
     "title": "Log In",

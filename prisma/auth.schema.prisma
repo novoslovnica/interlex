@@ -27,6 +27,7 @@ model User {
   settings      UserSettings?
   collections   UserWordCollection[]
   flashcardProgress FlashcardProgress[]
+  apiKeys       ApiKey[]
 }
 
 model Account {
@@ -156,4 +157,30 @@ model FlashcardProgress {
   @@unique([userId, wordId])
   @@index([userId, nextReviewAt])
   @@map("flashcard_progress")
+}
+
+// Self-serve API keys for the public read-only API (app/api/public/v1/**).
+// Raw key format: "islx_<random>". Only the SHA-256 hash is ever stored -
+// the raw key is shown to the user exactly once, at creation, and never
+// again (same discipline as a password hash, not a reversible secret).
+// Verification is hash-then-lookup via the unique index on keyHash, not a
+// manual byte comparison in application code, so crypto.timingSafeEqual
+// (used for the Telegram HMAC check in auth.config.ts) doesn't apply here -
+// there's no secret-byte-by-byte comparison for a timing side channel to
+// exploit, same model as GitHub/Stripe API keys.
+model ApiKey {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  keyPrefix    String                      // first ~12 chars incl. "islx_", shown in the UI so a user can tell keys apart without re-revealing them
+  keyHash      String    @unique
+  lastUsedAt   DateTime?
+  requestCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+  revokedAt    DateTime?                   // soft delete - revoked rows are kept, never hard-deleted
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("api_keys")
 }
