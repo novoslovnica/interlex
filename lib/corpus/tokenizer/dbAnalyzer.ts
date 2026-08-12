@@ -6,6 +6,7 @@ import { etymCyrToEtymLat } from '@/lib/transliteration';
 import { getExpectedCasesForPreposition } from '@/lib/corpus/syntax/government';
 import { CASE_WEIGHTS } from '@/lib/corpus/priorities/types';
 import { normalizeCaseValue } from './caseNormalize';
+import { expandSpellingVariants } from './spellingVariants';
 
 // Управление предлога слева — почти жёсткое грамматическое правило (не
 // статистическая склонность), поэтому перевешивает частотность с большим
@@ -76,12 +77,26 @@ export class DbAnalyzer {
             clean = etymCyrToEtymLat(clean);
         }
 
-        const anomalyEntries = this.inflectionAnomalies.get(clean) ?? [];
+        // A plain letter (e.g. "u") can be a simplified spelling of a
+        // canonical diacritic letter (e.g. "ų") - widen the search to every
+        // plausible de-simplified variant so "sut" also finds what "sųt"
+        // would (see spellingVariants.ts). Always includes `clean` itself.
+        const cleanVariants = expandSpellingVariants(clean);
 
-        const candidateBases = this.generateHypotheticalBases(clean);
+        const anomalyEntries = this.dedupeAnomalies(
+            cleanVariants.flatMap((variant) => this.inflectionAnomalies.get(variant) ?? [])
+        );
+
+        const candidateBaseSet = new Set<string>();
+        for (const variant of cleanVariants) {
+            for (const base of this.generateHypotheticalBases(variant)) {
+                candidateBaseSet.add(base);
+            }
+        }
+        const candidateBases = Array.from(candidateBaseSet);
         const words = candidateBases.length > 0 ? await this.queryWordsByBase(candidateBases) : [];
 
-        const exactMatches = words.length > 0 ? this.matchForms(clean, words) : [];
+        const exactMatches = words.length > 0 ? this.matchForms(cleanVariants, words) : [];
         // Стем-префиксный фоллбек — как и раньше, только когда точной формы
         // вообще не нашлось (тот же приоритет, что был в старом коде: он
         // никогда не конкурировал с exactMatches, только подменял их
@@ -91,7 +106,7 @@ export class DbAnalyzer {
         // и byti-VERB через аномалию, и sut-AUX через стем-префикс — оба
         // реальные представления одного и того же слова в словаре).
         const stemPrefixWord = exactMatches.length === 0 && words.length > 0
-            ? this.findBestStemPrefixWord(clean, words)
+            ? this.findBestStemPrefixWord(cleanVariants, words)
             : null;
 
         if (exactMatches.length > 0 || anomalyEntries.length > 0 || stemPrefixWord) {
@@ -140,6 +155,23 @@ export class DbAnalyzer {
             flavor: words[0].flavor,
             candidates: [this.toCandidate(words[0], { surfaceForm: words[0].isv ?? clean, feats: {} }, 0, 'form_freq')],
         };
+    }
+
+    // Merging anomaly lookups across spelling variants (see cleanVariants in
+    // analyzeWord) can surface the same anomaly row more than once if it
+    // happens to match under several variants - dedupe by (wordSlug,
+    // grammeme), same key shape as buildInflectionAnomalyIndex's own
+    // defensive dedup in analyzer-factory.ts.
+    private dedupeAnomalies(entries: AnomalyMatch[]): AnomalyMatch[] {
+        const seen = new Set<string>();
+        const result: AnomalyMatch[] = [];
+        for (const entry of entries) {
+            const key = `${entry.wordSlug}|${entry.grammeme}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            result.push(entry);
+        }
+        return result;
     }
 
     private anomalyToWordRecord(a: AnomalyMatch): WordBaseRecord {
@@ -224,10 +256,10 @@ export class DbAnalyzer {
     }
 
     private matchForms(
-        clean: string,
+        cleanVariants: string[],
         words: WordBaseRecord[]
     ): Array<{ word: WordBaseRecord; form: GeneratedForm }> {
-        const normalizedClean = this.normalizeForm(clean);
+        const normalizedVariants = new Set(cleanVariants.map((v) => this.normalizeForm(v)));
         const matches: Array<{ word: WordBaseRecord; form: GeneratedForm }> = [];
         for (const word of words) {
             if (!word.isv || !word.pos) continue;
@@ -256,13 +288,13 @@ export class DbAnalyzer {
 
             const forms = generateWordForms(engineInput, true);
             for (const form of forms) {
-                if (this.normalizeForm(form.surfaceForm.toLowerCase()) === normalizedClean) {
+                if (normalizedVariants.has(this.normalizeForm(form.surfaceForm.toLowerCase()))) {
                     matches.push({ word, form });
                     matched = true;
                 }
             }
 
-            if (!matched && this.normalizeForm(word.isv.toLowerCase()) === normalizedClean) {
+            if (!matched && normalizedVariants.has(this.normalizeForm(word.isv.toLowerCase()))) {
                 matches.push({
                     word,
                     form: { surfaceForm: word.isv, feats: {} },
@@ -280,30 +312,42 @@ export class DbAnalyzer {
      * его с точными и аномальными кандидатами в один пул омонимов.
      */
     private findBestStemPrefixWord(
-        clean: string,
+        cleanVariants: string[],
         words: WordBaseRecord[]
     ): WordBaseRecord | null {
-        let best: { word: WordBaseRecord; stemLen: number } | null = null;
+        // Same tie-break as before, generalized across spelling variants:
+        // prefer a stem shorter than the full surface form (i.e. a real
+        // word + ending) over a stem that equals the whole surface form (no
+        // ending at all - a weaker, more coincidental match), then prefer
+        // the longest stem.
+        const isBetter = (
+            candidate: { stemLen: number; isExact: boolean },
+            current: { stemLen: number; isExact: boolean } | null
+        ): boolean => {
+            if (!current) return true;
+            if (candidate.isExact !== current.isExact) return !candidate.isExact;
+            return candidate.stemLen > current.stemLen;
+        };
+
+        let best: { word: WordBaseRecord; stemLen: number; isExact: boolean } | null = null;
 
         for (const word of words) {
             if (!word.isv || !word.pos) continue;
             const stem = (word.stem || word.base || '').toLowerCase();
             if (!stem) continue;
-            if (!clean.startsWith(stem)) continue;
 
-            if (!best) {
-                best = { word, stemLen: stem.length };
-                continue;
+            // A word may match under more than one spelling variant - keep
+            // this word's own strongest match first.
+            let wordBest: { stemLen: number; isExact: boolean } | null = null;
+            for (const variant of cleanVariants) {
+                if (!variant.startsWith(stem)) continue;
+                const candidate = { stemLen: stem.length, isExact: stem.length === variant.length };
+                if (isBetter(candidate, wordBest)) wordBest = candidate;
             }
+            if (!wordBest) continue;
 
-            const isExact = stem.length === clean.length;
-            const bestIsExact = best.stemLen === clean.length;
-
-            if (isExact && !bestIsExact) continue;
-            if (!isExact && bestIsExact) { best = { word, stemLen: stem.length }; continue; }
-
-            if (stem.length > best.stemLen) {
-                best = { word, stemLen: stem.length };
+            if (isBetter(wordBest, best)) {
+                best = { word, ...wordBest };
             }
         }
 
