@@ -58,6 +58,12 @@ export enum SystemFeature {
     // Разрешение омонимии токенов корпуса (см. lib/corpus/disambiguation/)
     CorpusTokenDisambiguate = "corpus_token_disambiguate",
 
+    // Управление глаголов (VerbGovernment, corpus.db) — питает Pass C
+    // дизамбигуации и разметку клаузных ролей в синтаксис-парсере (см.
+    // lib/corpus/syntax/government.ts), намеренно сеяно пустым до этой
+    // админки (нельзя выдумывать лингвистический факт скриптом)
+    VerbGovernmentEdit = "verb_government_edit",
+
     // Ревью автосгенерированных кандидатов из красных/жёлтых токенов корпуса
     // (см. lib/corpus/candidates/)
     CorpusCandidatesReview = "corpus_candidates_review",
@@ -333,6 +339,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CorpusTokenDisambiguate]: {
         label: "Разрешение омонимии токенов",
         description: "Просмотр кандидатов и ручной выбор леммы/граммемы для неоднозначных токенов",
+        category: "Корпус",
+    },
+    [SystemFeature.VerbGovernmentEdit]: {
+        label: "Управление глаголов",
+        description: "Ввод фактов вида «глагол X управляет падежом Y» для дизамбигуации и синтаксис-парсера",
         category: "Корпус",
     },
     [SystemFeature.CorpusCandidatesReview]: {

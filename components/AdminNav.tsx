@@ -63,6 +63,7 @@ const navItems: NavEntry[] = [
     { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },
+    { href: "/admin/verb-government", label: "Управление глаголов", roles: ["ADMIN", "MODERATOR"], feature: Feature.VerbGovernmentEdit },
     { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"], feature: Feature.DeduplicationManage },
 ]
 
