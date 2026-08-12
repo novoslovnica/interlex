@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import {useTranslations} from "next-intl"
+import TelegramLogin from "@/components/TelegramLogin"
 
 function LoginContent() {
     const t = useTranslations("login");
@@ -42,6 +43,10 @@ function LoginContent() {
                         </svg>
                         {t("google")}
                     </button>
+
+                    <div className="pt-2">
+                        <TelegramLogin callbackUrl={callbackUrl} />
+                    </div>
                 </div>
             </div>
         </div>

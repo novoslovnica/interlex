@@ -252,7 +252,7 @@
   },
   "login": {
     "title": "Vhod v akkont",
-    "description": "Vnidite črz Yandex ili Google, aby dostali dostup k nastajenjam i upravlenju.",
+    "description": "Vnidite črz Yandex, Google ili Telegram, aby dostali dostup k nastajenjam i upravlenju.",
     "yandex": "Vniti črz Yandex",
     "google": "Vniti črz Google"
   },

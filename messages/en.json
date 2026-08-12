@@ -252,7 +252,7 @@
   },
   "login": {
     "title": "Log In",
-    "description": "Log in via Yandex or Google to access settings and management.",
+    "description": "Log in via Yandex, Google, or Telegram to access settings and management.",
     "yandex": "Log in with Yandex",
     "google": "Log in with Google"
   },
