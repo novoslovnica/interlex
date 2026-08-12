@@ -7,6 +7,7 @@ import {useTranslations} from "next-intl";
 import {saveScriptPreference} from "@/app/settings/actions";
 import BookmarkButton from "@/components/BookmarkButton";
 import {ScriptMode} from "@/lib/script-mode";
+import {TRANSLATION_LANGUAGES} from "@/config/features";
 
 import "./main-page.css";
 
@@ -59,7 +60,7 @@ const WordCard = ({ onClickCard, item, currentScript }: { onClickCard: any; item
         >
             <div className="card-title">{title}</div>
             <div className="card-meta">{`${item.pos}`}</div>
-            <div className="card-desc">{item.target?.value}</div>
+            <div className="card-desc">{item.meaningText}</div>
             <div className="absolute top-2 right-2">
                 <BookmarkButton wordId={item.id} />
             </div>
@@ -72,6 +73,9 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const [searchValue, setSearchValue] = useState("");
     const [mainCategory, setMainCategory] = useState("");
     const [usageType, setUsageType] = useState("");
+    // '' = обычный (прямой) поиск по ISV; код языка = реверс-словарь —
+    // искать лексемы по значению на этом языке (roadmap п.45).
+    const [reverseLang, setReverseLang] = useState("");
     const [formScript, setFormScript] = useState<ScriptMode>(currentScript);
     const [items, setItems] = useState<Array<any>>([]);
     const [hasFetched, setHasFetched] = useState(false);
@@ -84,13 +88,18 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
 
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    const performSearch = useCallback((query: string, mc: string, ut: string) => {
+    const performSearch = useCallback((query: string, mc: string, ut: string, lang: string) => {
         setIsLoading(true);
         setVisibleCount(PAGE_SIZE);
-        const params = new URLSearchParams({ search: query, limit: '50', offset: '0' });
-        if (mc) params.set('mainCategory', mc);
-        if (ut) params.set('usageType', ut);
-        fetch(`/api/lexicon?${params}`)
+        const url = lang
+            ? `/api/lexicon/reverse?${new URLSearchParams({ search: query, lang, limit: '50', offset: '0' })}`
+            : (() => {
+                const params = new URLSearchParams({ search: query, limit: '50', offset: '0' });
+                if (mc) params.set('mainCategory', mc);
+                if (ut) params.set('usageType', ut);
+                return `/api/lexicon?${params}`;
+            })();
+        fetch(url)
             .then(res => res.json())
             .then((data) => {
                 setItems(data);
@@ -100,32 +109,42 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     }, []);
 
     const executeSearch = useCallback(() => {
-        const sValue = formScript === ScriptMode.CYRILLIC
+        // Реверс-поиск идёт по натуральному языку (ru/en/...), а не по ISV —
+        // кириллическую/этимологическую нормализацию форм ISV к нему
+        // применять не нужно.
+        const sValue = !reverseLang && formScript === ScriptMode.CYRILLIC
             ? standardToSimple(mapNslToEtymologized(searchValue))
             : searchValue;
 
         const params = new URLSearchParams({ q: searchValue });
         if (mainCategory) params.set('mainCategory', mainCategory);
         if (usageType) params.set('usageType', usageType);
-        performSearch(sValue, mainCategory, usageType);
+        if (reverseLang) params.set('lang', reverseLang);
+        performSearch(sValue, mainCategory, usageType, reverseLang);
         router.replace(`/lexicon?${params}`);
         setFiltersVisible(false);
-    }, [searchValue, mainCategory, usageType, formScript, performSearch, router]);
+    }, [searchValue, mainCategory, usageType, reverseLang, formScript, performSearch, router]);
 
     useEffect(() => {
         const q = searchParams.get('q');
         const mc = searchParams.get('mainCategory') || '';
         const ut = searchParams.get('usageType') || '';
+        const lang = searchParams.get('lang') || '';
         if (q) {
             setSearchValue(q);
             setMainCategory(mc);
             setUsageType(ut);
+            setReverseLang(lang);
+            if (lang) {
+                performSearch(q, mc, ut, lang);
+                return;
+            }
             const detectedScript = /[а-яА-ЯёЁ]/.test(q) ? ScriptMode.CYRILLIC : ScriptMode.LATIN;
             setFormScript(detectedScript);
             const normalized = detectedScript === ScriptMode.CYRILLIC
                 ? standardToSimple(mapNslToEtymologized(q))
                 : q;
-            performSearch(normalized, mc, ut);
+            performSearch(normalized, mc, ut, '');
         }
     }, []);
 
@@ -165,6 +184,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         className="filter-select"
                         value={mainCategory}
                         onChange={e => setMainCategory(e.target.value)}
+                        disabled={!!reverseLang}
+                        title={reverseLang ? "Недоступно при реверс-поиске" : undefined}
                     >
                         {Object.entries(MAIN_CATEGORY_LABELS).map(([value, label]) => (
                             <option key={value} value={value}>{label}</option>
@@ -174,6 +195,8 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         className="filter-select"
                         value={usageType}
                         onChange={e => setUsageType(e.target.value)}
+                        disabled={!!reverseLang}
+                        title={reverseLang ? "Недоступно при реверс-поиске" : undefined}
                     >
                         {Object.entries(USAGE_TYPE_LABELS).map(([value, label]) => (
                             <option key={value} value={value}>{label}</option>
@@ -183,9 +206,23 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         className="script-switcher"
                         onClick={toggleScript}
                         title={formScript === ScriptMode.CYRILLIC ? "Преключи на латиницу" : "Преключи на кириллицу"}
+                        disabled={!!reverseLang}
                     >
                         {formScript === ScriptMode.CYRILLIC ? "Кир" : "Lat"}
                     </button>
+                    <select
+                        className="filter-select"
+                        value={reverseLang}
+                        onChange={e => setReverseLang(e.target.value)}
+                        title="Искати по значению на другом языке (реверс-словарь)"
+                    >
+                        <option value="">Меджуслвнски → ...</option>
+                        {TRANSLATION_LANGUAGES.map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                                {lang.flag ? `${lang.flag} ` : ''}{lang.name} → Меджусл.
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="flex gap-2">
@@ -193,7 +230,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         type="text"
                         id="searchInput"
                         className="search-box flex-1"
-                        placeholder={t("searchPlaceholder")}
+                        placeholder={reverseLang ? "Слово на другом языке..." : t("searchPlaceholder")}
                         value={searchValue}
                         onKeyDown={onKeyDown}
                         onChange={onChangeSearch}

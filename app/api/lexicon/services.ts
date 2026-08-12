@@ -3,98 +3,29 @@ import {fetchTranslationsForMeaningIds, type TranslationRow} from "@/lib/transla
 
 type LangRecord = TranslationRow;
 
-export const getDictItems = async (
-    search: string,
-    offset: number,
-    limit: number,
-    mainCategory?: string,
-    usageType?: string,
-    filterLang?: string,
-    unverified?: boolean,
-    includeHidden?: boolean,
-) => {
-    const db = await init();
+const LEXEME_COLUMNS = `
+    l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
+    l.declension, l.conjugation, l.transcription,
+    l.aspect, l.transitivity, l.animacy, l.degree,
+    l.pronType, l.numType, l.frequency, l.intelligibility,
+    l.addition, l.sameInLanguages, l.etymology, l.proto,
+    l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
+    l.secondaryStem, l.tertiaryStem,
+    l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
+`;
 
-    let data: any[] = [];
+const LEXEME_JOINS = `
+    FROM lexemes l
+    LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
+    LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
+`;
 
-    if (search) {
-        // lexemes_text/lexeme_allophones_text are FTS5 tables with a trigram tokenizer,
-        // which supports substring MATCH only for patterns of 3+ characters. Shorter
-        // queries fall back to a plain (parameterized) LIKE scan.
-        const useFts = search.length >= 3;
-        const searchOp = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
-        const searchParam = useFts
-            ? `"${search.replace(/"/g, '""')}"`
-            : `%${search.replace(/[%_]/g, '\\$&')}%`;
-        const lexemeIds = db.prepare(`
-            SELECT DISTINCT l.id FROM lexemes l
-            WHERE (
-                l.id IN (SELECT ROWID FROM lexemes_text WHERE value ${searchOp})
-                OR EXISTS (
-                    SELECT 1 FROM lexeme_allophones la
-                    WHERE la.lexemeId = l.id
-                    AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
-                    AND la.type = 'standard'
-                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value ${searchOp})
-                )
-            )
-            ${includeHidden ? '' : 'AND l.isPublic = 1'}
-        `).all(searchParam, searchParam) as { id: number }[];
-
-        const ids = lexemeIds.map(r => r.id);
-        if (ids.length === 0) return [];
-
-        const placeholders = ids.map(() => '?').join(',');
-
-        data = db.prepare(`
-            SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                   l.declension, l.conjugation, l.transcription,
-                   l.aspect, l.transitivity, l.animacy, l.degree,
-                   l.pronType, l.numType, l.frequency, l.intelligibility,
-                   l.addition, l.sameInLanguages, l.etymology, l.proto,
-                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                   l.secondaryStem, l.tertiaryStem,
-                   l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
-            FROM lexemes l
-            LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-            LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-            WHERE l.id IN (${placeholders})
-            GROUP BY l.id
-        `).all(...ids) as any[];
-    } else {
-        let filterClause = '';
-        const filterParams: any[] = [];
-        if (mainCategory) {
-            filterClause += ' WHERE l.mainCategory = ?';
-            filterParams.push(mainCategory);
-        }
-        if (usageType) {
-            filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
-            filterParams.push(usageType);
-        }
-        if (!includeHidden) {
-            filterClause += filterClause ? ' AND l.isPublic = 1' : ' WHERE l.isPublic = 1';
-        }
-
-        data = db.prepare(`
-            SELECT l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
-                   l.declension, l.conjugation, l.transcription,
-                   l.aspect, l.transitivity, l.animacy, l.degree,
-                   l.pronType, l.numType, l.frequency, l.intelligibility,
-                   l.addition, l.sameInLanguages, l.etymology, l.proto,
-                   l.paradigm, l.protoStemClass, l.stemExtension, l.genesis,
-                   l.secondaryStem, l.tertiaryStem,
-                   l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
-            FROM lexemes l
-            LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
-            LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
-            ${filterClause}
-            GROUP BY l.id
-            ORDER BY l.id ASC
-            LIMIT ${limit} OFFSET ${offset}
-        `).all(...filterParams);
-    }
-
+// Общий второй проход для forward- и reverse-поиска: набор lexeme-строк ->
+// полноценные элементы результата (значения, переводы на 18 языков,
+// allophones, флаг дублей). Раньше жил только внутри getDictItems — вынесен,
+// чтобы getReverseDictItems (поиск по значению на другом языке, см. roadmap
+// п.45) не дублировал этот блок один в один.
+const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?: boolean) => {
     const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "hsb", "dsb", "cu", "nl", "eo"];
 
     let res: any[];
@@ -193,4 +124,124 @@ export const getDictItems = async (
     }
 
     return res;
+};
+
+export const getDictItems = async (
+    search: string,
+    offset: number,
+    limit: number,
+    mainCategory?: string,
+    usageType?: string,
+    filterLang?: string,
+    unverified?: boolean,
+    includeHidden?: boolean,
+) => {
+    const db = await init();
+
+    let data: any[] = [];
+
+    if (search) {
+        // lexemes_text/lexeme_allophones_text are FTS5 tables with a trigram tokenizer,
+        // which supports substring MATCH only for patterns of 3+ characters. Shorter
+        // queries fall back to a plain (parameterized) LIKE scan.
+        const useFts = search.length >= 3;
+        const searchOp = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
+        const searchParam = useFts
+            ? `"${search.replace(/"/g, '""')}"`
+            : `%${search.replace(/[%_]/g, '\\$&')}%`;
+        const lexemeIds = db.prepare(`
+            SELECT DISTINCT l.id FROM lexemes l
+            WHERE (
+                l.id IN (SELECT ROWID FROM lexemes_text WHERE value ${searchOp})
+                OR EXISTS (
+                    SELECT 1 FROM lexeme_allophones la
+                    WHERE la.lexemeId = l.id
+                    AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
+                    AND la.type = 'standard'
+                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value ${searchOp})
+                )
+            )
+            ${includeHidden ? '' : 'AND l.isPublic = 1'}
+        `).all(searchParam, searchParam) as { id: number }[];
+
+        const ids = lexemeIds.map(r => r.id);
+        if (ids.length === 0) return [];
+
+        const placeholders = ids.map(() => '?').join(',');
+
+        data = db.prepare(`
+            SELECT ${LEXEME_COLUMNS}
+            ${LEXEME_JOINS}
+            WHERE l.id IN (${placeholders})
+            GROUP BY l.id
+        `).all(...ids) as any[];
+    } else {
+        let filterClause = '';
+        const filterParams: any[] = [];
+        if (mainCategory) {
+            filterClause += ' WHERE l.mainCategory = ?';
+            filterParams.push(mainCategory);
+        }
+        if (usageType) {
+            filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
+            filterParams.push(usageType);
+        }
+        if (!includeHidden) {
+            filterClause += filterClause ? ' AND l.isPublic = 1' : ' WHERE l.isPublic = 1';
+        }
+
+        data = db.prepare(`
+            SELECT ${LEXEME_COLUMNS}
+            ${LEXEME_JOINS}
+            ${filterClause}
+            GROUP BY l.id
+            ORDER BY l.id ASC
+            LIMIT ${limit} OFFSET ${offset}
+        `).all(...filterParams);
+    }
+
+    return enrichLexemeRows(db, data, filterLang, unverified);
+};
+
+// Реверс-словарь (roadmap п.45): поиск лексем ISV по значению на другом
+// языке — идёт от translations.value, а не от lexemes_text/lexeme_allophones_text,
+// поэтому переиспользовать FTS5-таблицы forward-поиска нельзя (те индексируют
+// только сами ISV-словоформы). translations на момент внедрения — 365к строк,
+// самый крупный отдельный язык (en) — ~42к; LIKE-скан, отфильтрованный по
+// уже проиндексированному translations(language, ...), укладывается в
+// единицы миллисекунд без отдельного FTS5-индекса — не строим его здесь.
+export const getReverseDictItems = async (
+    search: string,
+    language: string,
+    offset: number,
+    limit: number,
+    includeHidden?: boolean,
+) => {
+    if (!search || !language) return [];
+
+    const db = await init();
+
+    const searchParam = `%${search.replace(/[%_]/g, '\\$&')}%`;
+    const lexemeIds = db.prepare(`
+        SELECT DISTINCT l.id FROM lexemes l
+        JOIN meanings m ON m.lexemeId = l.id
+        JOIN translations t ON t.meaningId = m.id
+        WHERE t.language = ? AND t.value LIKE ? ESCAPE '\\'
+        ${includeHidden ? '' : 'AND l.isPublic = 1'}
+        ORDER BY l.id ASC
+        LIMIT ? OFFSET ?
+    `).all(language, searchParam, limit, offset) as { id: number }[];
+
+    const ids = lexemeIds.map(r => r.id);
+    if (ids.length === 0) return [];
+
+    const placeholders = ids.map(() => '?').join(',');
+    const data = db.prepare(`
+        SELECT ${LEXEME_COLUMNS}
+        ${LEXEME_JOINS}
+        WHERE l.id IN (${placeholders})
+        GROUP BY l.id
+    `).all(...ids) as any[];
+
+    return enrichLexemeRows(db, data);
 };
