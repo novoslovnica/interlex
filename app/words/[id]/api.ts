@@ -1,3 +1,4 @@
+import {cache} from "react";
 import {init} from "@/lib/sqlite";
 import {fetchSymmetricSemanticRelations} from "@/lib/relations";
 import {fetchTranslationsForLexeme} from "@/lib/translations";
@@ -12,7 +13,11 @@ export const getKnownPrepositions = async (): Promise<string[]> => {
   return rows.map(r => r.value);
 };
 
-export const getItem = async (id: string) => {
+// generateMetadata() and the page component both call getItem() with the
+// same id in the same request (see app/words/[id]/page.tsx) - React.cache
+// dedupes that to a single execution instead of running the whole query
+// battery below twice per page load.
+export const getItem = cache(async (id: string) => {
   const db = await init();
 
   const data = db.prepare('select * from lexemes where id = ?').get(id) as any;
@@ -147,4 +152,4 @@ export const getItem = async (id: string) => {
     dsb,
     roots,
   };
-};
+});
