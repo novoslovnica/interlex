@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # SQLite DB files are gitignored (real production data, never committed -
+      # see AGENTS.md) - these steps only generate the Prisma client code from
+      # the schema files, no database file is required for that.
+      - run: npm run db:gen-auth
+      - run: npm run db:gen-data
+      - run: npm run db:gen-library
+      - run: npm run db:gen-corpus
+
+      # ~320 pre-existing lint problems as of 2026-08-12 (see docs/roadmap.md
+      # #12 "Сократить any") - not something this CI setup is scoped to fix.
+      # Runs and reports so the count is visible and doesn't silently grow,
+      # but doesn't block merges until that debt is paid down.
+      - run: npm run lint
+        continue-on-error: true
+
+      # Standalone `tsc --noEmit` is not wired up here: this project's
+      # tsconfig.json pairs module=nodenext with moduleResolution=bundler,
+      # a combination the tsc CLI itself rejects (TS5095/TS5109) even though
+      # Next's own internal type-checker (used by `next build` when
+      # typescript.ignoreBuildErrors is false) accepts it. Forcing a
+      # different moduleResolution via CLI flag to work around this produces
+      # false-positive "Cannot find module" errors from resolution-algorithm
+      # differences, not real bugs. next.config.ts currently sets
+      # ignoreBuildErrors: true, so there is effectively no type-checking
+      # gate anywhere yet - tracked as a follow-up, not solved by this CI.
+
+      - run: npm run test:run
+
+      - run: npm run build
+        env:
+          AUTH_SECRET: ci-placeholder-secret

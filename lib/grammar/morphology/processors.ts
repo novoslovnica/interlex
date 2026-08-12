@@ -7,7 +7,7 @@ import {
     AdjectiveTypeClass,
 } from '@/lib/grammar/common';
 // Импортируем изолированные движки трех классов числительных
-import { generateNumeralForm, EnhancedNumDbItem } from '../numerals/cardinal';
+import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteToneType } from '../numerals/cardinal';
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
@@ -17,11 +17,16 @@ import {
     conjugateFullVerb,
     extractProtoStems,
     VerbModel,
-    FullParadigm
+    FullParadigm,
+    bytiPresent,
+    bytiImperfect,
+    bytiFuture,
+    conditionalParticles
 } from '../verb';
 import { splitMechanicalVerbTail, appendTailToConjugation } from '../verb/mechanicalTail';
 import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType } from '../adjective';
 import { generatePronounForm, EnhancedPronounDbItem, PronounClass } from '../pronoun';
+import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 
 /**
  * Процессор Существительных (NOUN)
@@ -640,7 +645,6 @@ export function processAdverb(word: EngineWordInput): GeneratedForm[] {
     const lemma = word.isv.toLowerCase().trim();
 
     const results: GeneratedForm[] = [];
-    const { applyFourTonesMark, getAcuteToneType } = require('../numerals/cardinal');
 
     const posForm = applyFourTonesMark(lemma, 1, getAcuteToneType(lemma, 1));
     results.push({ surfaceForm: posForm, feats: { degree: 'pos' } });
@@ -650,7 +654,6 @@ export function processAdverb(word: EngineWordInput): GeneratedForm[] {
     if (isQualitative && lemma.length > 2) {
         const cleanBase = lemma.slice(0, -1);
 
-        const { getEndingByGrammeme } = require('@/lib/grammar/endingLoader');
         const compSuffix = getEndingByGrammeme('adverb_comp', 'Degree=Cmp') ?? 'ěje';
         const supPrefix = getEndingByGrammeme('adverb_sup', 'Degree=Sup') ?? 'naj';
 
@@ -681,8 +684,6 @@ export function processAuxiliary(word: EngineWordInput): GeneratedForm[] {
 
     if (lemma === 'byti') {
         // Извлекаем готовые праславянские парадигмы, зафиксированные в verbEngine
-        const { bytiPresent, bytiImperfect, bytiFuture, conditionalParticles } = require('../verb/index');
-
         const pushAux = (paradigm: any, tense: string, mood: string) => {
             Object.keys(paradigm).forEach((key) => {
                 results.push({

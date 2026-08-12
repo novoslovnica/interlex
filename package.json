@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest",
+    "test:run": "vitest run",
     "release": "bash release.sh",
     "fill:db": "npx tsx scripts/db/fill-db.ts",
     "fill:is:db": "npx tsx scripts/db/fill-is-db.ts",
@@ -66,7 +68,8 @@
     "pdf-parse": "^2.4.5",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "optionalDependencies": {
     "@next/swc-linux-x64-gnu": "^16.2.9",

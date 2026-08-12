@@ -1,0 +1,131 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`declineNoun > generates a stable paradigm for bog (masculine, o-hard, paradigm A) 1`] = `
+{
+  "dual.accusative": "bóga",
+  "dual.dative": "bogóma",
+  "dual.genitive": "bógu",
+  "dual.instrumental": "bogóma",
+  "dual.locative": "bógu",
+  "dual.nominative": "bóga",
+  "dual.vocative": "bóga",
+  "plural.accusative": "bógy",
+  "plural.dative": "bógom",
+  "plural.genitive": "bóg",
+  "plural.instrumental": "bógy",
+  "plural.locative": "bógěh",
+  "plural.nominative": "bógi",
+  "plural.vocative": "bógi",
+  "singular.accusative": "bóg",
+  "singular.dative": "bógu",
+  "singular.genitive": "bóga",
+  "singular.instrumental": "bógom",
+  "singular.locative": "bógě",
+  "singular.nominative": "bóg",
+  "singular.vocative": "bóge",
+}
+`;
+
+exports[`declineNoun > generates a stable paradigm for kost (i-basis, paradigm A) 1`] = `
+{
+  "dual.accusative": "kósti",
+  "dual.dative": "kostéma",
+  "dual.genitive": "kostéju",
+  "dual.instrumental": "kostéma",
+  "dual.locative": "kostéju",
+  "dual.nominative": "kósti",
+  "dual.vocative": "kósti",
+  "plural.accusative": "kósti",
+  "plural.dative": "kóstem",
+  "plural.genitive": "kóstej",
+  "plural.instrumental": "kostémi",
+  "plural.locative": "kósteh",
+  "plural.nominative": "kósti",
+  "plural.vocative": "kósti",
+  "singular.accusative": "kóstj",
+  "singular.dative": "kósti",
+  "singular.genitive": "kósti",
+  "singular.instrumental": "kostéjų",
+  "singular.locative": "kósti",
+  "singular.nominative": "kóstj",
+  "singular.vocative": "kósti",
+}
+`;
+
+exports[`declineNoun > generates a stable paradigm for ruka (feminine, a-hard, paradigm B) 1`] = `
+{
+  "dual.accusative": "rukě́",
+  "dual.dative": "rukomá",
+  "dual.genitive": "rukú",
+  "dual.instrumental": "rukomá",
+  "dual.locative": "rukú",
+  "dual.nominative": "rukě́",
+  "dual.vocative": "rukě́",
+  "plural.accusative": "ruká",
+  "plural.dative": "rukóm",
+  "plural.genitive": "rúk",
+  "plural.instrumental": "ruký",
+  "plural.locative": "rukě́h",
+  "plural.nominative": "ruká",
+  "plural.vocative": "ruká",
+  "singular.accusative": "rukó",
+  "singular.dative": "rukú",
+  "singular.genitive": "ruká",
+  "singular.instrumental": "rukóm",
+  "singular.locative": "rukě́",
+  "singular.nominative": "rukó",
+  "singular.vocative": "rukó",
+}
+`;
+
+exports[`declineNoun > generates a stable paradigm for syn (masculine, u-basis, paradigm C) 1`] = `
+{
+  "dual.accusative": "syný",
+  "dual.dative": "synomá",
+  "dual.genitive": "synovú",
+  "dual.instrumental": "synamá",
+  "dual.locative": "synovú",
+  "dual.nominative": "syný",
+  "dual.vocative": "syný",
+  "plural.accusative": "sýny",
+  "plural.dative": "synám",
+  "plural.genitive": "synóv",
+  "plural.instrumental": "synamí",
+  "plural.locative": "syně́h",
+  "plural.nominative": "synové",
+  "plural.vocative": "synové",
+  "singular.accusative": "sýn",
+  "singular.dative": "synoví",
+  "singular.genitive": "synú",
+  "singular.instrumental": "synóm",
+  "singular.locative": "synú",
+  "singular.nominative": "sýn",
+  "singular.vocative": "synú",
+}
+`;
+
+exports[`declineNoun > generates a stable paradigm for tělo (neuter, a-hard, paradigm C) 1`] = `
+{
+  "dual.accusative": "tělě́",
+  "dual.dative": "tělomá",
+  "dual.genitive": "tělú",
+  "dual.instrumental": "tělomá",
+  "dual.locative": "tělú",
+  "dual.nominative": "tělě́",
+  "dual.vocative": "tělě́",
+  "plural.accusative": "tělá",
+  "plural.dative": "tělóm",
+  "plural.genitive": "tě́l",
+  "plural.instrumental": "tělý",
+  "plural.locative": "tělě́h",
+  "plural.nominative": "tělá",
+  "plural.vocative": "tělá",
+  "singular.accusative": "tě́lo",
+  "singular.dative": "tělú",
+  "singular.genitive": "tělá",
+  "singular.instrumental": "tělóm",
+  "singular.locative": "tělě́",
+  "singular.nominative": "těló",
+  "singular.vocative": "těló",
+}
+`;

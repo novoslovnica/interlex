@@ -8,6 +8,7 @@ slovnik*
 NOTES.md
 drafts/
 scripts/python/pdf/
+scripts/python/.venv/
 public/covers/
 public/audio/
 interlex.db-shm
