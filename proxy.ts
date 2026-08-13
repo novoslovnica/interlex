@@ -42,7 +42,19 @@ export async function proxy(req: NextRequest) {
     const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
 
     if (isAdminRoute) {
-        const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+        // @auth/core's getToken() defaults secureCookie to false when not
+        // passed explicitly, which makes it look for the plain
+        // "authjs.session-token" cookie. On an HTTPS deployment, the real
+        // sign-in flow (the full Auth.js handler under /api/auth, not this
+        // standalone helper) sets the "__Secure-"-prefixed cookie instead -
+        // so without this, a genuinely logged-in ADMIN/MODERATOR would
+        // never be found here and would always be redirected to
+        // /unauthorized. Behind a reverse proxy (nginx etc.) the request
+        // itself arrives over plain HTTP, so req.nextUrl.protocol alone
+        // isn't reliable - x-forwarded-proto (standard nginx
+        // `proxy_set_header X-Forwarded-Proto $scheme`) is checked first.
+        const secureCookie = req.headers.get("x-forwarded-proto") === "https" || req.nextUrl.protocol === "https:";
+        const token = await getToken({ req, secret: process.env.AUTH_SECRET, secureCookie });
         const role = token?.role as string | undefined;
 
         if (!role || !ADMIN_ROLES.has(role)) {
