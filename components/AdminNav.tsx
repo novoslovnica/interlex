@@ -171,6 +171,17 @@ export default function AdminNav({ userRole, userPermissions = [] }: AdminNavPro
         <div className="relative border-b bg-muted/40">
             <div className="container mx-auto flex h-12 items-center px-4">
                 <nav className="flex h-full space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto">
+                    {(userRole === "ADMIN" || userRole === "MODERATOR") && (
+                        <Link
+                            href="/admin/dashboard"
+                            className={`inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80
+                                ${pathname === "/admin/dashboard"
+                                    ? "border-primary text-foreground font-semibold"
+                                    : "border-transparent text-muted-foreground"}`}
+                        >
+                            Дашборд
+                        </Link>
+                    )}
                     {navItems.map((entry) => {
                         if (!hasAccess(entry, userRole, userPermissions)) return null
 

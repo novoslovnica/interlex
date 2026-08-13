@@ -22,6 +22,9 @@ export default function CorpusAdminNav() {
     <div className="relative border-b bg-muted/40">
       <div className="container mx-auto flex h-12 items-center px-4">
         <nav className="flex h-full space-x-6 text-sm font-medium">
+          <Link href="/admin/dashboard" className={linkClass(false)}>
+            Дашборд
+          </Link>
           <Link href="/admin/corpus/builder" className={linkClass(isBuilder)}>
             Конструктор
           </Link>
