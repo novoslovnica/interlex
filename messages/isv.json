@@ -23,6 +23,7 @@
       "protoslavic": "Praslověnsky",
       "reverseSearch": "Obratno iskanje",
       "library": "Biblioteka",
+      "mediaLibrary": "Medijateka",
       "textbook": "Učebnik",
       "about": "O projektě",
       "api": "API",
@@ -141,6 +142,19 @@
     "noExact": "Točnyh rimov ne najdeno",
     "similarSounding": "Podobne po zvučanju",
     "noSimilar": "Podobnyh slov ne najdeno"
+  },
+  "media": {
+    "title": "Medijateka soobščestva",
+    "description": "Podkasty, YouTube-kanaly i drugy audio/video-kontent na medžuslovjanskom jezyku.",
+    "empty": "V medijatecě ješče nima zapisov",
+    "verified": "✓ Prověreno",
+    "types": {
+      "podcast": "Podkasty",
+      "youtube_channel": "YouTube-kanaly",
+      "video": "Video",
+      "audio_track": "Audio",
+      "other": "Drugo"
+    }
   },
   "translate": {
     "title": "Prěvod",

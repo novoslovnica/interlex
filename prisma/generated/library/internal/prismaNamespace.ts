@@ -384,7 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  LibraryEntry: 'LibraryEntry'
+  LibraryEntry: 'LibraryEntry',
+  MediaLibraryEntry: 'MediaLibraryEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "libraryEntry"
+    modelProps: "libraryEntry" | "mediaLibraryEntry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MediaLibraryEntry: {
+      payload: Prisma.$MediaLibraryEntryPayload<ExtArgs>
+      fields: Prisma.MediaLibraryEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MediaLibraryEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MediaLibraryEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.MediaLibraryEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MediaLibraryEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        findMany: {
+          args: Prisma.MediaLibraryEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>[]
+        }
+        create: {
+          args: Prisma.MediaLibraryEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        createMany: {
+          args: Prisma.MediaLibraryEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MediaLibraryEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.MediaLibraryEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        update: {
+          args: Prisma.MediaLibraryEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.MediaLibraryEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MediaLibraryEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MediaLibraryEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.MediaLibraryEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MediaLibraryEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.MediaLibraryEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMediaLibraryEntry>
+        }
+        groupBy: {
+          args: Prisma.MediaLibraryEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MediaLibraryEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MediaLibraryEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MediaLibraryEntryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -549,6 +624,29 @@ export const LibraryEntryScalarFieldEnum = {
 } as const
 
 export type LibraryEntryScalarFieldEnum = (typeof LibraryEntryScalarFieldEnum)[keyof typeof LibraryEntryScalarFieldEnum]
+
+
+export const MediaLibraryEntryScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  mediaType: 'mediaType',
+  url: 'url',
+  platform: 'platform',
+  description: 'description',
+  thumbnailUrl: 'thumbnailUrl',
+  language: 'language',
+  addedById: 'addedById',
+  addedBy: 'addedBy',
+  verified: 'verified',
+  verifiedBy: 'verifiedBy',
+  isPublic: 'isPublic',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MediaLibraryEntryScalarFieldEnum = (typeof MediaLibraryEntryScalarFieldEnum)[keyof typeof MediaLibraryEntryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -718,6 +816,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   libraryEntry?: Prisma.LibraryEntryOmit
+  mediaLibraryEntry?: Prisma.MediaLibraryEntryOmit
 }
 
 /* Types for Logging */

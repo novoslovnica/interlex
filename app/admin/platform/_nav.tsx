@@ -7,6 +7,7 @@ export default function PlatformAdminNav() {
   const pathname = usePathname()
 
   const isLibrary = pathname.startsWith("/admin/platform/library")
+  const isMedia = pathname.startsWith("/admin/platform/media")
   const isUsers = pathname.startsWith("/admin/platform/users")
   const isAuditLog = pathname.startsWith("/admin/platform/audit-log")
 
@@ -23,6 +24,9 @@ export default function PlatformAdminNav() {
         <nav className="flex h-full space-x-6 text-sm font-medium">
           <Link href="/admin/platform/library" className={linkClass(isLibrary)}>
             Библиотека
+          </Link>
+          <Link href="/admin/platform/media" className={linkClass(isMedia)}>
+            Медиатека
           </Link>
           <Link href="/admin/platform/users" className={linkClass(isUsers)}>
             Пользователи

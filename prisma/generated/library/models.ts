@@ -9,4 +9,5 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/LibraryEntry'
+export type * from './models/MediaLibraryEntry'
 export type * from './commonInputTypes'

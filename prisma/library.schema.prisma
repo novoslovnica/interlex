@@ -58,3 +58,32 @@ body       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+// Медиатека сообщества (roadmap п.82) - каталог ВНЕШНЕГО аудио/видео-
+// контента на ISV (подкасты, YouTube-каналы), намеренно отдельная модель от
+// LibraryEntry: LibraryEntry моделирует одно произведение (текст с телом,
+// CEFR-читабельностью и т.п.), а тут - ссылка на внешний канал/шоу без
+// собственного тела. v1: наполнение только модераторами, без публичных
+// предложений (в отличие от WordSuggestion/ContentReport).
+model MediaLibraryEntry {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  mediaType    String   // 'podcast' | 'youtube_channel' | 'video' | 'audio_track' | 'other'
+  url          String
+  platform     String?  // 'youtube' | 'spotify' | 'soundcloud' | 'apple_podcasts' | 'other'
+  description  String?
+  thumbnailUrl String?
+  language     String?  // свободный текст, напр. "isv" или "isv+ru"
+
+  addedById  String?
+  addedBy    String?
+  verified   Boolean @default(false)
+  verifiedBy String?
+
+  isPublic Boolean @default(true)
+  views    Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

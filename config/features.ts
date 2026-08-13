@@ -49,6 +49,10 @@ export enum SystemFeature {
     // Библиотека
     LibraryManage = "library_manage",
 
+    // Медиатека сообщества (roadmap п.82) - каталог внешних подкастов/
+    // YouTube-каналов, отдельная сущность от LibraryEntry
+    MediaLibraryManage = "media_library_manage",
+
     // Конструктор корпуса
     CorpusBuilder = "corpus_builder",
 
@@ -327,6 +331,13 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.LibraryManage]: {
         label: "Управление библиотекой",
         description: "Добавление и редактирование текстов в библиотеке",
+        category: "Библиотека",
+    },
+
+    // Медиатека сообщества
+    [SystemFeature.MediaLibraryManage]: {
+        label: "Управление медиатекой",
+        description: "Добавление и редактирование записей медиатеки (подкасты, YouTube-каналы)",
         category: "Библиотека",
     },
 

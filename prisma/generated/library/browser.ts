@@ -22,3 +22,8 @@ export * from './enums';
  * 
  */
 export type LibraryEntry = Prisma.LibraryEntryModel
+/**
+ * Model MediaLibraryEntry
+ * 
+ */
+export type MediaLibraryEntry = Prisma.MediaLibraryEntryModel

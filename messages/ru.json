@@ -23,6 +23,7 @@
       "protoslavic": "Праслав.",
       "reverseSearch": "Обратный поиск",
       "library": "Библиотека",
+      "mediaLibrary": "Медиатека",
       "textbook": "Учебник",
       "about": "О программе",
       "api": "API",
@@ -141,6 +142,19 @@
     "noExact": "Точных рифм не найдено",
     "similarSounding": "Похожие по звучанию",
     "noSimilar": "Похожих слов не найдено"
+  },
+  "media": {
+    "title": "Медиатека сообщества",
+    "description": "Подкасты, YouTube-каналы и другой аудио/видео-контент на межславянском языке.",
+    "empty": "В медиатеке пока нет записей",
+    "verified": "✓ Проверено",
+    "types": {
+      "podcast": "Подкасты",
+      "youtube_channel": "YouTube-каналы",
+      "video": "Видео",
+      "audio_track": "Аудио",
+      "other": "Другое"
+    }
   },
   "translate": {
     "title": "Перевод",

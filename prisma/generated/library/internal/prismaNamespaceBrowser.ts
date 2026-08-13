@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  LibraryEntry: 'LibraryEntry'
+  LibraryEntry: 'LibraryEntry',
+  MediaLibraryEntry: 'MediaLibraryEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -102,6 +103,29 @@ export const LibraryEntryScalarFieldEnum = {
 } as const
 
 export type LibraryEntryScalarFieldEnum = (typeof LibraryEntryScalarFieldEnum)[keyof typeof LibraryEntryScalarFieldEnum]
+
+
+export const MediaLibraryEntryScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  mediaType: 'mediaType',
+  url: 'url',
+  platform: 'platform',
+  description: 'description',
+  thumbnailUrl: 'thumbnailUrl',
+  language: 'language',
+  addedById: 'addedById',
+  addedBy: 'addedBy',
+  verified: 'verified',
+  verifiedBy: 'verifiedBy',
+  isPublic: 'isPublic',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MediaLibraryEntryScalarFieldEnum = (typeof MediaLibraryEntryScalarFieldEnum)[keyof typeof MediaLibraryEntryScalarFieldEnum]
 
 
 export const SortOrder = {

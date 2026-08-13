@@ -76,6 +76,12 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
           </Link>
           <h2 className="font-bold text-lg">Sbornik</h2>
           <p className="text-[11px] text-muted-foreground">Biblioteka tekstov</p>
+          <Link
+            href="/media"
+            className="inline-block text-[11px] text-muted-foreground hover:text-foreground transition-colors underline decoration-dotted"
+          >
+            🎙️ Medijateka soobščestva →
+          </Link>
         </div>
 
         <nav className="flex-1 overflow-y-auto p-2 space-y-3">

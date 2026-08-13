@@ -23,6 +23,7 @@
       "protoslavic": "Proto-Slavic",
       "reverseSearch": "Reverse search",
       "library": "Library",
+      "mediaLibrary": "Media library",
       "textbook": "Textbook",
       "about": "About",
       "api": "API",
@@ -141,6 +142,19 @@
     "noExact": "No exact rhymes found",
     "similarSounding": "Similar sounding",
     "noSimilar": "No similar words found"
+  },
+  "media": {
+    "title": "Community media library",
+    "description": "Podcasts, YouTube channels and other audio/video content in Interslavic.",
+    "empty": "No entries in the media library yet",
+    "verified": "✓ Verified",
+    "types": {
+      "podcast": "Podcasts",
+      "youtube_channel": "YouTube channels",
+      "video": "Videos",
+      "audio_track": "Audio",
+      "other": "Other"
+    }
   },
   "translate": {
     "title": "Translate",
