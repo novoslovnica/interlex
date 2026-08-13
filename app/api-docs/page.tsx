@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
-import { PUBLIC_API_RATE_LIMIT_PER_MINUTE } from "@/lib/publicApi/rateLimit"
+import { PUBLIC_API_RATE_LIMITS } from "@/lib/publicApi/rateLimit"
 import { PUBLIC_API_DEFAULT_LIMIT, PUBLIC_API_MAX_LIMIT } from "@/lib/publicApi/words"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -52,7 +52,10 @@ export default async function ApiDocsPage() {
             </Section>
 
             <Section title={t("rateLimits.title")}>
-                <p className="text-muted-foreground">{t("rateLimits.body", { limit: PUBLIC_API_RATE_LIMIT_PER_MINUTE })}</p>
+                <p className="text-muted-foreground">
+                    {t("rateLimits.body", { words: PUBLIC_API_RATE_LIMITS.words, corpus: PUBLIC_API_RATE_LIMITS.corpus, library: PUBLIC_API_RATE_LIMITS.library })}
+                </p>
+                <p className="text-muted-foreground">{t("rateLimits.headers")}</p>
             </Section>
 
             <Section title={t("responseFormat.title")}>

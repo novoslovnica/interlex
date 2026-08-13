@@ -405,7 +405,8 @@
     },
     "rateLimits": {
       "title": "Rate limits",
-      "body": "{limit} requests per minute per API key."
+      "body": "The limit depends on the endpoint group: lexicon and Proto-Slavic — {words}/min, library — {library}/min, corpus search (KWIC) — {corpus}/min (more computationally expensive). Counted separately per API key.",
+      "headers": "Every response carries X-RateLimit-Limit/Remaining/Reset headers - no need to wait for a 429 to know how much you have left."
     },
     "responseFormat": {
       "title": "Response format",

@@ -3,7 +3,7 @@ import { withPublicApiAuth } from "@/lib/publicApi/withAuth"
 import { publicApiError, publicApiItem } from "@/lib/publicApi/response"
 import { getPublicProtoWordById } from "@/lib/publicApi/proto"
 
-export const GET = withPublicApiAuth<{ params: Promise<{ id: string }> }>(async (_req: NextRequest, { params }) => {
+export const GET = withPublicApiAuth<{ params: Promise<{ id: string }> }>("words", async (_req: NextRequest, { params }) => {
     const { id: rawId } = await params
     const id = Number(rawId)
     if (!Number.isInteger(id) || id <= 0) {

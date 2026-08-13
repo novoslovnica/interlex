@@ -10,6 +10,7 @@ export default function PlatformAdminNav() {
   const isMedia = pathname.startsWith("/admin/platform/media")
   const isUsers = pathname.startsWith("/admin/platform/users")
   const isAuditLog = pathname.startsWith("/admin/platform/audit-log")
+  const isApiKeys = pathname.startsWith("/admin/platform/api-keys")
 
   const linkClass = (active: boolean) =>
     `inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80 ${
@@ -36,6 +37,9 @@ export default function PlatformAdminNav() {
           </Link>
           <Link href="/admin/platform/audit-log" className={linkClass(isAuditLog)}>
             Аудит
+          </Link>
+          <Link href="/admin/platform/api-keys" className={linkClass(isApiKeys)}>
+            API-ключи
           </Link>
         </nav>
       </div>

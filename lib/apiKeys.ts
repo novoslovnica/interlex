@@ -15,6 +15,7 @@ export interface ApiKeySummary {
     requestCount: number
     createdAt: Date
     revokedAt: Date | null
+    rateLimitOverride: number | null
 }
 
 const SUMMARY_SELECT = {
@@ -25,6 +26,7 @@ const SUMMARY_SELECT = {
     requestCount: true,
     createdAt: true,
     revokedAt: true,
+    rateLimitOverride: true,
 } as const
 
 /** Never selects keyHash - the raw key is never retrievable again after creation. */
@@ -72,6 +74,37 @@ export async function createApiKeyForUser(userId: string, name: string): Promise
 export async function revokeApiKeyForUser(userId: string, id: string): Promise<boolean> {
     const result = await prismaAuth.apiKey.updateMany({
         where: { id, userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+    })
+    return result.count > 0
+}
+
+export interface ApiKeyAdminSummary extends ApiKeySummary {
+    userId: string
+    userEmail: string | null
+}
+
+/** Admin-only (roadmap #38) - every key across every user, for /admin/platform/api-keys. */
+export function listAllApiKeysForAdmin(): Promise<ApiKeyAdminSummary[]> {
+    return prismaAuth.apiKey.findMany({
+        select: { ...SUMMARY_SELECT, userId: true, user: { select: { email: true } } },
+        orderBy: { createdAt: "desc" },
+    }).then((rows) => rows.map(({ user, ...rest }) => ({ ...rest, userEmail: user.email })))
+}
+
+/** Admin-only. `value: null` clears the override, reverting the key to its category default. */
+export async function setApiKeyRateLimitOverride(id: string, value: number | null): Promise<boolean> {
+    const result = await prismaAuth.apiKey.updateMany({
+        where: { id },
+        data: { rateLimitOverride: value },
+    })
+    return result.count > 0
+}
+
+/** Admin-only revoke - unlike revokeApiKeyForUser, not scoped to a userId (an admin can revoke anyone's key for abuse). */
+export async function revokeApiKeyByAdmin(id: string): Promise<boolean> {
+    const result = await prismaAuth.apiKey.updateMany({
+        where: { id, revokedAt: null },
         data: { revokedAt: new Date() },
     })
     return result.count > 0

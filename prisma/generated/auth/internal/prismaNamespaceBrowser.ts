@@ -192,7 +192,8 @@ export const ApiKeyScalarFieldEnum = {
   lastUsedAt: 'lastUsedAt',
   requestCount: 'requestCount',
   createdAt: 'createdAt',
-  revokedAt: 'revokedAt'
+  revokedAt: 'revokedAt',
+  rateLimitOverride: 'rateLimitOverride'
 } as const
 
 export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]

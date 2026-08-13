@@ -179,6 +179,13 @@ model ApiKey {
   createdAt    DateTime  @default(now())
   revokedAt    DateTime?                   // soft delete - revoked rows are kept, never hard-deleted
 
+  // Admin-assignable override (roadmap #38) - when set, replaces the
+  // category default (lib/publicApi/rateLimit.ts's PUBLIC_API_RATE_LIMITS)
+  // for THIS key across every category uniformly, not a per-category
+  // matrix. Self-service key creation never sets this - only
+  // /admin/platform/api-keys (Feature.ApiKeysManage) writes it.
+  rateLimitOverride Int?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])

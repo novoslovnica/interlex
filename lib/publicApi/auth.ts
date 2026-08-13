@@ -6,6 +6,7 @@ export interface AuthenticatedApiKey {
     id: string
     userId: string
     name: string
+    rateLimitOverride: number | null
 }
 
 export type PublicApiAuthResult =
@@ -46,5 +47,5 @@ export async function authenticatePublicApiRequest(req: NextRequest): Promise<Pu
     prismaAuth.$executeRaw`UPDATE api_keys SET "requestCount" = "requestCount" + 1, "lastUsedAt" = CURRENT_TIMESTAMP WHERE id = ${record.id}`
         .catch(() => {})
 
-    return { ok: true, key: { id: record.id, userId: record.userId, name: record.name } }
+    return { ok: true, key: { id: record.id, userId: record.userId, name: record.name, rateLimitOverride: record.rateLimitOverride } }
 }

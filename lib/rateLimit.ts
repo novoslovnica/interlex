@@ -37,9 +37,16 @@ export class RateLimiter {
 
     constructor(private config: RateLimitConfig) {}
 
-    check(key: string, now: number = Date.now()): RateLimitResult {
+    /**
+     * `maxRequestsOverride` lets one call site grant a specific key a
+     * different budget than this instance's own config.maxRequests (e.g. a
+     * trusted API key with an admin-assigned higher limit, roadmap #38) -
+     * the window (windowMs) stays shared, only the ceiling varies per call.
+     */
+    check(key: string, now: number = Date.now(), maxRequestsOverride?: number): RateLimitResult {
         if (Math.random() < SWEEP_PROBABILITY) this.sweep(now);
 
+        const maxRequests = maxRequestsOverride ?? this.config.maxRequests;
         const bucket = this.buckets.get(key);
 
         if (!bucket || now - bucket.windowStart >= this.config.windowMs) {
@@ -48,7 +55,7 @@ export class RateLimiter {
         }
 
         bucket.count += 1;
-        if (bucket.count > this.config.maxRequests) {
+        if (bucket.count > maxRequests) {
             const retryAfterSeconds = Math.ceil((bucket.windowStart + this.config.windowMs - now) / 1000);
             return { limited: true, retryAfterSeconds };
         }
@@ -63,13 +70,14 @@ export class RateLimiter {
      * called, or its window already expired) - callers should treat that as
      * "0 used".
      */
-    peek(key: string, now: number = Date.now()): RateLimitPeekResult | null {
+    peek(key: string, now: number = Date.now(), maxRequestsOverride?: number): RateLimitPeekResult | null {
         const bucket = this.buckets.get(key);
         if (!bucket || now - bucket.windowStart >= this.config.windowMs) return null;
 
+        const maxRequests = maxRequestsOverride ?? this.config.maxRequests;
         return {
             count: bucket.count,
-            remaining: Math.max(0, this.config.maxRequests - bucket.count),
+            remaining: Math.max(0, maxRequests - bucket.count),
             resetInSeconds: Math.ceil((bucket.windowStart + this.config.windowMs - now) / 1000),
         };
     }

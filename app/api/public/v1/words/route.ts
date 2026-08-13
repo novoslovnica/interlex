@@ -3,7 +3,7 @@ import { withPublicApiAuth } from "@/lib/publicApi/withAuth"
 import { publicApiList } from "@/lib/publicApi/response"
 import { searchPublicWords, clampLimit, clampOffset } from "@/lib/publicApi/words"
 
-export const GET = withPublicApiAuth(async (req: NextRequest) => {
+export const GET = withPublicApiAuth("words", async (req: NextRequest) => {
     const { searchParams } = new URL(req.url)
     const search = searchParams.get("search")?.trim() ?? ""
     const limit = clampLimit(Number(searchParams.get("limit")))

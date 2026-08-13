@@ -3,7 +3,7 @@ import { withPublicApiAuth } from "@/lib/publicApi/withAuth"
 import { publicApiError, publicApiItem } from "@/lib/publicApi/response"
 import { getPublicWordBySlug } from "@/lib/publicApi/words"
 
-export const GET = withPublicApiAuth<{ params: Promise<{ slug: string }> }>(async (_req: NextRequest, { params }) => {
+export const GET = withPublicApiAuth<{ params: Promise<{ slug: string }> }>("words", async (_req: NextRequest, { params }) => {
     const { slug } = await params
     const word = await getPublicWordBySlug(slug)
     // Same response for "doesn't exist" and "exists but hidden" (isPublic=false)

@@ -405,7 +405,8 @@
     },
     "rateLimits": {
       "title": "Limity zapytov",
-      "body": "{limit} zapytov na minutu na jeden API-ključ."
+      "body": "Limit zavisit od grupy endpointov: slovnik i Praslověnsky — {words}/min, biblioteka — {library}/min, iskanje po korpusu (KWIC) — {corpus}/min (drožje vypočislitelno). Sčita sę odděljno na jeden API-ključ.",
+      "headers": "Každy otgovor nesje headery X-RateLimit-Limit/Remaining/Reset - ne trěba čekati 429, aby uznati, kolko ostaje."
     },
     "responseFormat": {
       "title": "Format otvěta",

@@ -92,6 +92,11 @@ export enum SystemFeature {
     // "предложить слово" и кнопка "сообщить об ошибке" на карточке слова
     SuggestionsReview = "suggestions_review",
     ReportsReview = "reports_review",
+
+    // Управление API-ключами всех пользователей (roadmap п.38) - выдача
+    // per-key override лимита, отзыв при злоупотреблении. Самообслуживание
+    // (создание/отзыв СВОИХ ключей) не гейтится этим - см. app/api/api-keys
+    ApiKeysManage = "api_keys_manage",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -426,6 +431,13 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
         label: "Ревью жалоб на ошибки",
         description: "Просмотр и обработка публичных жалоб 'сообщить об ошибке' на карточках слов",
         category: "Обратная связь",
+    },
+
+    // API-ключи
+    [SystemFeature.ApiKeysManage]: {
+        label: "Управление API-ключами",
+        description: "Просмотр ключей всех пользователей, назначение персонального лимита запросов, отзыв при злоупотреблении",
+        category: "Система",
     },
 };
 
