@@ -6,6 +6,7 @@ import {mapNslToEtymologized} from "@/lib/nsl";
 import {useTranslations} from "next-intl";
 import {saveScriptPreference} from "@/app/settings/actions";
 import BookmarkButton from "@/components/BookmarkButton";
+import DiacriticsHelper from "@/components/DiacriticsHelper";
 import {ScriptMode} from "@/lib/script-mode";
 
 import "./main-page.css";
@@ -280,6 +281,12 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         onKeyDown={onKeyDown}
                         onChange={onChangeSearch}
                         ref={searchInputRef}
+                    />
+                    <DiacriticsHelper
+                        targetRef={searchInputRef}
+                        value={searchValue}
+                        onChange={setSearchValue}
+                        defaultPanel={formScript === ScriptMode.CYRILLIC ? "cyrillic" : "latin"}
                     />
                     <button
                         className="search-btn"

@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useRef, useState, useCallback } from "react"
 import { convert, type Script } from "@/lib/transliteration"
+import DiacriticsHelper from "@/components/DiacriticsHelper"
 import {useTranslations} from "next-intl"
 
 const SCRIPTS: Script[] = ["etym_lat", "etym_cyr", "std_lat", "std_cyr", "simple_lat", "simple_cyr"]
@@ -11,6 +12,7 @@ export default function TransliterationClient() {
   const [sourceText, setSourceText] = useState("")
   const [fromScript, setFromScript] = useState<Script>("etym_lat")
   const [toScript, setToScript] = useState<Script>("std_lat")
+  const sourceTextareaRef = useRef<HTMLTextAreaElement>(null)
 
   const resultText = convert(sourceText, fromScript, toScript)
 
@@ -39,12 +41,22 @@ export default function TransliterationClient() {
                 <option key={s} value={s}>{t(`scriptLabels.${s}`)}</option>
               ))}
             </select>
-            <textarea
-              className="w-full h-64 p-4 border rounded-lg text-base leading-relaxed resize-y bg-background font-mono"
-              placeholder={t("inputPlaceholder")}
-              value={sourceText}
-              onChange={(e) => setSourceText(e.target.value)}
-            />
+            <div className="relative">
+              <textarea
+                ref={sourceTextareaRef}
+                className="w-full h-64 p-4 border rounded-lg text-base leading-relaxed resize-y bg-background font-mono"
+                placeholder={t("inputPlaceholder")}
+                value={sourceText}
+                onChange={(e) => setSourceText(e.target.value)}
+              />
+              <DiacriticsHelper
+                targetRef={sourceTextareaRef}
+                value={sourceText}
+                onChange={setSourceText}
+                mode={fromScript.includes("cyr") ? "cyrillic" : "latin"}
+                className="absolute top-2 right-2"
+              />
+            </div>
           </div>
 
           <div className="flex md:flex-col items-center justify-center gap-2 pt-8">
