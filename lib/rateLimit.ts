@@ -15,6 +15,12 @@ export interface RateLimitResult {
     retryAfterSeconds: number;
 }
 
+export interface RateLimitPeekResult {
+    count: number;
+    remaining: number;
+    resetInSeconds: number;
+}
+
 interface Bucket {
     count: number;
     windowStart: number;
@@ -47,6 +53,25 @@ export class RateLimiter {
             return { limited: true, retryAfterSeconds };
         }
         return { limited: false, retryAfterSeconds: 0 };
+    }
+
+    /**
+     * Read-only look at a key's current window, without consuming a request
+     * (unlike check()). Used by roadmap #58's usage dashboard so a user can
+     * see "how much of my limit is used" without that lookup itself eating
+     * into the limit. Returns null if the key has no live bucket (never
+     * called, or its window already expired) - callers should treat that as
+     * "0 used".
+     */
+    peek(key: string, now: number = Date.now()): RateLimitPeekResult | null {
+        const bucket = this.buckets.get(key);
+        if (!bucket || now - bucket.windowStart >= this.config.windowMs) return null;
+
+        return {
+            count: bucket.count,
+            remaining: Math.max(0, this.config.maxRequests - bucket.count),
+            resetInSeconds: Math.ceil((bucket.windowStart + this.config.windowMs - now) / 1000),
+        };
     }
 
     private sweep(now: number): void {

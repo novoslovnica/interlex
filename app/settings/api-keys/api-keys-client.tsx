@@ -13,6 +13,13 @@ interface ApiKeySummary {
     revokedAt: string | null
 }
 
+interface ApiKeyUsage {
+    id: string
+    windowUsed: number
+    windowLimit: number
+    windowResetInSeconds: number
+}
+
 interface JustCreatedKey extends ApiKeySummary {
     rawKey: string
 }
@@ -25,6 +32,8 @@ function formatDate(value: string | null): string {
 export function ApiKeysClient() {
     const t = useTranslations("apiKeys")
     const [keys, setKeys] = useState<ApiKeySummary[] | null>(null)
+    const [usage, setUsage] = useState<Record<string, ApiKeyUsage>>({})
+    const [refreshingUsage, setRefreshingUsage] = useState(false)
     const [loadError, setLoadError] = useState<string | null>(null)
     const [name, setName] = useState("")
     const [creating, setCreating] = useState(false)
@@ -44,8 +53,25 @@ export function ApiKeysClient() {
         }
     }
 
+    const loadUsage = async () => {
+        setRefreshingUsage(true)
+        try {
+            const res = await fetch("/api/api-keys/usage")
+            if (!res.ok) throw new Error()
+            const data = await res.json()
+            const byId: Record<string, ApiKeyUsage> = {}
+            for (const u of (data.usage ?? []) as ApiKeyUsage[]) byId[u.id] = u
+            setUsage(byId)
+        } catch {
+            // Non-fatal - the rest of the key list still works without live usage.
+        } finally {
+            setRefreshingUsage(false)
+        }
+    }
+
     useEffect(() => {
         loadKeys()
+        loadUsage()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -151,8 +177,15 @@ export function ApiKeysClient() {
             </div>
 
             <div className="border rounded-xl bg-background shadow-sm border-border/60 overflow-hidden">
-                <div className="px-6 py-3 border-b border-border/60">
+                <div className="px-6 py-3 border-b border-border/60 flex items-center justify-between">
                     <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t("listSection")}</h2>
+                    <button
+                        onClick={loadUsage}
+                        disabled={refreshingUsage}
+                        className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-50"
+                    >
+                        {refreshingUsage ? t("refreshingUsage") : t("refreshUsage")}
+                    </button>
                 </div>
                 {loadError && <p className="text-xs text-destructive px-6 py-4">{loadError}</p>}
                 {keys === null && !loadError && (
@@ -169,6 +202,7 @@ export function ApiKeysClient() {
                                     <th className="px-6 py-2 font-medium">{t("columns.name")}</th>
                                     <th className="px-6 py-2 font-medium">{t("columns.prefix")}</th>
                                     <th className="px-6 py-2 font-medium">{t("columns.requests")}</th>
+                                    <th className="px-6 py-2 font-medium">{t("columns.window")}</th>
                                     <th className="px-6 py-2 font-medium">{t("columns.lastUsed")}</th>
                                     <th className="px-6 py-2 font-medium">{t("columns.created")}</th>
                                     <th className="px-6 py-2 font-medium">{t("columns.status")}</th>
@@ -181,6 +215,23 @@ export function ApiKeysClient() {
                                         <td className="px-6 py-3 font-medium">{key.name}</td>
                                         <td className="px-6 py-3 font-mono text-xs text-muted-foreground">{key.keyPrefix}…</td>
                                         <td className="px-6 py-3">{key.requestCount}</td>
+                                        <td className="px-6 py-3 text-xs">
+                                            {key.revokedAt ? (
+                                                <span className="text-muted-foreground">{t("windowNoData")}</span>
+                                            ) : usage[key.id] ? (
+                                                <>
+                                                    <span className="font-medium">{usage[key.id].windowUsed}</span>
+                                                    <span className="text-muted-foreground">/{usage[key.id].windowLimit}</span>
+                                                    {usage[key.id].windowResetInSeconds > 0 && (
+                                                        <span className="text-muted-foreground ml-1">
+                                                            ({t("windowResetIn", { seconds: usage[key.id].windowResetInSeconds })})
+                                                        </span>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <span className="text-muted-foreground">{t("windowNoData")}</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-3 text-xs text-muted-foreground">{formatDate(key.lastUsedAt)}</td>
                                         <td className="px-6 py-3 text-xs text-muted-foreground">{formatDate(key.createdAt)}</td>
                                         <td className="px-6 py-3">
