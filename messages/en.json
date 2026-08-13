@@ -8,6 +8,7 @@
       "library": "Library",
       "tools": "Tools",
       "transliterator": "Transliterator",
+      "rhymeSearch": "Rhyme search",
       "avatar": "Avatar",
       "settings": "Settings",
       "profile": "Profile",
@@ -127,6 +128,19 @@
     "success": "Thanks! Your suggestion was sent for review.",
     "error": "Couldn't submit. Please try again.",
     "cancel": "Cancel"
+  },
+  "rhyme": {
+    "heading": "Rhyme search",
+    "subtitle": "Finds words that sound alike by IPA transcription — for poetry, songs and conlang creativity.",
+    "placeholder": "Enter a word...",
+    "search": "Search",
+    "searching": "Searching...",
+    "error": "Couldn't search. Please try again.",
+    "computedIpa": "Transcription:",
+    "exactRhymes": "Exact rhymes",
+    "noExact": "No exact rhymes found",
+    "similarSounding": "Similar sounding",
+    "noSimilar": "No similar words found"
   },
   "translate": {
     "title": "Translate",
@@ -504,6 +518,7 @@
   "word": {
     "title": "Word",
     "notFound": "Information not available",
+    "findRhymesLink": "Find rhymes",
     "meta": {
       "pos": "Part of speech",
       "gender": "Gender",

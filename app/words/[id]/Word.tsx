@@ -206,6 +206,13 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
                 <span className="font-ipa text-slate-400 text-lg">{transcription}</span>
+                <Link
+                    href={`/rhyme?word=${encodeURIComponent(word)}`}
+                    target="_blank"
+                    className="text-xs text-slate-400 hover:text-blue-500 transition-colors underline decoration-dotted"
+                >
+                    {t("findRhymesLink")}
+                </Link>
                 <div className="flex items-center gap-2 ml-auto">
                     {item.cefrLevel && (
                         <span className={`text-xs font-bold px-2 py-1 rounded-full ${

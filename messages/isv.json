@@ -8,6 +8,7 @@
       "library": "Biblioteka",
       "tools": "Orųdia",
       "transliterator": "Transliterator",
+      "rhymeSearch": "Iskanje rimov",
       "avatar": "Avatar",
       "profile": "Profil",
       "flashcards": "Kartočky",
@@ -127,6 +128,19 @@
     "success": "Blagodarimo! Vaše predloženje poslano na moderaciju.",
     "error": "Ne uspělo sę poslati. Prosimo, probujte znova.",
     "cancel": "Otkazati"
+  },
+  "rhyme": {
+    "heading": "Iskanje rimov",
+    "subtitle": "Nahodi slova, sozvučna po IPA-transkripciji — dlja poezije, pěsn'i i konlangerskoj tvorčosti.",
+    "placeholder": "Vvedite slovo...",
+    "search": "Iskati",
+    "searching": "Iskanje...",
+    "error": "Ne uspělo sę iskati. Prosimo, probujte znova.",
+    "computedIpa": "Transkripcija:",
+    "exactRhymes": "Točne rimy",
+    "noExact": "Točnyh rimov ne najdeno",
+    "similarSounding": "Podobne po zvučanju",
+    "noSimilar": "Podobnyh slov ne najdeno"
   },
   "translate": {
     "title": "Prěvod",
@@ -504,6 +518,7 @@
   "word": {
     "title": "Slovo",
     "notFound": "Informacija otsutstvuje",
+    "findRhymesLink": "Najti rimy",
     "meta": {
       "pos": "Čast rěči",
       "gender": "Rod",

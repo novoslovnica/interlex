@@ -57,6 +57,11 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                 {t("transliterator")}
                             </Link>
                         </li>
+                        <li>
+                            <Link href="/rhyme" className="nav-link" onClick={closeAll}>
+                                {t("rhymeSearch")}
+                            </Link>
+                        </li>
                     </ul>
                 </li>
 
