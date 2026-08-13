@@ -4,7 +4,6 @@ import Link from "next/link"
 import { prismaAuth as dbAuth, prismaData, prismaCorpus } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requireRole } from "@/lib/permissions"
-import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -79,8 +78,6 @@ export default async function ModerationDashboardPage() {
   const tiles = allTiles.filter((t) => canSee(t.feature))
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
       <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
         <h1 className="text-xl font-bold">Панель модератора</h1>
 
@@ -108,6 +105,5 @@ export default async function ModerationDashboardPage() {
           ))}
         </div>
       </div>
-    </div>
   )
 }

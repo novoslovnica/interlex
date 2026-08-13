@@ -4,7 +4,6 @@ import Link from "next/link"
 import { prismaLibrary as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requirePermission } from "@/lib/permissions"
-import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { DeleteButton } from "./_components/DeleteButton"
 import { getFlavorLabel } from "@/config/flavor"
 import type { Metadata } from "next"
@@ -18,13 +17,6 @@ export default async function AdminLibraryPage() {
   const session = await auth()
   if (!session) redirect("/login")
   await requirePermission(session, Feature.LibraryManage)
-
-  const userPermissions = session.user.role === "MODERATOR"
-    ? (await dbAuth.featurePermission.findMany({
-        where: { userId: session.user.id },
-        select: { featureKey: true },
-      })).map(p => p.featureKey)
-    : []
 
   const entries = await db.libraryEntry.findMany({
     orderBy: { createdAt: "desc" },
@@ -41,7 +33,6 @@ export default async function AdminLibraryPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Библиотека</h1>
@@ -131,6 +122,5 @@ export default async function AdminLibraryPage() {
           </table>
         </div>
       </div>
-    </div>
   )
 }

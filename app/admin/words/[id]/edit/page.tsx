@@ -1,4 +1,4 @@
-import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
+import { prismaData as db } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import { type Prisma } from "@/prisma/generated/data/client"
 import ArticleForm from "@/components/ArticleForm"
@@ -8,7 +8,6 @@ import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 import { init } from "@/lib/sqlite"
-import AdminNav from "@/components/AdminNav"
 import { RelationsTab } from "./_components/relations-tab"
 import { updateWord } from "@/lib/actions/word-actions"
 import { fetchSymmetricSemanticRelations, fetchOutgoingSemanticRelations, fetchIncomingSemanticRelations } from "@/lib/relations"
@@ -191,13 +190,6 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
     return updateWord({ ...formData, wordId })
   }
 
-  const userPermissions = session.user.role === "MODERATOR"
-    ? (await dbAuth.featurePermission.findMany({
-        where: { userId: session.user.id },
-        select: { featureKey: true },
-      })).map(p => p.featureKey)
-    : []
-
   // Read-only summary tab — mirrors the semantic_relations relationType/direction
   // convention used by the dedicated admin pages (relation-config.ts) so this
   // tab never falls out of sync with what /admin/synonyms, /admin/antonyms and
@@ -242,8 +234,6 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
   }))
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
       <div className="flex flex-col h-full overflow-hidden">
         <div className="px-4 md:px-6 py-3 border-b shrink-0">
           <div className="flex gap-4">
@@ -330,6 +320,5 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
           )}
         </div>
       </div>
-    </div>
   )
 }

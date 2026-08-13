@@ -43,7 +43,6 @@ export default async function AdminApiKeysPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
         <div className="flex items-baseline justify-between">
           <h1 className="text-xl font-bold">API-ключи</h1>
@@ -53,6 +52,5 @@ export default async function AdminApiKeysPage() {
         </div>
         <ApiKeysAdminClient keys={keys} setOverride={setOverride} revoke={revoke} />
       </div>
-    </div>
   )
 }

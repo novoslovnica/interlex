@@ -71,7 +71,6 @@ export default async function AuditLogPage({
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Аудит изменений</h1>
@@ -197,6 +196,5 @@ export default async function AuditLogPage({
           </div>
         )}
       </div>
-    </div>
   )
 }

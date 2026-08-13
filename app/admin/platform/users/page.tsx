@@ -72,23 +72,21 @@ export default async function AdminUsersPage() {
     }
 
     return (
-        <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-            <div className="flex flex-col h-full overflow-hidden">
-                <div className="px-4 md:px-6 pb-2 shrink-0">
-                    <h1 className="text-2xl font-bold">Управление правами</h1>
-                    <p className="text-muted-foreground text-sm">
-                        Выберите пользователя из списка слева, чтобы настроить его роль и индивидуальные фичи.
-                    </p>
-                </div>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <div className="px-4 md:px-6 pb-2 shrink-0">
+                <h1 className="text-2xl font-bold">Управление правами</h1>
+                <p className="text-muted-foreground text-sm">
+                    Выберите пользователя из списка слева, чтобы настроить его роль и индивидуальные фичи.
+                </p>
+            </div>
 
-                <div className="flex-1 min-h-0 overflow-hidden">
-                    <UsersManagementClient
-                        initialUsers={users}
-                        featureCategories={FEATURE_CATEGORIES}
-                        onTogglePermission={toggleFeaturePermission}
-                        onUpdateRole={updateUserRole}
-                    />
-                </div>
+            <div className="flex-1 min-h-0 overflow-hidden">
+                <UsersManagementClient
+                    initialUsers={users}
+                    featureCategories={FEATURE_CATEGORIES}
+                    onTogglePermission={toggleFeaturePermission}
+                    onUpdateRole={updateUserRole}
+                />
             </div>
         </div>
     )

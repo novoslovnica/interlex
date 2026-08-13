@@ -1,10 +1,9 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
+import { prismaData as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requirePermission } from "@/lib/permissions"
 import { CoreVocabularyClient } from "./core-vocabulary-client"
-import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 import { logAudit } from "@/lib/audit-log"
 
@@ -35,13 +34,6 @@ export default async function AdminCoreVocabularyPage() {
   if (!session) redirect("/unauthorized")
 
   await requirePermission(session, Feature.CoreVocabularyManage)
-
-  const userPermissions = session.user.role === "MODERATOR"
-    ? (await dbAuth.featurePermission.findMany({
-        where: { userId: session.user.id },
-        select: { featureKey: true },
-      })).map((p) => p.featureKey)
-    : []
 
   const concepts = await db.coreVocabularyConcept.findMany({
     include: {
@@ -114,20 +106,17 @@ export default async function AdminCoreVocabularyPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <div className="flex flex-col h-full overflow-hidden">
-        <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-        <div className="px-4 md:px-6 pb-2 shrink-0">
-          <h1 className="text-2xl font-bold">Базовая лексика</h1>
-          <p className="text-muted-foreground text-sm">
-            Выберите понятие слева, затем найдите и привяжите межславянское значение, которое является его
-            экспонентом. Сами списки — фиксированные справочники (Сводеш-100, Лейпциг-Джакарта), не редактируются
-            здесь; понятие, входящее в оба списка, показывается одной строкой с двумя рангами.
-          </p>
-        </div>
-        <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
-          <CoreVocabularyClient initialConcepts={initialConcepts} onUpdateExponents={updateExponents} />
-        </div>
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <div className="px-4 md:px-6 pb-2 shrink-0">
+        <h1 className="text-2xl font-bold">Базовая лексика</h1>
+        <p className="text-muted-foreground text-sm">
+          Выберите понятие слева, затем найдите и привяжите межславянское значение, которое является его
+          экспонентом. Сами списки — фиксированные справочники (Сводеш-100, Лейпциг-Джакарта), не редактируются
+          здесь; понятие, входящее в оба списка, показывается одной строкой с двумя рангами.
+        </p>
+      </div>
+      <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
+        <CoreVocabularyClient initialConcepts={initialConcepts} onUpdateExponents={updateExponents} />
       </div>
     </div>
   )

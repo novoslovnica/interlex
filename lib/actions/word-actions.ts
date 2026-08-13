@@ -272,7 +272,7 @@ export async function updateWord(formData: any) {
     }
   }
 
-  redirect("/admin")
+  redirect("/admin/translations")
 }
 
 export async function createWord(formData: any) {
@@ -396,5 +396,5 @@ export async function createWord(formData: any) {
     })
   }
 
-  redirect("/admin")
+  redirect("/admin/translations")
 }

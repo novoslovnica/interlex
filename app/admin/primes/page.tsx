@@ -1,10 +1,9 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
+import { prismaData as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requirePermission } from "@/lib/permissions"
 import { PrimesClient } from "./primes-client"
-import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 import { logAudit } from "@/lib/audit-log"
 
@@ -35,13 +34,6 @@ export default async function AdminPrimesPage() {
   if (!session) redirect("/unauthorized")
 
   await requirePermission(session, Feature.SemanticPrimesManage)
-
-  const userPermissions = session.user.role === "MODERATOR"
-    ? (await dbAuth.featurePermission.findMany({
-        where: { userId: session.user.id },
-        select: { featureKey: true },
-      })).map((p) => p.featureKey)
-    : []
 
   const primes = await db.semanticPrime.findMany({
     orderBy: { sortOrder: "asc" },
@@ -109,19 +101,16 @@ export default async function AdminPrimesPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <div className="flex flex-col h-full overflow-hidden">
-        <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-        <div className="px-4 md:px-6 pb-2 shrink-0">
-          <h1 className="text-2xl font-bold">Семантические праймы (NSM)</h1>
-          <p className="text-muted-foreground text-sm">
-            Выберите прайм слева, затем найдите и привяжите межславянское значение, которое является его экспонентом.
-            Сам список 64 праймов — фиксированный справочник (Goddard 2011), не редактируется здесь.
-          </p>
-        </div>
-        <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
-          <PrimesClient initialPrimes={initialPrimes} onUpdateExponents={updateExponents} />
-        </div>
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <div className="px-4 md:px-6 pb-2 shrink-0">
+        <h1 className="text-2xl font-bold">Семантические праймы (NSM)</h1>
+        <p className="text-muted-foreground text-sm">
+          Выберите прайм слева, затем найдите и привяжите межславянское значение, которое является его экспонентом.
+          Сам список 64 праймов — фиксированный справочник (Goddard 2011), не редактируется здесь.
+        </p>
+      </div>
+      <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
+        <PrimesClient initialPrimes={initialPrimes} onUpdateExponents={updateExponents} />
       </div>
     </div>
   )

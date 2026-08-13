@@ -1,10 +1,9 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { prismaAuth as dbAuth, prismaData as db } from "@/lib/prisma"
+import { prismaData as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requirePermission } from "@/lib/permissions"
 import { SynonymsClient } from "./synonyms-client"
-import AdminNav from "@/components/AdminNav"
 import type { Metadata } from "next"
 import { logAudit } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
@@ -38,13 +37,6 @@ export default async function AdminSynonymsPage() {
     if (!session) redirect("/unauthorized")
 
     await requirePermission(session, Feature.SynonymsEdit)
-
-    const userPermissions = session.user.role === "MODERATOR"
-        ? (await dbAuth.featurePermission.findMany({
-            where: { userId: session.user.id },
-            select: { featureKey: true },
-          })).map(p => p.featureKey)
-        : []
 
     const rawWords = await db.lexeme.findMany({
         select: {
@@ -98,21 +90,18 @@ export default async function AdminSynonymsPage() {
     }
 
     return (
-        <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-            <div className="flex flex-col h-full overflow-hidden">
-                <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-                <div className="px-4 md:px-6 pb-2 shrink-0">
-                    <h1 className="text-2xl font-bold">Управление синонимами</h1>
-                    <p className="text-muted-foreground text-sm">
-                        Выберите слово, затем его значение, чтобы привязать к нему синонимичные значения других слов.
-                    </p>
-                </div>
-                <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
-                    <SynonymsClient
-                        initialWords={initialWords}
-                        onUpdateSynonyms={updateSynonyms}
-                    />
-                </div>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <div className="px-4 md:px-6 pb-2 shrink-0">
+                <h1 className="text-2xl font-bold">Управление синонимами</h1>
+                <p className="text-muted-foreground text-sm">
+                    Выберите слово, затем его значение, чтобы привязать к нему синонимичные значения других слов.
+                </p>
+            </div>
+            <div className="flex-1 min-h-0 px-4 md:px-6 overflow-hidden">
+                <SynonymsClient
+                    initialWords={initialWords}
+                    onUpdateSynonyms={updateSynonyms}
+                />
             </div>
         </div>
     )

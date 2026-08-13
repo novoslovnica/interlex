@@ -1,6 +1,5 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import AdminNav from "@/components/AdminNav"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import TranslationCardsClient from "./translation-cards-client"
@@ -33,15 +32,12 @@ const TranslationCardsPage = async () => {
     const currentLanguage = userSettings?.language === "en" ? "en" : "ru"
 
     return (
-        <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-            <div className="flex flex-col h-full overflow-hidden">
-                <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-                <TranslationCardsClient
-                    currentLanguage={currentLanguage}
-                    userRole={session.user.role || ""}
-                    userPermissions={userPermissions}
-                />
-            </div>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <TranslationCardsClient
+                currentLanguage={currentLanguage}
+                userRole={session.user.role || ""}
+                userPermissions={userPermissions}
+            />
         </div>
     )
 }

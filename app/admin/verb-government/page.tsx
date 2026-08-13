@@ -1,7 +1,5 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { prismaAuth as dbAuth } from "@/lib/prisma"
-import AdminNav from "@/components/AdminNav"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import type { Metadata } from "next"
@@ -18,19 +16,7 @@ const VerbGovernmentPage = async () => {
 
   await requirePermission(session, Feature.VerbGovernmentEdit)
 
-  const userPermissions = session.user.role === "MODERATOR"
-      ? (await dbAuth.featurePermission.findMany({
-          where: { userId: session.user.id },
-          select: { featureKey: true },
-        })).map(p => p.featureKey)
-      : []
-
-  return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-      <VerbGovernmentClient />
-    </div>
-  )
+  return <VerbGovernmentClient />
 }
 
 export default VerbGovernmentPage

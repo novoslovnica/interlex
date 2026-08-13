@@ -60,7 +60,6 @@ export default async function EditMediaPage({ params }: { params: Promise<{ id: 
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 w-full">
         <h1 className="text-xl font-bold mb-6">Редактирование: {entry.title}</h1>
         <MediaLibraryForm
@@ -79,6 +78,5 @@ export default async function EditMediaPage({ params }: { params: Promise<{ id: 
           }}
         />
       </div>
-    </div>
   )
 }

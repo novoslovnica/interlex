@@ -25,16 +25,30 @@ function isGroup(entry: NavEntry): entry is NavGroup {
     return "children" in entry
 }
 
-function getFeature(entry: NavEntry): string | undefined {
-    return "feature" in entry ? (entry as NavItem).feature : undefined
-}
-
+// Раньше это был плоский список из 17 пунктов + 1 dropdown на 14, плюс ещё
+// два ПОЛНОСТЬЮ отдельных nav-бара для /admin/platform/* и /admin/corpus/*
+// без единого перехода между тремя зонами (см. обсуждение в чате при
+// проектировании главной страницы админки). Теперь один компонент на всё
+// дерево /admin/**, сгруппированный по смыслу, а не плоским списком.
 const navItems: NavEntry[] = [
-    { href: "/admin", label: "Переводы", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
-    { href: "/admin/translation-cards", label: "Переводы (карточки)", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
-    { href: "/admin/word-cards", label: "Слова (карточки)", roles: ["ADMIN", "MODERATOR"], feature: Feature.WordsEdit },
-    { href: "/admin/synonyms", label: "Синонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SynonymsEdit },
-    { href: "/admin/antonyms", label: "Антонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.AntonymsEdit },
+    { href: "/admin", label: "Главная", roles: ["ADMIN", "MODERATOR"] },
+    {
+        label: "Тезаурус",
+        roles: ["ADMIN", "MODERATOR"],
+        children: [
+            { href: "/admin/translations", label: "Переводы", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
+            { href: "/admin/translation-cards", label: "Переводы (карточки)", roles: ["ADMIN", "MODERATOR"], feature: Feature.DictionaryEdit },
+            { href: "/admin/word-cards", label: "Слова (карточки)", roles: ["ADMIN", "MODERATOR"], feature: Feature.WordsEdit },
+            { href: "/admin/synonyms", label: "Синонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SynonymsEdit },
+            { href: "/admin/antonyms", label: "Антонимы", roles: ["ADMIN", "MODERATOR"], feature: Feature.AntonymsEdit },
+            { href: "/admin/primes", label: "Праймы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SemanticPrimesManage },
+            { href: "/admin/core-vocabulary", label: "Базовая лексика", roles: ["ADMIN", "MODERATOR"], feature: Feature.CoreVocabularyManage },
+            { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
+            { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
+            { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },
+            { href: "/admin/verb-government", label: "Управление глаголов", roles: ["ADMIN", "MODERATOR"], feature: Feature.VerbGovernmentEdit },
+        ],
+    },
     {
         label: "Отношения",
         roles: ["ADMIN", "MODERATOR"],
@@ -56,17 +70,39 @@ const navItems: NavEntry[] = [
             { href: "/admin/relations/derivation-sources", label: "Источники деривации", roles: ["ADMIN", "MODERATOR"], feature: Feature.DerivationSourcesEdit },
         ],
     },
-    { href: "/admin/primes", label: "Праймы", roles: ["ADMIN", "MODERATOR"], feature: Feature.SemanticPrimesManage },
-    { href: "/admin/core-vocabulary", label: "Базовая лексика", roles: ["ADMIN", "MODERATOR"], feature: Feature.CoreVocabularyManage },
-    { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
-    { href: "/admin/corpus-candidates", label: "Кандидаты из корпуса", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusCandidatesReview },
-    { href: "/admin/suggestions", label: "Предложенные слова", roles: ["ADMIN", "MODERATOR"], feature: Feature.SuggestionsReview },
-    { href: "/admin/reports", label: "Жалобы на ошибки", roles: ["ADMIN", "MODERATOR"], feature: Feature.ReportsReview },
-    { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
-    { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
-    { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },
-    { href: "/admin/verb-government", label: "Управление глаголов", roles: ["ADMIN", "MODERATOR"], feature: Feature.VerbGovernmentEdit },
-    { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"], feature: Feature.DeduplicationManage },
+    {
+        label: "Очереди",
+        roles: ["ADMIN", "MODERATOR"],
+        children: [
+            { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
+            { href: "/admin/corpus-candidates", label: "Кандидаты из корпуса", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusCandidatesReview },
+            { href: "/admin/suggestions", label: "Предложенные слова", roles: ["ADMIN", "MODERATOR"], feature: Feature.SuggestionsReview },
+            { href: "/admin/reports", label: "Жалобы на ошибки", roles: ["ADMIN", "MODERATOR"], feature: Feature.ReportsReview },
+            { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"], feature: Feature.DeduplicationManage },
+        ],
+    },
+    {
+        label: "Корпус",
+        roles: ["ADMIN", "MODERATOR"],
+        children: [
+            { href: "/admin/corpus/builder", label: "Конструктор", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
+            { href: "/admin/corpus/documents", label: "Документы", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
+            { href: "/admin/corpus/import", label: "Импорт", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
+            { href: "/admin/corpus/semantic-field", label: "Семантическое поле", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
+        ],
+    },
+    {
+        label: "Платформа",
+        roles: ["ADMIN", "MODERATOR"],
+        children: [
+            { href: "/admin/platform/library", label: "Библиотека", roles: ["ADMIN", "MODERATOR"], feature: Feature.LibraryManage },
+            { href: "/admin/platform/media", label: "Медиатека", roles: ["ADMIN", "MODERATOR"], feature: Feature.MediaLibraryManage },
+            { href: "/admin/platform/users", label: "Пользователи", roles: ["ADMIN"] },
+            { href: "/admin/platform/audit-log", label: "Аудит", roles: ["ADMIN", "MODERATOR"], feature: Feature.LogsView },
+            { href: "/admin/platform/api-keys", label: "API-ключи", roles: ["ADMIN", "MODERATOR"], feature: Feature.ApiKeysManage },
+        ],
+    },
+    { href: "/admin/dashboard", label: "Дашборд", roles: ["ADMIN", "MODERATOR"] },
 ]
 
 interface AdminNavProps {
@@ -83,7 +119,13 @@ function hasAccess(entry: NavEntry, userRole: string, userPermissions: string[])
     }
     if (!entry.roles.includes(userRole)) return false
     if (userRole === "ADMIN") return true
-    if (!entry.feature) return false
+    // No feature attached (e.g. "Главная"/"Дашборд") means "no specific
+    // permission gates this, role membership alone is enough" - mirrors how
+    // the group branch above already treats a missing `feature`. Before this
+    // fix, a feature-less top-level item was only reachable by ADMIN; the
+    // "Дашборд" link used to work around that by living outside this whole
+    // navItems/hasAccess mechanism as a hand-rolled special case.
+    if (!entry.feature) return true
     return userPermissions.includes(entry.feature)
 }
 
@@ -171,17 +213,6 @@ export default function AdminNav({ userRole, userPermissions = [] }: AdminNavPro
         <div className="relative border-b bg-muted/40">
             <div className="container mx-auto flex h-12 items-center px-4">
                 <nav className="flex h-full space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto">
-                    {(userRole === "ADMIN" || userRole === "MODERATOR") && (
-                        <Link
-                            href="/admin/dashboard"
-                            className={`inline-flex items-center h-full border-b-2 transition-colors hover:text-foreground/80
-                                ${pathname === "/admin/dashboard"
-                                    ? "border-primary text-foreground font-semibold"
-                                    : "border-transparent text-muted-foreground"}`}
-                        >
-                            Дашборд
-                        </Link>
-                    )}
                     {navItems.map((entry) => {
                         if (!hasAccess(entry, userRole, userPermissions)) return null
 

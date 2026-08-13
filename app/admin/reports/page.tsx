@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { prismaAuth as dbAuth, prismaData } from "@/lib/prisma"
-import AdminNav from "@/components/AdminNav"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import type { Metadata } from "next"
@@ -26,7 +25,7 @@ export default async function ReportsPage({
   const { page: pageStr } = await searchParams
   const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1)
 
-  const [reports, total, userPermissions] = await Promise.all([
+  const [reports, total] = await Promise.all([
     prismaData.contentReport.findMany({
       where: { status: "pending" },
       orderBy: { createdAt: "desc" },
@@ -34,11 +33,6 @@ export default async function ReportsPage({
       take: PAGE_SIZE,
     }),
     prismaData.contentReport.count({ where: { status: "pending" } }),
-    session.user.role === "MODERATOR"
-      ? dbAuth.featurePermission
-          .findMany({ where: { userId: session.user.id }, select: { featureKey: true } })
-          .then((rows) => rows.map((p) => p.featureKey))
-      : Promise.resolve([]),
   ])
 
   const lexemeIds = [...new Set(reports.map((r) => r.lexemeId))]
@@ -72,10 +66,5 @@ export default async function ReportsPage({
     submitter: r.submitterUserId ? (submitterById.get(r.submitterUserId) ?? r.submitterUserId) : (r.submitterContact ?? null),
   }))
 
-  return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-      <ReportsClient reports={dtos} page={page} totalPages={totalPages} total={total} />
-    </div>
-  )
+  return <ReportsClient reports={dtos} page={page} totalPages={totalPages} total={total} />
 }

@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 import { prismaLibrary as db } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requirePermission } from "@/lib/permissions"
-import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { buildEntry, append } from "@/lib/action-history"
 import { compressBody } from "@/lib/body"
 import { LibraryForm } from "./form"
@@ -18,13 +17,6 @@ export default async function NewLibraryPage() {
   const session = await auth()
   if (!session) redirect("/login")
   await requirePermission(session, Feature.LibraryManage)
-
-  const userPermissions = session.user.role === "MODERATOR"
-    ? (await dbAuth.featurePermission.findMany({
-        where: { userId: session.user.id },
-        select: { featureKey: true },
-      })).map(p => p.featureKey)
-    : []
 
   async function save(formData: FormData) {
     "use server"
@@ -138,11 +130,9 @@ export default async function NewLibraryPage() {
   })
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 w-full">
         <h1 className="text-xl font-bold mb-6">Новый текст</h1>
         <LibraryForm action={save} entries={allEntries} />
       </div>
-    </div>
   )
 }

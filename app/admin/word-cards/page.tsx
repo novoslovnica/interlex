@@ -1,7 +1,5 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import AdminNav from "@/components/AdminNav"
-import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import WordCardsClient from "./word-cards-client"
@@ -19,19 +17,9 @@ const WordCardsPage = async () => {
 
     await requirePermission(session, Feature.WordsEdit)
 
-    const userPermissions = session.user.role === "MODERATOR"
-        ? (await dbAuth.featurePermission.findMany({
-            where: { userId: session.user.id },
-            select: { featureKey: true },
-        })).map(p => p.featureKey)
-        : []
-
     return (
-        <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-            <div className="flex flex-col h-full overflow-hidden">
-                <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-                <WordCardsClient />
-            </div>
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <WordCardsClient />
         </div>
     )
 }

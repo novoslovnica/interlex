@@ -57,11 +57,9 @@ export default async function NewMediaPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 w-full">
         <h1 className="text-xl font-bold mb-6">Новая запись медиатеки</h1>
         <MediaLibraryForm action={save} />
       </div>
-    </div>
   )
 }

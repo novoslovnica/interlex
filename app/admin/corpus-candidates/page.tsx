@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
-import { prismaAuth as dbAuth, prismaCorpus } from "@/lib/prisma"
-import AdminNav from "@/components/AdminNav"
+import { prismaCorpus } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import type { Metadata } from "next"
@@ -30,19 +29,12 @@ export default async function CorpusCandidatesPage({
   // Prisma так же удобно, как отдельный запрос — берём общее число кластеров
   // отдельным groupBy без пагинации (эти данные малы: одна строка на
   // clusterKey, не на токен).
-  const [allPendingClusters, userPermissions] = await Promise.all([
-    prismaCorpus.corpusCandidateProposal.groupBy({
-      by: ["clusterKey"],
-      where: { status: "pending" },
-      _max: { occurrenceCount: true },
-      orderBy: { _max: { occurrenceCount: "desc" } },
-    }),
-    session.user.role === "MODERATOR"
-      ? dbAuth.featurePermission
-          .findMany({ where: { userId: session.user.id }, select: { featureKey: true } })
-          .then((rows) => rows.map((p) => p.featureKey))
-      : Promise.resolve([]),
-  ])
+  const allPendingClusters = await prismaCorpus.corpusCandidateProposal.groupBy({
+    by: ["clusterKey"],
+    where: { status: "pending" },
+    _max: { occurrenceCount: true },
+    orderBy: { _max: { occurrenceCount: "desc" } },
+  })
 
   const totalClusters = allPendingClusters.length
   const totalPages = Math.max(1, Math.ceil(totalClusters / PAGE_SIZE))
@@ -80,14 +72,11 @@ export default async function CorpusCandidatesPage({
   }))
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
-      <AdminNav userRole={session.user.role || ""} userPermissions={userPermissions} />
-      <CorpusCandidatesClient
-        clusters={clusters}
-        page={page}
-        totalPages={totalPages}
-        totalClusters={totalClusters}
-      />
-    </div>
+    <CorpusCandidatesClient
+      clusters={clusters}
+      page={page}
+      totalPages={totalPages}
+      totalClusters={totalClusters}
+    />
   )
 }

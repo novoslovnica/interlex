@@ -39,7 +39,6 @@ export default async function AdminMediaPage() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-background text-foreground transition-colors duration-300">
       <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Медиатека</h1>
@@ -109,6 +108,5 @@ export default async function AdminMediaPage() {
           </table>
         </div>
       </div>
-    </div>
   )
 }
