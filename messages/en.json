@@ -397,6 +397,11 @@
       "body": "Every request requires an API key. Create one for free from your account.",
       "linkText": "Manage your API keys"
     },
+    "playground": {
+      "title": "Try it in the browser",
+      "body": "An interactive playground — send requests right from this page, no API key needed and nothing counts against your own key's limit.",
+      "linkText": "Open the playground"
+    },
     "auth": {
       "title": "Authentication",
       "body": "Pass your key as a Bearer token in the Authorization header on every request."

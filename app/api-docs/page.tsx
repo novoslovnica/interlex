@@ -46,6 +46,13 @@ export default async function ApiDocsPage() {
                 </Link>
             </Section>
 
+            <Section title={t("playground.title")}>
+                <p className="text-muted-foreground">{t("playground.body")}</p>
+                <Link href="/api-docs/playground" className="text-blue-600 font-medium hover:underline">
+                    {t("playground.linkText")} →
+                </Link>
+            </Section>
+
             <Section title={t("auth.title")}>
                 <p className="text-muted-foreground">{t("auth.body")}</p>
                 <CodeBlock>{`Authorization: Bearer islx_your_key_here`}</CodeBlock>

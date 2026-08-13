@@ -397,6 +397,11 @@
       "body": "Vsaky zapyt trěbuje API-ključ. Tvorite jego bezplatno v vašem akkontě.",
       "linkText": "Upravljati API-ključami"
     },
+    "playground": {
+      "title": "Popytajte v brauzeru",
+      "body": "Interaktivny plejgraund — posylajte zapyty iz tej strany, bez vašego API-ključa i bez rashodovanja jego limita.",
+      "linkText": "Otvoriti plejgraund"
+    },
     "auth": {
       "title": "Autentifikacija",
       "body": "Peredavajte ključ kako Bearer-token v zaglavju Authorization v vsakem zapytu."
