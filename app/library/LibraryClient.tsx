@@ -182,7 +182,7 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
           </Link>
           {canCreate && (
             <Link
-              href="/admin/library/new"
+              href="/admin/platform/library/new"
               className="text-xs font-medium px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity shrink-0"
             >
               + Dodati
