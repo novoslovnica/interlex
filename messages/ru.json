@@ -13,9 +13,7 @@
       "settings": "Настройки",
       "profile": "Профиль",
       "flashcards": "Карточки",
-      "admin": "Админка тезауруса",
-      "adminPlatform": "Админка",
-      "adminCorpus": "Админка корпуса",
+      "admin": "Админка",
       "logout": "Выйти",
       "login": "Войти"
     },

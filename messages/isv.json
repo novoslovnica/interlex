@@ -13,9 +13,7 @@
       "profile": "Profil",
       "flashcards": "Kartočky",
       "settings": "Nastavljenja",
-      "admin": "Administracia (tezaurus)",
-      "adminPlatform": "Administracia (platforma)",
-      "adminCorpus": "Administracia (korpus)",
+      "admin": "Administracia",
       "logout": "Izidti",
       "login": "Vnidti"
     },

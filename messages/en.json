@@ -13,9 +13,7 @@
       "settings": "Settings",
       "profile": "Profile",
       "flashcards": "Flashcards",
-      "admin": "Admin (Thesaurus)",
-      "adminPlatform": "Admin (Platform)",
-      "adminCorpus": "Admin (Corpus)",
+      "admin": "Admin",
       "logout": "Log out",
       "login": "Log in"
     },
