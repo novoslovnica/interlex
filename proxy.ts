@@ -22,6 +22,13 @@ const ADMIN_ROLES = new Set(["ADMIN", "MODERATOR"]);
 // several widgets on one page) while still bounding scraping/abuse.
 const apiRateLimiter = new RateLimiter({ windowMs: 60_000, maxRequests: 120 });
 
+// Stricter limiter for the two public write endpoints behind roadmap items
+// 49/97 (suggest a word / report an error) - these are cheap-content spam
+// vectors (no auth required), so they get a tighter budget on top of the
+// general 120/min limiter above rather than relying on it alone.
+const publicWriteRateLimiter = new RateLimiter({ windowMs: 60_000, maxRequests: 5 });
+const PUBLIC_WRITE_PATHS = new Set(["/api/reports", "/api/suggestions"]);
+
 export async function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
@@ -53,6 +60,16 @@ export async function proxy(req: NextRequest) {
                 { error: "Too many requests" },
                 { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
             );
+        }
+
+        if (req.method === "POST" && PUBLIC_WRITE_PATHS.has(pathname)) {
+            const writeLimit = publicWriteRateLimiter.check(getClientKey(req.headers));
+            if (writeLimit.limited) {
+                return NextResponse.json(
+                    { error: "Too many requests" },
+                    { status: 429, headers: { "Retry-After": String(writeLimit.retryAfterSeconds) } }
+                );
+            }
         }
     }
 

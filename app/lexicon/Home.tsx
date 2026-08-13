@@ -87,6 +87,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const searchParams = useSearchParams();
 
     const searchInputRef = useRef<HTMLInputElement>(null);
+    const reverseSelectRef = useRef<HTMLSelectElement>(null);
 
     const performSearch = useCallback((query: string, mc: string, ut: string, lang: string) => {
         setIsLoading(true);
@@ -145,6 +146,17 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                 ? standardToSimple(mapNslToEtymologized(q))
                 : q;
             performSearch(normalized, mc, ut, '');
+        }
+    }, []);
+
+    // Точка входа из футера (roadmap п.45, "Обратный поиск") - реверс-поиск
+    // уже жил только как малозаметный select в этом же ряду фильтров, без
+    // какой-либо ссылки на него откуда-либо ещё в приложении. Ряд фильтров
+    // и так виден по умолчанию при первой загрузке (filtersVisible), так
+    // что достаточно навести фокус на select.
+    useEffect(() => {
+        if (searchParams.get('reverse') === '1') {
+            reverseSelectRef.current?.focus();
         }
     }, []);
 
@@ -211,6 +223,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         {formScript === ScriptMode.CYRILLIC ? "Кир" : "Lat"}
                     </button>
                     <select
+                        ref={reverseSelectRef}
                         className="filter-select"
                         value={reverseLang}
                         onChange={e => setReverseLang(e.target.value)}
@@ -306,7 +319,18 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                 )}
 
                 {!isLoading && hasFetched && !items.length && (
-                    <div id="noResults" className="no-results">{t("noResults")}</div>
+                    <div id="noResults" className="no-results space-y-3">
+                        <p>{t("noResults")}</p>
+                        <p>
+                            <span className="mr-2">{t("suggestWordCta")}</span>
+                            <a
+                                href={`/suggest${searchValue ? `?value=${encodeURIComponent(searchValue)}` : ""}`}
+                                className="inline-block px-4 py-1.5 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all shadow-sm text-sm"
+                            >
+                                {t("suggestWordButton")}
+                            </a>
+                        </p>
+                    </div>
                 )}
             </div>
         </>

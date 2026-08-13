@@ -20,6 +20,7 @@
     },
     "footer": {
       "protoslavic": "Praslověnsky",
+      "reverseSearch": "Obratno iskanje",
       "library": "Biblioteka",
       "textbook": "Učebnik",
       "about": "O projektě",
@@ -83,7 +84,49 @@
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
     "noResults": "Ničego ne najdeno",
     "loading": "Načitanje...",
-    "loadMore": "Pokazati veči"
+    "loadMore": "Pokazati veči",
+    "suggestWordCta": "Ne našli slovo? Predložite jego nam",
+    "suggestWordButton": "Predložiti slovo"
+  },
+  "report": {
+    "buttonTitle": "Soobščiti o pogrěšce",
+    "title": "Soobščiti o pogrěšce",
+    "reasonLabel": "Čto ne tak?",
+    "reasons": {
+      "wrong_translation": "Nevěrny prěvod",
+      "wrong_meaning": "Nevěrno značenje",
+      "typo": "Pravopisna pogrěška",
+      "grammar": "Gramatična pogrěška",
+      "other": "Drugo"
+    },
+    "commentLabel": "Komentar (neobovjazkovo)",
+    "commentPlaceholder": "Opišite, čto ne tak...",
+    "contactLabel": "Kako s vami svjazati sę (neobovjazkovo)",
+    "contactPlaceholder": "Email ili Telegram",
+    "submit": "Poslati",
+    "submitting": "Posylanje...",
+    "success": "Blagodarimo! My prijeli vaše soobščenje.",
+    "error": "Ne uspělo sę poslati. Prosimo, probujte znova.",
+    "cancel": "Otkazati"
+  },
+  "suggestWord": {
+    "title": "Predložiti slovo",
+    "description": "Ne našli slovo v slovniku? Predložite jego — moderator prověri i dodaje.",
+    "valueLabel": "Slovo",
+    "valuePlaceholder": "Kako vy jego znajete ili pišete",
+    "meaningLabel": "Čto ono značit",
+    "meaningPlaceholder": "Opišite značenje",
+    "exampleLabel": "Prikład užitja (neobovjazkovo)",
+    "examplePlaceholder": "Prědloženje s tym slovom",
+    "sourceNoteLabel": "Dodatno (neobovjazkovo)",
+    "sourceNotePlaceholder": "Naprimer: podobno na rusko...",
+    "contactLabel": "Kako s vami svjazati sę (neobovjazkovo)",
+    "contactPlaceholder": "Email ili Telegram",
+    "submit": "Poslati predloženje",
+    "submitting": "Posylanje...",
+    "success": "Blagodarimo! Vaše predloženje poslano na moderaciju.",
+    "error": "Ne uspělo sę poslati. Prosimo, probujte znova.",
+    "cancel": "Otkazati"
   },
   "translate": {
     "title": "Prěvod",

@@ -127,6 +127,57 @@ model Candidate {
   @@map("candidates")
 }
 
+// Публичная "предложить слово" (roadmap п.49) — намеренно узкая стейджинг-
+// таблица, отдельная от Candidate: Candidate несёт ~30 лингвистических полей
+// (paradigm, protoStemClass, stemExtension...), которые обычный читатель
+// заполнить не может. Модератор при ревью вручную материализует одобренную
+// заявку в Candidate (см. app/admin/suggestions/actions.ts, тот же паттерн,
+// что approveHypothesisAction для CorpusCandidateProposal → Candidate).
+model WordSuggestion {
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
+  suggestedValue      String?
+  meaningText         String
+  exampleSentence     String?
+  sourceNote          String?
+  submitterUserId     String?
+  submitterContact    String?
+  status              String    @default("pending")
+  promotedCandidateId Int?
+  reviewedByUserId    String?
+  reviewedAt          DateTime?
+  moderatorNote       String?
+
+  @@index([status])
+  @@map("word_suggestions")
+}
+
+// Лёгкая кнопка "сообщить об ошибке" (roadmap п.97) на карточке слова —
+// отдельно от полного цикла редактирования в админке. entityType/entityId
+// указывают на Meaning или на языковой код перевода конкретного значения;
+// lexemeId денормализован для списка в админке и ссылки на редактор слова.
+model ContentReport {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  entityType        String
+  entityId          Int
+  lexemeId          Int
+  field             String?
+  reportedValue     String?
+  reasonCode        String
+  comment           String?
+  submitterUserId   String?
+  submitterContact  String?
+  status            String    @default("pending")
+  resolvedByUserId  String?
+  resolvedAt        DateTime?
+  moderatorNote     String?
+
+  @@index([status])
+  @@index([lexemeId])
+  @@map("content_reports")
+}
+
 model Meaning {
   id               Int      @id @default(autoincrement())
   lexemeId         Int

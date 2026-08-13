@@ -386,6 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Lexeme: 'Lexeme',
   Candidate: 'Candidate',
+  WordSuggestion: 'WordSuggestion',
+  ContentReport: 'ContentReport',
   Meaning: 'Meaning',
   Morpheme: 'Morpheme',
   LexemeMorpheme: 'LexemeMorpheme',
@@ -422,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
+    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -571,6 +573,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CandidateCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CandidateCountAggregateOutputType> | number
+        }
+      }
+    }
+    WordSuggestion: {
+      payload: Prisma.$WordSuggestionPayload<ExtArgs>
+      fields: Prisma.WordSuggestionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WordSuggestionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WordSuggestionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        findFirst: {
+          args: Prisma.WordSuggestionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WordSuggestionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        findMany: {
+          args: Prisma.WordSuggestionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>[]
+        }
+        create: {
+          args: Prisma.WordSuggestionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        createMany: {
+          args: Prisma.WordSuggestionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WordSuggestionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>[]
+        }
+        delete: {
+          args: Prisma.WordSuggestionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        update: {
+          args: Prisma.WordSuggestionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        deleteMany: {
+          args: Prisma.WordSuggestionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WordSuggestionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WordSuggestionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>[]
+        }
+        upsert: {
+          args: Prisma.WordSuggestionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordSuggestionPayload>
+        }
+        aggregate: {
+          args: Prisma.WordSuggestionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWordSuggestion>
+        }
+        groupBy: {
+          args: Prisma.WordSuggestionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordSuggestionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WordSuggestionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordSuggestionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ContentReport: {
+      payload: Prisma.$ContentReportPayload<ExtArgs>
+      fields: Prisma.ContentReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContentReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContentReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        findFirst: {
+          args: Prisma.ContentReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContentReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        findMany: {
+          args: Prisma.ContentReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>[]
+        }
+        create: {
+          args: Prisma.ContentReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        createMany: {
+          args: Prisma.ContentReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContentReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>[]
+        }
+        delete: {
+          args: Prisma.ContentReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        update: {
+          args: Prisma.ContentReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContentReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContentReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContentReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContentReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentReportPayload>
+        }
+        aggregate: {
+          args: Prisma.ContentReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContentReport>
+        }
+        groupBy: {
+          args: Prisma.ContentReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContentReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContentReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContentReportCountAggregateOutputType> | number
         }
       }
     }
@@ -2256,6 +2406,46 @@ export const CandidateScalarFieldEnum = {
 export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
 
 
+export const WordSuggestionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  suggestedValue: 'suggestedValue',
+  meaningText: 'meaningText',
+  exampleSentence: 'exampleSentence',
+  sourceNote: 'sourceNote',
+  submitterUserId: 'submitterUserId',
+  submitterContact: 'submitterContact',
+  status: 'status',
+  promotedCandidateId: 'promotedCandidateId',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type WordSuggestionScalarFieldEnum = (typeof WordSuggestionScalarFieldEnum)[keyof typeof WordSuggestionScalarFieldEnum]
+
+
+export const ContentReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  lexemeId: 'lexemeId',
+  field: 'field',
+  reportedValue: 'reportedValue',
+  reasonCode: 'reasonCode',
+  comment: 'comment',
+  submitterUserId: 'submitterUserId',
+  submitterContact: 'submitterContact',
+  status: 'status',
+  resolvedByUserId: 'resolvedByUserId',
+  resolvedAt: 'resolvedAt',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type ContentReportScalarFieldEnum = (typeof ContentReportScalarFieldEnum)[keyof typeof ContentReportScalarFieldEnum]
+
+
 export const MeaningScalarFieldEnum = {
   id: 'id',
   lexemeId: 'lexemeId',
@@ -2667,6 +2857,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   lexeme?: Prisma.LexemeOmit
   candidate?: Prisma.CandidateOmit
+  wordSuggestion?: Prisma.WordSuggestionOmit
+  contentReport?: Prisma.ContentReportOmit
   meaning?: Prisma.MeaningOmit
   morpheme?: Prisma.MorphemeOmit
   lexemeMorpheme?: Prisma.LexemeMorphemeOmit

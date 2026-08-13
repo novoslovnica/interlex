@@ -83,6 +83,11 @@ export enum SystemFeature {
 
     // Живое сопоставление одного слова с RuWordNet (см. AGENTS.md "Semantic Network")
     RuwordnetMatch = "ruwordnet_match",
+
+    // Обратная связь от читателей (roadmap пп.49, 97): публичная форма
+    // "предложить слово" и кнопка "сообщить об ошибке" на карточке слова
+    SuggestionsReview = "suggestions_review",
+    ReportsReview = "reports_review",
 }
 
 // 2. Список кодов всех языков из вашей схемы Prisma
@@ -398,6 +403,18 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
         label: "Сопоставление с RuWordNet",
         description: "Живой запуск сопоставления одного слова с RuWordNet прямо из карточки слова",
         category: "Семантика",
+    },
+
+    // Обратная связь от читателей
+    [SystemFeature.SuggestionsReview]: {
+        label: "Ревью предложенных слов",
+        description: "Просмотр и обработка публичных заявок 'предложить слово' (создание кандидата или отклонение)",
+        category: "Обратная связь",
+    },
+    [SystemFeature.ReportsReview]: {
+        label: "Ревью жалоб на ошибки",
+        description: "Просмотр и обработка публичных жалоб 'сообщить об ошибке' на карточках слов",
+        category: "Обратная связь",
     },
 };
 

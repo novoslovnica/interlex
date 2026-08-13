@@ -23,6 +23,7 @@ import type {CorpusExample} from "@/lib/corpus/fetchWordExamples";
 import BookmarkButton from "@/components/BookmarkButton";
 import ShareButton from "@/components/ShareButton";
 import AccentLegend from "@/components/AccentLegend";
+import ReportErrorModal from "@/components/ReportErrorModal";
 import {ScriptMode} from "@/lib/script-mode";
 
 const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[] }) => {
@@ -470,10 +471,22 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     </span>
                                 )}
 
-                                <div className="text-base md:text-lg text-slate-700 leading-relaxed">
-                                   <ReactMarkdown>
-                                       {m.meaning || t("sections.placeholder")}
-                                   </ReactMarkdown>
+                                <div className="flex items-start justify-between gap-2">
+                                    <div className="text-base md:text-lg text-slate-700 leading-relaxed">
+                                       <ReactMarkdown>
+                                           {m.meaning || t("sections.placeholder")}
+                                       </ReactMarkdown>
+                                    </div>
+                                    {m.id && (
+                                        <ReportErrorModal
+                                            entityType="Meaning"
+                                            entityId={m.id}
+                                            lexemeId={item.id}
+                                            field="meaning"
+                                            reportedValue={m.meaning}
+                                            className="shrink-0 mt-1"
+                                        />
+                                    )}
                                 </div>
 
                                 {m.examples && (
@@ -513,20 +526,32 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                         {Object.entries(meaningTranslations).map(([lang, val]) => (
                                             <div
                                                 key={lang}
-                                                className="flex flex-col justify-center p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
+                                                className="flex items-start justify-between gap-1 p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
                                             >
-                                                <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{languageLabel(lang)}</span>
-                                                <span className="text-base font-medium text-slate-800">
-                                                    {val.split(",").map((word, index) => (
-                                                        <Link
-                                                            key={word}
-                                                            target="_blank"
-                                                            href={getExternalDictionaryUrl(lang, word) || "#"}
-                                                        >
-                                                            {!!index && ', '}{word}
-                                                        </Link>
-                                                    ))}
-                                                </span>
+                                                <div className="flex flex-col justify-center">
+                                                    <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{languageLabel(lang)}</span>
+                                                    <span className="text-base font-medium text-slate-800">
+                                                        {val.split(",").map((word, index) => (
+                                                            <Link
+                                                                key={word}
+                                                                target="_blank"
+                                                                href={getExternalDictionaryUrl(lang, word) || "#"}
+                                                            >
+                                                                {!!index && ', '}{word}
+                                                            </Link>
+                                                        ))}
+                                                    </span>
+                                                </div>
+                                                {m.id && (
+                                                    <ReportErrorModal
+                                                        entityType="Translation"
+                                                        entityId={m.id}
+                                                        lexemeId={item.id}
+                                                        field={lang}
+                                                        reportedValue={val}
+                                                        className="shrink-0"
+                                                    />
+                                                )}
                                             </div>
                                         ))}
                                     </div>

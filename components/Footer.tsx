@@ -10,6 +10,7 @@ export default async function Footer() {
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
                 <nav className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5">
                     <Link href="/proto" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("protoslavic")}</Link>
+                    <Link href="/lexicon?reverse=1" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("reverseSearch")}</Link>
                     <Link href="/library" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("library")}</Link>
                     <Link href="/textbook/ru" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("textbook")}</Link>
                     <Link href="/about" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("about")}</Link>

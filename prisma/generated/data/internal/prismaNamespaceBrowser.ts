@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Lexeme: 'Lexeme',
   Candidate: 'Candidate',
+  WordSuggestion: 'WordSuggestion',
+  ContentReport: 'ContentReport',
   Meaning: 'Meaning',
   Morpheme: 'Morpheme',
   LexemeMorpheme: 'LexemeMorpheme',
@@ -179,6 +181,46 @@ export const CandidateScalarFieldEnum = {
 } as const
 
 export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
+
+
+export const WordSuggestionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  suggestedValue: 'suggestedValue',
+  meaningText: 'meaningText',
+  exampleSentence: 'exampleSentence',
+  sourceNote: 'sourceNote',
+  submitterUserId: 'submitterUserId',
+  submitterContact: 'submitterContact',
+  status: 'status',
+  promotedCandidateId: 'promotedCandidateId',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type WordSuggestionScalarFieldEnum = (typeof WordSuggestionScalarFieldEnum)[keyof typeof WordSuggestionScalarFieldEnum]
+
+
+export const ContentReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  lexemeId: 'lexemeId',
+  field: 'field',
+  reportedValue: 'reportedValue',
+  reasonCode: 'reasonCode',
+  comment: 'comment',
+  submitterUserId: 'submitterUserId',
+  submitterContact: 'submitterContact',
+  status: 'status',
+  resolvedByUserId: 'resolvedByUserId',
+  resolvedAt: 'resolvedAt',
+  moderatorNote: 'moderatorNote'
+} as const
+
+export type ContentReportScalarFieldEnum = (typeof ContentReportScalarFieldEnum)[keyof typeof ContentReportScalarFieldEnum]
 
 
 export const MeaningScalarFieldEnum = {

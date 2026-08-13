@@ -60,6 +60,8 @@ const navItems: NavEntry[] = [
     { href: "/admin/core-vocabulary", label: "Базовая лексика", roles: ["ADMIN", "MODERATOR"], feature: Feature.CoreVocabularyManage },
     { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
     { href: "/admin/corpus-candidates", label: "Кандидаты из корпуса", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusCandidatesReview },
+    { href: "/admin/suggestions", label: "Предложенные слова", roles: ["ADMIN", "MODERATOR"], feature: Feature.SuggestionsReview },
+    { href: "/admin/reports", label: "Жалобы на ошибки", roles: ["ADMIN", "MODERATOR"], feature: Feature.ReportsReview },
     { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
     { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },

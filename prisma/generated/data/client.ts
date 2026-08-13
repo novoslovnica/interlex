@@ -52,6 +52,16 @@ export type Lexeme = Prisma.LexemeModel
  */
 export type Candidate = Prisma.CandidateModel
 /**
+ * Model WordSuggestion
+ * 
+ */
+export type WordSuggestion = Prisma.WordSuggestionModel
+/**
+ * Model ContentReport
+ * 
+ */
+export type ContentReport = Prisma.ContentReportModel
+/**
  * Model Meaning
  * 
  */

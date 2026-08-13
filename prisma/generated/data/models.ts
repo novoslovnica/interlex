@@ -10,6 +10,8 @@
  */
 export type * from './models/Lexeme'
 export type * from './models/Candidate'
+export type * from './models/WordSuggestion'
+export type * from './models/ContentReport'
 export type * from './models/Meaning'
 export type * from './models/Morpheme'
 export type * from './models/LexemeMorpheme'

@@ -20,6 +20,7 @@
     },
     "footer": {
       "protoslavic": "Праслав.",
+      "reverseSearch": "Обратный поиск",
       "library": "Библиотека",
       "textbook": "Учебник",
       "about": "О программе",
@@ -83,7 +84,49 @@
     "guestBanner": "При переводе с междуславянского локаль автоматически подстроена под локаль вашего браузера.",
     "noResults": "Ничего не найдено",
     "loading": "Загрузка...",
-    "loadMore": "Показать ещё"
+    "loadMore": "Показать ещё",
+    "suggestWordCta": "Не нашли слово? Предложите его нам",
+    "suggestWordButton": "Предложить слово"
+  },
+  "report": {
+    "buttonTitle": "Сообщить об ошибке",
+    "title": "Сообщить об ошибке",
+    "reasonLabel": "Что не так?",
+    "reasons": {
+      "wrong_translation": "Неверный перевод",
+      "wrong_meaning": "Неверное значение",
+      "typo": "Опечатка",
+      "grammar": "Грамматическая ошибка",
+      "other": "Другое"
+    },
+    "commentLabel": "Комментарий (необязательно)",
+    "commentPlaceholder": "Опишите, что не так...",
+    "contactLabel": "Как с вами связаться (необязательно)",
+    "contactPlaceholder": "Email или Telegram",
+    "submit": "Отправить",
+    "submitting": "Отправка...",
+    "success": "Спасибо! Мы получили сообщение.",
+    "error": "Не удалось отправить. Попробуйте ещё раз.",
+    "cancel": "Отмена"
+  },
+  "suggestWord": {
+    "title": "Предложить слово",
+    "description": "Не нашли слово в словаре? Предложите его — модератор проверит и добавит.",
+    "valueLabel": "Слово",
+    "valuePlaceholder": "Как вы его знаете или пишете",
+    "meaningLabel": "Что оно значит",
+    "meaningPlaceholder": "Опишите значение",
+    "exampleLabel": "Пример использования (необязательно)",
+    "examplePlaceholder": "Предложение с этим словом",
+    "sourceNoteLabel": "Дополнительно (необязательно)",
+    "sourceNotePlaceholder": "Например: похоже на русское...",
+    "contactLabel": "Как с вами связаться (необязательно)",
+    "contactPlaceholder": "Email или Telegram",
+    "submit": "Отправить предложение",
+    "submitting": "Отправка...",
+    "success": "Спасибо! Ваше предложение отправлено на модерацию.",
+    "error": "Не удалось отправить. Попробуйте ещё раз.",
+    "cancel": "Отмена"
   },
   "translate": {
     "title": "Перевод",

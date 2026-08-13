@@ -20,6 +20,7 @@
     },
     "footer": {
       "protoslavic": "Proto-Slavic",
+      "reverseSearch": "Reverse search",
       "library": "Library",
       "textbook": "Textbook",
       "about": "About",
@@ -83,7 +84,49 @@
     "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
     "noResults": "No results found",
     "loading": "Loading...",
-    "loadMore": "Show more"
+    "loadMore": "Show more",
+    "suggestWordCta": "Didn't find the word? Suggest it to us",
+    "suggestWordButton": "Suggest a word"
+  },
+  "report": {
+    "buttonTitle": "Report an error",
+    "title": "Report an error",
+    "reasonLabel": "What's wrong?",
+    "reasons": {
+      "wrong_translation": "Wrong translation",
+      "wrong_meaning": "Wrong meaning",
+      "typo": "Typo",
+      "grammar": "Grammar error",
+      "other": "Other"
+    },
+    "commentLabel": "Comment (optional)",
+    "commentPlaceholder": "Describe what's wrong...",
+    "contactLabel": "How to reach you (optional)",
+    "contactPlaceholder": "Email or Telegram",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "success": "Thanks! We received your report.",
+    "error": "Couldn't submit. Please try again.",
+    "cancel": "Cancel"
+  },
+  "suggestWord": {
+    "title": "Suggest a word",
+    "description": "Didn't find the word in the dictionary? Suggest it — a moderator will review and add it.",
+    "valueLabel": "Word",
+    "valuePlaceholder": "How you know or spell it",
+    "meaningLabel": "What it means",
+    "meaningPlaceholder": "Describe the meaning",
+    "exampleLabel": "Example usage (optional)",
+    "examplePlaceholder": "A sentence using this word",
+    "sourceNoteLabel": "Additional notes (optional)",
+    "sourceNotePlaceholder": "E.g. similar to Russian...",
+    "contactLabel": "How to reach you (optional)",
+    "contactPlaceholder": "Email or Telegram",
+    "submit": "Submit suggestion",
+    "submitting": "Submitting...",
+    "success": "Thanks! Your suggestion was sent for review.",
+    "error": "Couldn't submit. Please try again.",
+    "cancel": "Cancel"
   },
   "translate": {
     "title": "Translate",
