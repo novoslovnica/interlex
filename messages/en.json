@@ -418,7 +418,11 @@
       "wordsList": "Search/list lexicon words. Params: search, limit (default {defaultLimit}, max {maxLimit}), offset.",
       "wordsDetail": "Full detail for one word by slug: grammar fields, meanings, and translations.",
       "protoList": "Search/list the Proto-Slavic (ESSJa) dictionary. Params: search, limit, offset.",
-      "protoDetail": "Full detail for one Proto-Slavic word by id, including its morphemes."
+      "protoDetail": "Full detail for one Proto-Slavic word by id, including its morphemes.",
+      "libraryList": "Search/list library texts (without the full body). Params: search (title/author), limit, offset.",
+      "libraryDetail": "Full detail for one library text by slug, including the full body.",
+      "kwic": "KWIC (KeyWord In Context) corpus search - accepts a CQL query, returns matches with left/right context (±10 tokens) and document metadata.",
+      "kwicSyntax": "The CQL dialect is restricted: one or more [segments] in a row, each containing conditions like attr=\"value\" or attr!=\"value\" joined with &. Allowed attributes: lemma, pos, surfaceForm, or any grammatical feature (e.g. case=\"acc\"). No OR, no regex. Max 5 segments per query."
     }
   },
   "login": {

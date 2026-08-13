@@ -418,7 +418,11 @@
       "wordsList": "Iskanje/spisok slov lexikona. Parametry: search, limit (po umolčanju {defaultLimit}, maksimum {maxLimit}), offset.",
       "wordsDetail": "Polna informacija o jednom slově po slug: gramatičny polja, značenja i prěvody.",
       "protoList": "Iskanje/spisok praslověnskogo slovnika (ESSJa). Parametry: search, limit, offset.",
-      "protoDetail": "Polna informacija o jednom praslověnskom slově po id, vključajų morfemy."
+      "protoDetail": "Polna informacija o jednom praslověnskom slově po id, vključajų morfemy.",
+      "libraryList": "Iskanje/spisok tekstov biblioteky (bez polnogo teksta). Parametry: search (po naslovu/avtoru), limit, offset.",
+      "libraryDetail": "Polna informacija o jednom tekstě biblioteky po slug, vključajų polny tekst.",
+      "kwic": "Iskanje po korpusu v formatě KWIC (KeyWord In Context) - prijima CQL-zapyt, vraća sovpadenja s lěvym/pravym kontekstom (±10 tokenov) i metadanymi dokumenta.",
+      "kwicSyntax": "Sintaksis CQL je urězan: jeden ili několiko [segmentov] rjadom, vnutri - uslovja tipa attr=\"značenje\" ili attr!=\"značenje\", sojedinjena črěz &. Dostupne atributy: lemma, pos, surfaceForm, ili bilo kaky gramatičny znak (npr. case=\"acc\"). Bez OR i regularnyh vyrazov. Maksimum 5 segmentov na zapyt."
     }
   },
   "login": {

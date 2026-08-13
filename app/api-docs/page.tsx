@@ -89,6 +89,22 @@ export default async function ApiDocsPage() {
                         <p className="text-muted-foreground text-xs mt-1">{t("endpoints.protoDetail")}</p>
                         <CodeBlock>{`curl -H "Authorization: Bearer islx_..." \\\n  "https://interslavic-lexicon.com/api/public/v1/proto/123"`}</CodeBlock>
                     </div>
+                    <div>
+                        <p className="font-mono text-xs font-bold">GET /api/public/v1/library</p>
+                        <p className="text-muted-foreground text-xs mt-1">{t("endpoints.libraryList")}</p>
+                        <CodeBlock>{`curl -H "Authorization: Bearer islx_..." \\\n  "https://interslavic-lexicon.com/api/public/v1/library?search=princ&limit=10"`}</CodeBlock>
+                    </div>
+                    <div>
+                        <p className="font-mono text-xs font-bold">GET /api/public/v1/library/:slug</p>
+                        <p className="text-muted-foreground text-xs mt-1">{t("endpoints.libraryDetail")}</p>
+                        <CodeBlock>{`curl -H "Authorization: Bearer islx_..." \\\n  "https://interslavic-lexicon.com/api/public/v1/library/maly-princ"`}</CodeBlock>
+                    </div>
+                    <div>
+                        <p className="font-mono text-xs font-bold">POST /api/public/v1/corpus/kwic</p>
+                        <p className="text-muted-foreground text-xs mt-1">{t("endpoints.kwic")}</p>
+                        <p className="text-muted-foreground text-xs mt-1">{t("endpoints.kwicSyntax")}</p>
+                        <CodeBlock>{`curl -X POST -H "Authorization: Bearer islx_..." -H "Content-Type: application/json" \\\n  -d '{"query": "[lemma=\\"dom\\"]", "limit": 10}' \\\n  "https://interslavic-lexicon.com/api/public/v1/corpus/kwic"`}</CodeBlock>
+                    </div>
                 </div>
             </Section>
         </div>
