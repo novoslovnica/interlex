@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server"
 import { withPublicApiAuth } from "@/lib/publicApi/withAuth"
 import { publicApiList } from "@/lib/publicApi/response"
-import { searchPublicWords, clampLimit, clampOffset } from "@/lib/publicApi/words"
+import { searchPublicWords } from "@/lib/publicApi/words"
+import { clampLimit, clampOffset } from "@/lib/publicApi/pagination"
 
 export const GET = withPublicApiAuth("words", async (req: NextRequest) => {
     const { searchParams } = new URL(req.url)

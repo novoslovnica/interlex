@@ -2,7 +2,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { PUBLIC_API_RATE_LIMITS } from "@/lib/publicApi/rateLimit"
-import { PUBLIC_API_DEFAULT_LIMIT, PUBLIC_API_MAX_LIMIT } from "@/lib/publicApi/words"
+import { PUBLIC_API_DEFAULT_LIMIT, PUBLIC_API_MAX_LIMIT } from "@/lib/publicApi/pagination"
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("apiDocs")
