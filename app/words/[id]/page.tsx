@@ -9,6 +9,7 @@ import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
 import {resolveGender} from "@/lib/grammar/stemClassifier";
 import {PosType} from "@/lib/grammar/common";
 import {fetchWordExamples} from "@/lib/corpus/fetchWordExamples";
+import {fetchHistoricalAttestations} from "@/lib/historical/fetchHistoricalAttestations";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -46,6 +47,8 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     // corpus.db is a separate database from interlex.db (item.slug) - fetched
     // independently and merged here rather than joined in one query.
     const corpusExamples = item?.slug ? await fetchWordExamples(item.slug) : [];
+    // historical.db is also a separate database - same fetch-and-merge pattern.
+    const historicalAttestations = item?.id ? await fetchHistoricalAttestations(item.id) : [];
 
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
 
@@ -103,7 +106,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             )}
             <div className="scroll-container w-full pt-6 px-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} />
+                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} historicalAttestations={historicalAttestations} />
                 </Suspense>
             </div>
         </main>

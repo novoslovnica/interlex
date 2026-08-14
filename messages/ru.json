@@ -604,6 +604,8 @@
       "antonyms": "Антонимы",
       "corpusExamples": "Примеры из корпуса",
       "corpusExamplesSource": "Источник",
+      "historicalAttestations": "Исторические свидетельства",
+      "historicalAttestationsHint": "Родственные формы, зафиксированные в исторических текстах",
       "etymology": "Этимология и внешние ссылки",
       "etymologyLink": "Этимология",
       "wiktionary": "Реконструкция (Википедия)"

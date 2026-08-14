@@ -594,6 +594,8 @@
       "antonyms": "Antonimy",
       "corpusExamples": "Priměry iz korpusa",
       "corpusExamplesSource": "Izvor",
+      "historicalAttestations": "Istoričnye svědoctva",
+      "historicalAttestationsHint": "Rodstvenne formy najdene v istoričnyh tekstah",
       "etymology": "Etimologija i vněšnje odkazky",
       "etymologyLink": "Etimologija",
       "wiktionary": "Rekonstrukcija (Vikipedija)"

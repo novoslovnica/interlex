@@ -20,13 +20,14 @@ import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
 import type {CorpusExample} from "@/lib/corpus/fetchWordExamples";
+import type {HistoricalAttestationDTO} from "@/lib/historical/fetchHistoricalAttestations";
 import BookmarkButton from "@/components/BookmarkButton";
 import ShareButton from "@/components/ShareButton";
 import AccentLegend from "@/components/AccentLegend";
 import ReportErrorModal from "@/components/ReportErrorModal";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[] }) => {
+const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples, historicalAttestations }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[]; historicalAttestations?: HistoricalAttestationDTO[] }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -657,6 +658,29 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                 </li>
                             );
                         })}
+                    </ul>
+                </section>
+            )}
+
+            {historicalAttestations && historicalAttestations.length > 0 && (
+                <section className="mt-8 pt-4 border-t border-slate-100">
+                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-1">{t("sections.historicalAttestations")}</h2>
+                    <p className="text-xs text-slate-400 mb-3">{t("sections.historicalAttestationsHint")}</p>
+                    <ul className="space-y-3">
+                        {historicalAttestations.map((a, idx) => (
+                            <li key={idx} className="text-sm">
+                                <p className="text-slate-700">
+                                    <span className="font-semibold">{a.historicalLemma}</span>
+                                    <span className="text-xs text-slate-400 ml-2">({a.branchLabel}, ×{a.occurrenceCount})</span>
+                                </p>
+                                {a.example && (
+                                    <p className="text-xs text-slate-500 mt-0.5">
+                                        «{a.example.sentenceText}» — {a.example.documentTitle}
+                                        {a.example.period ? `, ${a.example.period}` : ""}
+                                    </p>
+                                )}
+                            </li>
+                        ))}
                     </ul>
                 </section>
             )}

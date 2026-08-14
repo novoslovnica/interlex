@@ -71,7 +71,7 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
             <span className="text-xs px-2 py-0.5 rounded bg-muted text-muted-foreground">{a.branchLabel}</span>
             <span className="text-xs text-muted-foreground">→</span>
             {a.lexeme ? (
-              <Link href={`/words/${a.lexeme.slug}`} target="_blank" className="text-lg font-semibold underline">
+              <Link href={`/words/${a.lexeme.id}`} target="_blank" className="text-lg font-semibold underline">
                 {a.lexeme.value}
               </Link>
             ) : (
