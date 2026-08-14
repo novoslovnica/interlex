@@ -69,6 +69,7 @@ const SECTIONS: HomeSection[] = [
     links: [
       { href: "/admin/candidates", label: "Кандидаты", feature: Feature.CandidatesPromote },
       { href: "/admin/corpus-candidates", label: "Кандидаты из корпуса", feature: Feature.CorpusCandidatesReview },
+      { href: "/admin/historical-attestations", label: "Историч. аттестации", feature: Feature.HistoricalAttestationsReview },
       { href: "/admin/suggestions", label: "Предложенные слова", feature: Feature.SuggestionsReview },
       { href: "/admin/reports", label: "Жалобы на ошибки", feature: Feature.ReportsReview },
       { href: "/admin/deduplication", label: "Дедупликация", adminOnly: true },

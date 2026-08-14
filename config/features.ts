@@ -72,6 +72,10 @@ export enum SystemFeature {
     // (см. lib/corpus/candidates/)
     CorpusCandidatesReview = "corpus_candidates_review",
 
+    // Ревью сопоставлений историч. корпусов (грамоты/старослав./балканослав.,
+    // historical.db) с лексемами — см. lib/historical/
+    HistoricalAttestationsReview = "historical_attestations_review",
+
     // Консолидированная семантическая сеть (2026-07-23) — новые типы отношений
     PosSynonymsEdit = "pos_synonyms_edit",
     InstanceOfEdit = "instance_of_edit",
@@ -370,6 +374,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CorpusCandidatesReview]: {
         label: "Кандидаты из корпуса",
         description: "Просмотр и модерация автосгенерированных кандидатов в лексемы из красных/жёлтых токенов корпуса",
+        category: "Корпус",
+    },
+    [SystemFeature.HistoricalAttestationsReview]: {
+        label: "Исторические аттестации",
+        description: "Просмотр и модерация автосопоставлений слов из историч. корпусов (грамоты/старослав./балканослав.) с лексемами",
         category: "Корпус",
     },
 

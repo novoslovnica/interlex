@@ -76,6 +76,7 @@ const navItems: NavEntry[] = [
         children: [
             { href: "/admin/candidates", label: "Кандидаты", roles: ["ADMIN", "MODERATOR"], feature: Feature.CandidatesPromote },
             { href: "/admin/corpus-candidates", label: "Кандидаты из корпуса", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusCandidatesReview },
+            { href: "/admin/historical-attestations", label: "Историч. аттестации", roles: ["ADMIN", "MODERATOR"], feature: Feature.HistoricalAttestationsReview },
             { href: "/admin/suggestions", label: "Предложенные слова", roles: ["ADMIN", "MODERATOR"], feature: Feature.SuggestionsReview },
             { href: "/admin/reports", label: "Жалобы на ошибки", roles: ["ADMIN", "MODERATOR"], feature: Feature.ReportsReview },
             { href: "/admin/deduplication", label: "Дедупликация", roles: ["ADMIN"], feature: Feature.DeduplicationManage },
