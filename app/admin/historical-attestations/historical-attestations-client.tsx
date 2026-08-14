@@ -1,9 +1,15 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { confirmAttestationAction, rejectAttestationAction } from "./actions"
+import { confirmAttestationAction, rejectAttestationAction, reassignAttestationAction } from "./actions"
+
+interface LexemeSearchResult {
+  id: number
+  value: string | null
+  pos: string | null
+}
 
 export interface AttestationDTO {
   id: number
@@ -36,6 +42,35 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
   const [hidden, setHidden] = useState(false)
   const router = useRouter()
 
+  const [reassignOpen, setReassignOpen] = useState(false)
+  const [query, setQuery] = useState("")
+  const [results, setResults] = useState<LexemeSearchResult[]>([])
+  const [searching, setSearching] = useState(false)
+  const [selected, setSelected] = useState<LexemeSearchResult | null>(null)
+
+  useEffect(() => {
+    if (!reassignOpen || query.trim().length < 2) {
+      setResults([])
+      return
+    }
+    const handle = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const res = await fetch(`/api/lexicon?search=${encodeURIComponent(query.trim())}&limit=8`)
+        if (res.ok) {
+          const data = await res.json()
+          const items = Array.isArray(data) ? data : []
+          setResults(items.map((r: LexemeSearchResult) => ({ id: r.id, value: r.value, pos: r.pos })))
+        }
+      } catch {
+        setResults([])
+      } finally {
+        setSearching(false)
+      }
+    }, 300)
+    return () => clearTimeout(handle)
+  }, [query, reassignOpen])
+
   const handleConfirm = () => {
     startTransition(async () => {
       const result = await confirmAttestationAction(a.id)
@@ -51,6 +86,19 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
   const handleReject = () => {
     startTransition(async () => {
       const result = await rejectAttestationAction(a.id, note || undefined)
+      if (result.success) {
+        setHidden(true)
+        router.refresh()
+      } else {
+        alert(`Ошибка: ${result.error}`)
+      }
+    })
+  }
+
+  const handleReassign = () => {
+    if (!selected) return
+    startTransition(async () => {
+      const result = await reassignAttestationAction(a.id, selected.id)
       if (result.success) {
         setHidden(true)
         router.refresh()
@@ -107,6 +155,10 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
                 Отмена
               </button>
             </>
+          ) : reassignOpen ? (
+            <button onClick={() => { setReassignOpen(false); setQuery(""); setSelected(null) }} className="px-2 py-1 text-xs rounded border hover:bg-muted transition-colors">
+              Отмена
+            </button>
           ) : (
             <>
               <button
@@ -115,6 +167,12 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
                 className="px-3 py-1 text-xs font-medium rounded bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {isPending ? "..." : "Подтвердить"}
+              </button>
+              <button
+                onClick={() => setReassignOpen(true)}
+                className="px-3 py-1 text-xs font-medium rounded border hover:bg-muted transition-colors"
+              >
+                Другая лексема
               </button>
               <button
                 onClick={() => setRejectOpen(true)}
@@ -126,6 +184,44 @@ function AttestationCard({ a }: { a: AttestationDTO }) {
           )}
         </div>
       </div>
+
+      {reassignOpen && (
+        <div className="border-t pt-2 space-y-2">
+          <input
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setSelected(null) }}
+            placeholder="Поиск лексемы по значению..."
+            autoFocus
+            className="w-full px-2 py-1 text-sm rounded border bg-background"
+          />
+          {searching && <div className="text-xs text-muted-foreground">Поиск...</div>}
+          {!searching && results.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {results.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setSelected(r)}
+                  className={`px-2 py-1 text-xs rounded border transition-colors ${
+                    selected?.id === r.id ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                  }`}
+                >
+                  {r.value} {r.pos && <span className="opacity-60">({r.pos})</span>}
+                </button>
+              ))}
+            </div>
+          )}
+          {!searching && query.trim().length >= 2 && results.length === 0 && (
+            <div className="text-xs text-muted-foreground">Ничего не найдено</div>
+          )}
+          <button
+            onClick={handleReassign}
+            disabled={isPending || !selected}
+            className="px-3 py-1 text-xs font-medium rounded bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {isPending ? "..." : selected ? `Привязать к «${selected.value}»` : "Привязать"}
+          </button>
+        </div>
+      )}
 
       {a.examples.length > 0 && (
         <div className="text-xs text-muted-foreground border-t pt-2 space-y-1">
