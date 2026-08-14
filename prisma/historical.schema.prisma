@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/historical"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Исторические корпуса (старославянский, восточнославянский/берестяные грамоты,
+// балканославянский и т.д.) — отдельная БД от corpus.db намеренно: разный
+// жизненный цикл (фиксированные манускрипты против растущего/переанализируемого
+// совр. корпуса), разметка приходит из внешних источников (UD/CLARIN трибанки),
+// а не из нашего DbAnalyzer/грамматического движка, и нет ни одного запроса,
+// где эти таблицы джойнились бы с CorpusDocument/CorpusToken в одной транзакции.
+// См. AGENTS.md "Historical Corpora" за архитектурное обсуждение.
+
+model HistoricalDocument {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  title        String
+  branch       String // 'east' | 'south' (старослав.) | 'balkan' — расширяемо, не enum
+  period       String? // напр. "1025-1500"
+  sourceCorpus String // 'ud_birchbark' | 'ud_ocs_proiel' | 'clarin_balkan_slavic'
+  sourceUrl    String?
+  license      String
+  externalId   String   @unique // стабильный тег источника для идемпотентного upsert (напр. имя conllu-файла)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sentences HistoricalSentence[]
+  tokens    HistoricalToken[]
+
+  @@index([branch])
+}
+
+model HistoricalSentence {
+  id           String @id @default(uuid())
+  documentSlug String
+  position     Int // порядковый номер предложения в документе
+  rawText      String // поле FORM'ов, склеенное как в CoNLL-U (# text = ...)
+
+  document HistoricalDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  tokens   HistoricalToken[]
+
+  @@index([documentSlug])
+}
+
+model HistoricalToken {
+  id           BigInt @id @default(autoincrement())
+  documentSlug String
+  sentenceId   String
+  tokenIndex   Int // позиция в предложении (CoNLL-U колонка ID)
+
+  form          String // FORM как в источнике (палеографическая кириллица)
+  formTranslit  String? // научная латинская транслитерация FORM, отдельный шаг
+  lemma         String // LEMMA как в источнике
+  lemmaTranslit String? // научная латинская транслитерация LEMMA
+  upos          String // UPOS
+  feats         Json? // FEATS
+
+  document HistoricalDocument @relation(fields: [documentSlug], references: [slug], onDelete: Cascade)
+  sentence HistoricalSentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+
+  @@index([documentSlug])
+  @@index([sentenceId])
+  @@index([lemmaTranslit])
+}
+
+// Мост к Lexeme (interlex.db) — plain id, без реального FK (та же конвенция,
+// что CorpusToken.wordSlug в corpus.db: разные БД, никогда не джойнятся в
+// одной транзакции). Группировка на уровне леммы, а не токена — не создаём
+// отдельную запись на каждое из тысяч вхождений одного и того же слова
+// (см. CorpusCandidateProposal.clusterKey за тем же паттерном).
+model HistoricalAttestation {
+  id              Int      @id @default(autoincrement())
+  branch          String // денормализовано для фильтрации без джойна
+  historicalLemma String // нормализованная (после транслитерации) лемма из корпуса
+  lexemeId        Int // -> interlex.db Lexeme.id
+  matchMethod     String // 'proto_bridge' | 'phonetic_heuristic' | 'manual'
+  confidence      Float    @default(0)
+  // Статус, выставленный вручную модератором, повторный прогон матчера
+  // никогда не трогает — тот же принцип, что CorpusCandidateProposal.status,
+  // CorpusDependency.source, semantic_relations.source.
+  status          String   @default("proposed") // 'auto_confirmed' | 'proposed' | 'rejected' | 'manually_confirmed'
+  occurrenceCount Int      @default(1)
+  exampleTokenIds Json // BigInt[] как JSON-массив, для показа примеров в UI
+  note            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([branch, historicalLemma, lexemeId])
+  @@index([lexemeId])
+  @@index([status])
+}

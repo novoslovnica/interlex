@@ -34,6 +34,12 @@ if (dbType === "auth") {
         migrations: { path: "prisma/migrations/corpus" },
         datasource: { url: resolveFileUrl(env("CORPUS_DATABASE_URL") ?? "file:./corpus.db") },
     });
+} else if (dbType === "historical") {
+    config = defineConfig({
+        schema: "prisma/historical.schema.prisma",
+        migrations: { path: "prisma/migrations/historical" },
+        datasource: { url: resolveFileUrl(env("HISTORICAL_DATABASE_URL") ?? "file:./historical.db") },
+    });
 } else {
     config = defineConfig({
         schema: "prisma/data.schema.prisma",

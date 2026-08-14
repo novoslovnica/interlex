@@ -17,6 +17,7 @@
     "db:gen-data": "cross-env DB_TYPE=data prisma generate",
     "db:gen-library": "cross-env DB_TYPE=library prisma generate",
     "db:gen-corpus": "cross-env DB_TYPE=corpus prisma generate",
+    "db:gen-historical": "cross-env DB_TYPE=historical prisma generate",
     "compute:frequency": "npx tsx scripts/compute-lexicon-frequency.ts",
     "upload:ruwordnet": "npx tsx scripts/db/upload-ruwordnet.ts",
     "refresh:ruwordnet": "npx tsx scripts/db/run-ruwordnet-pipeline.ts",
