@@ -9,6 +9,7 @@
       "tools": "Orųdia",
       "transliterator": "Transliterator",
       "rhymeSearch": "Iskanje rimov",
+      "collocations": "Slovosočetanja",
       "avatar": "Avatar",
       "profile": "Profil",
       "flashcards": "Kartočky",
@@ -215,7 +216,29 @@
   },
   "corpus": {
     "title": "Korpus tekstov",
-    "description": "Iskanje po korpusu tekstov na medžuslovjanskom jezyku. Konkordans i analiz slovoupotreby v paralelnyh tekstah."
+    "description": "Iskanje po korpusu tekstov na medžuslovjanskom jezyku. Konkordans i analiz slovoupotreby v paralelnyh tekstah.",
+    "collocations": {
+      "title": "Ustaljeny slovosočetanja i n-gramy",
+      "description": "Čto često stoji rędom s čim v korpusě tekstov: ustaljeny slovosočetanja i statistično znatna n-gramy.",
+      "navLabel": "Slovosočetanja",
+      "tabIdioms": "Ustaljeny slovosočetanja",
+      "tabNgrams": "N-gramy",
+      "searchPlaceholder": "Iskanje po slovu...",
+      "sizeLabel": "Razměr",
+      "sortLabel": "Sortěrovanje",
+      "sortByFrequency": "Po čęstotnosti",
+      "sortByScore": "Po znatnosti",
+      "frequencyLabel": "Čęstotnost",
+      "scoreLabel": "Znatnost",
+      "showExamples": "Priměry",
+      "hideExamples": "Skryti priměry",
+      "noExamples": "Priměry ně najdeny",
+      "loadingExamples": "Zagruzuje priměry...",
+      "loadMore": "Pokazati věcej",
+      "noResults": "Ničto ně najdeno",
+      "loading": "Zagruzuje...",
+      "totalCount": "Vsego: {count}"
+    }
   },
   "transliteration": {
     "title": "Transliterator",

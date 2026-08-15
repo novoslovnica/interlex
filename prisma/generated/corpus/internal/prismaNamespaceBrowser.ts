@@ -60,6 +60,7 @@ export const ModelName = {
   CorpusCandidateProposal: 'CorpusCandidateProposal',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
+  CorpusNgram: 'CorpusNgram',
   CorpusConfig: 'CorpusConfig'
 } as const
 
@@ -216,6 +217,24 @@ export const WordFormPriorityScalarFieldEnum = {
 } as const
 
 export type WordFormPriorityScalarFieldEnum = (typeof WordFormPriorityScalarFieldEnum)[keyof typeof WordFormPriorityScalarFieldEnum]
+
+
+export const CorpusNgramScalarFieldEnum = {
+  id: 'id',
+  n: 'n',
+  ngramKey: 'ngramKey',
+  slugs: 'slugs',
+  lemmas: 'lemmas',
+  posPattern: 'posPattern',
+  displayText: 'displayText',
+  frequency: 'frequency',
+  score: 'score',
+  logLikelihood: 'logLikelihood',
+  dice: 'dice',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CorpusNgramScalarFieldEnum = (typeof CorpusNgramScalarFieldEnum)[keyof typeof CorpusNgramScalarFieldEnum]
 
 
 export const CorpusConfigScalarFieldEnum = {

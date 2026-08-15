@@ -9,6 +9,7 @@
       "tools": "Tools",
       "transliterator": "Transliterator",
       "rhymeSearch": "Rhyme search",
+      "collocations": "Collocations",
       "avatar": "Avatar",
       "settings": "Settings",
       "profile": "Profile",
@@ -215,7 +216,29 @@
   },
   "corpus": {
     "title": "Text Corpus",
-    "description": "Search the Interslavic text corpus. Concordance and analysis of word usage in parallel texts."
+    "description": "Search the Interslavic text corpus. Concordance and analysis of word usage in parallel texts.",
+    "collocations": {
+      "title": "Collocations & N-grams",
+      "description": "What tends to stand next to what in the corpus: fixed collocations and statistically significant n-grams.",
+      "navLabel": "Collocations",
+      "tabIdioms": "Fixed collocations",
+      "tabNgrams": "N-grams",
+      "searchPlaceholder": "Search by word...",
+      "sizeLabel": "Size",
+      "sortLabel": "Sort",
+      "sortByFrequency": "By frequency",
+      "sortByScore": "By significance",
+      "frequencyLabel": "Frequency",
+      "scoreLabel": "Significance",
+      "showExamples": "Examples",
+      "hideExamples": "Hide examples",
+      "noExamples": "No examples found",
+      "loadingExamples": "Loading examples...",
+      "loadMore": "Load more",
+      "noResults": "No results found",
+      "loading": "Loading...",
+      "totalCount": "Total: {count}"
+    }
   },
   "transliteration": {
     "title": "Transliterator",

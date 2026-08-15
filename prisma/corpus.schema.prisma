@@ -263,6 +263,41 @@ model WordFormPriority {
   @@index([surfaceForm])
 }
 
+// Браузер устойчивых словосочетаний/n-грамм (roadmap #44, план
+// groovy-soaring-wall). N-generic: одна таблица на все размеры (2..5),
+// а не отдельные колонки/таблицы под каждый N — расширение диапазона
+// размеров в lib/corpus/collocations/computeNgrams.ts — это правка
+// конфига (NGRAM_SIZES), а не миграция схемы. slugs/lemmas — упорядоченные
+// JSON-массивы длины n (в SQLite нет нативного array-типа). displayText —
+// денормализованный текст фразы для дешёвого LIKE-поиска по слову без
+// отдельной junction-таблицы (см. план — такая таблица для "похожие
+// n-граммы этого слова" на /words/[id] осознанно не строится сейчас).
+// Таблица создаётся вручную сырым SQL (scripts/db/2026-08-15-add-corpus-ngrams.ts),
+// не через `prisma migrate dev` — та же причина, что и у остальных таблиц
+// corpus.db (нет _prisma_migrations, см. CLAUDE.md). Пересчитывается
+// полностью (delete+reinsert) при каждом запуске compute — здесь нет
+// ручных модераторских правок, которые нужно защищать (в отличие от
+// CorpusDependency.source/semantic_relations.source).
+model CorpusNgram {
+  id            Int      @id @default(autoincrement())
+  n             Int                  // 2..5
+  ngramKey      String               // slugs.join("␟") — канонический ключ для upsert
+  slugs         Json                 // упорядоченный string[] Lexeme.slug, длина == n
+  lemmas        Json                 // упорядоченный string[] для отображения (переживает удаление Lexeme)
+  posPattern    String               // pos через "_", напр. "ADJ_NOUN" — для фильтра/отображения
+  displayText   String               // фраза через пробел (латиница) — для LIKE-поиска
+  frequency     Int                  // сырая частота смежных, внутри-предложенческих вхождений
+  score         Float                // обобщённый PMI, единая метрика ранжирования для любого n
+  logLikelihood Float?               // только для n=2
+  dice          Float?               // только для n=2
+  updatedAt     DateTime @updatedAt
+
+  @@unique([n, ngramKey])
+  @@index([n, frequency])
+  @@index([n, score])
+  @@index([displayText])
+}
+
 model CorpusConfig {
   id    Int    @id @default(autoincrement())
   key   String @unique

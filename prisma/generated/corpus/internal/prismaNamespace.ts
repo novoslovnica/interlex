@@ -393,6 +393,7 @@ export const ModelName = {
   CorpusCandidateProposal: 'CorpusCandidateProposal',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
+  CorpusNgram: 'CorpusNgram',
   CorpusConfig: 'CorpusConfig'
 } as const
 
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusTokenCandidate" | "corpusDependency" | "corpusCandidateProposal" | "verbGovernment" | "wordFormPriority" | "corpusConfig"
+    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusTokenCandidate" | "corpusDependency" | "corpusCandidateProposal" | "verbGovernment" | "wordFormPriority" | "corpusNgram" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1079,6 +1080,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CorpusNgram: {
+      payload: Prisma.$CorpusNgramPayload<ExtArgs>
+      fields: Prisma.CorpusNgramFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusNgramFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusNgramFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusNgramFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusNgramFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        findMany: {
+          args: Prisma.CorpusNgramFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>[]
+        }
+        create: {
+          args: Prisma.CorpusNgramCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        createMany: {
+          args: Prisma.CorpusNgramCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusNgramCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusNgramDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        update: {
+          args: Prisma.CorpusNgramUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusNgramDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusNgramUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusNgramUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusNgramUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusNgramPayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusNgramAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusNgram>
+        }
+        groupBy: {
+          args: Prisma.CorpusNgramGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusNgramGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusNgramCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusNgramCountAggregateOutputType> | number
+        }
+      }
+    }
     CorpusConfig: {
       payload: Prisma.$CorpusConfigPayload<ExtArgs>
       fields: Prisma.CorpusConfigFieldRefs
@@ -1331,6 +1406,24 @@ export const WordFormPriorityScalarFieldEnum = {
 export type WordFormPriorityScalarFieldEnum = (typeof WordFormPriorityScalarFieldEnum)[keyof typeof WordFormPriorityScalarFieldEnum]
 
 
+export const CorpusNgramScalarFieldEnum = {
+  id: 'id',
+  n: 'n',
+  ngramKey: 'ngramKey',
+  slugs: 'slugs',
+  lemmas: 'lemmas',
+  posPattern: 'posPattern',
+  displayText: 'displayText',
+  frequency: 'frequency',
+  score: 'score',
+  logLikelihood: 'logLikelihood',
+  dice: 'dice',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CorpusNgramScalarFieldEnum = (typeof CorpusNgramScalarFieldEnum)[keyof typeof CorpusNgramScalarFieldEnum]
+
+
 export const CorpusConfigScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -1568,6 +1661,7 @@ export type GlobalOmitConfig = {
   corpusCandidateProposal?: Prisma.CorpusCandidateProposalOmit
   verbGovernment?: Prisma.VerbGovernmentOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit
+  corpusNgram?: Prisma.CorpusNgramOmit
   corpusConfig?: Prisma.CorpusConfigOmit
 }
 

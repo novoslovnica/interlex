@@ -87,6 +87,11 @@ export type VerbGovernment = Prisma.VerbGovernmentModel
  */
 export type WordFormPriority = Prisma.WordFormPriorityModel
 /**
+ * Model CorpusNgram
+ * 
+ */
+export type CorpusNgram = Prisma.CorpusNgramModel
+/**
  * Model CorpusConfig
  * 
  */

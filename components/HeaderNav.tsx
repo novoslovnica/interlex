@@ -62,6 +62,11 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                                 {t("rhymeSearch")}
                             </Link>
                         </li>
+                        <li>
+                            <Link href="/corpus/collocations" className="nav-link" onClick={closeAll}>
+                                {t("collocations")}
+                            </Link>
+                        </li>
                     </ul>
                 </li>
 

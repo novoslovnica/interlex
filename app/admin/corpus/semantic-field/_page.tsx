@@ -55,6 +55,32 @@ export default function SemanticFieldPage() {
   const [error, setError] = useState<string | null>(null)
   const [analysis, setAnalysis] = useState<CollocationAnalysis | null>(null)
 
+  const [ngramLoading, setNgramLoading] = useState(false)
+  const [ngramResult, setNgramResult] = useState<string | null>(null)
+  const [ngramError, setNgramError] = useState<string | null>(null)
+
+  async function recomputeNgrams() {
+    setNgramLoading(true)
+    setNgramError(null)
+    setNgramResult(null)
+    try {
+      const res = await fetch("/api/admin/corpus/recompute-ngrams", { method: "POST" })
+      const data = await res.json()
+      if (!res.ok) {
+        setNgramError(data.error || "Ошибка запроса")
+      } else {
+        const counts = Object.entries(data.written as Record<string, number>)
+          .map(([n, c]) => `n=${n}: ${c}`)
+          .join(", ")
+        setNgramResult(`Готово. Токенов в корпусе: ${data.totalMatchedTokens}. ${counts}`)
+      }
+    } catch (e) {
+      setNgramError(e instanceof Error ? e.message : "Неизвестная ошибка")
+    } finally {
+      setNgramLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (!debouncedWordQuery.trim() || selectedWord) return
     let cancelled = false
@@ -116,6 +142,25 @@ export default function SemanticFieldPage() {
         (LL ≥ 15.13), периферия — слабее, но ещё значимые (LL ≥ 10.83). Dice и PMI показаны как
         вспомогательные метрики.
       </p>
+
+      <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-lg border bg-muted/20">
+        <button
+          onClick={recomputeNgrams}
+          disabled={ngramLoading}
+          className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+        >
+          {ngramLoading ? "Пересчитываем..." : "Пересчитать n-граммы"}
+        </button>
+        <span className="text-xs text-muted-foreground max-w-md">
+          Обновляет данные для публичного{" "}
+          <a href="/corpus/collocations" target="_blank" className="underline">
+            /corpus/collocations
+          </a>{" "}
+          (биграммы..5-граммы корпуса).
+        </span>
+        {ngramResult && <span className="text-xs text-green-700 dark:text-green-300">{ngramResult}</span>}
+        {ngramError && <span className="text-xs text-red-700 dark:text-red-300">{ngramError}</span>}
+      </div>
 
       <div className="flex flex-wrap items-end gap-4 mb-6">
         <div className="relative w-72">
