@@ -35,6 +35,7 @@ export async function GET(
           include: { flavor: true },
         },
         protoSlavicWord: true,
+        protoSuggestion: { select: { id: true, lemma: true } },
       },
     })
 
@@ -66,9 +67,22 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { value, type, allophones, stressPosition, meaning, protoSlavicWordId } = body
+    const { value, type, allophones, stressPosition, meaning, protoSlavicWordId, protoSuggestionAction } = body
 
     const before = await db.morpheme.findUnique({ where: { id: rootId } })
+
+    // Once a moderator sets a real protoSlavicWordId (via the cached
+    // suggestion's Accept button or the manual search picker) a pending
+    // suggestion is resolved either way — drop it out of the
+    // /admin/roots?protoPending=true review queue.
+    const resolvesProtoSuggestion =
+      protoSlavicWordId !== undefined && protoSlavicWordId !== null && before?.protoSuggestionStatus === "pending"
+    const protoSuggestionStatusUpdate =
+      protoSuggestionAction === "dismiss"
+        ? "dismissed"
+        : protoSuggestionAction === "apply" || resolvesProtoSuggestion
+          ? "applied"
+          : undefined
 
     const root = await db.morpheme.update({
       where: { id: rootId },
@@ -78,6 +92,11 @@ export async function PATCH(
         ...(stressPosition !== undefined && { stressPosition: stressPosition ?? null }),
         ...(meaning !== undefined && { meaning: meaning ?? null }),
         ...(protoSlavicWordId !== undefined && { protoSlavicWordId: protoSlavicWordId ?? null }),
+        ...(protoSuggestionStatusUpdate && {
+          protoSuggestionStatus: protoSuggestionStatusUpdate,
+          protoSuggestionReviewedByUserId: session?.user?.id ?? null,
+          protoSuggestionReviewedAt: new Date(),
+        }),
       },
     })
 

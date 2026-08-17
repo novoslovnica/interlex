@@ -209,6 +209,8 @@ export type ProtoSlavicWordWhereInput = {
   body?: Prisma.StringFilter<"ProtoSlavicWord"> | string
   sourceUrl?: Prisma.StringFilter<"ProtoSlavicWord"> | string
   morphemes?: Prisma.MorphemeListRelationFilter
+  morphemeSuggestions?: Prisma.MorphemeListRelationFilter
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalListRelationFilter
 }
 
 export type ProtoSlavicWordOrderByWithRelationInput = {
@@ -217,6 +219,8 @@ export type ProtoSlavicWordOrderByWithRelationInput = {
   body?: Prisma.SortOrder
   sourceUrl?: Prisma.SortOrder
   morphemes?: Prisma.MorphemeOrderByRelationAggregateInput
+  morphemeSuggestions?: Prisma.MorphemeOrderByRelationAggregateInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalOrderByRelationAggregateInput
 }
 
 export type ProtoSlavicWordWhereUniqueInput = Prisma.AtLeast<{
@@ -228,6 +232,8 @@ export type ProtoSlavicWordWhereUniqueInput = Prisma.AtLeast<{
   body?: Prisma.StringFilter<"ProtoSlavicWord"> | string
   sourceUrl?: Prisma.StringFilter<"ProtoSlavicWord"> | string
   morphemes?: Prisma.MorphemeListRelationFilter
+  morphemeSuggestions?: Prisma.MorphemeListRelationFilter
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalListRelationFilter
 }, "id">
 
 export type ProtoSlavicWordOrderByWithAggregationInput = {
@@ -257,6 +263,8 @@ export type ProtoSlavicWordCreateInput = {
   body?: string
   sourceUrl?: string
   morphemes?: Prisma.MorphemeCreateNestedManyWithoutProtoSlavicWordInput
+  morphemeSuggestions?: Prisma.MorphemeCreateNestedManyWithoutProtoSuggestionInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalCreateNestedManyWithoutProtoSuggestionInput
 }
 
 export type ProtoSlavicWordUncheckedCreateInput = {
@@ -265,6 +273,8 @@ export type ProtoSlavicWordUncheckedCreateInput = {
   body?: string
   sourceUrl?: string
   morphemes?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSlavicWordInput
+  morphemeSuggestions?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSuggestionInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedCreateNestedManyWithoutProtoSuggestionInput
 }
 
 export type ProtoSlavicWordUpdateInput = {
@@ -272,6 +282,8 @@ export type ProtoSlavicWordUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
   morphemes?: Prisma.MorphemeUpdateManyWithoutProtoSlavicWordNestedInput
+  morphemeSuggestions?: Prisma.MorphemeUpdateManyWithoutProtoSuggestionNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUpdateManyWithoutProtoSuggestionNestedInput
 }
 
 export type ProtoSlavicWordUncheckedUpdateInput = {
@@ -280,6 +292,8 @@ export type ProtoSlavicWordUncheckedUpdateInput = {
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
   morphemes?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSlavicWordNestedInput
+  morphemeSuggestions?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSuggestionNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedUpdateManyWithoutProtoSuggestionNestedInput
 }
 
 export type ProtoSlavicWordCreateManyInput = {
@@ -342,6 +356,12 @@ export type ProtoSlavicWordCreateNestedOneWithoutMorphemesInput = {
   connect?: Prisma.ProtoSlavicWordWhereUniqueInput
 }
 
+export type ProtoSlavicWordCreateNestedOneWithoutMorphemeSuggestionsInput = {
+  create?: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemeSuggestionsInput>
+  connectOrCreate?: Prisma.ProtoSlavicWordCreateOrConnectWithoutMorphemeSuggestionsInput
+  connect?: Prisma.ProtoSlavicWordWhereUniqueInput
+}
+
 export type ProtoSlavicWordUpdateOneWithoutMorphemesNestedInput = {
   create?: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemesInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemesInput>
   connectOrCreate?: Prisma.ProtoSlavicWordCreateOrConnectWithoutMorphemesInput
@@ -352,10 +372,38 @@ export type ProtoSlavicWordUpdateOneWithoutMorphemesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProtoSlavicWordUpdateToOneWithWhereWithoutMorphemesInput, Prisma.ProtoSlavicWordUpdateWithoutMorphemesInput>, Prisma.ProtoSlavicWordUncheckedUpdateWithoutMorphemesInput>
 }
 
+export type ProtoSlavicWordUpdateOneWithoutMorphemeSuggestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemeSuggestionsInput>
+  connectOrCreate?: Prisma.ProtoSlavicWordCreateOrConnectWithoutMorphemeSuggestionsInput
+  upsert?: Prisma.ProtoSlavicWordUpsertWithoutMorphemeSuggestionsInput
+  disconnect?: Prisma.ProtoSlavicWordWhereInput | boolean
+  delete?: Prisma.ProtoSlavicWordWhereInput | boolean
+  connect?: Prisma.ProtoSlavicWordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProtoSlavicWordUpdateToOneWithWhereWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUpdateWithoutMorphemeSuggestionsInput>, Prisma.ProtoSlavicWordUncheckedUpdateWithoutMorphemeSuggestionsInput>
+}
+
+export type ProtoSlavicWordCreateNestedOneWithoutRootDiscoverySuggestionsInput = {
+  create?: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutRootDiscoverySuggestionsInput>
+  connectOrCreate?: Prisma.ProtoSlavicWordCreateOrConnectWithoutRootDiscoverySuggestionsInput
+  connect?: Prisma.ProtoSlavicWordWhereUniqueInput
+}
+
+export type ProtoSlavicWordUpdateOneWithoutRootDiscoverySuggestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutRootDiscoverySuggestionsInput>
+  connectOrCreate?: Prisma.ProtoSlavicWordCreateOrConnectWithoutRootDiscoverySuggestionsInput
+  upsert?: Prisma.ProtoSlavicWordUpsertWithoutRootDiscoverySuggestionsInput
+  disconnect?: Prisma.ProtoSlavicWordWhereInput | boolean
+  delete?: Prisma.ProtoSlavicWordWhereInput | boolean
+  connect?: Prisma.ProtoSlavicWordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProtoSlavicWordUpdateToOneWithWhereWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUpdateWithoutRootDiscoverySuggestionsInput>, Prisma.ProtoSlavicWordUncheckedUpdateWithoutRootDiscoverySuggestionsInput>
+}
+
 export type ProtoSlavicWordCreateWithoutMorphemesInput = {
   lemma: string
   body?: string
   sourceUrl?: string
+  morphemeSuggestions?: Prisma.MorphemeCreateNestedManyWithoutProtoSuggestionInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalCreateNestedManyWithoutProtoSuggestionInput
 }
 
 export type ProtoSlavicWordUncheckedCreateWithoutMorphemesInput = {
@@ -363,11 +411,35 @@ export type ProtoSlavicWordUncheckedCreateWithoutMorphemesInput = {
   lemma: string
   body?: string
   sourceUrl?: string
+  morphemeSuggestions?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSuggestionInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedCreateNestedManyWithoutProtoSuggestionInput
 }
 
 export type ProtoSlavicWordCreateOrConnectWithoutMorphemesInput = {
   where: Prisma.ProtoSlavicWordWhereUniqueInput
   create: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemesInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemesInput>
+}
+
+export type ProtoSlavicWordCreateWithoutMorphemeSuggestionsInput = {
+  lemma: string
+  body?: string
+  sourceUrl?: string
+  morphemes?: Prisma.MorphemeCreateNestedManyWithoutProtoSlavicWordInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalCreateNestedManyWithoutProtoSuggestionInput
+}
+
+export type ProtoSlavicWordUncheckedCreateWithoutMorphemeSuggestionsInput = {
+  id?: number
+  lemma: string
+  body?: string
+  sourceUrl?: string
+  morphemes?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSlavicWordInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedCreateNestedManyWithoutProtoSuggestionInput
+}
+
+export type ProtoSlavicWordCreateOrConnectWithoutMorphemeSuggestionsInput = {
+  where: Prisma.ProtoSlavicWordWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemeSuggestionsInput>
 }
 
 export type ProtoSlavicWordUpsertWithoutMorphemesInput = {
@@ -385,6 +457,8 @@ export type ProtoSlavicWordUpdateWithoutMorphemesInput = {
   lemma?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemeSuggestions?: Prisma.MorphemeUpdateManyWithoutProtoSuggestionNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUpdateManyWithoutProtoSuggestionNestedInput
 }
 
 export type ProtoSlavicWordUncheckedUpdateWithoutMorphemesInput = {
@@ -392,6 +466,86 @@ export type ProtoSlavicWordUncheckedUpdateWithoutMorphemesInput = {
   lemma?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemeSuggestions?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSuggestionNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedUpdateManyWithoutProtoSuggestionNestedInput
+}
+
+export type ProtoSlavicWordUpsertWithoutMorphemeSuggestionsInput = {
+  update: Prisma.XOR<Prisma.ProtoSlavicWordUpdateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedUpdateWithoutMorphemeSuggestionsInput>
+  create: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutMorphemeSuggestionsInput>
+  where?: Prisma.ProtoSlavicWordWhereInput
+}
+
+export type ProtoSlavicWordUpdateToOneWithWhereWithoutMorphemeSuggestionsInput = {
+  where?: Prisma.ProtoSlavicWordWhereInput
+  data: Prisma.XOR<Prisma.ProtoSlavicWordUpdateWithoutMorphemeSuggestionsInput, Prisma.ProtoSlavicWordUncheckedUpdateWithoutMorphemeSuggestionsInput>
+}
+
+export type ProtoSlavicWordUpdateWithoutMorphemeSuggestionsInput = {
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemes?: Prisma.MorphemeUpdateManyWithoutProtoSlavicWordNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUpdateManyWithoutProtoSuggestionNestedInput
+}
+
+export type ProtoSlavicWordUncheckedUpdateWithoutMorphemeSuggestionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemes?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSlavicWordNestedInput
+  rootDiscoverySuggestions?: Prisma.RootDiscoveryProposalUncheckedUpdateManyWithoutProtoSuggestionNestedInput
+}
+
+export type ProtoSlavicWordCreateWithoutRootDiscoverySuggestionsInput = {
+  lemma: string
+  body?: string
+  sourceUrl?: string
+  morphemes?: Prisma.MorphemeCreateNestedManyWithoutProtoSlavicWordInput
+  morphemeSuggestions?: Prisma.MorphemeCreateNestedManyWithoutProtoSuggestionInput
+}
+
+export type ProtoSlavicWordUncheckedCreateWithoutRootDiscoverySuggestionsInput = {
+  id?: number
+  lemma: string
+  body?: string
+  sourceUrl?: string
+  morphemes?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSlavicWordInput
+  morphemeSuggestions?: Prisma.MorphemeUncheckedCreateNestedManyWithoutProtoSuggestionInput
+}
+
+export type ProtoSlavicWordCreateOrConnectWithoutRootDiscoverySuggestionsInput = {
+  where: Prisma.ProtoSlavicWordWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutRootDiscoverySuggestionsInput>
+}
+
+export type ProtoSlavicWordUpsertWithoutRootDiscoverySuggestionsInput = {
+  update: Prisma.XOR<Prisma.ProtoSlavicWordUpdateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedUpdateWithoutRootDiscoverySuggestionsInput>
+  create: Prisma.XOR<Prisma.ProtoSlavicWordCreateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedCreateWithoutRootDiscoverySuggestionsInput>
+  where?: Prisma.ProtoSlavicWordWhereInput
+}
+
+export type ProtoSlavicWordUpdateToOneWithWhereWithoutRootDiscoverySuggestionsInput = {
+  where?: Prisma.ProtoSlavicWordWhereInput
+  data: Prisma.XOR<Prisma.ProtoSlavicWordUpdateWithoutRootDiscoverySuggestionsInput, Prisma.ProtoSlavicWordUncheckedUpdateWithoutRootDiscoverySuggestionsInput>
+}
+
+export type ProtoSlavicWordUpdateWithoutRootDiscoverySuggestionsInput = {
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemes?: Prisma.MorphemeUpdateManyWithoutProtoSlavicWordNestedInput
+  morphemeSuggestions?: Prisma.MorphemeUpdateManyWithoutProtoSuggestionNestedInput
+}
+
+export type ProtoSlavicWordUncheckedUpdateWithoutRootDiscoverySuggestionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lemma?: Prisma.StringFieldUpdateOperationsInput | string
+  body?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  morphemes?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSlavicWordNestedInput
+  morphemeSuggestions?: Prisma.MorphemeUncheckedUpdateManyWithoutProtoSuggestionNestedInput
 }
 
 
@@ -401,10 +555,14 @@ export type ProtoSlavicWordUncheckedUpdateWithoutMorphemesInput = {
 
 export type ProtoSlavicWordCountOutputType = {
   morphemes: number
+  morphemeSuggestions: number
+  rootDiscoverySuggestions: number
 }
 
 export type ProtoSlavicWordCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   morphemes?: boolean | ProtoSlavicWordCountOutputTypeCountMorphemesArgs
+  morphemeSuggestions?: boolean | ProtoSlavicWordCountOutputTypeCountMorphemeSuggestionsArgs
+  rootDiscoverySuggestions?: boolean | ProtoSlavicWordCountOutputTypeCountRootDiscoverySuggestionsArgs
 }
 
 /**
@@ -424,6 +582,20 @@ export type ProtoSlavicWordCountOutputTypeCountMorphemesArgs<ExtArgs extends run
   where?: Prisma.MorphemeWhereInput
 }
 
+/**
+ * ProtoSlavicWordCountOutputType without action
+ */
+export type ProtoSlavicWordCountOutputTypeCountMorphemeSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MorphemeWhereInput
+}
+
+/**
+ * ProtoSlavicWordCountOutputType without action
+ */
+export type ProtoSlavicWordCountOutputTypeCountRootDiscoverySuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RootDiscoveryProposalWhereInput
+}
+
 
 export type ProtoSlavicWordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -431,6 +603,8 @@ export type ProtoSlavicWordSelect<ExtArgs extends runtime.Types.Extensions.Inter
   body?: boolean
   sourceUrl?: boolean
   morphemes?: boolean | Prisma.ProtoSlavicWord$morphemesArgs<ExtArgs>
+  morphemeSuggestions?: boolean | Prisma.ProtoSlavicWord$morphemeSuggestionsArgs<ExtArgs>
+  rootDiscoverySuggestions?: boolean | Prisma.ProtoSlavicWord$rootDiscoverySuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.ProtoSlavicWordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["protoSlavicWord"]>
 
@@ -458,6 +632,8 @@ export type ProtoSlavicWordSelectScalar = {
 export type ProtoSlavicWordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lemma" | "body" | "sourceUrl", ExtArgs["result"]["protoSlavicWord"]>
 export type ProtoSlavicWordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   morphemes?: boolean | Prisma.ProtoSlavicWord$morphemesArgs<ExtArgs>
+  morphemeSuggestions?: boolean | Prisma.ProtoSlavicWord$morphemeSuggestionsArgs<ExtArgs>
+  rootDiscoverySuggestions?: boolean | Prisma.ProtoSlavicWord$rootDiscoverySuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.ProtoSlavicWordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProtoSlavicWordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -467,6 +643,8 @@ export type $ProtoSlavicWordPayload<ExtArgs extends runtime.Types.Extensions.Int
   name: "ProtoSlavicWord"
   objects: {
     morphemes: Prisma.$MorphemePayload<ExtArgs>[]
+    morphemeSuggestions: Prisma.$MorphemePayload<ExtArgs>[]
+    rootDiscoverySuggestions: Prisma.$RootDiscoveryProposalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -868,6 +1046,8 @@ readonly fields: ProtoSlavicWordFieldRefs;
 export interface Prisma__ProtoSlavicWordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   morphemes<T extends Prisma.ProtoSlavicWord$morphemesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProtoSlavicWord$morphemesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MorphemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  morphemeSuggestions<T extends Prisma.ProtoSlavicWord$morphemeSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProtoSlavicWord$morphemeSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MorphemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  rootDiscoverySuggestions<T extends Prisma.ProtoSlavicWord$rootDiscoverySuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProtoSlavicWord$rootDiscoverySuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RootDiscoveryProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1313,6 +1493,54 @@ export type ProtoSlavicWord$morphemesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.MorphemeScalarFieldEnum | Prisma.MorphemeScalarFieldEnum[]
+}
+
+/**
+ * ProtoSlavicWord.morphemeSuggestions
+ */
+export type ProtoSlavicWord$morphemeSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Morpheme
+   */
+  select?: Prisma.MorphemeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Morpheme
+   */
+  omit?: Prisma.MorphemeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MorphemeInclude<ExtArgs> | null
+  where?: Prisma.MorphemeWhereInput
+  orderBy?: Prisma.MorphemeOrderByWithRelationInput | Prisma.MorphemeOrderByWithRelationInput[]
+  cursor?: Prisma.MorphemeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MorphemeScalarFieldEnum | Prisma.MorphemeScalarFieldEnum[]
+}
+
+/**
+ * ProtoSlavicWord.rootDiscoverySuggestions
+ */
+export type ProtoSlavicWord$rootDiscoverySuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RootDiscoveryProposal
+   */
+  select?: Prisma.RootDiscoveryProposalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RootDiscoveryProposal
+   */
+  omit?: Prisma.RootDiscoveryProposalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RootDiscoveryProposalInclude<ExtArgs> | null
+  where?: Prisma.RootDiscoveryProposalWhereInput
+  orderBy?: Prisma.RootDiscoveryProposalOrderByWithRelationInput | Prisma.RootDiscoveryProposalOrderByWithRelationInput[]
+  cursor?: Prisma.RootDiscoveryProposalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RootDiscoveryProposalScalarFieldEnum | Prisma.RootDiscoveryProposalScalarFieldEnum[]
 }
 
 /**

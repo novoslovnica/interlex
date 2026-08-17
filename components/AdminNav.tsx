@@ -45,6 +45,7 @@ const navItems: NavEntry[] = [
             { href: "/admin/core-vocabulary", label: "Базовая лексика", roles: ["ADMIN", "MODERATOR"], feature: Feature.CoreVocabularyManage },
             { href: "/admin/roots", label: "Корни", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
             { href: "/admin/roots/words", label: "Слова корней", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootsEdit },
+            { href: "/admin/root-discovery", label: "Новые корни (кандидаты)", roles: ["ADMIN", "MODERATOR"], feature: Feature.RootDiscoveryReview },
             { href: "/admin/endings", label: "Окончания", roles: ["ADMIN", "MODERATOR"], feature: Feature.EndingsEdit },
             { href: "/admin/verb-government", label: "Управление глаголов", roles: ["ADMIN", "MODERATOR"], feature: Feature.VerbGovernmentEdit },
         ],

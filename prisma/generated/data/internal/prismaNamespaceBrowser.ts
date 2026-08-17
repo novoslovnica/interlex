@@ -66,6 +66,7 @@ export const ModelName = {
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
+  RootDiscoveryProposal: 'RootDiscoveryProposal',
   Synset: 'Synset',
   MeaningSynset: 'MeaningSynset',
   AuditLog: 'AuditLog',
@@ -247,7 +248,19 @@ export const MorphemeScalarFieldEnum = {
   type: 'type',
   stressPosition: 'stressPosition',
   meaning: 'meaning',
-  protoSlavicWordId: 'protoSlavicWordId'
+  protoSlavicWordId: 'protoSlavicWordId',
+  qualityFlag: 'qualityFlag',
+  qualityFlagSuggestedValue: 'qualityFlagSuggestedValue',
+  qualityFlagDetails: 'qualityFlagDetails',
+  qualityFlagStatus: 'qualityFlagStatus',
+  qualityFlaggedAt: 'qualityFlaggedAt',
+  qualityFlagReviewedByUserId: 'qualityFlagReviewedByUserId',
+  qualityFlagReviewedAt: 'qualityFlagReviewedAt',
+  protoSuggestionId: 'protoSuggestionId',
+  protoSuggestionScore: 'protoSuggestionScore',
+  protoSuggestionStatus: 'protoSuggestionStatus',
+  protoSuggestionReviewedByUserId: 'protoSuggestionReviewedByUserId',
+  protoSuggestionReviewedAt: 'protoSuggestionReviewedAt'
 } as const
 
 export type MorphemeScalarFieldEnum = (typeof MorphemeScalarFieldEnum)[keyof typeof MorphemeScalarFieldEnum]
@@ -347,6 +360,30 @@ export const ProtoSlavicWordScalarFieldEnum = {
 } as const
 
 export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
+
+
+export const RootDiscoveryProposalScalarFieldEnum = {
+  id: 'id',
+  clusterKey: 'clusterKey',
+  proposedValue: 'proposedValue',
+  method: 'method',
+  strippedPrefix: 'strippedPrefix',
+  strippedSuffix: 'strippedSuffix',
+  memberLexemeIds: 'memberLexemeIds',
+  occurrenceCount: 'occurrenceCount',
+  exampleLexemeIds: 'exampleLexemeIds',
+  protoSuggestionId: 'protoSuggestionId',
+  protoSuggestionScore: 'protoSuggestionScore',
+  status: 'status',
+  createdMorphemeId: 'createdMorphemeId',
+  resolutionNote: 'resolutionNote',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type RootDiscoveryProposalScalarFieldEnum = (typeof RootDiscoveryProposalScalarFieldEnum)[keyof typeof RootDiscoveryProposalScalarFieldEnum]
 
 
 export const SynsetScalarFieldEnum = {
@@ -474,10 +511,34 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 

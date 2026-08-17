@@ -238,10 +238,36 @@ model Morpheme {
   protoSlavicWordId Int?
   protoSlavicWord   ProtoSlavicWord? @relation(fields: [protoSlavicWordId], references: [id])
 
+  // Флаги качества корневого гнезда, проставляются идемпотентным аудитом
+  // (scripts/roots-discovery/audit-root-quality.ts). Повторный прогон
+  // трогает только строки с qualityFlagStatus IS NULL — решение модератора
+  // ('pending' после проставления флага, затем 'dismissed'/'resolved')
+  // никогда не сбрасывается автоматически.
+  qualityFlag                 String?
+  qualityFlagSuggestedValue   String?
+  qualityFlagDetails          String?
+  qualityFlagStatus           String?
+  qualityFlaggedAt            DateTime?
+  qualityFlagReviewedByUserId String?
+  qualityFlagReviewedAt       DateTime?
+
+  // Кэш лучшего кандидата прасл. формы для очереди ревью в /admin/roots.
+  // protoSlavicWordId выше остаётся единственным источником истины для уже
+  // ПОДТВЕРЖДЁННОЙ связи — эти поля лишь черновик-подсказка до
+  // подтверждения/отклонения модератором либо автоприменения (exact+unique).
+  protoSuggestionId               Int?
+  protoSuggestion                 ProtoSlavicWord? @relation("MorphemeProtoSuggestion", fields: [protoSuggestionId], references: [id])
+  protoSuggestionScore            Float?
+  protoSuggestionStatus           String?
+  protoSuggestionReviewedByUserId String?
+  protoSuggestionReviewedAt       DateTime?
+
   lexemes_morphemes  LexemeMorpheme[]
   morphemeAllophones MorphemeAllophone[]
 
   @@index([protoSlavicWordId])
+  @@index([qualityFlagStatus])
+  @@index([protoSuggestionStatus])
   @@map("morphemes")
 }
 
@@ -377,10 +403,54 @@ model ProtoSlavicWord {
   body      String @default("")
   sourceUrl String @default("") @map("source_url")
 
-  morphemes Morpheme[]
+  morphemes                Morpheme[]
+  morphemeSuggestions      Morpheme[]               @relation("MorphemeProtoSuggestion")
+  rootDiscoverySuggestions RootDiscoveryProposal[]   @relation("RootProposalProtoSuggestion")
 
   @@index([lemma])
   @@map("proto_slavic_words")
+}
+
+// Кластеры непривязанных лексем, предложенные скриптом аффиксного разбора
+// (scripts/roots-discovery/discover-new-roots.ts) как кандидаты в новые
+// корневые Morpheme (type=0). memberLexemeIds хранит только id — реальные
+// LexemeMorpheme создаются лишь после одобрения модератором
+// (app/admin/root-discovery/actions.ts), чтобы непроверенный кластер не мог
+// молча создать привязки к ещё не существующему корню.
+//
+// Повторный прогон генератора обновляет по ключу (clusterKey, method):
+// memberLexemeIds/occurrenceCount/exampleLexemeIds/lastSeenAt/protoSuggestion*,
+// но никогда не трогает status — тот же reimport-safety идиом, что у
+// CorpusCandidateProposal/CorpusToken.resolutionSource/semantic_relations.source.
+model RootDiscoveryProposal {
+  id Int @id @default(autoincrement())
+
+  clusterKey    String
+  proposedValue String
+  method        String // 'affix_strip' | 'raw_substring_fallback'
+  strippedPrefix String?
+  strippedSuffix String?
+
+  memberLexemeIds  Json
+  occurrenceCount  Int  @default(0)
+  exampleLexemeIds Json
+
+  protoSuggestionId    Int?
+  protoSuggestion      ProtoSlavicWord? @relation("RootProposalProtoSuggestion", fields: [protoSuggestionId], references: [id])
+  protoSuggestionScore Float?
+
+  status            String    @default("pending") // pending | approved | rejected
+  createdMorphemeId Int? // Morpheme.id после одобрения, без FK-констрейнта (как candidateId в CorpusCandidateProposal)
+  resolutionNote    String?
+  reviewedByUserId  String?
+  reviewedAt        DateTime?
+
+  firstSeenAt DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+
+  @@unique([clusterKey, method])
+  @@index([status, occurrenceCount])
+  @@map("root_discovery_proposals")
 }
 
 // Синсеты RuWordNet — смысловые группы слов

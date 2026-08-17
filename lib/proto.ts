@@ -1,3 +1,5 @@
+import { normalizeSoftConsonants, collapseDoubleJ } from './isv';
+
 // Интерфейс расширенной записи в нашей базе данных
 export interface EnhancedLemmaRow {
     interslavic: string;       // Междуславянская лемма
@@ -110,12 +112,93 @@ export function convertToInterslavic(protoWord: string): string {
 
     return word;
 }
+
+// Стреи кириллические омоглифы, оставшиеся от распознавания глифов Brill PDF
+// (см. sanitizeProtoSlavic/brill_glyph_map.json — та функция разбирает
+// токены /gXXXX, эта же чистит символы, которые уже "просочились" как
+// обычная кириллица, например "оbčаръ" с кириллическими о/а вместо
+// латинских). Намеренно НЕ включает ъ/ь — это настоящие кириллические
+// еры, которые convertToInterslavic уже ожидает и обрабатывает.
+const PROTO_HOMOGLYPHS: Record<string, string> = {
+    'а': 'a', 'о': 'o', 'е': 'e', 'р': 'r', 'с': 'c', 'х': 'h',
+    'у': 'u', 'в': 'v', 'н': 'n', 'к': 'k', 'м': 'm', 'т': 't',
+};
+
+function fixProtoHomoglyphs(s: string): string {
+    return [...s].map((ch) => PROTO_HOMOGLYPHS[ch] ?? ch).join('');
+}
+
+// Порядок important: длинные окончания раньше коротких, иначе, например,
+// "iti" срежется как "i" + "ti" вместо одного "iti".
+const PROTO_ENDINGS = [
+    'ěti', 'iti', 'ovati', 'nǫti', 'ati', 'ti', // маркеры инфинитива глагола
+    'ьje', 'ьja', 'ije', 'ija', 'ьcь', 'ъkъ',   // частые деривационные хвосты после convertToInterslavic
+    'ja', 'a', 'o', 'y', 'e',                     // голые гласные класса основы
+];
+
+function finalNormalizeForRootMatching(s: string): string {
+    return collapseDoubleJ(normalizeSoftConsonants(s.toLowerCase().trim()));
+}
+
+/**
+ * Приводит сырую лемму из proto_slavic_words (ESSJa) к форме, сравнимой с
+ * современным корнем ISV (lib/grammar Morpheme.value): берёт первую
+ * реконструкцию до "/" и первого пробела (отбрасывая "(sę)"/побочные формы/
+ * римские цифры-омонимы), снимает ведущую "*", чинит кириллические
+ * омоглифы, прогоняет через convertToInterslavic, снимает одно
+ * праслав. окончание, и в конце применяет ту же нормализацию мягких
+ * согласных (lib/isv.ts), что и корневая сторона сравнения — обе стороны
+ * должны попасть в одну орфографию до подсчёта расстояния Левенштейна.
+ */
+export function normalizeProtoLemma(rawLemma: string): string {
+    let token = (rawLemma || '').trim();
+    token = token.split('/')[0];
+    token = token.trim().split(/\s+/)[0] || '';
+    token = token.replace(/^\*+/, '');
+    token = token.replace(/[().,;:*]+$/g, '');
+    token = fixProtoHomoglyphs(token);
+    if (!token) return '';
+
+    let converted = convertToInterslavic(token);
+    for (const ending of PROTO_ENDINGS) {
+        if (converted.endsWith(ending) && converted.length - ending.length >= 2) {
+            converted = converted.slice(0, -ending.length);
+            break;
+        }
+    }
+    return finalNormalizeForRootMatching(converted);
+}
+
+/** Нормализует ISV-значение корня (Morpheme.value) той же финальной
+ * орфографической нормализацией, что и normalizeProtoLemma, чтобы обе
+ * стороны сравнения были сопоставимы. */
+export function normalizeRootValueForMatching(value: string): string {
+    return finalNormalizeForRootMatching(value || '');
+}
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Загружаем автоматически заполненную карту глифов
-const glyphMapPath = path.resolve('./brill_glyph_map.json');
-const brillGlyphMap: Record<string, string> = JSON.parse(fs.readFileSync(glyphMapPath, 'utf-8'));
+// Карта глифов грузится лениво (только когда реально вызывается
+// sanitizeProtoSlavic), а не на верхнем уровне модуля — раньше файл
+// читался при импорте lib/proto.ts, из-за чего сам факт импорта этого
+// модуля (например, для normalizeProtoLemma выше) падал с ENOENT, если
+// brill_glyph_map.json не лежит в корне репозитория (он был перенесён в
+// drafts/, путь ниже проверяет оба места).
+let brillGlyphMapCache: Record<string, string> | null = null;
+
+function loadBrillGlyphMap(): Record<string, string> {
+    if (brillGlyphMapCache) return brillGlyphMapCache;
+    const candidates = [
+        path.resolve(process.cwd(), 'brill_glyph_map.json'),
+        path.resolve(process.cwd(), 'drafts/brill_glyph_map.json'),
+    ];
+    const foundPath = candidates.find((p) => fs.existsSync(p));
+    if (!foundPath) {
+        throw new Error(`brill_glyph_map.json not found (checked: ${candidates.join(', ')})`);
+    }
+    brillGlyphMapCache = JSON.parse(fs.readFileSync(foundPath, 'utf-8'));
+    return brillGlyphMapCache!;
+}
 
 /**
  * Динамический дешифратор на основе сгенерированной карты глифов
@@ -127,6 +210,7 @@ export function sanitizeProtoSlavic(rawPdfWord: string): string {
     const matches = word.match(/\/g\d+/g);
 
     if (matches) {
+        const brillGlyphMap = loadBrillGlyphMap();
         for (const token of matches) {
             // Берем дешифрованную букву из нашей карты (ъ, ь, ě и т.д.)
             const replacementChar = brillGlyphMap[token];

@@ -399,6 +399,7 @@ export const ModelName = {
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
+  RootDiscoveryProposal: 'RootDiscoveryProposal',
   Synset: 'Synset',
   MeaningSynset: 'MeaningSynset',
   AuditLog: 'AuditLog',
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
+    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "rootDiscoveryProposal" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1538,6 +1539,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RootDiscoveryProposal: {
+      payload: Prisma.$RootDiscoveryProposalPayload<ExtArgs>
+      fields: Prisma.RootDiscoveryProposalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RootDiscoveryProposalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RootDiscoveryProposalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        findFirst: {
+          args: Prisma.RootDiscoveryProposalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RootDiscoveryProposalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        findMany: {
+          args: Prisma.RootDiscoveryProposalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>[]
+        }
+        create: {
+          args: Prisma.RootDiscoveryProposalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        createMany: {
+          args: Prisma.RootDiscoveryProposalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RootDiscoveryProposalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>[]
+        }
+        delete: {
+          args: Prisma.RootDiscoveryProposalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        update: {
+          args: Prisma.RootDiscoveryProposalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        deleteMany: {
+          args: Prisma.RootDiscoveryProposalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RootDiscoveryProposalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RootDiscoveryProposalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>[]
+        }
+        upsert: {
+          args: Prisma.RootDiscoveryProposalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RootDiscoveryProposalPayload>
+        }
+        aggregate: {
+          args: Prisma.RootDiscoveryProposalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRootDiscoveryProposal>
+        }
+        groupBy: {
+          args: Prisma.RootDiscoveryProposalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RootDiscoveryProposalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RootDiscoveryProposalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RootDiscoveryProposalCountAggregateOutputType> | number
+        }
+      }
+    }
     Synset: {
       payload: Prisma.$SynsetPayload<ExtArgs>
       fields: Prisma.SynsetFieldRefs
@@ -2470,7 +2545,19 @@ export const MorphemeScalarFieldEnum = {
   type: 'type',
   stressPosition: 'stressPosition',
   meaning: 'meaning',
-  protoSlavicWordId: 'protoSlavicWordId'
+  protoSlavicWordId: 'protoSlavicWordId',
+  qualityFlag: 'qualityFlag',
+  qualityFlagSuggestedValue: 'qualityFlagSuggestedValue',
+  qualityFlagDetails: 'qualityFlagDetails',
+  qualityFlagStatus: 'qualityFlagStatus',
+  qualityFlaggedAt: 'qualityFlaggedAt',
+  qualityFlagReviewedByUserId: 'qualityFlagReviewedByUserId',
+  qualityFlagReviewedAt: 'qualityFlagReviewedAt',
+  protoSuggestionId: 'protoSuggestionId',
+  protoSuggestionScore: 'protoSuggestionScore',
+  protoSuggestionStatus: 'protoSuggestionStatus',
+  protoSuggestionReviewedByUserId: 'protoSuggestionReviewedByUserId',
+  protoSuggestionReviewedAt: 'protoSuggestionReviewedAt'
 } as const
 
 export type MorphemeScalarFieldEnum = (typeof MorphemeScalarFieldEnum)[keyof typeof MorphemeScalarFieldEnum]
@@ -2570,6 +2657,30 @@ export const ProtoSlavicWordScalarFieldEnum = {
 } as const
 
 export type ProtoSlavicWordScalarFieldEnum = (typeof ProtoSlavicWordScalarFieldEnum)[keyof typeof ProtoSlavicWordScalarFieldEnum]
+
+
+export const RootDiscoveryProposalScalarFieldEnum = {
+  id: 'id',
+  clusterKey: 'clusterKey',
+  proposedValue: 'proposedValue',
+  method: 'method',
+  strippedPrefix: 'strippedPrefix',
+  strippedSuffix: 'strippedSuffix',
+  memberLexemeIds: 'memberLexemeIds',
+  occurrenceCount: 'occurrenceCount',
+  exampleLexemeIds: 'exampleLexemeIds',
+  protoSuggestionId: 'protoSuggestionId',
+  protoSuggestionScore: 'protoSuggestionScore',
+  status: 'status',
+  createdMorphemeId: 'createdMorphemeId',
+  resolutionNote: 'resolutionNote',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  firstSeenAt: 'firstSeenAt',
+  lastSeenAt: 'lastSeenAt'
+} as const
+
+export type RootDiscoveryProposalScalarFieldEnum = (typeof RootDiscoveryProposalScalarFieldEnum)[keyof typeof RootDiscoveryProposalScalarFieldEnum]
 
 
 export const SynsetScalarFieldEnum = {
@@ -2697,12 +2808,36 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 
@@ -2743,6 +2878,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 /**
@@ -2870,6 +3019,7 @@ export type GlobalOmitConfig = {
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit
+  rootDiscoveryProposal?: Prisma.RootDiscoveryProposalOmit
   synset?: Prisma.SynsetOmit
   meaningSynset?: Prisma.MeaningSynsetOmit
   auditLog?: Prisma.AuditLogOmit

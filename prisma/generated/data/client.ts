@@ -117,6 +117,11 @@ export type InflectionAnomaly = Prisma.InflectionAnomalyModel
  */
 export type ProtoSlavicWord = Prisma.ProtoSlavicWordModel
 /**
+ * Model RootDiscoveryProposal
+ * 
+ */
+export type RootDiscoveryProposal = Prisma.RootDiscoveryProposalModel
+/**
  * Model Synset
  * 
  */

@@ -33,6 +33,9 @@ export enum SystemFeature {
     RootsCreate = "roots_create",
     RootsEdit = "roots_edit",
     RootsDelete = "roots_delete",
+    // Ревью автопредложенных новых корней из кластеризации непривязанных лексем
+    // (scripts/roots-discovery/discover-new-roots.ts, /admin/root-discovery)
+    RootDiscoveryReview = "root_discovery_review",
 
     // Окончания (флексии)
     EndingsCreate = "endings_create",
@@ -297,6 +300,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.RootsDelete]: {
         label: "Удаление корней",
         description: "Удаление корней из базы",
+        category: "Корни и окончания",
+    },
+    [SystemFeature.RootDiscoveryReview]: {
+        label: "Ревью новых корней",
+        description: "Просмотр и одобрение/отклонение автопредложенных новых корней из кластеризации непривязанных слов",
         category: "Корни и окончания",
     },
 

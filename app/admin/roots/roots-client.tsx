@@ -15,6 +15,13 @@ interface RootItem {
   stressPosition: number | null
   meaning?: string | null
   protoSlavicWordId?: number | null
+  qualityFlag?: string | null
+  qualityFlagStatus?: string | null
+  qualityFlagSuggestedValue?: string | null
+  protoSuggestionId?: number | null
+  protoSuggestionScore?: number | null
+  protoSuggestionStatus?: string | null
+  protoSuggestion?: { id: number; lemma: string } | null
 }
 
 interface RootFull extends RootItem {
@@ -29,6 +36,14 @@ interface RootFull extends RootItem {
     flavor: { code: string }
   }[]
   protoSlavicWord?: { id: number; lemma: string } | null
+  qualityFlagDetails?: string | null
+}
+
+const QUALITY_FLAG_LABELS: Record<string, string> = {
+  corrupted_numeric_value: "Битое значение (число вместо текста)",
+  affix_collision_prefix: "Совпадает с приставкой",
+  affix_collision_suffix: "Совпадает с суффиксом",
+  implausible_nest_size: "Подозрительно большое гнездо для короткого корня",
 }
 
 interface WordOption {
@@ -83,8 +98,18 @@ export default function RootsClient() {
   )
 }
 
+type RootFilter = "all" | "flagged" | "protoPending" | "noProto"
+
+const ROOT_FILTER_OPTIONS: { value: RootFilter; label: string }[] = [
+  { value: "all", label: "Все" },
+  { value: "flagged", label: "⚠ С пометкой" },
+  { value: "protoPending", label: "Есть предложение /proto" },
+  { value: "noProto", label: "Без прото-формы" },
+]
+
 function RootsClientInner() {
   const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState<RootFilter>("all")
   const [editRootId, setEditRootId] = useState<number | null>(null)
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null)
@@ -100,7 +125,7 @@ function RootsClientInner() {
     isLoading,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["roots", debouncedSearch],
+    queryKey: ["roots", debouncedSearch, filter],
     queryFn: async ({ pageParam = 0 }) => {
       const params = new URLSearchParams({
         offset: String(pageParam),
@@ -108,6 +133,9 @@ function RootsClientInner() {
         admin: "true",
       })
       if (debouncedSearch.trim()) params.set("query", debouncedSearch)
+      if (filter === "flagged") params.set("flagged", "true")
+      if (filter === "protoPending") params.set("protoPending", "true")
+      if (filter === "noProto") params.set("noProto", "true")
       const res = await fetch(`/api/roots?${params}`)
       return res.json() as Promise<{ items: RootItem[]; total: number }>
     },
@@ -181,6 +209,21 @@ function RootsClientInner() {
             </span>
           )}
         </div>
+        <div className="flex flex-wrap gap-1.5 shrink-0">
+          {ROOT_FILTER_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setFilter(opt.value)}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
+                filter === opt.value
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-background hover:bg-muted/30"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="overflow-auto max-h-[500px] border rounded-xl bg-background shadow-sm overflow-x-auto max-w-full">
@@ -206,7 +249,25 @@ function RootsClientInner() {
               allItems.map((root) => (
                 <tr key={root.id} className="hover:bg-muted/10 transition-colors">
                   <td className="p-3 text-muted-foreground">{root.id}</td>
-                  <td className="p-3 font-semibold">{root.value || "—"}</td>
+                  <td className="p-3 font-semibold">
+                    {root.value || "—"}
+                    {root.qualityFlagStatus === "pending" && (
+                      <span
+                        title={QUALITY_FLAG_LABELS[root.qualityFlag ?? ""] ?? root.qualityFlag ?? ""}
+                        className="ml-1.5 inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 align-middle"
+                      >
+                        ⚠ пометка
+                      </span>
+                    )}
+                    {root.protoSuggestionStatus === "pending" && root.protoSuggestion && (
+                      <span
+                        title={`Предложение: ${root.protoSuggestion.lemma}`}
+                        className="ml-1.5 inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300 align-middle"
+                      >
+                        /proto: {root.protoSuggestion.lemma}
+                      </span>
+                    )}
+                  </td>
                   <td className="p-3">{typeLabel(root.type)}</td>
                   <td className="p-3 text-xs text-muted-foreground">{root.stressPosition !== null ? root.stressPosition : "—"}</td>
                   <td className="p-3 text-xs text-muted-foreground whitespace-nowrap">
@@ -330,6 +391,8 @@ function EditRootModal({
     }
   })
   const [saving, setSaving] = useState(false)
+  const [dismissingFlag, setDismissingFlag] = useState(false)
+  const [suggestionActionPending, setSuggestionActionPending] = useState(false)
 
   // Auto-fill east/west/south allophones when core changes
   useEffect(() => {
@@ -412,6 +475,51 @@ function EditRootModal({
     setAddingWord(false)
   }
 
+  const handleDismissFlag = async () => {
+    setDismissingFlag(true)
+    try {
+      const res = await fetch(`/api/roots/${root.id}/quality-flag/dismiss`, { method: "POST" })
+      if (res.ok) onSaved()
+      else alert("Ошибка при отклонении пометки")
+    } catch {
+      alert("Ошибка при отклонении пометки")
+    }
+    setDismissingFlag(false)
+  }
+
+  const handleAcceptProtoSuggestion = async () => {
+    if (root.protoSuggestionId == null) return
+    setSuggestionActionPending(true)
+    try {
+      const res = await fetch(`/api/roots/${root.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ protoSlavicWordId: root.protoSuggestionId, protoSuggestionAction: "apply" }),
+      })
+      if (res.ok) onSaved()
+      else alert("Ошибка при применении предложения")
+    } catch {
+      alert("Ошибка при применении предложения")
+    }
+    setSuggestionActionPending(false)
+  }
+
+  const handleRejectProtoSuggestion = async () => {
+    setSuggestionActionPending(true)
+    try {
+      const res = await fetch(`/api/roots/${root.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ protoSuggestionAction: "dismiss" }),
+      })
+      if (res.ok) onSaved()
+      else alert("Ошибка при отклонении предложения")
+    } catch {
+      alert("Ошибка при отклонении предложения")
+    }
+    setSuggestionActionPending(false)
+  }
+
   const handleRemoveWord = async (rootWordId: number) => {
     try {
       const res = await fetch(`/api/roots/${root.id}/words`, {
@@ -480,6 +588,63 @@ function EditRootModal({
               placeholder="Например: движение наружу / за пределы чего-либо"
             />
           </div>
+
+          {root.qualityFlagStatus === "pending" && (
+            <div className="border border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-800 rounded-md p-3 space-y-2">
+              <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+                ⚠ {QUALITY_FLAG_LABELS[root.qualityFlag ?? ""] ?? root.qualityFlag}
+              </p>
+              {root.qualityFlagDetails && (
+                <p className="text-[11px] text-amber-700 dark:text-amber-400 break-words">{root.qualityFlagDetails}</p>
+              )}
+              <div className="flex gap-2">
+                {root.qualityFlagSuggestedValue && (
+                  <button
+                    type="button"
+                    onClick={() => setValue(root.qualityFlagSuggestedValue!)}
+                    className="px-2 py-1 bg-amber-600 text-white text-xs rounded hover:bg-amber-700"
+                  >
+                    Применить значение «{root.qualityFlagSuggestedValue}»
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleDismissFlag}
+                  disabled={dismissingFlag}
+                  className="px-2 py-1 border text-xs rounded hover:bg-background disabled:opacity-50"
+                >
+                  {dismissingFlag ? "..." : "Отклонить пометку"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {protoSlavicWordId === null && root.protoSuggestionStatus === "pending" && root.protoSuggestion && (
+            <div className="border border-sky-300 bg-sky-50 dark:bg-sky-900/20 dark:border-sky-800 rounded-md p-3 space-y-2">
+              <p className="text-xs font-semibold text-sky-800 dark:text-sky-300">
+                Похоже на <em>{root.protoSuggestion.lemma}</em>
+                {root.protoSuggestionScore != null && ` (совпадение ${Math.round(root.protoSuggestionScore * 100)}%)`}
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleAcceptProtoSuggestion}
+                  disabled={suggestionActionPending}
+                  className="px-2 py-1 bg-sky-600 text-white text-xs rounded hover:bg-sky-700 disabled:opacity-50"
+                >
+                  {suggestionActionPending ? "..." : "Принять"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRejectProtoSuggestion}
+                  disabled={suggestionActionPending}
+                  className="px-2 py-1 border text-xs rounded hover:bg-background disabled:opacity-50"
+                >
+                  Отклонить
+                </button>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-xs font-semibold mb-1">Прото-славянская форма</label>

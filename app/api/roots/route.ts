@@ -8,16 +8,23 @@ export async function GET(request: Request) {
     const offset = parseInt(searchParams.get("offset") || "0")
     const limit = parseInt(searchParams.get("limit") || "50")
     const admin = searchParams.get("admin") === "true"
+    const flagged = searchParams.get("flagged") === "true"
+    const protoPending = searchParams.get("protoPending") === "true"
+    const noProto = searchParams.get("noProto") === "true"
 
     const where: Record<string, unknown> = {}
     if (query.trim()) {
       where.value = { contains: query }
     }
+    if (flagged) where.qualityFlagStatus = "pending"
+    if (protoPending) where.protoSuggestionStatus = "pending"
+    if (noProto) where.protoSlavicWordId = null
 
     if (admin) {
       const [items, total] = await Promise.all([
         db.morpheme.findMany({
           where,
+          include: { protoSuggestion: { select: { id: true, lemma: true } } },
           orderBy: { value: "asc" },
           skip: offset,
           take: limit,

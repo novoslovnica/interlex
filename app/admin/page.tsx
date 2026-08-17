@@ -41,6 +41,7 @@ const SECTIONS: HomeSection[] = [
       { href: "/admin/core-vocabulary", label: "Базовая лексика", feature: Feature.CoreVocabularyManage },
       { href: "/admin/roots", label: "Корни", feature: Feature.RootsEdit },
       { href: "/admin/roots/words", label: "Слова корней", feature: Feature.RootsEdit },
+      { href: "/admin/root-discovery", label: "Новые корни (кандидаты)", feature: Feature.RootDiscoveryReview },
       { href: "/admin/endings", label: "Окончания", feature: Feature.EndingsEdit },
       { href: "/admin/verb-government", label: "Управление глаголов", feature: Feature.VerbGovernmentEdit },
     ],

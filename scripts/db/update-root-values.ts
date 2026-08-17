@@ -1,3 +1,9 @@
+// Superseded by scripts/roots-discovery/* (see extract-root-candidates.ts's
+// own header note) — unconditionally applies root-candidates.json with no
+// dry-run flag and no awareness of the qualityFlag/protoSuggestion review
+// state those scripts introduced. Kept for git history / manual one-off use
+// only.
+
 import * as path from 'path'
 import fs from 'fs'
 
