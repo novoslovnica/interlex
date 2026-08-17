@@ -183,15 +183,21 @@ async function upsertProposal(
 
   console.log(`[${args.method}] "${args.clusterKey}" — ${args.members.length} members (e.g. ${args.members.slice(0, 3).map((m) => m.value).join(", ")})`)
 
+  // memberLexemeIds/exampleLexemeIds are Prisma `Json` columns — pass the
+  // raw array/object and let Prisma serialize it. Passing an
+  // already-JSON.stringify()'d string here double-encodes it (Prisma then
+  // serializes *that string* as the JSON value), so a read back out
+  // returns a string instead of an array — this was exactly the
+  // `exampleLexemeIds.map is not a function` bug in production.
   await db.rootDiscoveryProposal.upsert({
     where: { clusterKey_method: { clusterKey: args.clusterKey, method: args.method } },
     update: {
       proposedValue: args.proposedValue,
       strippedPrefix: args.strippedPrefix,
       strippedSuffix: args.strippedSuffix,
-      memberLexemeIds: JSON.stringify(memberLexemeIds),
+      memberLexemeIds,
       occurrenceCount: memberLexemeIds.length,
-      exampleLexemeIds: JSON.stringify(exampleLexemeIds),
+      exampleLexemeIds,
       lastSeenAt: new Date(),
     },
     create: {
@@ -200,9 +206,9 @@ async function upsertProposal(
       method: args.method,
       strippedPrefix: args.strippedPrefix,
       strippedSuffix: args.strippedSuffix,
-      memberLexemeIds: JSON.stringify(memberLexemeIds),
+      memberLexemeIds,
       occurrenceCount: memberLexemeIds.length,
-      exampleLexemeIds: JSON.stringify(exampleLexemeIds),
+      exampleLexemeIds,
     },
   })
 }
