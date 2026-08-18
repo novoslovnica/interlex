@@ -52,7 +52,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
             text-slate-900 group-hover:text-blue-600
             dark:text-white dark:group-hover:text-blue-400"
                             >
-                                {isvToCyr(data.value || "")}
+                                {isvToCyr(data.isv || data.value || "")}
                             </h3>
                             <span className="text-sm font-medium font-mono text-slate-500 dark:text-slate-400">
                             ({data.isv})
