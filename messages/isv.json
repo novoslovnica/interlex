@@ -364,7 +364,14 @@
     "sessionComplete": "Sesija zaveršena!",
     "sessionCompleteDescription": "Vy povtorili {count} kartočok.",
     "newSession": "Načęti ješče jednu sesiju",
-    "loginRequired": "Vnidite v akkont, aby otslěživati napredek po kartočkah."
+    "loginRequired": "Vnidite v akkont, aby otslěživati napredek po kartočkah.",
+    "exportAnki": "Eksportovati v Anki (.apkg)",
+    "exportingAnki": "Gotovju eksport...",
+    "exportError": "Ne udalo se eksportovati. Poprobujte drugų uroveń ili najprjed projdite několko kartočok.",
+    "summaryTitle": "Rezultaty",
+    "weakWordsTitle": "Označeno za povtorenje",
+    "weakWordsDescription": "Slova, ke vy ocenili kako \"Snova\" ili \"Trudno\", su sohranjene v våšų kolekciju — možete jih najti v profilu.",
+    "viewProfile": "Otvoriti sohranjene slova"
   },
   "apiKeys": {
     "title": "API-ključe",

@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { isvToCyr } from "@/lib/isv"
 import { ScriptMode } from "@/lib/script-mode"
+import { addWordToCollection } from "@/app/profile/actions"
 
 interface FlashcardsClientProps {
     currentScript: ScriptMode
@@ -20,6 +22,12 @@ interface FlashcardSessionCard {
 }
 
 type ReviewButton = "again" | "hard" | "good" | "easy"
+
+// "Again"/"Hard" ratings mean the learner didn't recall the word - these are
+// auto-saved to the existing bookmark collection (same mechanism as
+// BookmarkButton) so they surface on /profile without a separate
+// "words to review" feature having to be built from scratch.
+const WEAK_BUTTONS: ReviewButton[] = ["again", "hard"]
 
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
@@ -40,9 +48,37 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
     const [error, setError] = useState<string | null>(null)
     const [reviewing, setReviewing] = useState(false)
     const [reviewedCount, setReviewedCount] = useState(0)
+    const [reviewCounts, setReviewCounts] = useState<Record<ReviewButton, number>>({ again: 0, hard: 0, good: 0, easy: 0 })
+    const [weakWords, setWeakWords] = useState<FlashcardSessionCard[]>([])
+    const [exporting, setExporting] = useState(false)
+    const [exportError, setExportError] = useState<string | null>(null)
 
     const displayValue = (value: string) => {
         return currentScript === ScriptMode.CYRILLIC ? isvToCyr(value) : value
+    }
+
+    const handleExport = async () => {
+        setExporting(true)
+        setExportError(null)
+        try {
+            const params = new URLSearchParams()
+            if (level) params.set("cefrLevel", level)
+            const res = await fetch(`/api/flashcards/export?${params.toString()}`)
+            if (!res.ok) throw new Error("export failed")
+            const blob = await res.blob()
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement("a")
+            a.href = url
+            a.download = `interlex-flashcards${level ? `-${level}` : ""}.apkg`
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            URL.revokeObjectURL(url)
+        } catch {
+            setExportError(t("exportError"))
+        } finally {
+            setExporting(false)
+        }
     }
 
     const startSession = async () => {
@@ -52,6 +88,8 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
         setIndex(0)
         setFlipped(false)
         setReviewedCount(0)
+        setReviewCounts({ again: 0, hard: 0, good: 0, easy: 0 })
+        setWeakWords([])
         try {
             const params = new URLSearchParams()
             if (level) params.set("cefrLevel", level)
@@ -82,6 +120,15 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
             // future session unchanged.
         } finally {
             setReviewedCount((c) => c + 1)
+            setReviewCounts((prev) => ({ ...prev, [button]: prev[button] + 1 }))
+            if (WEAK_BUTTONS.includes(button)) {
+                setWeakWords((prev) => [...prev, card])
+                addWordToCollection(card.wordId).catch(() => {
+                    // Non-fatal: same "session continues regardless" rule as
+                    // the review POST above - worst case the word just isn't
+                    // bookmarked, review scheduling is unaffected.
+                })
+            }
             setFlipped(false)
             setIndex((i) => i + 1)
             setReviewing(false)
@@ -131,6 +178,14 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                         {loading ? t("loading") : t("start")}
                     </button>
                     {error && <p className="text-sm text-red-600">{error}</p>}
+                    <button
+                        onClick={handleExport}
+                        disabled={exporting}
+                        className="w-full py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted/40 disabled:opacity-50 transition-colors"
+                    >
+                        {exporting ? t("exportingAnki") : t("exportAnki")}
+                    </button>
+                    {exportError && <p className="text-sm text-red-600">{exportError}</p>}
                 </div>
             )}
 
@@ -147,15 +202,65 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
             )}
 
             {cards && cards.length > 0 && index >= cards.length && (
-                <div className="border rounded-xl bg-background p-8 shadow-sm border-border/60 text-center space-y-4">
-                    <h2 className="text-xl font-bold">{t("sessionComplete")}</h2>
-                    <p className="text-muted-foreground">{t("sessionCompleteDescription", { count: reviewedCount })}</p>
-                    <button
-                        onClick={() => setCards(null)}
-                        className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
-                    >
-                        {t("newSession")}
-                    </button>
+                <div className="border rounded-xl bg-background p-8 shadow-sm border-border/60 text-center space-y-6">
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-bold">{t("sessionComplete")}</h2>
+                        <p className="text-muted-foreground">{t("sessionCompleteDescription", { count: reviewedCount })}</p>
+                    </div>
+
+                    <div className="space-y-2 text-left">
+                        <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider text-center">
+                            {t("summaryTitle")}
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                            {REVIEW_BUTTONS.map(({ key, className }) => (
+                                <div key={key} className={`rounded-lg border py-2 text-center ${className}`}>
+                                    <div className="text-lg font-bold">{reviewCounts[key]}</div>
+                                    <div className="text-xs">{t(key)}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {weakWords.length > 0 && (
+                        <div className="space-y-2 text-left border-t border-border/60 pt-4">
+                            <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                                {t("weakWordsTitle")}
+                            </div>
+                            <p className="text-xs text-muted-foreground">{t("weakWordsDescription")}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {weakWords.map((card, i) => (
+                                    <Link
+                                        key={`${card.wordId}-${i}`}
+                                        href={`/words/${card.wordId}`}
+                                        className="px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
+                                    >
+                                        {displayValue(card.value)}
+                                    </Link>
+                                ))}
+                            </div>
+                            <Link href="/profile" className="inline-block text-xs font-medium text-blue-600 hover:underline pt-1">
+                                {t("viewProfile")} →
+                            </Link>
+                        </div>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <button
+                            onClick={() => setCards(null)}
+                            className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
+                        >
+                            {t("newSession")}
+                        </button>
+                        <button
+                            onClick={handleExport}
+                            disabled={exporting}
+                            className="flex-1 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted/40 disabled:opacity-50 transition-colors"
+                        >
+                            {exporting ? t("exportingAnki") : t("exportAnki")}
+                        </button>
+                    </div>
+                    {exportError && <p className="text-sm text-red-600">{exportError}</p>}
                 </div>
             )}
 

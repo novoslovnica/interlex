@@ -364,7 +364,14 @@
     "sessionComplete": "Session complete!",
     "sessionCompleteDescription": "You reviewed {count} cards.",
     "newSession": "Start another session",
-    "loginRequired": "Log in to track your flashcard progress."
+    "loginRequired": "Log in to track your flashcard progress.",
+    "exportAnki": "Export to Anki (.apkg)",
+    "exportingAnki": "Preparing export...",
+    "exportError": "Failed to export. Try a different level or study a few cards first.",
+    "summaryTitle": "Summary",
+    "weakWordsTitle": "Marked for review",
+    "weakWordsDescription": "Words you rated \"Again\" or \"Hard\" were saved to your collection so you can find them on your profile.",
+    "viewProfile": "View saved words"
   },
   "apiKeys": {
     "title": "API Keys",
