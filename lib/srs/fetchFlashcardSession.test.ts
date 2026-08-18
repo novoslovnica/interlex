@@ -48,7 +48,7 @@ describe("fetchFlashcardSession", () => {
         queueAll((sql) => sql.includes("id IN"), [
             { id: 101, slug: "byti-VERB", value: "byti", pos: "VERB", cefrLevel: "A1" },
         ]);
-        queueAll((sql) => sql.includes("ORDER BY corpusFrequencyPerMln"), [
+        queueAll((sql) => sql.includes("corpusFrequencyPerMln"), [
             { id: 202, slug: "voda-NOUN", value: "voda", pos: "NOUN", cefrLevel: "A1" },
         ]);
 
@@ -69,7 +69,7 @@ describe("fetchFlashcardSession", () => {
             .mockResolvedValueOnce([]) // due
             .mockResolvedValueOnce([]); // all progress
 
-        queueAll((sql) => sql.includes("ORDER BY corpusFrequencyPerMln"), [
+        queueAll((sql) => sql.includes("corpusFrequencyPerMln"), [
             { id: 303, slug: "dom-NOUN", value: "dom", pos: "NOUN", cefrLevel: "A1" },
         ]);
         fetchTranslationsForLexemeIds.mockReturnValue([]);
@@ -82,7 +82,7 @@ describe("fetchFlashcardSession", () => {
 
     it("prefers a verified translation over an earlier unverified one for the same lexeme", async () => {
         flashcardProgressFindMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
-        queueAll((sql) => sql.includes("ORDER BY corpusFrequencyPerMln"), [
+        queueAll((sql) => sql.includes("corpusFrequencyPerMln"), [
             { id: 404, slug: "test-NOUN", value: "test", pos: "NOUN", cefrLevel: "A1" },
         ]);
         fetchTranslationsForLexemeIds.mockReturnValue([

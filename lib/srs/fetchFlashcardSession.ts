@@ -14,6 +14,18 @@ export interface FlashcardSessionCard {
 
 const DEFAULT_SESSION_SIZE = 15;
 
+// lexemes.value is a plain-ASCII-ish citation form (e.g. "posta") that can
+// be missing diacritics the CORE allophone already carries (e.g. "pošta") -
+// same gap fixed for the homepage word-of-day widget. Falls back to the raw
+// value only for the (rare) lexeme with no CORE "standard" allophone row.
+const CORE_VALUE_SQL = `COALESCE(
+    (SELECT la.value FROM lexeme_allophones la
+     JOIN allophone_flavors af ON af.id = la.flavorId
+     WHERE la.lexemeId = l.id AND af.code = 'CORE' AND la.type = 'standard'
+     LIMIT 1),
+    l.value
+)`;
+
 interface LexemeRow {
     id: number;
     slug: string;
@@ -58,7 +70,7 @@ export async function fetchFlashcardSession(
     if (dueWordIds.length > 0) {
         const placeholders = dueWordIds.map(() => "?").join(",");
         const rows = db.prepare(
-            `SELECT id, slug, value, pos, cefrLevel FROM lexemes WHERE id IN (${placeholders}) AND value IS NOT NULL`
+            `SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel FROM lexemes l WHERE l.id IN (${placeholders}) AND l.value IS NOT NULL`
         ).all(...dueWordIds) as LexemeRow[];
         for (const row of rows) {
             cards.push({ wordId: row.id, slug: row.slug, value: row.value, pos: row.pos, cefrLevel: row.cefrLevel, translation: null, isReview: true });
@@ -68,15 +80,15 @@ export async function fetchFlashcardSession(
     const remaining = limit - cards.length;
     if (remaining > 0) {
         const excludeIds = [...new Set([...knownWordIds, ...dueWordIds])];
-        const excludeClause = excludeIds.length > 0 ? `AND id NOT IN (${excludeIds.map(() => "?").join(",")})` : "";
-        const cefrClause = cefrLevel ? "AND cefrLevel = ?" : "AND cefrLevel IS NOT NULL";
+        const excludeClause = excludeIds.length > 0 ? `AND l.id NOT IN (${excludeIds.map(() => "?").join(",")})` : "";
+        const cefrClause = cefrLevel ? "AND l.cefrLevel = ?" : "AND l.cefrLevel IS NOT NULL";
         const params: (string | number)[] = cefrLevel ? [cefrLevel, ...excludeIds] : [...excludeIds];
 
         const rows = db.prepare(`
-            SELECT id, slug, value, pos, cefrLevel
-            FROM lexemes
-            WHERE value IS NOT NULL AND (isCollocation IS NULL OR isCollocation != 1) ${cefrClause} ${excludeClause}
-            ORDER BY corpusFrequencyPerMln DESC
+            SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel
+            FROM lexemes l
+            WHERE l.value IS NOT NULL AND (l.isCollocation IS NULL OR l.isCollocation != 1) ${cefrClause} ${excludeClause}
+            ORDER BY l.corpusFrequencyPerMln DESC
             LIMIT ?
         `).all(...params, remaining) as LexemeRow[];
         for (const row of rows) {
