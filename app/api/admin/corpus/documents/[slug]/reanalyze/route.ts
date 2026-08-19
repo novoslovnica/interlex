@@ -6,6 +6,7 @@ import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { reanalyzeCorpusDocument } from "@/lib/corpus/reanalyzeDocument"
+import { decodeSlugParam } from "@/lib/slug"
 
 export async function POST(
   _request: NextRequest,
@@ -16,7 +17,8 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   try {
     const validEndings = await buildValidEndings()

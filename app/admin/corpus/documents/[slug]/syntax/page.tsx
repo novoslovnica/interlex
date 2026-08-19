@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation"
 import { prismaCorpus } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { decodeSlugParam } from "@/lib/slug"
 import type { Metadata } from "next"
 import SyntaxEditorClient, { type SentenceData } from "./_page"
 
@@ -24,7 +25,8 @@ export default async function CorpusSyntaxPage({
   if (!session) redirect("/login")
   await requirePermission(session, Feature.CorpusSyntaxEdit)
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const { page: pageStr } = await searchParams
   const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1)
 

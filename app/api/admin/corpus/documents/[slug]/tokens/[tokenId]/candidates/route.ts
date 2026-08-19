@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { prismaCorpus } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { decodeSlugParam } from "@/lib/slug"
 
 /**
  * Читает CorpusTokenCandidate для одного токена — данные, на основании
@@ -19,7 +20,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug, tokenId } = await params
+  const { slug: rawSlug, tokenId } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   let id: bigint
   try {

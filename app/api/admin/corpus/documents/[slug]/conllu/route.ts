@@ -5,6 +5,7 @@ import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { documentToConllU, SyntaxToken, ConlluSentenceInput } from "@/lib/corpus/syntax"
 import { MorphoGrammarFeats } from "@/lib/grammar/common"
+import { decodeSlugParam } from "@/lib/slug"
 
 /**
  * Экспорт документа в CoNLL-U (см. lib/corpus/syntax/conllu.ts). Только
@@ -21,7 +22,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const doc = await prismaCorpus.corpusDocument.findUnique({ where: { slug }, select: { slug: true } })
   if (!doc) {

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { prismaCorpus } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { decodeSlugParam } from "@/lib/slug"
 import type { Metadata } from "next"
 import CorpusDocumentEditPage from "./_page"
 
@@ -22,7 +23,8 @@ const CorpusDocumentPageWrapper = async ({
 
   await requirePermission(session, Feature.CorpusBuilder)
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const document = await prismaCorpus.corpusDocument.findUnique({
     where: { slug },

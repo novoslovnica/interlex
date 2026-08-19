@@ -5,6 +5,7 @@ import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { parseComplexSentence, saveDependencies, SyntaxToken } from "@/lib/corpus/syntax"
 import { MorphoGrammarFeats } from "@/lib/grammar/common"
+import { decodeSlugParam } from "@/lib/slug"
 
 /**
  * Синтаксический разбор уже проанализированного (POS/feats размечен)
@@ -24,7 +25,8 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const doc = await prismaCorpus.corpusDocument.findUnique({ where: { slug } })
   if (!doc) {

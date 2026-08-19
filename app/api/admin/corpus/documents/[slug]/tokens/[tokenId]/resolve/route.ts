@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { resolveTokenHomonym, ResolveTokenInput } from "@/lib/corpus/resolveTokenHomonym"
+import { decodeSlugParam } from "@/lib/slug"
 
 export async function POST(
   request: NextRequest,
@@ -13,7 +14,8 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug, tokenId } = await params
+  const { slug: rawSlug, tokenId } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   let id: bigint
   try {

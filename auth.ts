@@ -39,6 +39,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (user) {
                 token.role = user.role
             }
+            // Роль в JWT иначе фиксируется один раз при входе и никогда не
+            // обновляется (для Telegram — Credentials-провайдер вообще не
+            // передаёт role в user, см. auth.config.ts). Подтягиваем
+            // актуальную роль из БД на каждый чек сессии, чтобы повышение
+            // до ADMIN/MODERATOR подхватывалось без повторного логина.
+            if (token.sub) {
+                const dbUser = await prisma.user.findUnique({
+                    where: { id: token.sub },
+                    select: { role: true },
+                })
+                if (dbUser) {
+                    token.role = dbUser.role
+                }
+            }
             return token
         },
     },

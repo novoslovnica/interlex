@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { logAudit } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
 import { upsertTranslation, TRANSLATION_LANGUAGE_CODES } from "@/lib/translations"
+import { stripLatinDiacritics } from "@/lib/levenshtein"
 
 async function syncBaseHomonym(wordId: number, newBase: string | null, oldBase: string | null) {
     async function getFlavorsForLexeme(lexemeId: number): Promise<string[]> {
@@ -79,6 +80,8 @@ export const updateField = async (wordId: string, field: string, newValue: strin
 
     if (["stem", "nsl", "isv", "value", "external_id"].includes(field)) {
         const parsedId = parseInt(wordId)
+        let allophoneVerifiedResult: number | null | undefined
+        let derivedLexemeValue: string | undefined
 
         if (field === "stem") {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
@@ -129,6 +132,25 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             if (verified !== undefined && verified !== oldVerified) {
                 changes.push({ field: `${field}.verified`, oldValue: oldVerified, newValue: verified })
             }
+            allophoneVerifiedResult = verified !== undefined ? verified : oldVerified
+
+            // "Ключ поиска" (Lexeme.value) больше не редактируется вручную в
+            // админ-таблице — выводится автоматически из CORE-аллофона
+            // удалением диакритики, чтобы всегда оставаться реальным
+            // plain-ASCII поисковым ключом для этого слова.
+            if (field === "isv") {
+                const currentLexeme = await prisma.lexeme.findUnique({ where: { id: parsedId } })
+                const oldLexemeValue = currentLexeme?.value ?? null
+                derivedLexemeValue = stripLatinDiacritics(newValue)
+                if (derivedLexemeValue !== oldLexemeValue) {
+                    await prisma.lexeme.update({
+                        where: { id: parsedId },
+                        data: { value: derivedLexemeValue },
+                    })
+                    changes.push({ field: "value", oldValue: oldLexemeValue, newValue: derivedLexemeValue })
+                }
+            }
+
             await logAudit(session?.user, "Lexeme", parsedId, changes)
         } else {
             const current = await prisma.lexeme.findUnique({ where: { id: parsedId } })
@@ -143,7 +165,7 @@ export const updateField = async (wordId: string, field: string, newValue: strin
             ])
         }
 
-        return { success: true };
+        return { success: true, value: newValue, verified: allophoneVerifiedResult, lexemeValue: derivedLexemeValue };
     }
 
     const lang = field.toLowerCase();

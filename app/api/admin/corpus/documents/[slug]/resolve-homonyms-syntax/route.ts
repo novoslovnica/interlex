@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { resolveHomonymsViaSyntax } from "@/lib/corpus/resolveHomonymsViaSyntax"
+import { decodeSlugParam } from "@/lib/slug"
 
 /**
  * "Проход C" плана разрешения омонимии — отдельное действие от /reanalyze
@@ -21,7 +22,8 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   try {
     const result = await resolveHomonymsViaSyntax(slug)

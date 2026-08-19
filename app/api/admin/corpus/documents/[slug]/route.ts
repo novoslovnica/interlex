@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { prismaCorpus } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
+import { decodeSlugParam } from "@/lib/slug"
 
 export async function PUT(
   request: NextRequest,
@@ -13,7 +14,8 @@ export async function PUT(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const { title, author } = await request.json()
 
   if (!title || typeof title !== "string" || !title.trim()) {

@@ -4,6 +4,7 @@ import { prismaCorpus } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import type { TokenResult, SegmentResult } from "@/components/CorpusTokenDisplay"
+import { decodeSlugParam } from "@/lib/slug"
 
 export async function GET(
   _request: NextRequest,
@@ -14,7 +15,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug, position } = await params
+  const { slug: rawSlug, position } = await params
+  const slug = decodeSlugParam(rawSlug)
   const pos = parseInt(position, 10)
   if (isNaN(pos)) {
     return NextResponse.json({ error: "Invalid position" }, { status: 400 })

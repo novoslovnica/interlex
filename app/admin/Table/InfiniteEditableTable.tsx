@@ -8,7 +8,7 @@ import {
     ColumnDef, VisibilityState,
 } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { EditableCell } from './EditableCell';
+import { EditableAllophoneCell } from './EditableAllophoneCell';
 import {EditableLanguageCell} from "@/app/admin/Table/EditableLanguageCell";
 import Link from "next/link";
 import DeduplicationModal from './DeduplicationModal';
@@ -63,6 +63,9 @@ export default function InfiniteEditableTable({ initialColumnVisibility, onSaveC
     const [searchQuery, setSearchQuery] = useState('');
     const [filterLang, setFilterLang] = useState('');
 const [unverifiedOnly, setUnverifiedOnly] = useState(false);
+const [unverifiedMeanings, setUnverifiedMeanings] = useState(false);
+const [unverifiedCore, setUnverifiedCore] = useState(false);
+const [unverifiedNsl, setUnverifiedNsl] = useState(false);
 const [langFilterExpanded, setLangFilterExpanded] = useState(true);
 
     const debouncedSearch = useDebounce(searchQuery, 400);
@@ -120,7 +123,10 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
         { code: 'eo', label: 'Эсперанто' },
     ];
 
-    const queryKey = useMemo(() => ['lexicon-infinite', debouncedSearch, filterLang, unverifiedOnly], [debouncedSearch, filterLang, unverifiedOnly]);
+    const queryKey = useMemo(
+        () => ['lexicon-infinite', debouncedSearch, filterLang, unverifiedOnly, unverifiedMeanings, unverifiedCore, unverifiedNsl],
+        [debouncedSearch, filterLang, unverifiedOnly, unverifiedMeanings, unverifiedCore, unverifiedNsl]
+    );
 
     const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage } =
         useInfiniteQuery({
@@ -140,6 +146,9 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                         params.append('unverified', '1');
                     }
                 }
+                if (unverifiedMeanings) params.append('unverifiedMeanings', '1');
+                if (unverifiedCore) params.append('unverifiedCore', '1');
+                if (unverifiedNsl) params.append('unverifiedNsl', '1');
 
                 const res = await fetch(`/api/lexicon?${params.toString()}`);
                 const data = await res.json();
@@ -162,8 +171,8 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
             const pages = data?.pages ? data.pages.flatMap(page => page.data || []) : [];
             const seenLexemeIds = new Set<number>();
             return pages.map(row => {
-                const isFirst = !seenLexemeIds.has(row.lexemeId);
-                seenLexemeIds.add(row.lexemeId);
+                const isFirst = !seenLexemeIds.has(row.id);
+                seenLexemeIds.add(row.id);
                 return { ...row, _disabledLexemeFields: !isFirst };
             });
         }, [data]
@@ -187,7 +196,7 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 minSize: 200,
                 cell: ({ getValue, row }) => {
                     const meaning = getValue<string>();
-                    const verified = (row.original as any).verified as boolean;
+                    const verified = (row.original as any).meaningVerified === 1;
                     const meaningId = (row.original as any).meaningId as number;
                     return (
                         <div className="px-2 py-1 truncate flex items-center gap-1.5" title={meaning || ''}>
@@ -232,13 +241,13 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 accessorKey: 'nsl',
                 header: 'Новословница (архив)',
                 minSize: 200,
-                cell: EditableCell,
+                cell: EditableAllophoneCell,
             },
             {
                 id: "isv",
                 accessorKey: 'isv',
                 header: 'Межславянский',
-                cell: EditableCell,
+                cell: EditableAllophoneCell,
             },
             {
                 id: "value",
@@ -247,32 +256,18 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 minSize: 120,
                 cell: ({ getValue, row }) => {
                     const val = getValue<string>();
-                    const disabled = (row.original as any)._disabledLexemeFields === true || !hasFullEditPermission;
                     const duplicateCount = (row.original as any).duplicateCount as number;
                     const isDuplicate = duplicateCount > 1;
 
-                    if (disabled) {
-                        return (
-                            <span className={`block px-2 py-1 italic truncate ${isDuplicate ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
-                                {val || '—'}
-                            </span>
-                        );
-                    }
-
+                    // Больше не редактируется вручную — выводится автоматически
+                    // из CORE (isv) удалением диакритики при сохранении этой колонки.
                     return (
-                        <input
-                            defaultValue={val}
-                            onBlur={(e) => {
-                                (table.options.meta as any)?.updateData(row.index, 'value', e.target.value);
-                            }}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    (table.options.meta as any)?.updateData(row.index, 'value', (e.target as HTMLInputElement).value);
-                                    (e.target as HTMLInputElement).blur();
-                                }
-                            }}
-                            className={`w-full bg-transparent px-2 py-1 border border-transparent hover:border-gray-300 focus:border-blue-500 focus:bg-white outline-none rounded transition ${isDuplicate ? 'text-red-600 font-medium' : ''}`}
-                        />
+                        <span
+                            className={`block px-2 py-1 italic truncate ${isDuplicate ? 'text-red-500 font-medium' : 'text-gray-400'}`}
+                            title="Автоматически выводится из CORE"
+                        >
+                            {val || '—'}
+                        </span>
                     );
                 },
             },
@@ -423,10 +418,11 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
         getCoreRowModel: getCoreRowModel(),
         meta: {
             canEditWordsCore: hasFullEditPermission,
-            updateData: (rowIndex: number, columnId: string, value: string) => {
+            updateData: (rowIndex: number, columnId: string, value: string, verified?: number) => {
                 const targetRow = flatData[rowIndex];
                 if (!targetRow) return;
 
+                const verifiedField = `${columnId}Verified`;
                 queryClient.setQueryData(queryKey, (old: any) => {
                     if (!old) return old;
                     return {
@@ -434,20 +430,47 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                         pages: old.pages.map((page: any) => ({
                             ...page,
                             data: page.data.map((row: any) =>
-                                row.meaningId === targetRow.meaningId ? { ...row, [columnId]: value } : row
+                                row.meaningId === targetRow.meaningId
+                                    ? { ...row, [columnId]: value, ...(verified !== undefined ? { [verifiedField]: verified } : {}) }
+                                    : row
                             )
                         }))
                     };
                 });
-                if (["nsl", "isv", "value"].includes(columnId)) {
+                if (["nsl", "isv"].includes(columnId)) {
                     fetch(`/api/lexicon/${targetRow.id}/updateField`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             field: columnId,
                             newValue: value,
+                            ...(verified !== undefined ? { verified } : {}),
                         }),
                     })
+                        .then(res => (res.ok ? res.json() : null))
+                        .then(result => {
+                            // "Ключ поиска" выводится из CORE удалением диакритики
+                            // на сервере (updateField/service.ts) — синхронизируем
+                            // локальный кэш этой лексемы, чтобы колонка value
+                            // обновилась без полного рефетча.
+                            if (columnId === 'isv' && result?.lexemeValue !== undefined) {
+                                queryClient.setQueryData(queryKey, (old: any) => {
+                                    if (!old) return old;
+                                    return {
+                                        ...old,
+                                        pages: old.pages.map((page: any) => ({
+                                            ...page,
+                                            data: page.data.map((row: any) =>
+                                                row.meaningId === targetRow.meaningId
+                                                    ? { ...row, value: result.lexemeValue }
+                                                    : row
+                                            )
+                                        }))
+                                    };
+                                });
+                            }
+                        })
+                        .catch(() => {});
                 }
             },
             updateCellData: (rowIndex: number, columnId: string, value: unknown) => {
@@ -558,6 +581,36 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                             <span>Только непроверенные ({LANG_OPTIONS.find(l => l.code === filterLang)?.label})</span>
                         </label>
                     )}
+
+                    <label className="flex items-center gap-1.5 text-xs bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors">
+                        <input
+                            type="checkbox"
+                            checked={unverifiedMeanings}
+                            onChange={(e) => setUnverifiedMeanings(e.target.checked)}
+                            className="rounded border text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>Только неподтверждённые значения</span>
+                    </label>
+
+                    <label className="flex items-center gap-1.5 text-xs bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors">
+                        <input
+                            type="checkbox"
+                            checked={unverifiedCore}
+                            onChange={(e) => setUnverifiedCore(e.target.checked)}
+                            className="rounded border text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>Только неподтверждённое CORE</span>
+                    </label>
+
+                    <label className="flex items-center gap-1.5 text-xs bg-background border border-border rounded px-3 py-1 cursor-pointer select-none hover:border-blue-500 transition-colors">
+                        <input
+                            type="checkbox"
+                            checked={unverifiedNsl}
+                            onChange={(e) => setUnverifiedNsl(e.target.checked)}
+                            className="rounded border text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>Только неподтверждённое NSL</span>
+                    </label>
                 </div>
 
                 <button

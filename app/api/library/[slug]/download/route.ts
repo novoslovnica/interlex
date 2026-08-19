@@ -6,13 +6,15 @@ import { tmpdir } from "os"
 import { join } from "path"
 import { readFileSync, unlinkSync, rmSync } from "fs"
 import { randomUUID } from "crypto"
+import { decodeSlugParam } from "@/lib/slug"
 
 interface PageParams {
   params: Promise<{ slug: string }>
 }
 
 export async function GET(_request: NextRequest, { params }: PageParams) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const entry = await db.libraryEntry.findUnique({ where: { slug } })
   if (!entry || !entry.body) {
@@ -53,10 +55,15 @@ export async function GET(_request: NextRequest, { params }: PageParams) {
   unlinkSync(outputPath)
   rmSync(tempDir, { recursive: true, force: true })
 
+  // Content-Disposition's plain filename= must be a ByteString (ASCII only) -
+  // most real slugs here carry Latin diacritics or Cyrillic (see AGENTS.md
+  // library notes), so give a stripped-down ASCII fallback for old clients
+  // plus the real name via the RFC 5987 filename*= extended parameter.
+  const asciiSlug = slug.replace(/[^\x20-\x7E]/g, "_") || "text"
   return new NextResponse(epubBuffer, {
     headers: {
       "Content-Type": "application/epub+zip",
-      "Content-Disposition": `attachment; filename="${slug}.epub"`,
+      "Content-Disposition": `attachment; filename="${asciiSlug}.epub"; filename*=UTF-8''${encodeURIComponent(slug)}.epub`,
     },
   })
 }

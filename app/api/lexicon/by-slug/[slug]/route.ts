@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prismaData } from "@/lib/prisma"
+import { decodeSlugParam } from "@/lib/slug"
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const lexeme = await prismaData.lexeme.findUnique({
     where: { slug },

@@ -4,6 +4,7 @@ import { prismaCorpus } from "@/lib/prisma"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { generateTeiXml, type TeiDocument, type TeiSegment, type TeiSentence, type TeiToken } from "@/lib/tei"
+import { decodeSlugParam } from "@/lib/slug"
 
 export const maxDuration = 60
 
@@ -18,7 +19,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
 
   const document = await prismaCorpus.corpusDocument.findUnique({
     where: { slug },

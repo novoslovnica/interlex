@@ -5,6 +5,7 @@ import { MarkdownRenderer } from "./MarkdownRenderer"
 import { decompressBody } from "@/lib/body"
 import { getFlavorLabel } from "@/config/flavor"
 import { getCollectionBodyLength } from "@/lib/library-stats"
+import { decodeSlugParam } from "@/lib/slug"
 import type { Metadata } from "next"
 import {getTranslations} from "next-intl/server"
 
@@ -25,7 +26,8 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const t = await getTranslations("library");
   const entry = await db.libraryEntry.findUnique({ where: { slug } })
   if (!entry) return { title: t("notFound") }
@@ -96,7 +98,8 @@ function pageEstimate(bodyLength: number): string {
 }
 
 export default async function LibraryReadingPage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const t = await getTranslations("library");
   const entry = await db.libraryEntry.findUnique({
     where: { slug },

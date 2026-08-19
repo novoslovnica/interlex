@@ -1,5 +1,6 @@
 import {init} from "@/lib/sqlite";
 import {redirect, notFound} from "next/navigation";
+import {decodeSlugParam} from "@/lib/slug";
 
 const getProtoByLemma = async (lemma: string) => {
     const db = await init();
@@ -10,7 +11,7 @@ const getProtoByLemma = async (lemma: string) => {
 
 const ProtoWordRedirectPage = async ({params}: { params: Promise<{ slug: string }> }) => {
     const {slug} = await params;
-    const decoded = decodeURIComponent(slug);
+    const decoded = decodeSlugParam(slug);
     const item = await getProtoByLemma(decoded);
 
     if (!item) {

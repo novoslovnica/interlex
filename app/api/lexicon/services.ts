@@ -4,7 +4,7 @@ import {fetchTranslationsForMeaningIds, type TranslationRow} from "@/lib/transla
 type LangRecord = TranslationRow;
 
 const LEXEME_COLUMNS = `
-    l.id, la_core.value AS isv, la_nsl.value AS nsl, l.value, l.slug, l.stem, l.pos, l.gender,
+    l.id, la_core.value AS isv, la_nsl.value AS nsl, la_core.verified AS isvVerified, la_nsl.verified AS nslVerified, l.value, l.slug, l.stem, l.pos, l.gender,
     l.declension, l.conjugation, l.transcription,
     l.aspect, l.transitivity, l.animacy, l.degree,
     l.pronType, l.numType, l.frequency, l.intelligibility,
@@ -25,7 +25,7 @@ const LEXEME_JOINS = `
 // allophones, флаг дублей). Раньше жил только внутри getDictItems — вынесен,
 // чтобы getReverseDictItems (поиск по значению на другом языке, см. roadmap
 // п.45) не дублировал этот блок один в один.
-const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?: boolean) => {
+const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?: boolean, unverifiedMeanings?: boolean, unverifiedCore?: boolean, unverifiedNsl?: boolean) => {
     const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "hsb", "dsb", "cu", "nl", "eo"];
 
     let res: any[];
@@ -33,18 +33,18 @@ const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?
     const lexemeIds = data.map(item => item.id).filter(Boolean);
     let allMeaningIds: number[] = [];
     const lexemeToMeanings: Record<number, number[]> = {};
-    const meaningMap: Record<number, { id: number; meaning: string | null; examples: string | null }> = {};
+    const meaningMap: Record<number, { id: number; meaning: string | null; examples: string | null; meaningVerified: number | null }> = {};
     if (lexemeIds.length > 0) {
         const idPlaceholders = lexemeIds.map(() => '?').join(',');
         const meaningRows = db.prepare(`
-            SELECT id, lexemeId, meaning, examples FROM meanings WHERE lexemeId IN (${idPlaceholders})
-        `).all(...lexemeIds) as { id: number; lexemeId: number; meaning: string | null; examples: string | null }[];
+            SELECT id, lexemeId, meaning, examples, meaningVerified FROM meanings WHERE lexemeId IN (${idPlaceholders})
+        `).all(...lexemeIds) as { id: number; lexemeId: number; meaning: string | null; examples: string | null; meaningVerified: number | null }[];
 
         for (const row of meaningRows) {
             allMeaningIds.push(row.id);
             if (!lexemeToMeanings[row.lexemeId]) lexemeToMeanings[row.lexemeId] = [];
             lexemeToMeanings[row.lexemeId].push(row.id);
-            meaningMap[row.id] = { id: row.id, meaning: row.meaning, examples: row.examples };
+            meaningMap[row.id] = { id: row.id, meaning: row.meaning, examples: row.examples, meaningVerified: row.meaningVerified };
         }
     }
 
@@ -53,7 +53,7 @@ const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?
     res = data.flatMap(item => {
         const meaningIds = lexemeToMeanings[item.id] || [];
         if (meaningIds.length === 0) {
-            const result: any = { ...item, meaningId: null, meaningText: null, examples: null };
+            const result: any = { ...item, meaningId: null, meaningText: null, examples: null, meaningVerified: null };
             for (const lang of langCodes) {
                 result[lang] = [];
             }
@@ -61,7 +61,7 @@ const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?
         }
         return meaningIds.map(mid => {
             const m = meaningMap[mid];
-            const result: any = { ...item, meaningId: m.id, meaningText: m.meaning, examples: m.examples };
+            const result: any = { ...item, meaningId: m.id, meaningText: m.meaning, examples: m.examples, meaningVerified: m.meaningVerified };
             for (const lang of langCodes) {
                 result[lang] = allLangData[lang]?.[mid] || [];
             }
@@ -74,6 +74,16 @@ const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?
             const langEntries = item[filterLang] as LangRecord[];
             return langEntries.length > 0 && langEntries.some(entry => entry.verified !== 1);
         });
+    }
+
+    if (unverifiedMeanings) {
+        res = res.filter(item => item.meaningVerified !== 1);
+    }
+    if (unverifiedCore) {
+        res = res.filter(item => item.isvVerified !== 1);
+    }
+    if (unverifiedNsl) {
+        res = res.filter(item => item.nslVerified !== 1);
     }
 
     const resLexemeIds = [...new Set(res.map(item => item.id).filter(Boolean))];
@@ -135,6 +145,9 @@ export const getDictItems = async (
     filterLang?: string,
     unverified?: boolean,
     includeHidden?: boolean,
+    unverifiedMeanings?: boolean,
+    unverifiedCore?: boolean,
+    unverifiedNsl?: boolean,
 ) => {
     const db = await init();
 
@@ -200,7 +213,7 @@ export const getDictItems = async (
         `).all(...filterParams);
     }
 
-    return enrichLexemeRows(db, data, filterLang, unverified);
+    return enrichLexemeRows(db, data, filterLang, unverified, unverifiedMeanings, unverifiedCore, unverifiedNsl);
 };
 
 // Реверс-словарь (roadmap п.45): поиск лексем ISV по значению на другом
