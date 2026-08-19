@@ -74,6 +74,9 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
     const hasDedupPermission = useMemo(() => {
         return userRole === "ADMIN" || userPermissions?.includes(Feature.DeduplicationManage) === true;
     }, [userRole, userPermissions]);
+    const hasFullEditPermission = useMemo(() => {
+        return userRole === "ADMIN" || userPermissions?.includes(Feature.WordsEdit) === true;
+    }, [userRole, userPermissions]);
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
         if (initialColumnVisibility) {
@@ -244,7 +247,7 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 minSize: 120,
                 cell: ({ getValue, row }) => {
                     const val = getValue<string>();
-                    const disabled = (row.original as any)._disabledLexemeFields === true;
+                    const disabled = (row.original as any)._disabledLexemeFields === true || !hasFullEditPermission;
                     const duplicateCount = (row.original as any).duplicateCount as number;
                     const isDuplicate = duplicateCount > 1;
 
@@ -407,7 +410,7 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 },
             },
         ],
-        [hasDedupPermission, handleMergeComplete]
+        [hasDedupPermission, hasFullEditPermission, handleMergeComplete]
     );
 
     const table = useReactTable({
@@ -419,6 +422,7 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
         onColumnVisibilityChange: setColumnVisibility,
         getCoreRowModel: getCoreRowModel(),
         meta: {
+            canEditWordsCore: hasFullEditPermission,
             updateData: (rowIndex: number, columnId: string, value: string) => {
                 const targetRow = flatData[rowIndex];
                 if (!targetRow) return;

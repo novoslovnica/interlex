@@ -12,7 +12,8 @@ export function EditableCell<TData>({ cell, row, column, table }: EditableCellPr
     const initialValue = cell.getValue() as string;
     const [value, setValue] = useState(initialValue);
 
-    const disabled = (row.original as any)?._disabledLexemeFields === true;
+    const canEditWordsCore = (table.options.meta as any)?.canEditWordsCore !== false;
+    const disabled = (row.original as any)?._disabledLexemeFields === true || !canEditWordsCore;
 
     useEffect(() => {
         setValue(initialValue);
