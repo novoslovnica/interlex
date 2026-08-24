@@ -11,6 +11,8 @@ interface ActionResult {
   success: boolean
   error?: string
   candidateId?: number
+  /** Сколько других кластеров закрылось как другие словоформы того же слова. */
+  mergedClusters?: number
 }
 
 /**
@@ -54,21 +56,32 @@ export async function approveHypothesisAction(
   const pos = overrides?.pos?.trim() || hypothesis.guessedPos
   if (!value) return { success: false, error: "Пустая словарная форма" }
 
-  const candidate = await prismaData.candidate.create({
-    data: {
-      value,
-      pos,
-      stem: hypothesis.guessedStem,
-    },
+  // Одно слово попадает в очередь столькими кластерами, сколько его
+  // словоформ встретилось в корпусе: "medžuslovjansky", "medžuslovjanskom" и
+  // "medžuslovjanskogo" — три отдельных решения об одном прилагательном.
+  // Первый же реальный разбор очереди это и показал: три одобрения породили
+  // трёх одинаковых кандидатов. Поэтому кандидат переиспользуется, а не
+  // создаётся заново.
+  const existing = await prismaData.candidate.findFirst({
+    where: { value, pos, promotedAt: null },
+    select: { id: true },
   })
 
-  await logAudit(session?.user, "Candidate", candidate.id, [
-    { field: "createdFromCorpusCluster", oldValue: null, newValue: hypothesis.clusterKey },
-    // Правку модератора фиксируем как переход "предложено -> принято", чтобы
-    // потом было видно, насколько реконструкция попадает в цель.
-    { field: "value", oldValue: hypothesis.reconstructedForm, newValue: candidate.value },
-    { field: "pos", oldValue: hypothesis.guessedPos, newValue: candidate.pos },
-  ])
+  const candidate = existing
+    ? existing
+    : await prismaData.candidate.create({
+        data: { value, pos, stem: hypothesis.guessedStem },
+      })
+
+  if (!existing) {
+    await logAudit(session?.user, "Candidate", candidate.id, [
+      { field: "createdFromCorpusCluster", oldValue: null, newValue: hypothesis.clusterKey },
+      // Правку модератора фиксируем как переход "предложено -> принято", чтобы
+      // потом было видно, насколько реконструкция попадает в цель.
+      { field: "value", oldValue: hypothesis.reconstructedForm, newValue: candidate.value },
+      { field: "pos", oldValue: hypothesis.guessedPos, newValue: candidate.pos },
+    ])
+  }
 
   const now = new Date()
   const reviewedByEmail = session?.user?.email ?? null
@@ -82,8 +95,39 @@ export async function approveHypothesisAction(
     data: { status: "merged_into_existing", reviewedByEmail, reviewedAt: now },
   })
 
+  // И закрываем остальные кластеры, предлагающие ровно ту же словарную
+  // статью: это те самые другие словоформы того же слова. Иначе модератор
+  // встретит их поодиночке и одобрит повторно. Трогаются только 'pending' —
+  // ни отложенные, ни уже рассмотренные вручную.
+  const siblings = await prismaCorpus.corpusCandidateProposal.findMany({
+    where: {
+      status: "pending",
+      reconstructedForm: value,
+      guessedPos: pos,
+      clusterKey: { not: hypothesis.clusterKey },
+    },
+    select: { clusterKey: true },
+    distinct: ["clusterKey"],
+  })
+
+  let mergedClusters = 0
+  if (siblings.length > 0) {
+    const result = await prismaCorpus.corpusCandidateProposal.updateMany({
+      where: { clusterKey: { in: siblings.map((s) => s.clusterKey) }, status: "pending" },
+      data: {
+        status: "merged_into_existing",
+        candidateId: candidate.id,
+        resolutionNote: `другая словоформа того же слова, статья заведена по кластеру "${hypothesis.clusterKey}"`,
+        reviewedByEmail,
+        reviewedAt: now,
+      },
+    })
+    mergedClusters = siblings.length
+    if (result.count === 0) mergedClusters = 0
+  }
+
   revalidatePath("/admin/corpus-candidates")
-  return { success: true, candidateId: candidate.id }
+  return { success: true, candidateId: candidate.id, mergedClusters }
 }
 
 /**

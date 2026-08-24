@@ -62,6 +62,11 @@ function HypothesisCard({ h }: { h: HypothesisDTO }) {
       const result = await approveHypothesisAction(h.id, { value, pos })
       if (result.success) {
         setDone("promoted")
+        if (result.mergedClusters) {
+          // Полезно знать сразу: одно решение закрыло не одну карточку, а
+          // все словоформы того же слова.
+          alert(`Готово. Заодно закрыто других словоформ этого слова: ${result.mergedClusters}`)
+        }
         router.refresh()
       } else {
         alert(`Ошибка: ${result.error}`)
