@@ -5,6 +5,21 @@ import { CollocationRecord } from "./collocationMatcher"
 import { normalizeSurfaceForm } from "@/lib/corpus/candidates/reconstruct"
 import { isValidPos } from "@/lib/grammar/common"
 import { foldDiacritics } from "./foldDiacritics"
+import { expandVariants, lexemeVariants } from "./lexemeVariants"
+
+// Лексема без единого Meaning не несёт информации: её нечего показать на
+// странице слова и бессмысленно вешать на корпусный токен. На текущих
+// данных это ровно один блок битого импорта — 3 097 строк, id 22411-25507,
+// все без стема, без значений и без переводов ("ęoati", "gygnivų", "him",
+// "mt", "sux"...), тогда как среди лексем со стемом таких НЕТ НИ ОДНОЙ.
+// Они успели попасть в base_homonyms (4 311 записей) и нагенерировать
+// 15 485 аллофонов, а 673 из них уже выигрывали корпусные токены — то есть
+// раздували омонимию и подменяли собой настоящие слова.
+//
+// Фильтр, а не удаление: строки остаются в словаре (вдруг это заготовка на
+// доработку), просто не участвуют в распознавании. Снимается одной правкой,
+// если блок когда-нибудь наполнят значениями.
+const HAS_MEANING = { meanings: { some: {} } } as const
 
 // InflectionAnomaly (`inflection_anomalies`, data.db) хранит суппletивные/
 // нерегулярные формы конкретных лексем (напр. "jest"/"sųt" у "byti" — не
@@ -18,6 +33,7 @@ import { foldDiacritics } from "./foldDiacritics"
 // совпадать с уже приведённым к этому виду токеном.
 export async function buildInflectionAnomalyIndex(): Promise<InflectionAnomalyIndex> {
   const rows = await prismaData.inflectionAnomaly.findMany({
+    where: { lexeme: HAS_MEANING },
     select: {
       inflection: true,
       grammeme: true,
@@ -75,7 +91,7 @@ export async function buildValidEndings(): Promise<Set<string>> {
 // многословных глаголов ("глагол + sę/se"/"предлог") в lib/grammar/verb/mechanicalTail.ts.
 export async function buildKnownPrepositions(): Promise<string[]> {
   const rows = await prismaData.lexeme.findMany({
-    where: { pos: "ADP" },
+    where: { pos: "ADP", ...HAS_MEANING },
     select: { value: true },
   })
   return rows
@@ -87,7 +103,7 @@ export async function buildKnownPrepositions(): Promise<string[]> {
 // сопоставления фраз в токенизаторе (lib/corpus/tokenizer/collocationMatcher.ts).
 export async function buildCollocationRecords(): Promise<CollocationRecord[]> {
   const rows = await prismaData.lexeme.findMany({
-    where: { isCollocation: true },
+    where: { isCollocation: true, ...HAS_MEANING },
     select: { slug: true, value: true, pos: true },
   })
   return rows
@@ -126,11 +142,12 @@ export async function buildFoldedBaseIndex(): Promise<FoldedBaseIndex> {
   }
 
   const lexemes = await prismaData.lexeme.findMany({
+    where: HAS_MEANING,
     select: { id: true, value: true, stem: true },
   })
   for (const l of lexemes) {
-    add(l.value, l.id)
-    add(l.stem, l.id)
+    for (const variant of expandVariants(l.value)) add(variant, l.id)
+    for (const variant of expandVariants(l.stem)) add(variant, l.id)
   }
 
   // Готовые флейворные написания (EAST/WEST/SOUTH/NSL) той же лексемы.
@@ -139,6 +156,7 @@ export async function buildFoldedBaseIndex(): Promise<FoldedBaseIndex> {
   // (западный флейвор отличается от неё только ų/ǫ -> o вместо -> u).
   // Оставлены, потому что стоят один запрос и ловят как раз этот остаток.
   const allophones = await prismaData.lexemeAllophone.findMany({
+    where: { lexeme: HAS_MEANING },
     select: { lexemeId: true, value: true },
   })
   for (const a of allophones) add(a.value, a.lexemeId)
@@ -199,6 +217,7 @@ function parseWordIds(raw: string): Map<number, string> {
 // (см. createDbAnalyzer и getAnalyzer в вызывающих роутах).
 export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
   const lexemes = await prismaData.lexeme.findMany({
+    where: HAS_MEANING,
     select: {
       id: true, slug: true, value: true, pos: true, protoStemClass: true,
       stemExtension: true, paradigm: true, stem: true, gender: true,
@@ -209,29 +228,34 @@ export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
   const index: FoldedBaseIndex = new Map()
   for (const l of lexemes) {
     if (!l.value || !l.pos || !isValidPos(l.pos.toUpperCase())) continue
-    let forms
-    try {
-      forms = generateWordForms({
-        id: l.id,
-        slug: l.slug,
-        isv: l.value,
-        pos: l.pos.toUpperCase(),
-        protoStemClass: l.protoStemClass,
-        stemExtension: l.stemExtension,
-        paradigm: l.paradigm,
-        stem: l.stem,
-        gender: l.gender,
-        animacy: l.animacy,
-        alternationType: null,
-        fleetingVowelAt: null,
-        flavor: "CORE",
-        isCollocation: l.isCollocation ?? false,
-      }, true)
-    } catch {
-      // Одна лексема с кривыми грамматическими полями не должна ронять
-      // построение индекса целиком — на текущих данных таких нет (0 ошибок
-      // на 24 440 лексемах), но данные правит модератор.
-      continue
+    // Каждый вариант склоняется отдельно: подать движку стем
+    // "altana, altank" целиком — значит получить мусорную парадигму.
+    const variantPairs = lexemeVariants(l.value, l.stem)
+    const forms = []
+    for (const variant of variantPairs) {
+      try {
+        forms.push(...generateWordForms({
+          id: l.id,
+          slug: l.slug,
+          isv: variant.value,
+          pos: l.pos.toUpperCase(),
+          protoStemClass: l.protoStemClass,
+          stemExtension: l.stemExtension,
+          paradigm: l.paradigm,
+          stem: variant.stem,
+          gender: l.gender,
+          animacy: l.animacy,
+          alternationType: null,
+          fleetingVowelAt: null,
+          flavor: "CORE",
+          isCollocation: l.isCollocation ?? false,
+        }, true))
+      } catch {
+        // Одна лексема с кривыми грамматическими полями не должна ронять
+        // построение индекса целиком — на текущих данных таких нет (0 ошибок
+        // на 24 440 лексемах), но данные правит модератор.
+        continue
+      }
     }
     for (const form of forms) {
       const key = foldDiacritics(form.surfaceForm.toLowerCase())
@@ -331,7 +355,7 @@ export function createQueryWordsByBase(
     if (ids.length === 0) return []
 
     const rows = await prismaData.lexeme.findMany({
-      where: { id: { in: ids } },
+      where: { id: { in: ids }, ...HAS_MEANING },
       select: {
         id: true,
         slug: true,

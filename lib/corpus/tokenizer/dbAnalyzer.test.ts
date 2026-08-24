@@ -146,3 +146,32 @@ describe("DbAnalyzer numeric tokens", () => {
         expect(queryWordsByBase).toHaveBeenCalled();
     });
 });
+
+describe("DbAnalyzer comma-bundled dictionary entries", () => {
+    // 227 live lexemes keep several spellings in one field ("altana, altanka")
+    // and 78 carry a "#" marker — in both cases Lexeme.stem holds the joined
+    // string too, so the engine used to be handed "altana, altank" and the
+    // second spelling was unrecognizable in any form.
+    it("matches the second spelling of a comma-bundled entry", async () => {
+        const word = makeWord({ id: 5, slug: 'altana-NOUN', isv: 'altana, altanka', stem: 'altana, altank' });
+        const queryWordsByBase = vi.fn(async () => [word]);
+
+        const analyzer = new DbAnalyzer(queryWordsByBase, new Set());
+        const result = await analyzer.analyzeWord('altanka');
+
+        expect(result!.wordSlug).toBe('altana-NOUN');
+        expect(result!.matchCount).toBe(1);
+        expect(result!.isPartialMatch).toBe(false);
+    });
+
+    it("strips the leading # marker when matching", async () => {
+        const word = makeWord({ id: 6, slug: 'agentura-NOUN', isv: '#agentura', stem: '#agentur' });
+        const queryWordsByBase = vi.fn(async () => [word]);
+
+        const analyzer = new DbAnalyzer(queryWordsByBase, new Set());
+        const result = await analyzer.analyzeWord('agentura');
+
+        expect(result!.wordSlug).toBe('agentura-NOUN');
+        expect(result!.matchCount).toBe(1);
+    });
+});

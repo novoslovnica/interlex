@@ -8,6 +8,7 @@ import { CASE_WEIGHTS } from '@/lib/corpus/priorities/types';
 import { normalizeCaseValue } from './caseNormalize';
 import { expandSpellingVariants } from './spellingVariants';
 import { foldDiacritics } from './foldDiacritics';
+import { lexemeVariants } from './lexemeVariants';
 
 // Управление предлога слева — почти жёсткое грамматическое правило (не
 // статистическая склонность), поэтому перевешивает частотность с большим
@@ -293,37 +294,45 @@ export class DbAnalyzer {
 
             let matched = false;
 
-            const engineInput: EngineWordInput = {
-                id: word.id,
-                slug: word.slug,
-                isv: word.isv,
-                pos: posTag,
-                protoStemClass: word.protoStemClass,
-                stemExtension: word.stemExtension,
-                paradigm: word.paradigm,
-                stem: word.stem,
-                gender: word.gender,
-                animacy: word.animacy,
-                alternationType: word.alternationType,
-                fleetingVowelAt: word.fleetingVowelAt,
-                flavor: word.flavor || 'CORE',
-                isCollocation: word.isCollocation ?? false,
-                knownPrepositions: this.knownPrepositions,
-            };
+            // Статья словаря может держать несколько вариантов написания в
+            // одном поле ("altana, altanka"); каждый склоняется отдельно,
+            // иначе движок получит стем "altana, altank" и породит мусор, а
+            // второй вариант не опознается ни в одной форме. Тот же разбор,
+            // что и при построении индекса форм (см. lexemeVariants.ts).
+            for (const variant of lexemeVariants(word.isv, word.stem)) {
+                const engineInput: EngineWordInput = {
+                    id: word.id,
+                    slug: word.slug,
+                    isv: variant.value,
+                    pos: posTag,
+                    protoStemClass: word.protoStemClass,
+                    stemExtension: word.stemExtension,
+                    paradigm: word.paradigm,
+                    stem: variant.stem,
+                    gender: word.gender,
+                    animacy: word.animacy,
+                    alternationType: word.alternationType,
+                    fleetingVowelAt: word.fleetingVowelAt,
+                    flavor: word.flavor || 'CORE',
+                    isCollocation: word.isCollocation ?? false,
+                    knownPrepositions: this.knownPrepositions,
+                };
 
-            const forms = generateWordForms(engineInput, true);
-            for (const form of forms) {
-                if (normalizedVariants.has(this.normalizeForm(form.surfaceForm.toLowerCase()))) {
-                    matches.push({ word, form });
+                const forms = generateWordForms(engineInput, true);
+                for (const form of forms) {
+                    if (normalizedVariants.has(this.normalizeForm(form.surfaceForm.toLowerCase()))) {
+                        matches.push({ word, form });
+                        matched = true;
+                    }
+                }
+
+                if (!matched && normalizedVariants.has(this.normalizeForm(variant.value.toLowerCase()))) {
+                    matches.push({
+                        word,
+                        form: { surfaceForm: variant.value, feats: {} },
+                    });
                     matched = true;
                 }
-            }
-
-            if (!matched && normalizedVariants.has(this.normalizeForm(word.isv.toLowerCase()))) {
-                matches.push({
-                    word,
-                    form: { surfaceForm: word.isv, feats: {} },
-                });
             }
         }
         return matches;
