@@ -175,3 +175,34 @@ describe("DbAnalyzer comma-bundled dictionary entries", () => {
         expect(result!.matchCount).toBe(1);
     });
 });
+
+describe("DbAnalyzer literal spelling beats folded spelling", () => {
+    // Folding is what makes undiacriticized corpus text matchable at all, but
+    // it also merges genuinely different words: "šut" (clown) with "sųt"
+    // (they are), "ony" (that one) with "on" (he). When the surface form
+    // matches one lexeme literally and another only after folding, the literal
+    // one has to win regardless of how much more frequent the other is.
+    it("prefers the literally-spelled lexeme over a far more frequent folded one", async () => {
+        const clown = makeWord({ id: 7, slug: 'sut-n', isv: 'šut', stem: 'šut', corpusFrequencyPerMln: 1 });
+        const areVerb = makeWord({ id: 8, slug: 'sut-AUX', isv: 'sųt', stem: 'sųt', corpusFrequencyPerMln: 9000 });
+        const queryWordsByBase = vi.fn(async () => [clown, areVerb]);
+
+        const analyzer = new DbAnalyzer(queryWordsByBase, new Set());
+        const result = await analyzer.analyzeWord('šut');
+
+        expect(result!.wordSlug).toBe('sut-n');
+        expect(result!.matchCount).toBe(2);
+        expect(result!.candidates![0].wordSlug).toBe('sut-n');
+    });
+
+    it("still lets frequency decide when neither match is literal", async () => {
+        const clown = makeWord({ id: 7, slug: 'sut-n', isv: 'šut', stem: 'šut', corpusFrequencyPerMln: 1 });
+        const areVerb = makeWord({ id: 8, slug: 'sut-AUX', isv: 'sųt', stem: 'sųt', corpusFrequencyPerMln: 9000 });
+        const queryWordsByBase = vi.fn(async () => [clown, areVerb]);
+
+        const analyzer = new DbAnalyzer(queryWordsByBase, new Set());
+        const result = await analyzer.analyzeWord('sut');
+
+        expect(result!.wordSlug).toBe('sut-AUX');
+    });
+});

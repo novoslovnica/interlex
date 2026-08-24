@@ -148,15 +148,18 @@ export class DbAnalyzer {
             // лексема это слово" она так же авторитетна, как точное
             // совпадение парадигмы; стем-префиксный кандидат остаётся
             // самым слабым (isPartial), как и раньше.
-            type Candidate = { word: WordBaseRecord; form: GeneratedForm; forcedSource?: MorphoCandidateSource; isPartial?: boolean };
+            type Candidate = { word: WordBaseRecord; form: GeneratedForm; forcedSource?: MorphoCandidateSource; isPartial?: boolean; exact?: boolean };
             const combined: Candidate[] = [
                 ...exactMatches,
+                // Аномальные (суппletивные) формы ищутся по несвёрнутому
+                // написанию, поэтому их совпадение всегда буквальное.
                 ...anomalyEntries.map((a): Candidate => ({
                     word: this.anomalyToWordRecord(a),
                     form: { surfaceForm: clean, feats: {} },
                     forcedSource: 'anomaly',
+                    exact: true,
                 })),
-                ...(stemPrefixWord ? [{ word: stemPrefixWord, form: { surfaceForm: clean, feats: {} }, isPartial: true }] : []),
+                ...(stemPrefixWord ? [{ word: stemPrefixWord, form: { surfaceForm: clean, feats: {} }, isPartial: true, exact: false }] : []),
             ];
 
             const scored = combined
@@ -164,7 +167,12 @@ export class DbAnalyzer {
                     const scoreResult = this.scoreMatch(m.word, m.form.feats, context?.leftNeighbor);
                     return { ...m, ...scoreResult, source: m.forcedSource ?? scoreResult.source };
                 })
-                .sort((a, b) => b.score - a.score);
+                // Буквальное совпадение написания — сильнее любой частотности:
+                // иначе "šut" (клоун) проигрывал бы "sųt" (суть) просто
+                // потому, что последнее частотнее, хотя в тексте написано
+                // ровно первое. Внутри каждого класса порядок прежний — по
+                // счёту (частотность * падеж, с поправкой на управление).
+                .sort((a, b) => (b.exact ? 1 : 0) - (a.exact ? 1 : 0) || b.score - a.score);
 
             const winner = scored[0];
             const result = this.toAnalysis(winner.word, winner.form);
@@ -284,9 +292,16 @@ export class DbAnalyzer {
     private matchForms(
         cleanVariants: string[],
         words: WordBaseRecord[]
-    ): Array<{ word: WordBaseRecord; form: GeneratedForm }> {
+    ): Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean }> {
         const normalizedVariants = new Set(cleanVariants.map((v) => this.normalizeForm(v)));
-        const matches: Array<{ word: WordBaseRecord; form: GeneratedForm }> = [];
+        // Точное написание (без свёртки диакритики) — отдельный класс:
+        // свёртка нужна для полноты, но она склеивает и по-настоящему разные
+        // слова ("ješte" ещё / "jeste" 2pl от byti, "šut" клоун / "sųt" суть,
+        // "ony" оный / "on" он). Если словоформа совпала с одной лексемой
+        // буквально, а с другой — только после свёртки, буквальное совпадение
+        // должно побеждать независимо от частотности.
+        const exactVariants = new Set(cleanVariants.map((v) => v.toLowerCase()));
+        const matches: Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean }> = [];
         for (const word of words) {
             if (!word.isv || !word.pos) continue;
             const posTag = word.pos.toUpperCase();
@@ -320,18 +335,23 @@ export class DbAnalyzer {
 
                 const forms = generateWordForms(engineInput, true);
                 for (const form of forms) {
-                    if (normalizedVariants.has(this.normalizeForm(form.surfaceForm.toLowerCase()))) {
-                        matches.push({ word, form });
+                    const lowered = form.surfaceForm.toLowerCase();
+                    if (normalizedVariants.has(this.normalizeForm(lowered))) {
+                        matches.push({ word, form, exact: exactVariants.has(lowered) });
                         matched = true;
                     }
                 }
 
-                if (!matched && normalizedVariants.has(this.normalizeForm(variant.value.toLowerCase()))) {
-                    matches.push({
-                        word,
-                        form: { surfaceForm: variant.value, feats: {} },
-                    });
-                    matched = true;
+                if (!matched) {
+                    const lowered = variant.value.toLowerCase();
+                    if (normalizedVariants.has(this.normalizeForm(lowered))) {
+                        matches.push({
+                            word,
+                            form: { surfaceForm: variant.value, feats: {} },
+                            exact: exactVariants.has(lowered),
+                        });
+                        matched = true;
+                    }
                 }
             }
         }
