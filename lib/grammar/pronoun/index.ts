@@ -36,7 +36,21 @@ export interface PronounFormRequest {
 // 2. РЕЕСТРЫ ФЛЕКСИЙ И СУППЛЕТИВНЫХ ОСНОВ МЕСТОИМЕНИЙ
 // =========================================================================
 
-// База полных и кратких форм для личных местоимений (Супплетивные сетки)
+// База полных и кратких форм для личных местоимений (Супплетивные сетки).
+//
+// 2026-08-24: сетка была праславянской — "nasъ"/"namъ"/"vasъ"/"vamъ"/"mьně"/
+// "mьnojǫ"/"tobojǫ" и "kěmь"/"komь"/"čimь"/"čemь" ниже. Те же два
+// преобразования, что применялись к существительным 2026-07-24: снять
+// конечный/внутренний ер и заменить носовой ǫ на современный ų (см. AGENTS.md,
+// "RESOLVED: Grammar Engine Was Producing Wrong Endings"). Формы вроде "nasъ"
+// в корпусе не встречаются вообще — они лежали в индексе мёртвым грузом.
+//
+// Что СОЗНАТЕЛЬНО не тронуто, потому что это не снятие ера, а другое
+// написание, и требует решения лингвиста:
+//   - "kěm" (твор. от kto): в ISV встречается и "kym";
+//   - "česo" (род. от čto): в ISV встречается и "čego";
+//   - двойственное "na" (вин. от ja) оставлено по решению мейнтейнера, хотя
+//     оно и сталкивается с частотным предлогом "na".
 const PERSONAL_PRONOUNS_REGISTRY: Record<string, Record<NumberType, Record<Case, { full: string; short?: string }>>> = {
     ja: {
         [NumberType.SINGULAR]: {
@@ -44,12 +58,12 @@ const PERSONAL_PRONOUNS_REGISTRY: Record<string, Record<NumberType, Record<Case,
             [Case.ACCUSATIVE]: { full: 'mene', short: 'mę' },
             [Case.GENITIVE]: { full: 'mene', short: 'mę' },
             [Case.DATIVE]: { full: 'meně', short: 'mi' },
-            [Case.INSTRUMENTAL]: { full: 'mьnojǫ' },
-            [Case.LOCATIVE]: { full: 'mьně' },
+            [Case.INSTRUMENTAL]: { full: 'mnojų' },
+            [Case.LOCATIVE]: { full: 'mně' },
             [Case.VOCATIVE]: { full: 'ja' }
         },
         [NumberType.PLURAL]: {
-            [Case.NOMINATIVE]: { full: 'my' }, [Case.ACCUSATIVE]: { full: 'nasъ', short: 'ny' }, [Case.GENITIVE]: { full: 'nasъ' }, [Case.DATIVE]: { full: 'namъ' }, [Case.INSTRUMENTAL]: { full: 'nami' }, [Case.LOCATIVE]: { full: 'nasъ' }, [Case.VOCATIVE]: { full: 'my' }
+            [Case.NOMINATIVE]: { full: 'my' }, [Case.ACCUSATIVE]: { full: 'nas', short: 'ny' }, [Case.GENITIVE]: { full: 'nas' }, [Case.DATIVE]: { full: 'nam' }, [Case.INSTRUMENTAL]: { full: 'nami' }, [Case.LOCATIVE]: { full: 'nas' }, [Case.VOCATIVE]: { full: 'my' }
         },
         [NumberType.DUAL]: {
             [Case.NOMINATIVE]: { full: 'vě' }, [Case.ACCUSATIVE]: { full: 'na' }, [Case.GENITIVE]: { full: 'naju' }, [Case.DATIVE]: { full: 'nama' }, [Case.INSTRUMENTAL]: { full: 'nama' }, [Case.LOCATIVE]: { full: 'naju' }, [Case.VOCATIVE]: { full: 'vě' }
@@ -61,12 +75,12 @@ const PERSONAL_PRONOUNS_REGISTRY: Record<string, Record<NumberType, Record<Case,
             [Case.ACCUSATIVE]: { full: 'tebe', short: 'tę' },
             [Case.GENITIVE]: { full: 'tebe', short: 'tę' },
             [Case.DATIVE]: { full: 'tobě', short: 'ti' },
-            [Case.INSTRUMENTAL]: { full: 'tobojǫ' },
+            [Case.INSTRUMENTAL]: { full: 'tobojų' },
             [Case.LOCATIVE]: { full: 'tobě' },
             [Case.VOCATIVE]: { full: 'ty' }
         },
         [NumberType.PLURAL]: {
-            [Case.NOMINATIVE]: { full: 'vy' }, [Case.ACCUSATIVE]: { full: 'vasъ', short: 'vy' }, [Case.GENITIVE]: { full: 'vasъ' }, [Case.DATIVE]: { full: 'vamъ' }, [Case.INSTRUMENTAL]: { full: 'vami' }, [Case.LOCATIVE]: { full: 'vasъ' }, [Case.VOCATIVE]: { full: 'vy' }
+            [Case.NOMINATIVE]: { full: 'vy' }, [Case.ACCUSATIVE]: { full: 'vas', short: 'vy' }, [Case.GENITIVE]: { full: 'vas' }, [Case.DATIVE]: { full: 'vam' }, [Case.INSTRUMENTAL]: { full: 'vami' }, [Case.LOCATIVE]: { full: 'vas' }, [Case.VOCATIVE]: { full: 'vy' }
         },
         [NumberType.DUAL]: {
             [Case.NOMINATIVE]: { full: 'va' }, [Case.ACCUSATIVE]: { full: 'va' }, [Case.GENITIVE]: { full: 'vaju' }, [Case.DATIVE]: { full: 'vama' }, [Case.INSTRUMENTAL]: { full: 'vama' }, [Case.LOCATIVE]: { full: 'vaju' }, [Case.VOCATIVE]: { full: 'va' }
@@ -77,10 +91,10 @@ const PERSONAL_PRONOUNS_REGISTRY: Record<string, Record<NumberType, Record<Case,
 // Сетка неличных вопросительных местоимений (kto/čto)
 const INTERROGATIVE_PRONOUNS: Record<'kto' | 'čto', Record<Case, string>> = {
     kto: {
-        [Case.NOMINATIVE]: 'kto', [Case.ACCUSATIVE]: 'kogo', [Case.GENITIVE]: 'kogo', [Case.DATIVE]: 'komu', [Case.INSTRUMENTAL]: 'kěmь', [Case.LOCATIVE]: 'komь', [Case.VOCATIVE]: 'kto'
+        [Case.NOMINATIVE]: 'kto', [Case.ACCUSATIVE]: 'kogo', [Case.GENITIVE]: 'kogo', [Case.DATIVE]: 'komu', [Case.INSTRUMENTAL]: 'kěm', [Case.LOCATIVE]: 'kom', [Case.VOCATIVE]: 'kto'
     },
     čto: {
-        [Case.NOMINATIVE]: 'čto', [Case.ACCUSATIVE]: 'čto', [Case.GENITIVE]: 'česo', [Case.DATIVE]: 'čemu', [Case.INSTRUMENTAL]: 'čimь', [Case.LOCATIVE]: 'čemь', [Case.VOCATIVE]: 'čto'
+        [Case.NOMINATIVE]: 'čto', [Case.ACCUSATIVE]: 'čto', [Case.GENITIVE]: 'česo', [Case.DATIVE]: 'čemu', [Case.INSTRUMENTAL]: 'čim', [Case.LOCATIVE]: 'čem', [Case.VOCATIVE]: 'čto'
     }
 };
 
