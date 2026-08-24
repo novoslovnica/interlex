@@ -24,7 +24,23 @@ interface ActionResult {
  * 'merged_into_existing' — судьба кластера решена, они не должны больше
  * маячить в очереди "pending".
  */
-export async function approveHypothesisAction(hypothesisId: number): Promise<ActionResult> {
+export interface ApproveOverrides {
+  /**
+   * Правленая словарная форма. Нужна прежде всего из-за диакритики: в корпусе
+   * слово сплошь и рядом написано упрощённо ("jezyk"), а в словарь оно должно
+   * попасть в каноническом написании ("język") — вывести его алгоритмически
+   * нельзя, "e" может быть и e, и ě, и ę. Реконструкция даёт заготовку,
+   * последнее слово за модератором.
+   */
+  value?: string
+  /** Правленая часть речи: гипотезы для одного слова часто расходятся именно в ней. */
+  pos?: string
+}
+
+export async function approveHypothesisAction(
+  hypothesisId: number,
+  overrides?: ApproveOverrides,
+): Promise<ActionResult> {
   const session = await auth()
   if (!(await checkPermission(session, Feature.CorpusCandidatesReview))) {
     return { success: false, error: "Forbidden" }
@@ -34,18 +50,24 @@ export async function approveHypothesisAction(hypothesisId: number): Promise<Act
   if (!hypothesis) return { success: false, error: "Гипотеза не найдена" }
   if (hypothesis.status !== "pending") return { success: false, error: "Уже обработано" }
 
+  const value = overrides?.value?.trim() || hypothesis.reconstructedForm
+  const pos = overrides?.pos?.trim() || hypothesis.guessedPos
+  if (!value) return { success: false, error: "Пустая словарная форма" }
+
   const candidate = await prismaData.candidate.create({
     data: {
-      value: hypothesis.reconstructedForm,
-      pos: hypothesis.guessedPos,
+      value,
+      pos,
       stem: hypothesis.guessedStem,
     },
   })
 
   await logAudit(session?.user, "Candidate", candidate.id, [
     { field: "createdFromCorpusCluster", oldValue: null, newValue: hypothesis.clusterKey },
-    { field: "value", oldValue: null, newValue: candidate.value },
-    { field: "pos", oldValue: null, newValue: candidate.pos },
+    // Правку модератора фиксируем как переход "предложено -> принято", чтобы
+    // потом было видно, насколько реконструкция попадает в цель.
+    { field: "value", oldValue: hypothesis.reconstructedForm, newValue: candidate.value },
+    { field: "pos", oldValue: hypothesis.guessedPos, newValue: candidate.pos },
   ])
 
   const now = new Date()

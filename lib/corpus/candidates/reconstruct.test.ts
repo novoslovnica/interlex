@@ -76,3 +76,59 @@ describe("buildHypothesesForSurfaceForm pruning", () => {
         expect(forms).toHaveLength(1);
     });
 });
+
+// Разбор реальной очереди мейнтейнером показал три дыры: не предлагались ни
+// начальные формы глаголов (а глаголов в очереди много), ни наречия, а
+// фильтр по опоре классов вдобавок молча вырезал и то, и другое — доли по
+// словарю считаются только для именных классов, у глагольных их нет и быть
+// не может.
+const VERB_INDEX: EndingReverseIndex = new Map([
+    ["", [{ stemType: "o_hard", grammeme: "Case=Nom|Number=Sing" }]],
+    ["t", [{ stemType: "verb_present_athematic_a", grammeme: "Person=3|Number=Plur" }]],
+    ["jut", [{ stemType: "verb_present_athematic_a", grammeme: "Person=3|Number=Plur" }]],
+    ["te", [{ stemType: "verb_present_athematic_i", grammeme: "Person=2|Number=Plur" }]],
+    ["š", [{ stemType: "verb_present_thematic_e", grammeme: "Person=2|Number=Sing" }]],
+    ["ěje", [{ stemType: "adverb_comp", grammeme: "Degree=Cmp" }]],
+]);
+
+describe("verb and adverb reconstruction", () => {
+    const reconstructions = (word: string) =>
+        buildHypothesesForSurfaceForm(word, VERB_INDEX, SUPPORT).map((h) => `${h.guessedPos}:${h.reconstructedForm}`);
+
+    it("recovers the infinitive of the short -am paradigm", () => {
+        expect(reconstructions("imajut")).toContain("VERB:imati");
+    });
+
+    it("recovers the infinitive of an -iti verb", () => {
+        expect(reconstructions("govorite")).toContain("VERB:govoriti");
+    });
+
+    it("recovers -ovati and -nųti from their thematic stems", () => {
+        expect(reconstructions("kupuješ")).toContain("VERB:kupovati");
+        expect(reconstructions("krikneš")).toContain("VERB:kriknųti");
+    });
+
+    it("refuses to guess a class I infinitive", () => {
+        // "mogųt" — основа палатализована (mog-/moć-), инфинитив может быть и
+        // на -ti, и на -ći: гипотезы быть не должно вовсе.
+        expect(reconstructions("mogut").filter((r) => r.startsWith("VERB:"))).toHaveLength(0);
+    });
+
+    it("turns an adverb comparative back into its positive form", () => {
+        expect(reconstructions("brzěje")).toContain("ADV:brzo");
+    });
+
+    it("offers an adverb reading for the productive -o/-e endings", () => {
+        expect(reconstructions("brzo")).toContain("ADV:brzo");
+    });
+
+    it("does not apply the dictionary-support filter to verb classes", () => {
+        // Регрессия: фильтр опоры сравнивал с порогом ЛЮБОЙ stemType, а у
+        // verb_present_* опоры нет — из-за чего вырезались все глагольные
+        // гипотезы разом, включая работавшую до того ветку l-причастия.
+        const withSupport = buildHypothesesForSurfaceForm("imajut", VERB_INDEX, SUPPORT);
+        const withoutSupport = buildHypothesesForSurfaceForm("imajut", VERB_INDEX);
+        expect(withSupport.some((h) => h.guessedPos === "VERB")).toBe(true);
+        expect(withoutSupport.some((h) => h.guessedPos === "VERB")).toBe(true);
+    });
+});

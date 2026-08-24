@@ -51,6 +51,54 @@ const ADJ_STEM_TYPES = new Set(["adj_hard", "adj_soft"])
 // классы, предлагать по ним новую лексему бессмысленно.
 const VERB_LPART_STEM_TYPE = "verb_lpart"
 
+// Классы настоящего времени, из которых инфинитив выводится однозначно.
+// Это обратная сторона extractProtoStems (lib/grammar/verb/index.ts): там
+// инфинитив разбирается на основы, здесь основа собирается обратно в
+// инфинитив. Восстановимо не всё — см. infinitiveFromPresentStem.
+const VERB_PRESENT_STEM_TYPES = new Set([
+  "verb_present_athematic_a", "verb_present_athematic_i", "verb_present_thematic_e",
+])
+
+const ADVERB_COMPARATIVE_STEM_TYPE = "adverb_comp"
+
+// Продуктивные финали наречий в ISV (образование от прилагательных:
+// dobry -> dobro, iskrenny -> iskrenne).
+const ADVERB_SURFACE_ENDINGS = ["o", "e"]
+
+/**
+ * Восстанавливает инфинитив по основе настоящего времени.
+ *
+ * Возвращает null там, где вывод недостоверен — лучше не показать гипотезу,
+ * чем показать выдуманную:
+ *  - класс I (тематическое -e после согласной, "mogų/mogut"): основа
+ *    палатализована, обратное преобразование неоднозначно (moć-/mog-), а
+ *    инфинитив может быть и на -ti, и на -ći;
+ *  - формы 1 л. ед. и 3 л. мн. классов на -i, где -i отброшено и произошла
+ *    йотация ("govorjų" от "govoriti") — та же неоднозначность.
+ */
+function infinitiveFromPresentStem(stemType: string, stem: string): string | null {
+  // Краткая парадигма на -am: основа перед окончанием — уже основа
+  // инфинитива ("ima" + "m"), поэтому просто +ti.
+  if (stemType === "verb_present_athematic_a") {
+    return stem.endsWith("a") ? stem + "ti" : null
+  }
+
+  // Класс IV: основа настоящего = корень + i ("govori" + š).
+  if (stemType === "verb_present_athematic_i") {
+    return stem.endsWith("i") ? stem + "ti" : null
+  }
+
+  // Тематическое -e: класс определяется тем, что стоит перед ним.
+  if (stemType === "verb_present_thematic_e") {
+    if (stem.endsWith("aje")) return stem.slice(0, -2) + "ti"        // znaje -> znati
+    if (stem.endsWith("uje")) return stem.slice(0, -3) + "ovati"     // kupuje -> kupovati
+    if (stem.endsWith("ne")) return stem.slice(0, -2) + "nųti"       // krikne -> kriknųti
+    return null                                                       // класс I — не выводим
+  }
+
+  return null
+}
+
 /**
  * Доля словаря, приходящаяся на каждый класс основ. Нужна, чтобы не
  * предлагать классы, которых в языке фактически нет.
@@ -200,10 +248,27 @@ export function buildHypothesesForSurfaceForm(
     // выдуманных строк было 1 003 090 — ровно половина всей таблицы.
     const evidenceless = endLen === 0
 
+    // Наречие — открытый класс и при этом неизменяемое: его словарная форма
+    // совпадает с формой в тексте, никакого окончания отрезать не нужно.
+    // Раньше наречия не предлагались вообще (adverb_* были исключены как
+    // "закрытые классы" — это верно про степени сравнения, но не про сам
+    // класс). Предлагаем не на каждое слово подряд, а на продуктивные
+    // финали -o/-e, которыми наречия в ISV и образуются от прилагательных.
+    if (evidenceless && ADVERB_SURFACE_ENDINGS.some((e) => clean.endsWith(e))) {
+      addHypothesis(seen, PosType.ADV, "adverb", "Degree=Pos", clean, clean, rank)
+    }
+
     for (const m of matches) {
       // Класс, которого в словаре фактически нет, не предлагаем вообще —
       // см. buildStemTypeSupport.
-      if (support && (support.get(m.stemType) ?? 0) < MIN_STEM_TYPE_SUPPORT) continue
+      //
+      // Проверка применяется ТОЛЬКО к именным и адъективным классам: именно
+      // для них buildStemTypeSupport считает доли по словарю. У глагольных и
+      // наречных stemType опоры нет и быть не может, поэтому безусловное
+      // сравнение с порогом вырезало их все до единого — включая работавшую
+      // до этого ветку l-причастия.
+      const measured = NOUN_STEM_TYPES.has(m.stemType) || ADJ_STEM_TYPES.has(m.stemType)
+      if (measured && support && (support.get(m.stemType) ?? 0) < MIN_STEM_TYPE_SUPPORT) continue
       if (NOUN_STEM_TYPES.has(m.stemType)) {
         for (const gender of citationGendersForNoun(m.stemType)) {
           const citationEnding = getEnding(m.stemType, "singular", "nom", "CORE", gender)
@@ -216,6 +281,17 @@ export function buildHypothesesForSurfaceForm(
         if (evidenceless && citationEnding) continue
         const guessedGrammeme = buildGrammeme("nom", "singular", GrammaticalGender.MASC)
         addHypothesis(seen, PosType.ADJ, m.stemType, guessedGrammeme, stem, stem + citationEnding, rank)
+      } else if (VERB_PRESENT_STEM_TYPES.has(m.stemType)) {
+        // Глаголов в очереди много, а раньше из всей глагольной парадигмы
+        // распознавалось только l-причастие — поэтому "imajut", "dumam",
+        // "koristate" не давали ни одной глагольной гипотезы вовсе.
+        const infinitive = infinitiveFromPresentStem(m.stemType, stem)
+        if (infinitive) {
+          addHypothesis(seen, PosType.VERB, m.stemType, "VerbForm=Inf", stem, infinitive, rank)
+        }
+      } else if (m.stemType === ADVERB_COMPARATIVE_STEM_TYPE) {
+        // Сравнительная степень наречия ("brzěje") -> положительная ("brzo").
+        addHypothesis(seen, PosType.ADV, m.stemType, "Degree=Pos", stem, stem + "o", rank)
       } else if (m.stemType === VERB_LPART_STEM_TYPE) {
         // Стандартная славянская эвристика: l-причастие minus l/la/lo/li/le
         // = основа инфинитива, plus -ti. Приблизительно (без учёта
