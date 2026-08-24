@@ -51,21 +51,27 @@ export async function buildInflectionAnomalyIndex(): Promise<InflectionAnomalyIn
   for (const r of rows) {
     const pos = r.lexeme.pos?.toUpperCase()
     if (!pos || !isValidPos(pos)) continue
-    const key = normalizeSurfaceForm(r.inflection)
-    if (!key) continue
-    const dedupeKey = `${key}|${r.lexeme.slug}|${r.grammeme}`
-    if (seenPerKey.has(dedupeKey)) continue
-    seenPerKey.add(dedupeKey)
-    const entry: AnomalyMatch = {
-      wordSlug: r.lexeme.slug,
-      lemma: r.lexeme.value ?? r.lexeme.slug,
-      pos,
-      grammeme: r.grammeme,
-      corpusFrequencyPerMln: r.lexeme.corpusFrequencyPerMln,
+    // 16 строк держат по два варианта одной формы через слэш ("mene/mę",
+    // "děla/dělese") — буквально такая строка не совпадёт ни с одним
+    // токеном, так что каждый вариант индексируется отдельно. Тот же
+    // принцип, что и для запятых в самих лексемах (lexemeVariants.ts).
+    for (const part of r.inflection.split("/")) {
+      const key = normalizeSurfaceForm(part.trim())
+      if (!key) continue
+      const dedupeKey = `${key}|${r.lexeme.slug}|${r.grammeme}`
+      if (seenPerKey.has(dedupeKey)) continue
+      seenPerKey.add(dedupeKey)
+      const entry: AnomalyMatch = {
+        wordSlug: r.lexeme.slug,
+        lemma: r.lexeme.value ?? r.lexeme.slug,
+        pos,
+        grammeme: r.grammeme,
+        corpusFrequencyPerMln: r.lexeme.corpusFrequencyPerMln,
+      }
+      const arr = map.get(key)
+      if (arr) arr.push(entry)
+      else map.set(key, [entry])
     }
-    const arr = map.get(key)
-    if (arr) arr.push(entry)
-    else map.set(key, [entry])
   }
   return map
 }
