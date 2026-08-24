@@ -17,6 +17,8 @@ const UPSERT_BATCH_SIZE = 500
 export interface GenerateProposalsResult {
   clustersProcessed: number
   hypothesesUpserted: number
+  restoredToPending: number
+  movedToDeferred: number
   redTokens: number
   yellowTokens: number
 }
@@ -29,6 +31,8 @@ export interface GenerateProposalsOptions {
   // понадобилось на практике.
   clusterOffset?: number
   clusterLimit?: number
+  /** Порог попадания в рабочую очередь, см. PENDING_MIN_OCCURRENCES. */
+  pendingMinOccurrences?: number
 }
 
 interface Cluster {
@@ -55,6 +59,27 @@ interface Cluster {
  * прогоном (тот же приём, что и у CorpusToken.resolutionSource/
  * CorpusDependency.source/semantic_relations.source в этом проекте).
  */
+/**
+ * Сколько раз слово должно встретиться в корпусе, чтобы попасть в очередь на
+ * ревью, а не в отложенные.
+ *
+ * Замер на живом корпусе (186 761 кластер): 109 173 из них (58%) — гапаксы,
+ * то есть одно вхождение на 5,1 млн токенов; ещё 34 779 встретились дважды.
+ * Разобрать 186 тысяч решений вручную нереально, а гапакс в корпусе такого
+ * размера почти всегда опечатка, имя собственное или иностранное слово.
+ *
+ * Значение 2 — самое осторожное из осмысленных: откладывает только настоящие
+ * гапаксы и убирает из очереди 58%, не трогая ничего, что встретилось хотя бы
+ * дважды. Более агрессивная отсечка — решение мейнтейнера, поэтому порог
+ * вынесен в параметр.
+ *
+ * ВАЖНО: отложенное — это НЕ отклонённое. Статус 'deferred' означает "пока
+ * не показываем", и при следующей перегенерации слово вернётся в очередь
+ * само, если наберёт вхождения (см. syncUnreviewedStatuses). Отклонение
+ * ('rejected') — утверждение "это не слово", которого мы про гапаксы не знаем.
+ */
+export const PENDING_MIN_OCCURRENCES = 2
+
 export async function generateCorpusCandidateProposals(
   options: GenerateProposalsOptions = {},
 ): Promise<GenerateProposalsResult> {
@@ -62,6 +87,7 @@ export async function generateCorpusCandidateProposals(
   // Доля словаря по классам основ — чтобы не предлагать классы, которых в
   // языке фактически нет (см. buildStemTypeSupport).
   const stemTypeSupport = await buildStemTypeSupport()
+  const pendingMin = options.pendingMinOccurrences ?? PENDING_MIN_OCCURRENCES
 
   const redTokenRows = await prismaCorpus.corpusToken.findMany({
     // wordIndex=-1 — пунктуация (см. tokenizer.ts/reanalyzeDocument.ts):
@@ -130,7 +156,7 @@ export async function generateCorpusCandidateProposals(
   for (const [clusterKey, cluster] of redClusters) {
     const hypotheses = buildHypothesesForSurfaceForm(cluster.surfaceForm, reverseIndex, stemTypeSupport)
     for (const h of hypotheses) {
-      buffer.push(buildProposalUpsert(clusterKey, "red_reverse_lookup", h, cluster.tokenIds, null, false))
+      buffer.push(buildProposalUpsert(clusterKey, "red_reverse_lookup", h, cluster.tokenIds, null, false, pendingMin))
       if (buffer.length >= UPSERT_BATCH_SIZE) await flush()
     }
   }
@@ -140,19 +166,50 @@ export async function generateCorpusCandidateProposals(
     const siblingStem = cluster.siblingWordSlug ? siblingStemBySlug.get(cluster.siblingWordSlug) : undefined
     for (const h of hypotheses) {
       const possibleEndingGap = !!siblingStem && h.guessedStem.toLowerCase() === siblingStem
-      buffer.push(buildProposalUpsert(clusterKey, "yellow_stem_sibling", h, cluster.tokenIds, cluster.siblingWordSlug, possibleEndingGap))
+      buffer.push(buildProposalUpsert(clusterKey, "yellow_stem_sibling", h, cluster.tokenIds, cluster.siblingWordSlug, possibleEndingGap, pendingMin))
       if (buffer.length >= UPSERT_BATCH_SIZE) await flush()
     }
   }
 
   await flush()
 
+  const statusSync = await syncUnreviewedStatuses(pendingMin)
+
   return {
+    ...statusSync,
     clustersProcessed: redClusters.size + yellowClusters.size,
     hypothesesUpserted,
     redTokens: redTokenRows.length,
     yellowTokens: yellowTokenRows.length,
   }
+}
+
+/**
+ * Приводит статус НЕ рассмотренных строк в соответствие с их текущей
+ * частотностью: слово, набравшее вхождения, возвращается в очередь, а
+ * упавшее ниже порога — уходит в отложенные.
+ *
+ * Трогает только пару pending <-> deferred. Решения модератора
+ * ('rejected'/'promoted'/'merged_into_existing') не затрагиваются ни при
+ * каких условиях — та же гарантия, что и у upsert, который сознательно не
+ * пишет status в ветке update.
+ *
+ * Два отдельных updateMany, а не пересчёт по строкам: обе выборки
+ * покрываются существующим индексом (status, occurrenceCount).
+ */
+async function syncUnreviewedStatuses(pendingMinOccurrences: number): Promise<{
+  restoredToPending: number
+  movedToDeferred: number
+}> {
+  const restored = await prismaCorpus.corpusCandidateProposal.updateMany({
+    where: { status: "deferred", occurrenceCount: { gte: pendingMinOccurrences } },
+    data: { status: "pending" },
+  })
+  const deferred = await prismaCorpus.corpusCandidateProposal.updateMany({
+    where: { status: "pending", occurrenceCount: { lt: pendingMinOccurrences } },
+    data: { status: "deferred" },
+  })
+  return { restoredToPending: restored.count, movedToDeferred: deferred.count }
 }
 
 function groupIntoClusters(
@@ -179,6 +236,7 @@ function buildProposalUpsert(
   tokenIds: bigint[],
   siblingWordSlug: string | null,
   possibleEndingGap: boolean,
+  pendingMinOccurrences: number,
 ) {
   const exampleTokenIds = tokenIds.slice(0, EXAMPLE_TOKEN_LIMIT).map((id) => id.toString())
 
@@ -204,6 +262,7 @@ function buildProposalUpsert(
       rank: h.rank,
       occurrenceCount: tokenIds.length,
       exampleTokenIds,
+      status: tokenIds.length >= pendingMinOccurrences ? "pending" : "deferred",
     },
     update: {
       occurrenceCount: tokenIds.length,

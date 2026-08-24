@@ -60,6 +60,8 @@ async function main() {
   console.log(`Yellow tokens (matchCount=1 && isPartialMatch): ${result.yellowTokens}`)
   console.log(`Distinct clusters (unique surface forms):      ${result.clustersProcessed}`)
   console.log(`Hypothesis rows upserted:                      ${result.hypothesesUpserted}`)
+  console.log(`Restored to pending (grew past threshold):      ${result.restoredToPending}`)
+  console.log(`Moved to deferred (below threshold):           ${result.movedToDeferred}`)
 }
 
 main().catch((e) => {

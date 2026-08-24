@@ -38,13 +38,25 @@ export default async function ModerationDashboardPage() {
   // разным БД (data.db, corpus.db) - каждый дешёвый сам по себе.
   const [candidatesPending, corpusClusters, corpusHomonyms, suggestionsPending, reportsPending] = await Promise.all([
     canSee(Feature.CandidatesPromote) ? prismaData.candidate.count({ where: { promotedAt: null } }) : Promise.resolve(0),
+    // COUNT(DISTINCT ...) вместо groupBy: тот тянул в память по строке на
+    // каждый кластер (на живых данных это 77 588 строк) только чтобы взять
+    // .length. Prisma не умеет count-distinct, поэтому сырой запрос.
     canSee(Feature.CorpusCandidatesReview)
-      ? prismaCorpus.corpusCandidateProposal.groupBy({ by: ["clusterKey"], where: { status: "pending" } }).then((rows) => rows.length)
+      ? prismaCorpus
+          .$queryRaw<{ n: bigint }[]>`SELECT COUNT(DISTINCT clusterKey) AS n FROM "CorpusCandidateProposal" WHERE status = 'pending'`
+          .then((rows) => Number(rows[0]?.n ?? 0))
       : Promise.resolve(0),
     // Нет отдельной страницы "все омонимы сразу" - matchCount/resolutionSource
     // проверяются только по одному токену за раз в TokenSidebar.tsx. Считаем
     // честно, ссылка ведёт на список документов, а не на несуществующий
     // единый список.
+    //
+    // Это НЕ очередь задач: из 786 419 токенов, где два лучших кандидата почти
+    // равны, 779 616 (99,1%) спорят о граммеме ОДНОЙ И ТОЙ ЖЕ лексемы — лемма
+    // и часть речи уже верны, и разрешается это синтаксическим разбором, а не
+    // кликами. Реально требуют человека лишь ~6 800 токенов, где спорят разные
+    // лексемы, и большинство из них — дубликаты в словаре. Показываем как
+    // показатель качества разметки, а не как список дел.
     canSee(Feature.CorpusTokenDisambiguate)
       ? prismaCorpus.corpusToken.count({ where: { matchCount: { gt: 1 }, resolutionSource: "auto" } })
       : Promise.resolve(0),
@@ -61,7 +73,7 @@ export default async function ModerationDashboardPage() {
       href: "/admin/corpus/documents",
       feature: Feature.CorpusTokenDisambiguate,
       count: corpusHomonyms,
-      note: "Разбор по документам — единого списка токенов нет",
+      note: "Показатель качества разметки, не очередь: 99% спорных случаев — граммема одной лексемы, это работа парсера",
     },
     { key: "suggestions", label: "Предложенные слова", href: "/admin/suggestions", feature: Feature.SuggestionsReview, count: suggestionsPending },
     { key: "reports", label: "Жалобы на ошибки", href: "/admin/reports", feature: Feature.ReportsReview, count: reportsPending },

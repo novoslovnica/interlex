@@ -17,6 +17,8 @@ export interface HypothesisDTO {
   exampleTokenIds: string[]
 }
 
+export type QueueKey = "words" | "endings" | "deferred"
+
 export interface ClusterDTO {
   clusterKey: string
   occurrenceCount: number
@@ -162,32 +164,71 @@ function ClusterCard({ cluster }: { cluster: ClusterDTO }) {
   )
 }
 
+const QUEUE_LABEL: Record<QueueKey, string> = {
+  words: "Новые слова",
+  endings: "Пробелы в парадигмах",
+  deferred: "Отложенные",
+}
+
 export default function CorpusCandidatesClient({
   clusters,
   page,
   totalPages,
   totalClusters,
+  queue,
+  queueCounts,
+  queueTitle,
+  queueHint,
 }: {
   clusters: ClusterDTO[]
   page: number
   totalPages: number
   totalClusters: number
+  queue: QueueKey
+  queueCounts: Record<QueueKey, number>
+  queueTitle: string
+  queueHint: string
 }) {
   return (
     <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Кандидаты из корпуса</h1>
-        <span className="text-sm text-muted-foreground">Слов на рассмотрении: {totalClusters}</span>
+        <span className="text-sm text-muted-foreground">Слов в этой очереди: {totalClusters.toLocaleString("ru")}</span>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Автосгенерированные гипотезы восстановления словарной формы для слов из корпуса, которые не удалось
-        распознать (красные) или у которых основа совпала с существующим словом, но флексия — нет (жёлтые).
-        Одобрение создаёт запись в «Кандидатах» для дальнейшей проверки; отклонение помечает слово как
-        неподходящее — оно больше не появится здесь при повторной генерации.
-      </p>
+
+      {/* Три очереди вместо одного плоского списка: это три разные задачи, и
+          смешивать их — значит прятать 3 721 дефект парадигм среди 77 тысяч
+          новых слов, а те, в свою очередь, среди 109 тысяч гапаксов. */}
+      <div className="flex flex-wrap gap-2">
+        {(Object.keys(QUEUE_LABEL) as QueueKey[]).map((key) => (
+          <Link
+            key={key}
+            href={`/admin/corpus-candidates?queue=${key}`}
+            className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
+              key === queue ? "bg-foreground text-background" : "hover:bg-muted"
+            }`}
+          >
+            {QUEUE_LABEL[key]}
+            <span className="ml-2 opacity-70">{queueCounts[key].toLocaleString("ru")}</span>
+          </Link>
+        ))}
+      </div>
+
+      <div className="space-y-1">
+        <h2 className="font-semibold">{queueTitle}</h2>
+        <p className="text-sm text-muted-foreground">{queueHint}</p>
+      </div>
+
+      {queue === "endings" && (
+        <p className="text-sm">
+          <Link href="/admin/endings" className="underline hover:no-underline">
+            Перейти к редактированию окончаний →
+          </Link>
+        </p>
+      )}
 
       {clusters.length === 0 && (
-        <div className="text-center text-muted-foreground py-12">Нет кандидатов на рассмотрении</div>
+        <div className="text-center text-muted-foreground py-12">Здесь пусто</div>
       )}
 
       <div className="space-y-4">
@@ -201,12 +242,12 @@ export default function CorpusCandidatesClient({
           <span>Страница {page} из {totalPages}</span>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={`/admin/corpus-candidates?page=${page - 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
+              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page - 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
                 ← Назад
               </Link>
             )}
             {page < totalPages && (
-              <Link href={`/admin/corpus-candidates?page=${page + 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
+              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page + 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
                 Вперёд →
               </Link>
             )}
