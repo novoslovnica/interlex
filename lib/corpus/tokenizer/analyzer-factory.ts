@@ -1,8 +1,10 @@
 import { prismaData } from "@/lib/prisma"
-import { DbAnalyzer, WordBaseRecord, AnomalyMatch, InflectionAnomalyIndex } from "./dbAnalyzer"
+import { DbAnalyzer, WordBaseRecord, AnomalyMatch, InflectionAnomalyIndex, FoldedBaseIndex } from "./dbAnalyzer"
+import { generateWordForms } from "@/lib/grammar/morphology/engine"
 import { CollocationRecord } from "./collocationMatcher"
 import { normalizeSurfaceForm } from "@/lib/corpus/candidates/reconstruct"
 import { isValidPos } from "@/lib/grammar/common"
+import { foldDiacritics } from "./foldDiacritics"
 
 // InflectionAnomaly (`inflection_anomalies`, data.db) хранит суппletивные/
 // нерегулярные формы конкретных лексем (напр. "jest"/"sųt" у "byti" — не
@@ -57,6 +59,14 @@ export async function buildValidEndings(): Promise<Set<string>> {
     select: { value: true },
   })
   const endings = new Set<string>(rows.map((r) => r.value))
+  // Свёрнутые варианты тех же окончаний: в корпусе больше трети словных
+  // токенов написаны без диакритики ("jezyku" вместо "języku"), и у таких
+  // словоформ окончание тоже свёрнутое. Без этого DbAnalyzer даже не
+  // порождает гипотетическую основу — слово не доходит до сопоставления
+  // парадигмы. Множество используется только для «какой суффикс можно
+  // отрезать», не для генерации форм, поэтому расширение здесь ничего не
+  // фабрикует (см. lib/corpus/tokenizer/foldDiacritics.ts).
+  for (const value of [...endings]) endings.add(foldDiacritics(value))
   endings.add("")
   return endings
 }
@@ -85,7 +95,186 @@ export async function buildCollocationRecords(): Promise<CollocationRecord[]> {
     .map((r) => ({ wordSlug: r.slug, lemma: r.value, pos: r.pos }))
 }
 
-export function createQueryWordsByBase(): (
+// Свёрнутый индекс основ: свёрнутое (без диакритики) написание -> id лексем.
+//
+// Закрывает две дыры стадии поиска лексемы, обе измерены на живом корпусе
+// (scripts/db/measure-corpus-recognition.ts):
+//  1. base_homonyms индексирует ТОЛЬКО стем ("pisa" у "pisati"), поэтому
+//     цитатная форма глагола недостижима: инфинитивного окончания -ti в
+//     ending_allophones нет вообще, отрезать нечего. 66 815 вхождений в
+//     корпусе — это ровно словарные формы существующих VERB-лексем.
+//  2. Индекс хранит каноническое написание ("język", "veľmi"), а корпус
+//     сплошь и рядом написан упрощённо ("jezyk", "velmi").
+//
+// Индекс строится в памяти (как buildInflectionAnomalyIndex), а не новой
+// таблицей: он полностью производный от lexemes/lexeme_allophones и должен
+// перестраиваться вместе с ними, а base_homonyms остаётся тем, чем был —
+// каноническим индексом, который правит модератор (см. syncBaseHomonym в
+// app/api/lexicon/[id]/updateField/service.ts).
+export async function buildFoldedBaseIndex(): Promise<FoldedBaseIndex> {
+  const index: FoldedBaseIndex = new Map()
+  const add = (raw: string | null | undefined, id: number) => {
+    if (!raw) return
+    const key = foldDiacritics(raw.toLowerCase().trim())
+    if (!key) return
+    const ids = index.get(key)
+    if (ids) {
+      if (!ids.includes(id)) ids.push(id)
+    } else {
+      index.set(key, [id])
+    }
+  }
+
+  const lexemes = await prismaData.lexeme.findMany({
+    select: { id: true, value: true, stem: true },
+  })
+  for (const l of lexemes) {
+    add(l.value, l.id)
+    add(l.stem, l.id)
+  }
+
+  // Готовые флейворные написания (EAST/WEST/SOUTH/NSL) той же лексемы.
+  // Меряется отдельно: поверх свёртки они добавляют всего ~10 тыс.
+  // вхождений из 1,33 млн красных — свёртка почти всё перекрывает сама
+  // (западный флейвор отличается от неё только ų/ǫ -> o вместо -> u).
+  // Оставлены, потому что стоят один запрос и ловят как раз этот остаток.
+  const allophones = await prismaData.lexemeAllophone.findMany({
+    select: { lexemeId: true, value: true },
+  })
+  for (const a of allophones) add(a.value, a.lexemeId)
+
+  // base_homonyms в свёрнутом виде — те же основы, что и сейчас, но
+  // достижимые при упрощённом написании словоформы.
+  const homonyms = await prismaData.baseHomonym.findMany({
+    select: { base: true, wordIds: true },
+  })
+  for (const h of homonyms) {
+    for (const id of parseWordIds(h.wordIds).keys()) add(h.base, id)
+  }
+
+  return index
+}
+
+// base_homonyms.wordIds живёт в двух форматах: исходный плоский number[] и
+// более новый {id, flavor}[] (см. AGENTS.md, Flavor System). Разбор был
+// заинлайнен в createQueryWordsByBase — вынесен, чтобы им же пользовался
+// buildFoldedBaseIndex.
+function parseWordIds(raw: string): Map<number, string> {
+  const result = new Map<number, string>()
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    return result
+  }
+  if (!Array.isArray(parsed)) return result
+  for (const item of parsed) {
+    if (typeof item === "number") result.set(item, "CORE")
+    else if (item && typeof item === "object" && typeof (item as { id?: unknown }).id === "number") {
+      const entry = item as { id: number; flavor?: string }
+      result.set(entry.id, entry.flavor || "CORE")
+    }
+  }
+  return result
+}
+
+// Индекс всех словоформ, которые грамматический движок умеет породить:
+// свёрнутая словоформа -> id лексем.
+//
+// Зачем, если формы и так генерируются в DbAnalyzer.matchForms: чтобы форма
+// дошла до сопоставления, DbAnalyzer сперва должен УГАДАТЬ границу основы,
+// отрезав окончание из ending_allophones. Граница в таблице морфологическая,
+// а в словоформе — поверхностная, и они расходятся: движок порождает
+// "imajųt" (3pl от "imati", стем "ima"), но окончания "jųt" в таблице нет,
+// поэтому основа "imaj" не проверяется, а "ima" не проверяется с окончанием
+// "jųt" — форма генерируется и остаётся недостижимой. На живом корпусе это
+// 103 341 вхождение сверх того, что ловится свёрнутыми основами
+// (scripts/db/measure-corpus-recognition.ts).
+//
+// Строится в памяти, а не таблицей, сознательно: индекс производен сразу от
+// двух вещей — словаря И грамматического движка. Таблица устаревала бы при
+// каждой правке lib/grammar/ (а их в этом проекте много, см. AGENTS.md), и
+// расхождение было бы молчаливым. Цена — 7,7 с и ~53 МБ на процесс,
+// измерено на 24 440 лексемах / 883 355 формах; собирается лениво, один раз
+// (см. createDbAnalyzer и getAnalyzer в вызывающих роутах).
+export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
+  const lexemes = await prismaData.lexeme.findMany({
+    select: {
+      id: true, slug: true, value: true, pos: true, protoStemClass: true,
+      stemExtension: true, paradigm: true, stem: true, gender: true,
+      animacy: true, isCollocation: true,
+    },
+  })
+
+  const index: FoldedBaseIndex = new Map()
+  for (const l of lexemes) {
+    if (!l.value || !l.pos || !isValidPos(l.pos.toUpperCase())) continue
+    let forms
+    try {
+      forms = generateWordForms({
+        id: l.id,
+        slug: l.slug,
+        isv: l.value,
+        pos: l.pos.toUpperCase(),
+        protoStemClass: l.protoStemClass,
+        stemExtension: l.stemExtension,
+        paradigm: l.paradigm,
+        stem: l.stem,
+        gender: l.gender,
+        animacy: l.animacy,
+        alternationType: null,
+        fleetingVowelAt: null,
+        flavor: "CORE",
+        isCollocation: l.isCollocation ?? false,
+      }, true)
+    } catch {
+      // Одна лексема с кривыми грамматическими полями не должна ронять
+      // построение индекса целиком — на текущих данных таких нет (0 ошибок
+      // на 24 440 лексемах), но данные правит модератор.
+      continue
+    }
+    for (const form of forms) {
+      const key = foldDiacritics(form.surfaceForm.toLowerCase())
+      // Односимвольные ключи не индексируем — по той же причине, что и в
+      // createQueryWordsByBase: они дают ложные совпадения на артефактах
+      // токенизации, а реальные однобуквенные слова находятся точным
+      // поиском по base_homonyms.
+      if (key.length < 2) continue
+      const ids = index.get(key)
+      if (ids) {
+        if (!ids.includes(l.id)) ids.push(l.id)
+      } else {
+        index.set(key, [l.id])
+      }
+    }
+  }
+  return index
+}
+
+// Единая точка сборки анализатора. До неё все 11 мест конструирования
+// повторяли одну и ту же связку из четырёх билдеров вручную — из-за чего
+// добавление нового индекса требовало не забыть 11 файлов (ровно так
+// InflectionAnomaly и оставался годами write-only, см. AGENTS.md).
+export async function createDbAnalyzer(): Promise<DbAnalyzer> {
+  const [validEndings, knownPrepositions, inflectionAnomalies, foldedBases, generatedForms] = await Promise.all([
+    buildValidEndings(),
+    buildKnownPrepositions(),
+    buildInflectionAnomalyIndex(),
+    buildFoldedBaseIndex(),
+    buildGeneratedFormIndex(),
+  ])
+  return new DbAnalyzer(
+    createQueryWordsByBase(foldedBases, generatedForms),
+    validEndings,
+    knownPrepositions,
+    inflectionAnomalies
+  )
+}
+
+export function createQueryWordsByBase(
+  foldedBases?: FoldedBaseIndex,
+  generatedForms?: FoldedBaseIndex,
+): (
   bases: string[],
 ) => Promise<WordBaseRecord[]> {
   return async (bases: string[]): Promise<WordBaseRecord[]> => {
@@ -95,16 +284,45 @@ export function createQueryWordsByBase(): (
 
     const lexemeFlavors = new Map<number, string>()
     for (const h of homonyms) {
-      const parsed = JSON.parse(h.wordIds)
-      if (Array.isArray(parsed)) {
-        if (parsed.length > 0 && typeof parsed[0] === "number") {
-          for (const id of parsed as number[]) {
-            lexemeFlavors.set(id, "CORE")
-          }
-        } else {
-          for (const item of parsed as Array<{ id: number; flavor?: string }>) {
-            lexemeFlavors.set(item.id, item.flavor || "CORE")
-          }
+      for (const [id, flavor] of parseWordIds(h.wordIds)) {
+        lexemeFlavors.set(id, flavor)
+      }
+    }
+
+    // Свёрнутый индекс — дополнение к точному поиску, а не замена: точное
+    // совпадение по канонической основе остаётся первичным и сохраняет
+    // свой флейвор, свёрнутые попадания добавляются как CORE.
+    if (foldedBases) {
+      for (const base of bases) {
+        // Односимвольные основы через свёртку не ищем. В словаре есть
+        // мусорные однобуквенные лексемы с пустым стемом ("je", "ě", "t"
+        // как NOUN) и лексема "ljev" со стемом "l" — после свёртки любой
+        // одиночный диакритический символ в корпусе ("ę", "ť", "ľ" —
+        // артефакты токенизации) начинал совпадать сразу с несколькими из
+        // них. Точный поиск по base_homonyms этим не затронут: реальные
+        // однобуквенные слова ("v", "k", "s", "i", "a") лежат там без
+        // диакритики и находятся как раньше.
+        if (base.length < 2) continue
+        const ids = foldedBases.get(foldDiacritics(base.toLowerCase()))
+        if (!ids) continue
+        for (const id of ids) {
+          if (!lexemeFlavors.has(id)) lexemeFlavors.set(id, "CORE")
+        }
+      }
+    }
+
+    // Индекс готовых словоформ. DbAnalyzer передаёт сюда в том числе саму
+    // словоформу целиком (вариант с нулевым окончанием), поэтому отдельный
+    // параметр не нужен. Лишние кандидаты, пойманные на коротких гипотезах
+    // основы, отсеются в matchForms — она всё равно сверяет каждую лексему
+    // с реальной словоформой.
+    if (generatedForms) {
+      for (const base of bases) {
+        if (base.length < 2) continue
+        const ids = generatedForms.get(foldDiacritics(base.toLowerCase()))
+        if (!ids) continue
+        for (const id of ids) {
+          if (!lexemeFlavors.has(id)) lexemeFlavors.set(id, "CORE")
         }
       }
     }

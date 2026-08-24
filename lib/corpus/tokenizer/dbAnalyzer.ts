@@ -7,6 +7,7 @@ import { getExpectedCasesForPreposition } from '@/lib/corpus/syntax/government';
 import { CASE_WEIGHTS } from '@/lib/corpus/priorities/types';
 import { normalizeCaseValue } from './caseNormalize';
 import { expandSpellingVariants } from './spellingVariants';
+import { foldDiacritics } from './foldDiacritics';
 
 // Управление предлога слева — почти жёсткое грамматическое правило (не
 // статистическая склонность), поэтому перевешивает частотность с большим
@@ -58,6 +59,16 @@ export interface AnomalyMatch {
 // InflectionAnomaly.inflection.
 export type InflectionAnomalyIndex = Map<string, AnomalyMatch[]>;
 
+// Свёрнутое (без диакритики) написание основы -> id лексем, у которых
+// такая основа/цитатная/флейворная форма. Строится в
+// analyzer-factory.ts::buildFoldedBaseIndex.
+export type FoldedBaseIndex = Map<string, number[]>;
+
+// Токен целиком из цифр (в любой письменности — \p{N}, как в TOKEN_PATTERN
+// токенизатора). Дробные/диапазонные записи сюда не попадают: токенизатор
+// режет их по пунктуации на отдельные числовые токены.
+const NUMERIC_TOKEN = /^\p{N}+$/u;
+
 const MAX_END_LEN = 4;
 const MIN_STEM_LEN = 2;
 
@@ -72,6 +83,25 @@ export class DbAnalyzer {
     async analyzeWord(surfaceForm: string, context?: AnalyzeContext): Promise<MorphoAnalysis | null> {
         let clean = surfaceForm.toLowerCase().trim();
         if (!clean) return null;
+
+        // Числовые токены ("2026", "15") — не «нераспознанное слово»: их
+        // просто нет и не может быть в словаре, а токенизатор пропускает
+        // цифры через \p{N} в TOKEN_PATTERN, поэтому они доходили сюда и
+        // оседали красными (81 587 вхождений на живом корпусе, 6,1% всех
+        // красных). Помечаем как NUM, лемма — сама запись числа.
+        if (NUMERIC_TOKEN.test(clean)) {
+            return {
+                lemma: clean,
+                pos: PosType.NUM,
+                wordSlug: null,
+                // MorphoGrammarFeats не описывает NumType — оставляем
+                // пустым, а не расширяем схему признаков ради одного тега.
+                feats: {},
+                matchCount: 1,
+                isPartialMatch: false,
+                candidates: [],
+            };
+        }
 
         if (/[а-яѢѣѦѧѪѫ]/i.test(clean)) {
             clean = etymCyrToEtymLat(clean);
@@ -238,21 +268,16 @@ export class DbAnalyzer {
         return Array.from(bases);
     }
 
+    // Сопоставление словоформы с формой, сгенерированной движком, идёт по
+    // свёрнутому написанию с обеих сторон. Раньше здесь был свой, более
+    // узкий список замен (č/š/ž/ě/ń/ł/ó/á/é/í/ú/ý и еры), из-за чего
+    // "jezyka" не совпадало с сгенерированным "języka", а "velmi" — с
+    // "veľmi": носовые (ę/ų/ǫ) и мягкие согласные (ľ/ť/ď/ś/ź/ć/đ) не
+    // сворачивались. Заменено общей foldDiacritics — надмножеством
+    // прежнего списка, так что ни одно ранее работавшее совпадение не
+    // теряется.
     private normalizeForm(form: string): string {
-        return form
-            .replace(/[\u044A\u044C]/g, '')
-            .replace(/[čČ]/g, 'c')
-            .replace(/[šŠ]/g, 's')
-            .replace(/[žŽ]/g, 'z')
-            .replace(/[ěĚ]/g, 'e')
-            .replace(/[ńŃ]/g, 'n')
-            .replace(/[łŁ]/g, 'l')
-            .replace(/[óÓ]/g, 'o')
-            .replace(/[áÁ]/g, 'a')
-            .replace(/[éÉ]/g, 'e')
-            .replace(/[íÍ]/g, 'i')
-            .replace(/[úÚ]/g, 'u')
-            .replace(/[ýÝ]/g, 'y');
+        return foldDiacritics(form);
     }
 
     private matchForms(
@@ -333,13 +358,18 @@ export class DbAnalyzer {
 
         for (const word of words) {
             if (!word.isv || !word.pos) continue;
-            const stem = (word.stem || word.base || '').toLowerCase();
+            // Свёрнутое написание с обеих сторон — по той же причине, что и
+            // в matchForms: стем в словаре канонический ("veľmi"), а
+            // словоформа в корпусе сплошь и рядом упрощённая ("velmi"), и
+            // сырое startsWith их не сопоставляет.
+            const stem = foldDiacritics((word.stem || word.base || '').toLowerCase());
             if (!stem) continue;
 
             // A word may match under more than one spelling variant - keep
             // this word's own strongest match first.
             let wordBest: { stemLen: number; isExact: boolean } | null = null;
-            for (const variant of cleanVariants) {
+            for (const rawVariant of cleanVariants) {
+                const variant = foldDiacritics(rawVariant);
                 if (!variant.startsWith(stem)) continue;
                 const candidate = { stemLen: stem.length, isExact: stem.length === variant.length };
                 if (isBetter(candidate, wordBest)) wordBest = candidate;

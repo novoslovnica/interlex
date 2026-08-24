@@ -15,12 +15,16 @@ const queryWordsByBaseSpy = vi.fn(async (bases: string[]) => {
     return TEST_WORDS.filter(w => bases.includes(w.isv!));
 });
 
-vi.mock("@/lib/corpus/tokenizer/analyzer-factory", () => ({
-    buildValidEndings: async () => new Set<string>([""]),
-    buildKnownPrepositions: async () => [],
-    buildInflectionAnomalyIndex: async () => new Map(),
-    createQueryWordsByBase: () => queryWordsByBaseSpy,
-}));
+vi.mock("@/lib/corpus/tokenizer/analyzer-factory", async () => {
+    const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer");
+    return {
+        // computeReadability собирает анализатор одной фабрикой
+        // (createDbAnalyzer), поэтому мок подменяет её целиком, а не
+        // четыре отдельных билдера, как раньше. queryWordsByBaseSpy
+        // остаётся тем же управляемым источником "known words".
+        createDbAnalyzer: async () => new DbAnalyzer(queryWordsByBaseSpy, new Set<string>([""]), [], new Map()),
+    };
+});
 
 const findMany = vi.fn(async ({ where }: { where: { slug: { in: string[] } } }) => {
     return TEST_WORDS.filter(w => where.slug.in.includes(w.slug)).map(w => ({ slug: w.slug, cefrLevel: w.cefrLevel }));

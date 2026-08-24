@@ -27,8 +27,7 @@ process.env.CORPUS_DATABASE_URL = `file:${path.resolve(process.cwd(), "corpus.db
 
 async function main() {
     const { prismaCorpus } = await import("@/lib/prisma")
-    const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer")
-    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { buildCollocationRecords, createDbAnalyzer } = await import("@/lib/corpus/tokenizer/analyzer-factory")
     const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
     const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
@@ -36,7 +35,7 @@ async function main() {
     const { contentHash } = await import("@/lib/corpus/sources/htmlText")
     const { fetchNoetherPapers1to43, fetchNoetherBook44, fetchNoetherPaper45 } = await import("@/lib/noether/noetherClient")
 
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions(), await buildInflectionAnomalyIndex())
+    const analyzer = await createDbAnalyzer()
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     let created = 0

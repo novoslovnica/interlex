@@ -1,10 +1,5 @@
 import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
-import {
-    buildValidEndings,
-    buildKnownPrepositions,
-    buildInflectionAnomalyIndex,
-    createQueryWordsByBase,
-} from "@/lib/corpus/tokenizer/analyzer-factory"
+import { createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { TOKEN_PATTERN } from "@/lib/corpus/tokenizer/tokenizer"
 import { prismaData } from "@/lib/prisma"
 
@@ -29,12 +24,7 @@ export interface ReadabilityResult {
 let cachedAnalyzer: DbAnalyzer | null = null
 async function getAnalyzer(): Promise<DbAnalyzer> {
     if (cachedAnalyzer) return cachedAnalyzer
-    const [validEndings, knownPrepositions, inflectionAnomalies] = await Promise.all([
-        buildValidEndings(),
-        buildKnownPrepositions(),
-        buildInflectionAnomalyIndex(),
-    ])
-    cachedAnalyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
+    cachedAnalyzer = await createDbAnalyzer()
     return cachedAnalyzer
 }
 

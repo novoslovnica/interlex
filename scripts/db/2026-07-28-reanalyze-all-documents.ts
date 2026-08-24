@@ -14,19 +14,15 @@
 //   npx tsx scripts/db/2026-07-28-reanalyze-all-documents.ts [limit]
 
 import { prismaCorpus } from "@/lib/prisma"
-import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildCollocationRecords, createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { reanalyzeCorpusDocument } from "@/lib/corpus/reanalyzeDocument"
 
 async function main() {
   const limitArg = process.argv[2] ? parseInt(process.argv[2], 10) : undefined
 
   console.log("Building analyzer (valid endings, known prepositions, collocations)...")
-  const validEndings = await buildValidEndings()
-  const knownPrepositions = await buildKnownPrepositions()
-  const inflectionAnomalies = await buildInflectionAnomalyIndex()
-  const analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
+  const analyzer = await createDbAnalyzer()
   const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
   const docs = await prismaCorpus.corpusDocument.findMany({

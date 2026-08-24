@@ -52,8 +52,7 @@ function stripIzvestiBoilerplate(raw: string): { title: string; body: string } {
 
 async function main() {
     const { prismaCorpus } = await import("@/lib/prisma")
-    const { DbAnalyzer } = await import("@/lib/corpus/tokenizer/dbAnalyzer")
-    const { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } = await import("@/lib/corpus/tokenizer/analyzer-factory")
+    const { buildCollocationRecords, createDbAnalyzer } = await import("@/lib/corpus/tokenizer/analyzer-factory")
     const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
     const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
@@ -62,7 +61,7 @@ async function main() {
     const { downloadBoxFolder } = await import("@/lib/box/boxClient")
     const { isIsvTextFile, isExcludedFromCorpus, isCandidateTextFile, parseLangTag, stripExt, parseAuthorTitle, firstNonEmptyLine, stableSlug, stripMarkdown } = await import("@/lib/box/textUtils")
 
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), await buildValidEndings(), await buildKnownPrepositions(), await buildInflectionAnomalyIndex())
+    const analyzer = await createDbAnalyzer()
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     let seen = 0

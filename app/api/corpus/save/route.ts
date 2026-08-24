@@ -5,16 +5,13 @@ import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { randomUUID } from "crypto"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
-import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
 import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
 import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildCollocationRecords, createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
 
-const analyzerPromise = Promise.all([buildValidEndings(), buildKnownPrepositions(), buildInflectionAnomalyIndex()]).then(
-    ([validEndings, knownPrepositions, inflectionAnomalies]) => new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
-)
+const analyzerPromise = createDbAnalyzer()
 const collocationMatcherPromise = buildCollocationRecords().then((records) => new CollocationMatcher(records))
 
 export async function POST(request: NextRequest) {

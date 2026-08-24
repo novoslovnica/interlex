@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
-import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
-import { buildValidEndings, buildKnownPrepositions, buildCollocationRecords, buildInflectionAnomalyIndex, createQueryWordsByBase } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { buildCollocationRecords, createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { reanalyzeCorpusDocument } from "@/lib/corpus/reanalyzeDocument"
 import { decodeSlugParam } from "@/lib/slug"
 
@@ -21,10 +20,7 @@ export async function POST(
   const slug = decodeSlugParam(rawSlug)
 
   try {
-    const validEndings = await buildValidEndings()
-    const knownPrepositions = await buildKnownPrepositions()
-    const inflectionAnomalies = await buildInflectionAnomalyIndex()
-    const analyzer = new DbAnalyzer(createQueryWordsByBase(), validEndings, knownPrepositions, inflectionAnomalies)
+    const analyzer = await createDbAnalyzer()
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
     const result = await reanalyzeCorpusDocument(slug, analyzer, collocationMatcher)
