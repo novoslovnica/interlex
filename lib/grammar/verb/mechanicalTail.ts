@@ -49,6 +49,12 @@ export function appendTailToConjugation(conj: ConjugationResult, tailSuffix: str
         ) as unknown as LParticiple,
         indicative: {
             presentOrFutureDirect: appendToParadigm(conj.indicative.presentOrFutureDirect, tailSuffix),
+            // Пересборка indicative здесь ручная, поэтому каждое новое поле
+            // нужно протянуть явно — иначе у глаголов с механическим хвостом
+            // ("zvati se") краткая парадигма молча пропадала бы.
+            presentOrFutureDirectShort: conj.indicative.presentOrFutureDirectShort
+                ? appendToParadigm(conj.indicative.presentOrFutureDirectShort, tailSuffix)
+                : undefined,
             futureAnalytical: conj.indicative.futureAnalytical ? {
                 withByti: appendToParadigm(conj.indicative.futureAnalytical.withByti, tailSuffix),
                 withImati: appendToParadigm(conj.indicative.futureAnalytical.withImati, tailSuffix),

@@ -74,6 +74,20 @@ const VERB_PRESENT_ENDINGS: Record<string, Record<VerbPersonNumber, string>> = {
     '1du': 'vě', '2du': 'ta', '3du': 'ta',
     '1pl': 'mo', '2pl': 'te', '3pl': 'ęt',
   },
+  // Третий класс настоящего времени: краткая парадигма глаголов на -ati
+  // ("znati" -> znam/znaš/zna/znamo/znate/znajut), существующая в ISV
+  // параллельно тематической ("znajų/znaješ/znaje"). Подтверждено
+  // мейнтейнером 2026-08-24: её берут все глаголы на -ati, поэтому признака
+  // у лексемы не заводим — обе парадигмы порождаются вместе
+  // (см. conjugateFullVerb в lib/grammar/verb/index.ts).
+  //
+  // Граммемы те же, что у двух других классов: класс живёт в stemType, а не
+  // в строке граммемы.
+  athematic_a: {
+    '1sg': 'm', '2sg': 'š', '3sg': '',
+    '1du': 'vě', '2du': 'ta', '3du': 'ta',
+    '1pl': 'mo', '2pl': 'te', '3pl': 'jut',
+  },
 };
 
 const VERB_AORIST_SIGMATIC: Record<VerbPersonNumber, string> = {

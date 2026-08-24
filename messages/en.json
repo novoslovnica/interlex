@@ -673,6 +673,7 @@
       "participlesPastPassive": "Past passive participle (-enyj/-tyj)",
       "tenses": {
         "present": "Present tense (Praesens)",
+        "presentShort": "Present tense, short form",
         "futureSimple": "Simple future (Futurum Rectum)",
         "futureAnalytical": "Analytical future (Futurum Periphrasticum)",
         "withByti": "With byti:",

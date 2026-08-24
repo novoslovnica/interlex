@@ -67,6 +67,12 @@ export interface LParticiple {
 
 export interface IndicativeMood {
     presentOrFutureDirect: FullParadigm;
+    // Краткая («стяжённая») парадигма настоящего времени глаголов на -ati:
+    // znam/znaš/zna/znamo/znate/znajut рядом с znajų/znaješ/znaje. В ISV
+    // существуют обе, поэтому движок порождает обе — признака у лексемы нет
+    // (подтверждено мейнтейнером 2026-08-24: краткую берут все глаголы на
+    // -ati). Отсутствует у остальных классов спряжения.
+    presentOrFutureDirectShort?: FullParadigm;
     futureAnalytical?: {
         withByti: FullParadigm;
         withImati: FullParadigm;
@@ -397,6 +403,8 @@ export function generateParticiples(verb: VerbModel): Participles {
 // 6. МАТРИЧНЫЙ ГЕНЕРАТОР ПОЛНОГО СПРЯЖЕНИЯ С ЧЕТЫРЕХТОНОВОЙ СИСТЕМОЙ
 // =========================================================================
 
+const SHORT_PRESENT_STEM_TYPE = 'verb_present_athematic_a';
+
 export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
     const { infinitive, infStem, presentStem, aoristStem, tertiaryStem, verbClass, aspect, paradigm, morphemes, stressPosition } = verb;
     const overrideFor = (form: string) => resolveStressOverride(form, morphemes, stressPosition) ?? undefined;
@@ -448,6 +456,27 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         '2pl': accentPresentForm(`${presentStem}${getVE(presentStemType, '2pl', PRES_GRAMMEME, 'te')}`, '2pl'),
         '3pl': accentPresentForm(p3pl, '3pl'),
     };
+
+    // Краткая парадигма настоящего времени для глаголов на -ati. Основа —
+    // презентная без тематического "je" ("znaje" -> "zna"); 3 л. мн. берёт
+    // "jut" и восстанавливает j ("znajut"). Класс III в extractProtoStems
+    // покрывает и -ati (presentStem на "aje"), и -ovati (на "uje") — краткую
+    // парадигму берут только первые, поэтому проверяем именно окончание
+    // основы, а не verbClass.
+    const shortPresentStem = presentStem.endsWith('aje') ? presentStem.slice(0, -2) : null;
+    const shortPresent: FullParadigm | undefined = shortPresentStem
+        ? {
+            '1sg': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '1sg', PRES_GRAMMEME, 'm')}`, '1sg'),
+            '2sg': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '2sg', PRES_GRAMMEME, 'š')}`, '2sg'),
+            '3sg': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '3sg', PRES_GRAMMEME, '')}`, '3sg'),
+            '1du': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '1du', PRES_GRAMMEME, 'vě')}`, '1du'),
+            '2du': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '2du', PRES_GRAMMEME, 'ta')}`, '2du'),
+            '3du': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '3du', PRES_GRAMMEME, 'ta')}`, '3du'),
+            '1pl': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '1pl', PRES_GRAMMEME, 'mo')}`, '1pl'),
+            '2pl': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '2pl', PRES_GRAMMEME, 'te')}`, '2pl'),
+            '3pl': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '3pl', PRES_GRAMMEME, 'jut')}`, '3pl'),
+        }
+        : undefined;
 
     // --- Б. АОРИСТ ---
     const isVowelStem = ['III', 'IV'].includes(verbClass) || infStem.endsWith('a') || infStem.endsWith('i');
@@ -582,6 +611,7 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         lParticiple,
         indicative: {
             presentOrFutureDirect: directParadigm,
+            ...(shortPresent ? { presentOrFutureDirectShort: shortPresent } : {}),
             futureAnalytical,
             aorist,
             imperfect,

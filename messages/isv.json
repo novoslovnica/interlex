@@ -673,6 +673,7 @@
       "participlesPastPassive": "Pričastje proš. vrem. pas. (-enyj/-tyj)",
       "tenses": {
         "present": "Nastojnoje vremja (Praesens)",
+        "presentShort": "Nastojnoje vremja, kratka forma",
         "futureSimple": "Budučeje prostoje (Futurum Rectum)",
         "futureAnalytical": "Budučeje analitično (Futurum Periphrasticum)",
         "withByti": "S byti:",

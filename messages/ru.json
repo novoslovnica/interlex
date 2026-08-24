@@ -683,6 +683,7 @@
       "participlesPastPassive": "Причастие прош. вр. пассивное (-enyj/-tyj)",
       "tenses": {
         "present": "Настоящее время (Praesens)",
+        "presentShort": "Настоящее время, краткая форма",
         "futureSimple": "Будущее простое (Futurum Rectum)",
         "futureAnalytical": "Будущее аналитическое (Futurum Periphrasticum)",
         "withByti": "С быти:",

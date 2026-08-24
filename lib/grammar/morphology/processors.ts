@@ -176,6 +176,19 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         mood: 'ind'
     });
 
+    // А2. Краткая парадигма настоящего времени глаголов на -ati
+    // (znam/znaš/zna рядом с znajų/znaješ/znaje) — в ISV живут обе, и в
+    // корпусе встречаются обе, поэтому распознаваться должны обе. Признаки
+    // те же, что у полной: это то же самое время того же глагола, другой
+    // ряд окончаний.
+    if (conj.indicative.presentOrFutureDirectShort) {
+        pushParadigmToResults(results, conj.indicative.presentOrFutureDirectShort, {
+            verbForm: 'fin',
+            tense: verbModel.aspect === VerbalAspect.PF ? 'fut' : 'pres',
+            mood: 'ind'
+        });
+    }
+
     // Б. Аорист
     pushParadigmToResults(results, conj.indicative.aorist, {
         verbForm: 'fin',

@@ -130,6 +130,16 @@ export const VerbConjugationTables: React.FC<TablesProps> = ({ data, currentScri
                         data.indicative.presentOrFutureDirect
                     )}
 
+                    {/* Краткая парадигма настоящего времени глаголов на -ati
+                        (znam/znaš/zna рядом с znajų/znaješ/znaje) — в ISV
+                        существуют обе, поэтому показываем обе, а не выбираем
+                        за читателя. У остальных классов спряжения её нет. */}
+                    {data.indicative.presentOrFutureDirectShort &&
+                        renderTimeGrid(
+                            t('verb.tenses.presentShort'),
+                            data.indicative.presentOrFutureDirectShort
+                        )}
+
                     {data.indicative.futureAnalytical && (
                         <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-2">
                             <h4 className="font-bold text-slate-700 text-sm">{t('verb.tenses.futureAnalytical')}</h4>
