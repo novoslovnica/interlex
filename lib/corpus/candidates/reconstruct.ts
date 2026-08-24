@@ -3,6 +3,7 @@ import { PosType, GrammaticalGender } from "@/lib/grammar/common"
 import { getEnding } from "@/lib/grammar/endingLoader"
 import { buildGrammeme } from "@/lib/grammar/grammemes"
 import { etymCyrToEtymLat } from "@/lib/transliteration"
+import { identifyStemTypeByDb, resolveGender, EnhancedDbItem } from "@/lib/grammar/stemClassifier"
 
 // Тот же перебор длин окончания, что и DbAnalyzer.generateHypotheticalBases —
 // нарочно не импортируется оттуда (там это приватные константы класса),
@@ -49,6 +50,69 @@ const ADJ_STEM_TYPES = new Set(["adj_hard", "adj_soft"])
 // numeral_*/collective_*/adverb_comp/adverb_sup тоже исключены: закрытые
 // классы, предлагать по ним новую лексему бессмысленно.
 const VERB_LPART_STEM_TYPE = "verb_lpart"
+
+/**
+ * Доля словаря, приходящаяся на каждый класс основ. Нужна, чтобы не
+ * предлагать классы, которых в языке фактически нет.
+ *
+ * Замерено на живом словаре (13 398 существительных): o 52%, ā 17%, jo 13%,
+ * i 9%, jā 9% — и при этом u-основы 19 лексем (0,14%), консонантные 14
+ * (0,10%). Генератор же предлагал u_basis и все четыре consonant_* для
+ * КАЖДОГО из 186 761 кластера: 933 805 строк, 47% таблицы, ради классов, в
+ * которых суммарно 33 слова. Причём consonant_er (термины родства mati/dъkti)
+ * и consonant_ent (детёныши telę) — семантически закрытые классы, новые
+ * слова в них не появляются.
+ *
+ * Считается из данных, а не хардкодом: классы определяются тем же
+ * identifyStemTypeByDb, что и при реальном склонении, поэтому список
+ * подстроится сам, если словарь изменится.
+ */
+export type StemTypeSupport = Map<string, number>
+
+export async function buildStemTypeSupport(): Promise<StemTypeSupport> {
+  const lexemes = await prismaData.lexeme.findMany({
+    where: { pos: { in: ["NOUN", "ADJ"] }, meanings: { some: {} } },
+    select: { pos: true, value: true, gender: true, protoStemClass: true, stemExtension: true },
+  })
+
+  const counts = new Map<string, number>()
+  let nounTotal = 0
+  let adjTotal = 0
+
+  for (const l of lexemes) {
+    if (l.pos === "ADJ") {
+      adjTotal++
+      // Прилагательные различаются мягкостью основы, а не protoStemClass;
+      // отдельного признака в словаре нет, поэтому оба класса считаются
+      // поддержанными — их и так всего два, вырожденного перебора нет.
+      counts.set("adj_hard", (counts.get("adj_hard") ?? 0) + 1)
+      counts.set("adj_soft", (counts.get("adj_soft") ?? 0) + 1)
+      continue
+    }
+    nounTotal++
+    const stemType = identifyStemTypeByDb({
+      interslavic: l.value ?? "",
+      protoSlavic: l.value ?? "",
+      paradigm: "A",
+      gender: resolveGender(l.gender, l.protoStemClass ?? undefined),
+      protoStemClass: l.protoStemClass ?? "o",
+      stemExtension: l.stemExtension ?? undefined,
+    } as EnhancedDbItem)
+    counts.set(stemType, (counts.get(stemType) ?? 0) + 1)
+  }
+
+  const support: StemTypeSupport = new Map()
+  for (const [stemType, n] of counts) {
+    const total = stemType.startsWith("adj_") ? adjTotal : nounTotal
+    support.set(stemType, total > 0 ? n / total : 0)
+  }
+  return support
+}
+
+// Ниже этой доли словаря класс не предлагается вовсе. 1% выбран так, чтобы
+// отсечь u-основы (0,14%) и консонантные (0,10%), не задев ни один живой
+// класс: следующий снизу — jā/i с 9%, то есть запас почти на порядок.
+export const MIN_STEM_TYPE_SUPPORT = 0.01
 
 export function normalizeSurfaceForm(rawSurfaceForm: string): string {
   let clean = rawSurfaceForm.toLowerCase().trim()
@@ -109,6 +173,7 @@ function addHypothesis(
 export function buildHypothesesForSurfaceForm(
   rawSurfaceForm: string,
   reverseIndex: EndingReverseIndex,
+  support?: StemTypeSupport,
 ): CandidateHypothesis[] {
   const clean = normalizeSurfaceForm(rawSurfaceForm)
   if (!clean) return []
@@ -127,15 +192,28 @@ export function buildHypothesesForSurfaceForm(
 
     const rank = MAX_END_LEN - endLen
 
+    // Совпало ПУСТОЕ окончание — значит про морфологию слова не известно
+    // ничего: основой стало всё слово целиком. В таком случае единственная
+    // защитимая гипотеза — «слово уже стоит в словарной форме»; дописывать
+    // к нему цитатное окончание другого класса значит выдумывать буквы на
+    // пустом месте ("by" -> "byo"/"bya"/"byi"). На живых данных таких
+    // выдуманных строк было 1 003 090 — ровно половина всей таблицы.
+    const evidenceless = endLen === 0
+
     for (const m of matches) {
+      // Класс, которого в словаре фактически нет, не предлагаем вообще —
+      // см. buildStemTypeSupport.
+      if (support && (support.get(m.stemType) ?? 0) < MIN_STEM_TYPE_SUPPORT) continue
       if (NOUN_STEM_TYPES.has(m.stemType)) {
         for (const gender of citationGendersForNoun(m.stemType)) {
           const citationEnding = getEnding(m.stemType, "singular", "nom", "CORE", gender)
+          if (evidenceless && citationEnding) continue
           const guessedGrammeme = buildGrammeme("nom", "singular", gender)
           addHypothesis(seen, PosType.NOUN, m.stemType, guessedGrammeme, stem, stem + citationEnding, rank)
         }
       } else if (ADJ_STEM_TYPES.has(m.stemType)) {
         const citationEnding = getEnding(m.stemType, "singular", "nom", "CORE", GrammaticalGender.MASC)
+        if (evidenceless && citationEnding) continue
         const guessedGrammeme = buildGrammeme("nom", "singular", GrammaticalGender.MASC)
         addHypothesis(seen, PosType.ADJ, m.stemType, guessedGrammeme, stem, stem + citationEnding, rank)
       } else if (m.stemType === VERB_LPART_STEM_TYPE) {
@@ -143,6 +221,7 @@ export function buildHypothesesForSurfaceForm(
         // = основа инфинитива, plus -ti. Приблизительно (без учёта
         // чередований на стыке), поэтому это черновик для модератора, а не
         // готовая форма — как и всё остальное в этой таблице.
+        if (evidenceless) continue
         addHypothesis(seen, PosType.VERB, m.stemType, "VerbForm=Inf", stem, stem + "ti", rank)
       }
       // Остальные stemType (verb_present_*/verb_aorist_*/verb_imperfect/
@@ -151,5 +230,26 @@ export function buildHypothesesForSurfaceForm(
     }
   }
 
-  return Array.from(seen.values()).sort((a, b) => a.rank - b.rank)
+  // Схлопываем гипотезы, ведущие к ОДНОЙ И ТОЙ ЖЕ словарной статье: для
+  // модератора "завести ли слово X как существительное в им. ед." — одно
+  // решение, а не четыре одинаковых строки, отличающихся только тем, какому
+  // историческому классу основ приписан результат. Класс — деталь, которая
+  // всё равно уточняется при заведении лексемы; представителем оставляем
+  // наиболее поддержанный словарём (при равенстве — с лучшим rank).
+  const collapsed = new Map<string, CandidateHypothesis>()
+  for (const h of seen.values()) {
+    const key = `${h.guessedPos}|${h.guessedGrammeme}|${h.reconstructedForm}`
+    const existing = collapsed.get(key)
+    if (!existing) {
+      collapsed.set(key, h)
+      continue
+    }
+    const better =
+      h.rank < existing.rank ||
+      (h.rank === existing.rank &&
+        (support?.get(h.guessedStemType) ?? 0) > (support?.get(existing.guessedStemType) ?? 0))
+    if (better) collapsed.set(key, h)
+  }
+
+  return Array.from(collapsed.values()).sort((a, b) => a.rank - b.rank)
 }

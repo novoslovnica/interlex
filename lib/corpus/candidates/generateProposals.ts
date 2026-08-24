@@ -2,6 +2,7 @@ import { prismaCorpus, prismaData } from "@/lib/prisma"
 import {
   buildEndingReverseIndex,
   buildHypothesesForSurfaceForm,
+  buildStemTypeSupport,
   normalizeSurfaceForm,
   CandidateHypothesis,
   ReconstructionRuleSource,
@@ -58,6 +59,9 @@ export async function generateCorpusCandidateProposals(
   options: GenerateProposalsOptions = {},
 ): Promise<GenerateProposalsResult> {
   const reverseIndex = await buildEndingReverseIndex()
+  // Доля словаря по классам основ — чтобы не предлагать классы, которых в
+  // языке фактически нет (см. buildStemTypeSupport).
+  const stemTypeSupport = await buildStemTypeSupport()
 
   const redTokenRows = await prismaCorpus.corpusToken.findMany({
     // wordIndex=-1 — пунктуация (см. tokenizer.ts/reanalyzeDocument.ts):
@@ -124,7 +128,7 @@ export async function generateCorpusCandidateProposals(
   }
 
   for (const [clusterKey, cluster] of redClusters) {
-    const hypotheses = buildHypothesesForSurfaceForm(cluster.surfaceForm, reverseIndex)
+    const hypotheses = buildHypothesesForSurfaceForm(cluster.surfaceForm, reverseIndex, stemTypeSupport)
     for (const h of hypotheses) {
       buffer.push(buildProposalUpsert(clusterKey, "red_reverse_lookup", h, cluster.tokenIds, null, false))
       if (buffer.length >= UPSERT_BATCH_SIZE) await flush()
@@ -132,7 +136,7 @@ export async function generateCorpusCandidateProposals(
   }
 
   for (const [clusterKey, cluster] of yellowClusters) {
-    const hypotheses = buildHypothesesForSurfaceForm(cluster.surfaceForm, reverseIndex)
+    const hypotheses = buildHypothesesForSurfaceForm(cluster.surfaceForm, reverseIndex, stemTypeSupport)
     const siblingStem = cluster.siblingWordSlug ? siblingStemBySlug.get(cluster.siblingWordSlug) : undefined
     for (const h of hypotheses) {
       const possibleEndingGap = !!siblingStem && h.guessedStem.toLowerCase() === siblingStem
