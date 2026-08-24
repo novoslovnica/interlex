@@ -10,8 +10,18 @@
 // reanalyzeCorpusDocument() itself (see lib/corpus/reanalyzeDocument.ts) —
 // safe to run against a corpus with existing manual edits.
 //
+// Prisma 7 подтекает памятью на длинных сериях $transaction (см. AGENTS.md,
+// "Corpus Candidate Proposals", п.3), поэтому прогон по всему корпусу принимает
+// [limit] [offset] и может быть разбит на несколько процессов: каждый документ
+// обрабатывается независимо и идемпотентно, так что продолжить с середины
+// безопасно. Документы берутся в стабильном порядке по slug — смещение
+// означает одно и то же от запуска к запуску.
+//
 // Usage:
-//   npx tsx scripts/db/2026-07-28-reanalyze-all-documents.ts [limit]
+//   npx tsx -r dotenv/config scripts/db/2026-07-28-reanalyze-all-documents.ts [limit] [offset]
+//
+// ВАЖНО: -r dotenv/config обязателен, иначе Prisma откроет пустой
+// prisma/corpus.db вместо настоящей БД в корне репозитория.
 
 import { prismaCorpus } from "@/lib/prisma"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
@@ -20,6 +30,7 @@ import { reanalyzeCorpusDocument } from "@/lib/corpus/reanalyzeDocument"
 
 async function main() {
   const limitArg = process.argv[2] ? parseInt(process.argv[2], 10) : undefined
+  const offsetArg = process.argv[3] ? parseInt(process.argv[3], 10) : 0
 
   console.log("Building analyzer (valid endings, known prepositions, collocations)...")
   const analyzer = await createDbAnalyzer()
@@ -28,10 +39,11 @@ async function main() {
   const docs = await prismaCorpus.corpusDocument.findMany({
     select: { slug: true },
     orderBy: { slug: "asc" },
+    ...(offsetArg ? { skip: offsetArg } : {}),
     ...(limitArg ? { take: limitArg } : {}),
   })
 
-  console.log(`Reanalyzing ${docs.length} documents...`)
+  console.log(`Reanalyzing ${docs.length} documents (offset ${offsetArg})...`)
 
   let totalAnalyzed = 0
   let totalFailed = 0
