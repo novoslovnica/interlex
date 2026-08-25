@@ -33,6 +33,12 @@ export interface GenerateProposalsOptions {
   clusterLimit?: number
   /** Порог попадания в рабочую очередь, см. PENDING_MIN_OCCURRENCES. */
   pendingMinOccurrences?: number
+  /**
+   * Ограничить генерацию перечисленными кластерами. Нужен точечному
+   * обновлению (lib/corpus/refresh.ts): после заведения нескольких лексем
+   * пересчитывать все 186 тысяч кластеров бессмысленно.
+   */
+  clusterKeys?: string[]
 }
 
 interface Cluster {
@@ -108,6 +114,12 @@ export async function generateCorpusCandidateProposals(
   let yellowClusters = groupIntoClusters(
     yellowTokenRows.map((t) => ({ id: t.id, surfaceForm: t.surfaceForm, siblingWordSlug: t.wordSlug })),
   )
+
+  if (options.clusterKeys) {
+    const wanted = new Set(options.clusterKeys)
+    redClusters = new Map([...redClusters].filter(([key]) => wanted.has(key)))
+    yellowClusters = new Map([...yellowClusters].filter(([key]) => wanted.has(key)))
+  }
 
   if (options.clusterOffset !== undefined || options.clusterLimit !== undefined) {
     const offset = options.clusterOffset ?? 0
@@ -210,6 +222,70 @@ async function syncUnreviewedStatuses(pendingMinOccurrences: number): Promise<{
     data: { status: "deferred" },
   })
   return { restoredToPending: restored.count, movedToDeferred: deferred.count }
+}
+
+/**
+ * Закрывает предложения по словам, которые перестали быть красными или
+ * жёлтыми: их завели в словарь, или они распознались после правки движка.
+ *
+ * Без этого очередь не сходится ни при каких условиях: генератор работает
+ * upsert-ом и никогда не удаляет строки, поэтому кластер, once попавший в
+ * таблицу, оставался бы в ней вечно. Именно так 74 831 кластер, посчитанный
+ * по корпусу из 300 документов, дожил до корпуса из 3 509 — их пришлось
+ * вычищать вручную.
+ *
+ * Не удаляет, а помечает 'resolved_recognized': видно, что слово прошло
+ * через очередь и чем закончилось. Решения модератора не трогаются — только
+ * 'pending' и 'deferred'.
+ */
+export async function reconcileProposals(): Promise<{
+  closedClusters: number
+  closedRows: number
+}> {
+  const live = new Set<string>()
+
+  const redRows = await prismaCorpus.corpusToken.findMany({
+    where: { matchCount: 0, wordIndex: { not: -1 } },
+    select: { surfaceForm: true },
+  })
+  for (const t of redRows) {
+    const key = normalizeSurfaceForm(t.surfaceForm)
+    if (key) live.add(key)
+  }
+
+  const yellowRows = await prismaCorpus.corpusToken.findMany({
+    where: { matchCount: 1, isPartialMatch: true, wordSlug: { not: null }, wordIndex: { not: -1 } },
+    select: { surfaceForm: true },
+  })
+  for (const t of yellowRows) {
+    const key = normalizeSurfaceForm(t.surfaceForm)
+    if (key) live.add(key)
+  }
+
+  const open = await prismaCorpus.corpusCandidateProposal.findMany({
+    where: { status: { in: ["pending", "deferred"] } },
+    select: { clusterKey: true },
+    distinct: ["clusterKey"],
+  })
+  const stale = open.map((o) => o.clusterKey).filter((key) => !live.has(key))
+  if (stale.length === 0) return { closedClusters: 0, closedRows: 0 }
+
+  // Разбиваем на части: SQLite ограничивает число параметров в IN.
+  const CHUNK = 500
+  let closedRows = 0
+  for (let i = 0; i < stale.length; i += CHUNK) {
+    const result = await prismaCorpus.corpusCandidateProposal.updateMany({
+      where: { clusterKey: { in: stale.slice(i, i + CHUNK) }, status: { in: ["pending", "deferred"] } },
+      data: {
+        status: "resolved_recognized",
+        resolutionNote: "слово больше не красное и не жёлтое — распознаётся корпусом",
+        reviewedAt: new Date(),
+      },
+    })
+    closedRows += result.count
+  }
+
+  return { closedClusters: stale.length, closedRows }
 }
 
 function groupIntoClusters(

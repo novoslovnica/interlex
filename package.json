@@ -19,6 +19,7 @@
     "db:gen-corpus": "cross-env DB_TYPE=corpus prisma generate",
     "db:gen-historical": "cross-env DB_TYPE=historical prisma generate",
     "compute:frequency": "npx tsx scripts/compute-lexicon-frequency.ts",
+    "corpus:refresh": "npx tsx scripts/db/corpus-refresh.ts",
     "upload:ruwordnet": "npx tsx scripts/db/upload-ruwordnet.ts",
     "refresh:ruwordnet": "npx tsx scripts/db/run-ruwordnet-pipeline.ts",
     "crawl:isv-wikipedia": "npx tsx scripts/crawl-isv-wikipedia.ts",
