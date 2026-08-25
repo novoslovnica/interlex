@@ -77,6 +77,16 @@ fi
 
 remote() { "${SSH[@]}" "$SSH_USER@$SSH_HOST" "$@"; }
 
+# В неинтерактивной ssh-сессии на сервере нужный node не подхватывается: там
+# системный v20.17, а рабочий v22 стоит через nvm (им запускается и сам юнит,
+# см. ExecStart). rebuild-remote.sh подгружает nvm первой же строкой — здесь
+# должно быть так же, иначе npm ci падает на требовании Prisma к версии Node.
+# Падает он, что важно, УЖЕ СНЕСЯ node_modules, то есть оставляет живой сайт
+# без зависимостей: процесс работает на загруженном в память, но не переживёт
+# перезапуска. Ровно это и случилось при первой попытке выкладки.
+NVM_INIT='export NVM_DIR="$HOME/.nvm"; [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh";'
+
+
 # Привилегированная команда на сервере. Пароль уходит через stdin, а не в
 # аргументах: в списке процессов на той стороне его быть не должно.
 remote_sudo() {
@@ -99,7 +109,7 @@ run_remote() {
     return 0
   fi
   info "$description"
-  remote "cd '$REMOTE_DIR' && $command" || die "Шаг не удался: $description"
+  remote "$NVM_INIT cd '$REMOTE_DIR' && $command" || die "Шаг не удался: $description"
 }
 
 # В фазовом режиме каждая фаза запускается отдельной командой — это и есть
@@ -162,6 +172,25 @@ else
   Либо запустите с SUDO_PASSWORD=… (уйдёт через stdin, в аргументах не появится),
   либо разрешите на сервере беспарольный systemctl для этого юнита, либо
   остановите и запустите сервис вручную, а скрипт прогоните с --no-service."
+fi
+
+# Версию node мало показать — её надо проверить. При первой попытке она была
+# в выводе осмотра (v20.17.0), но выводов из неё никто не сделал, и npm ci
+# снёс зависимости живого сайта.
+if [ "$DRY_RUN" = 1 ]; then
+  info "[не проверяю] версию node"
+else
+  REMOTE_NODE=$(remote "$NVM_INIT node -v 2>/dev/null" | tr -d 'v\r')
+  REMOTE_MAJOR=${REMOTE_NODE%%.*}
+  REMOTE_MINOR=$(echo "$REMOTE_NODE" | cut -d. -f2)
+  info "node после подгрузки nvm: v$REMOTE_NODE"
+  if [ "${REMOTE_MAJOR:-0}" -lt 20 ] \
+     || { [ "$REMOTE_MAJOR" = 20 ] && [ "${REMOTE_MINOR:-0}" -lt 19 ]; } \
+     || { [ "$REMOTE_MAJOR" = 22 ] && [ "${REMOTE_MINOR:-0}" -lt 12 ]; }; then
+    die "На сервере node v$REMOTE_NODE, а Prisma требует 20.19+, 22.12+ или 24+.
+  npm ci на такой версии падает, УЖЕ УДАЛИВ node_modules, и оставляет живой
+  сайт без зависимостей. Поставьте нужную версию через nvm и повторите."
+  fi
 fi
 
 LOCAL_BYTES=$(wc -c < corpus.db | tr -d ' ')
