@@ -246,11 +246,39 @@ info "sha256 локального файла: ${LOCAL_SHA:0:16}…"
 if [ "$DRY_RUN" = 1 ]; then
   info "[не выполняю] gzip -c corpus.db | ssh … 'gunzip > corpus.db.new'"
 else
-  info "Передаю (это надолго; файл идёт сжатым потоком, без временных копий)…"
-  gzip -1 -c corpus.db | remote "cd '$REMOTE_DIR' && gunzip -c > corpus.db.new" \
-    || die "Передача не удалась"
-  REMOTE_SHA=$(remote "cd '$REMOTE_DIR' && sha256sum corpus.db.new | cut -d' ' -f1")
-  [ "$LOCAL_SHA" = "$REMOTE_SHA" ] || die "Контрольные суммы не совпали — файл повреждён при передаче, подмену не делаю"
+  # Передача возобновляемая: rsync на сервере нет, поэтому докладываем
+  # недостающий хвост файла с байтового смещения. gunzip всегда пишет
+  # корректный ПРЕФИКС исходных данных, даже если поток оборвали на середине,
+  # поэтому дозаливка с размера уже лежащего файла даёт верный результат.
+  # Проверяется это всё равно контрольной суммой в конце.
+  #
+  # Нужно это не из осторожности: первая попытка оборвалась на 844 МБ из 4,5 ГБ,
+  # и без возобновления каждая следующая начиналась бы с нуля.
+  ATTEMPT=1
+  MAX_ATTEMPTS=5
+  while : ; do
+    OFFSET=$(remote "cd '$REMOTE_DIR' && stat -c%s corpus.db.new 2>/dev/null || echo 0" | tr -d '\r')
+    OFFSET=${OFFSET:-0}
+    if [ "$OFFSET" -ge "$LOCAL_BYTES" ]; then
+      info "Передано полностью ($OFFSET из $LOCAL_BYTES байт)"
+      break
+    fi
+    info "Попытка $ATTEMPT/$MAX_ATTEMPTS: продолжаю с $((OFFSET / 1048576)) МБ из $((LOCAL_BYTES / 1048576)) МБ…"
+    if tail -c "+$((OFFSET + 1))" corpus.db | gzip -1 -c \
+        | remote "cd '$REMOTE_DIR' && gunzip -c >> corpus.db.new"; then
+      continue
+    fi
+    ATTEMPT=$((ATTEMPT + 1))
+    [ "$ATTEMPT" -le "$MAX_ATTEMPTS" ] || die "Передача обрывалась $MAX_ATTEMPTS раз подряд — прекращаю"
+    info "Обрыв связи, повтор через 5 с…"
+    sleep 5
+  done
+
+  REMOTE_SHA=$(remote "cd '$REMOTE_DIR' && sha256sum corpus.db.new | cut -d' ' -f1" | tr -d '\r')
+  if [ "$LOCAL_SHA" != "$REMOTE_SHA" ]; then
+    remote "cd '$REMOTE_DIR' && rm -f corpus.db.new"
+    die "Контрольные суммы не совпали — недокачанный файл удалён, corpus.db не тронут. Запустите фазу заново."
+  fi
   info "Контрольные суммы совпали"
 fi
 
