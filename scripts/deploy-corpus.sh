@@ -15,6 +15,14 @@
 #   SUDO_PASSWORD=… bash scripts/deploy-corpus.sh   # если sudo просит пароль
 #   bash scripts/deploy-corpus.sh --no-service  # сервис останавливаете сами
 #
+# Если sudo недоступен, выкладка делится на три фазы, между которыми вы сами
+# останавливаете и запускаете сервис (простой — только на вторую фазу):
+#   bash scripts/deploy-corpus.sh --phase=pre      # всё до подмены, сервис работает
+#   sudo systemctl stop interslavic-lexicon.service
+#   bash scripts/deploy-corpus.sh --phase=swap     # подмена и сборка
+#   sudo systemctl start interslavic-lexicon.service
+#   bash scripts/deploy-corpus.sh --phase=finish   # кандидаты, пересчёты, сверка
+#
 # Настройки берутся из .env.release (USERNAME/PASSWORD/HOST) и переменных
 # окружения; любую можно переопределить:
 #   REMOTE_DIR=/var/www/…/interlex SSH_USER=… SSH_HOST=… bash scripts/deploy-corpus.sh
@@ -25,9 +33,13 @@ DRY_RUN=0
 ASSUME_YES=0
 SKIP_REMOTE_BACKUP=0
 SKIP_SERVICE=0
+PHASE=all
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
+    --phase=pre) PHASE=pre; SKIP_SERVICE=1 ;;
+    --phase=swap) PHASE=swap; SKIP_SERVICE=1 ;;
+    --phase=finish) PHASE=finish; SKIP_SERVICE=1 ;;
     --yes) ASSUME_YES=1 ;;
     --no-remote-backup) SKIP_REMOTE_BACKUP=1 ;;
     --no-service) SKIP_SERVICE=1 ;;
@@ -90,7 +102,17 @@ run_remote() {
   remote "cd '$REMOTE_DIR' && $command" || die "Шаг не удался: $description"
 }
 
+# В фазовом режиме каждая фаза запускается отдельной командой — это и есть
+# подтверждение, отдельных вопросов не задаём.
+in_phase() {
+  case "$PHASE" in
+    all) return 0 ;;
+    *) [ "$PHASE" = "$1" ] ;;
+  esac
+}
+
 confirm() {
+  [ "$PHASE" != all ] && return 0
   [ "$ASSUME_YES" = 1 ] && return 0
   [ "$DRY_RUN" = 1 ] && return 0
   printf '\n  %s [y/N] ' "$1"
@@ -144,8 +166,9 @@ info "Нужно свободного места: около ${NEEDED_GB} ГБ (
 confirm "Продолжать?"
 
 # ── 4. резервная копия на сервере ────────────────────────────────────────────
-say "4/10 Резервная копия баз на сервере"
 STAMP=$(date +%Y%m%d-%H%M%S)
+if in_phase pre; then
+say "4/10 Резервная копия баз на сервере"
 if [ "$SKIP_REMOTE_BACKUP" = 1 ]; then
   info "Пропущено по --no-remote-backup"
 else
@@ -153,7 +176,10 @@ else
     "cp -f corpus.db corpus.db.backup-$STAMP 2>/dev/null || true; cp -f interlex.db interlex.db.backup-$STAMP"
 fi
 
+fi
+
 # ── 5. код ───────────────────────────────────────────────────────────────────
+if in_phase pre; then
 say "5/10 Выкладка кода"
 if [ "$DRY_RUN" = 1 ]; then
   info "[не выполняю] git push origin main"
@@ -162,7 +188,10 @@ else
 fi
 run_remote "git pull + npm ci" "git checkout main && git pull && npm ci"
 
+fi
+
 # ── 6. правки словаря (идемпотентны, до подмены корпуса) ─────────────────────
+if in_phase pre; then
 say "6/10 Правки словаря"
 info "Идут ДО подмены корпуса: они меняют, как движок порождает формы."
 for script in \
@@ -174,8 +203,11 @@ do
   run_remote "$script" "npx tsx -r dotenv/config $script"
 done
 
+fi
+
 # ── 7. перенос корпуса ───────────────────────────────────────────────────────
-say "7/10 Перенос corpus.db"
+if in_phase pre; then
+say "7/10 Перенос corpus.db (файл встаёт рядом как corpus.db.new, подмены ещё нет)"
 LOCAL_SHA=$(shasum -a 256 corpus.db | cut -d' ' -f1)
 info "sha256 локального файла: ${LOCAL_SHA:0:16}…"
 if [ "$DRY_RUN" = 1 ]; then
@@ -189,6 +221,9 @@ else
   info "Контрольные суммы совпали"
 fi
 
+fi
+
+if in_phase swap; then
 confirm "Останавливаю сервис и подменяю corpus.db. Продолжать?"
 if [ "$SKIP_SERVICE" = 1 ]; then
   info "Сервис не трогаю (--no-service). Остановите его сами ДО подмены:"
@@ -202,8 +237,12 @@ else
 fi
 run_remote "подменяю corpus.db" "mv -f corpus.db.new corpus.db && rm -f corpus.db-wal corpus.db-shm corpus.db-journal"
 
-# ── 8. кандидаты и сборка ────────────────────────────────────────────────────
-say "8/10 Кандидаты и сборка"
+run_remote "сборка" "rm -rf .next && npm run build"
+fi
+
+# ── 8. кандидаты ─────────────────────────────────────────────────────────────
+if in_phase finish; then
+say "8/10 Кандидаты"
 if [ "$DRY_RUN" = 1 ]; then
   info "[не выполняю] scp $CANDIDATES_FILE"
 else
@@ -214,16 +253,6 @@ else
   fi
 fi
 run_remote "импорт кандидатов" "npx tsx scripts/db/import-candidates.ts $CANDIDATES_FILE --apply"
-run_remote "сборка" "rm -rf .next && npm run build"
-if [ "$SKIP_SERVICE" = 1 ]; then
-  info "Запустите сервис сами: sudo systemctl start $SERVICE"
-  confirm "Сервис запущен?"
-elif [ "$DRY_RUN" = 1 ]; then
-  info "[не выполняю] sudo systemctl start $SERVICE"
-else
-  info "запускаю $SERVICE"
-  remote_sudo "systemctl start $SERVICE" || die "Не удалось запустить сервис"
-fi
 
 # ── 9. пересчёты ─────────────────────────────────────────────────────────────
 say "9/10 Пересчёты"
@@ -241,6 +270,10 @@ else
   remote "systemctl is-active $SERVICE" || true
 fi
 
+fi
+
 say "Готово"
+[ "$PHASE" = pre ] && info "Фаза pre завершена. Теперь: sudo systemctl stop $SERVICE, затем --phase=swap"
+[ "$PHASE" = swap ] && info "Фаза swap завершена. Теперь: sudo systemctl start $SERVICE, затем --phase=finish"
 info "Резервные копии на сервере: corpus.db.backup-$STAMP, interlex.db.backup-$STAMP"
 info "Откат корпуса: mv corpus.db.backup-$STAMP corpus.db && sudo systemctl restart $SERVICE"
