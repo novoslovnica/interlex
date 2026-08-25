@@ -37,6 +37,26 @@ async function readWatermark(): Promise<Date | null> {
   return Number.isNaN(parsed.getTime()) ? null : parsed
 }
 
+/**
+ * Двигает отметку времени цикла. Публичная, потому что вызывать её надо
+ * ПОСЛЕ пересчёта частотности, а он живёт в CLI-обёртке.
+ *
+ * Почему это важно: computeLexiconFrequencies обновляет corpusFrequency и
+ * cefrLevel у ВСЕХ лексем через Prisma, а значит сдвигает им @updatedAt.
+ * Цикл ищет изменения по updatedAt — поэтому отметка, записанная до
+ * пересчёта, гарантирует, что следующий запуск увидит изменившимся весь
+ * словарь и выродится в полный пересчёт. Каждый прогон отравлял бы
+ * следующий; поймано на первой же боевой выкладке.
+ *
+ * Частотность на морфологический разбор не влияет (она участвует лишь в
+ * ранжировании омонимов, и сама выводится из корпуса — гоняться за этим
+ * значило бы искать неподвижную точку), поэтому такие изменения намеренно
+ * не отслеживаются.
+ */
+export async function commitAnalysisWatermark(at: Date): Promise<void> {
+  await writeWatermark(at)
+}
+
 async function writeWatermark(at: Date): Promise<void> {
   await prismaCorpus.corpusConfig.upsert({
     where: { key: WATERMARK_KEY },
@@ -120,6 +140,13 @@ export async function refreshCorpusForChangedLexemes(options: {
   since?: Date
   /** Не двигать отметку времени (для пробных прогонов). */
   dryWatermark?: boolean
+  /**
+   * Не двигать отметку здесь — вызывающая сторона сделает это сама через
+   * commitAnalysisWatermark, после пересчёта частотности. См. её комментарий.
+   */
+  deferWatermark?: boolean
+  /** Только выставить отметку и выйти: корпус уже соответствует словарю. */
+  baselineOnly?: boolean
   log?: (message: string) => void
 } = {}): Promise<RefreshResult> {
   const log = options.log ?? (() => {})
@@ -132,6 +159,16 @@ export async function refreshCorpusForChangedLexemes(options: {
   // путём (поймано на первом сквозном прогоне: 41 минута и падение).
   // Первый запуск просто выставляет точку отсчёта; осознанный широкий
   // пересчёт задаётся явным --since.
+  if (options.baselineOnly) {
+    log("Только точка отсчёта: корпус уже соответствует словарю, пересчитывать нечего.")
+    if (!options.dryWatermark) await writeWatermark(startedAt)
+    return {
+      baselineEstablished: true,
+      changedLexemes: 0, affectedTokens: 0, affectedSentences: 0, reanalyzed: 0,
+      stillUnrecognized: 0, closedClusters: 0, newClusters: 0, watermark: startedAt,
+    }
+  }
+
   if (!since) {
     log("Отметки времени нет — выставляю точку отсчёта, ничего не пересчитываю.")
     log("Для намеренно широкого пересчёта укажите --since=<дата>.")
@@ -205,7 +242,7 @@ export async function refreshCorpusForChangedLexemes(options: {
     : { clustersProcessed: 0 }
   log(`Пересобрано предложений по ${generated.clustersProcessed} кластерам`)
 
-  if (!options.dryWatermark) await writeWatermark(startedAt)
+  if (!options.dryWatermark && !options.deferWatermark) await writeWatermark(startedAt)
 
   return {
     changedLexemes: changed.length,

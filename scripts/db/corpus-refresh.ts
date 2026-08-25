@@ -21,6 +21,7 @@
 //   npm run corpus:refresh
 //   npm run corpus:refresh -- --since=2026-08-01   # пересчитать шире
 //   npm run corpus:refresh -- --dry-watermark      # не двигать отметку
+//   npm run corpus:refresh -- --baseline           # только выставить отметку
 
 import * as path from "path"
 
@@ -39,14 +40,20 @@ function parseSince(): Date | undefined {
 }
 
 async function main() {
-  const { refreshCorpusForChangedLexemes } = await import("@/lib/corpus/refresh")
+  const { refreshCorpusForChangedLexemes, commitAnalysisWatermark } = await import("@/lib/corpus/refresh")
   const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
   const { computeCefrLevels } = await import("@/lib/corpus/frequencies/compute-cefr-levels")
 
   const started = Date.now()
+  const dryWatermark = process.argv.includes("--dry-watermark")
   const result = await refreshCorpusForChangedLexemes({
     since: parseSince(),
-    dryWatermark: process.argv.includes("--dry-watermark"),
+    dryWatermark,
+    baselineOnly: process.argv.includes("--baseline"),
+    // Отметку двигаем сами, ПОСЛЕ пересчёта частотности: тот сдвигает
+    // updatedAt у всех лексем, и отметка, записанная раньше, заставила бы
+    // следующий запуск считать изменившимся весь словарь.
+    deferWatermark: true,
     log: (m) => console.log(`  ${m}`),
   })
 
@@ -59,6 +66,8 @@ async function main() {
   } else {
     console.log("  Затронутых токенов нет — частотность не трогаем")
   }
+
+  if (!dryWatermark) await commitAnalysisWatermark(new Date())
 
   console.log(`\n=== Готово за ${((Date.now() - started) / 1000).toFixed(1)}с ===`)
   console.log(`Изменившихся лексем:        ${result.changedLexemes}`)
