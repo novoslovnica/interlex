@@ -12,6 +12,8 @@
 #   bash scripts/deploy-corpus.sh --dry-run     # показать план, ничего не делать
 #   bash scripts/deploy-corpus.sh               # выполнить, со спросом перед подменой
 #   bash scripts/deploy-corpus.sh --yes         # без вопросов
+#   SUDO_PASSWORD=… bash scripts/deploy-corpus.sh   # если sudo просит пароль
+#   bash scripts/deploy-corpus.sh --no-service  # сервис останавливаете сами
 #
 # Настройки берутся из .env.release (USERNAME/PASSWORD/HOST) и переменных
 # окружения; любую можно переопределить:
@@ -22,11 +24,13 @@ set -euo pipefail
 DRY_RUN=0
 ASSUME_YES=0
 SKIP_REMOTE_BACKUP=0
+SKIP_SERVICE=0
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
     --yes) ASSUME_YES=1 ;;
     --no-remote-backup) SKIP_REMOTE_BACKUP=1 ;;
+    --no-service) SKIP_SERVICE=1 ;;
     *) echo "Неизвестный аргумент: $arg" >&2; exit 1 ;;
   esac
 done
@@ -38,6 +42,9 @@ SSH_HOST="${SSH_HOST:-${HOST:-}}"
 SSH_PASSWORD="${SSH_PASSWORD:-${PASSWORD:-}}"
 REMOTE_DIR="${REMOTE_DIR:-/var/www/interslavic-lexicon.com/interlex}"
 SERVICE="${SERVICE:-interslavic-lexicon.service}"
+# Пароль для sudo на сервере. Пустой — значит sudo должен работать без пароля;
+# если это не так, скрипт остановится ДО переноса файла, а не после.
+SUDO_PASSWORD="${SUDO_PASSWORD:-}"
 CANDIDATES_FILE="candidates-export.json"
 
 say()  { printf '\n\033[1m▸ %s\033[0m\n' "$*"; }
@@ -57,6 +64,17 @@ else
 fi
 
 remote() { "${SSH[@]}" "$SSH_USER@$SSH_HOST" "$@"; }
+
+# Привилегированная команда на сервере. Пароль уходит через stdin, а не в
+# аргументах: в списке процессов на той стороне его быть не должно.
+remote_sudo() {
+  local command="$1"
+  if [ -n "$SUDO_PASSWORD" ]; then
+    printf '%s\n' "$SUDO_PASSWORD" | remote "sudo -S -p '' $command"
+  else
+    remote "sudo -n $command"
+  fi
+}
 
 # Удалённая команда в каталоге проекта. Всё, что меняет состояние, проходит
 # через run_remote — в режиме --dry-run она только печатает.
@@ -105,6 +123,20 @@ say "3/10 Проверка сервера"
 remote "test -d '$REMOTE_DIR'" || die "На сервере нет каталога $REMOTE_DIR (переопределите REMOTE_DIR=)"
 info "Каталог: $REMOTE_DIR"
 remote "cd '$REMOTE_DIR' && echo '  ветка:' \$(git rev-parse --abbrev-ref HEAD) && echo '  базы:' && ls -lh *.db 2>/dev/null | awk '{print \"    \" \$9, \$5}' && echo '  диск:' && df -h . | tail -1 | awk '{print \"    свободно \" \$4}' && echo '  node:' \$(node -v 2>/dev/null || echo нет)"
+
+# Проверяем sudo ЗАРАНЕЕ. Он нужен только на шаге 7 (остановка сервиса), но
+# выяснять это после переноса 1,3 ГБ — значит встать посреди выкладки с
+# подменённым наполовину состоянием. Ровно так и вышло при первой попытке.
+if [ "$DRY_RUN" = 1 ]; then
+  info "[не проверяю] доступность sudo"
+elif remote_sudo "true" >/dev/null 2>&1; then
+  info "sudo: работает"
+else
+  die "sudo на сервере требует пароль, а он не задан.
+  Либо запустите с SUDO_PASSWORD=… (уйдёт через stdin, в аргументах не появится),
+  либо разрешите на сервере беспарольный systemctl для этого юнита, либо
+  остановите и запустите сервис вручную, а скрипт прогоните с --no-service."
+fi
 
 LOCAL_BYTES=$(wc -c < corpus.db | tr -d ' ')
 NEEDED_GB=$(( (LOCAL_BYTES * 2) / 1073741824 + 1 ))
@@ -158,7 +190,16 @@ else
 fi
 
 confirm "Останавливаю сервис и подменяю corpus.db. Продолжать?"
-run_remote "останавливаю $SERVICE" "sudo systemctl stop $SERVICE"
+if [ "$SKIP_SERVICE" = 1 ]; then
+  info "Сервис не трогаю (--no-service). Остановите его сами ДО подмены:"
+  info "  sudo systemctl stop $SERVICE"
+  confirm "Сервис остановлен?"
+elif [ "$DRY_RUN" = 1 ]; then
+  info "[не выполняю] sudo systemctl stop $SERVICE"
+else
+  info "останавливаю $SERVICE"
+  remote_sudo "systemctl stop $SERVICE" || die "Не удалось остановить сервис"
+fi
 run_remote "подменяю corpus.db" "mv -f corpus.db.new corpus.db && rm -f corpus.db-wal corpus.db-shm corpus.db-journal"
 
 # ── 8. кандидаты и сборка ────────────────────────────────────────────────────
@@ -174,7 +215,15 @@ else
 fi
 run_remote "импорт кандидатов" "npx tsx scripts/db/import-candidates.ts $CANDIDATES_FILE --apply"
 run_remote "сборка" "rm -rf .next && npm run build"
-run_remote "запускаю $SERVICE" "sudo systemctl start $SERVICE"
+if [ "$SKIP_SERVICE" = 1 ]; then
+  info "Запустите сервис сами: sudo systemctl start $SERVICE"
+  confirm "Сервис запущен?"
+elif [ "$DRY_RUN" = 1 ]; then
+  info "[не выполняю] sudo systemctl start $SERVICE"
+else
+  info "запускаю $SERVICE"
+  remote_sudo "systemctl start $SERVICE" || die "Не удалось запустить сервис"
+fi
 
 # ── 9. пересчёты ─────────────────────────────────────────────────────────────
 say "9/10 Пересчёты"
