@@ -225,6 +225,13 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     // (гейт в engine.ts).
     const { head: verbHead, tailSuffix } = splitMechanicalVerbTail(word.isv, word.knownPrepositions ?? []);
 
+    // Лексема VERB, чья словарная форма — не инфинитив ("je, jest" — формы byti,
+    // заведённые отдельной статьёй), не спрягается: правила вывели бы из "je"
+    // обрывки "e", "i", "h", "l", и союз "i" стал бы омонимом глагола.
+    if (!/(ti|ť|či|ći)$/.test(verbHead.toLowerCase().trim())) {
+        return [{ surfaceForm: word.isv, feats: {} }];
+    }
+
     // 1-3. Модель глагола: канонический инфинитив (value часто без диакритики —
     // "uciti" при стеме "uči"), основы из лексемы и класс. См. buildVerbModel.
     const verbModel: VerbModel = buildVerbModel({

@@ -36,6 +36,13 @@ describe("numerals 2-4", () => {
     })
 })
 
+describe("verb lexemes whose citation form is not an infinitive", () => {
+    it("are left invariant instead of being cut into letter fragments", () => {
+        // "je, jest" is a VERB lexeme holding forms of byti.
+        expect([...forms({ isv: "je", pos: "VERB", stem: "je" })]).toEqual(["je"])
+    })
+})
+
 describe("verbs with a prepositional tail", () => {
     it("conjugate the head taken from the stem", () => {
         const f = forms({
