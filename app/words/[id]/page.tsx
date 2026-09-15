@@ -5,7 +5,7 @@ import './word-page.css';
 import {getUserScript} from "@/lib/get-user-script";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import {declineWordAutomatically} from "@/lib/grammar/declineNoun";
+import {declineWordAutomatically, asNStemIfMisfiled} from "@/lib/grammar/declineNoun";
 import {resolveGender} from "@/lib/grammar/stemClassifier";
 import {PosType} from "@/lib/grammar/common";
 import {fetchWordExamples} from "@/lib/corpus/fetchWordExamples";
@@ -63,7 +63,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         for (const c of CASES_LIST) {
           try {
             nounParadigm[num][c] = declineWordAutomatically({
-              dbItem: {
+              dbItem: asNStemIfMisfiled({
                 interslavic: item.stem || item.word?.value || item.value,
                 protoSlavic: item.proto || "",
                 gender: resolveGender(item.gender, item.protoStemClass),
@@ -76,7 +76,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                   value: r.value,
                   stressPosition: r.stressPosition,
                 })),
-              },
+              }),
               targetCase: c,
               targetNumber: num,
             });

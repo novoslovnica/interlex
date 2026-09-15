@@ -317,7 +317,22 @@ const MODERN_PLURAL_VARIANTS: Partial<Record<StemType, Partial<Record<Case, stri
     o_soft: { gen: 'ev', dat: 'am', ins: 'ami', loc: 'ah' },
     a_hard: { dat: 'am', ins: 'ami', loc: 'ah' },
     a_soft: { dat: 'am', ins: 'ami', loc: 'ah' },
+    consonant_n: { dat: 'am', ins: 'ami', loc: 'ah' },
 };
+
+/**
+ * n-основы среднего рода (imę, vrěmę, plemę, sěmę) частью заведены в словаре
+ * как мягкие jo-основы со стемом на -men ("imen", "vrěmen" — 35 лексем). Как
+ * мягкие они получали j ("imenja") и не распознавались, а их формы перехватывали
+ * чужие лексемы. Склоняем их как consonant_n от словарной формы на -mę.
+ */
+export function asNStemIfMisfiled(dbItem: EnhancedDbItem): EnhancedDbItem {
+    const psc = String(dbItem.protoStemClass).toLowerCase();
+    if ((psc === 'jo' || psc === 'o') && dbItem.gender === 'neuter' && /men$/.test(dbItem.interslavic)) {
+        return { ...dbItem, interslavic: dbItem.interslavic.slice(0, -2) + 'ę', protoStemClass: 'consonant', stemExtension: 'en' };
+    }
+    return dbItem;
+}
 
 export function declineModernPluralVariants(dbItem: EnhancedDbItem, flavor: string = 'CORE'): { targetCase: Case; form: string }[] {
     const stemType = identifyStemTypeByDb(dbItem);
@@ -325,7 +340,10 @@ export function declineModernPluralVariants(dbItem: EnhancedDbItem, flavor: stri
     if (!variants) return [];
     return (Object.entries(variants) as [Case, string][]).map(([targetCase, ending]) => ({
         targetCase,
-        form: dropRedundantJ(collapseDoubleJ(normalizeSoftConsonants(nounStemForCase(dbItem, stemType, ending, flavor) + ending))),
+        // stemWithExtension — для n-основ (imen-ami), у o/a-основ наращения нет.
+        form: dropRedundantJ(collapseDoubleJ(normalizeSoftConsonants(
+            stemWithExtension(nounStemForCase(dbItem, stemType, ending, flavor), stemType, targetCase, 'plural') + ending,
+        ))),
     }));
 }
 

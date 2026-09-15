@@ -28,6 +28,17 @@ describe("s-stems", () => {
     })
 })
 
+describe("n-stems filed as soft stems", () => {
+    it("decline as n-stems instead of getting a soft j", () => {
+        // ime-NOUN in the dictionary: protoStemClass jo, stem "imen".
+        const f = forms({ isv: "ime", pos: "NOUN", stem: "imen", protoStemClass: "jo", gender: "Neut" })
+        for (const form of ["imę", "imene", "imeni", "imenem", "imena", "imenami"]) {
+            expect(f.has(form), form).toBe(true)
+        }
+        expect(f.has("imenja")).toBe(false)
+    })
+})
+
 describe("numerals 2-4", () => {
     it("recognise dvoh and dvoma", () => {
         const f = forms({ isv: "dva", pos: "NUM", stem: "dva" })

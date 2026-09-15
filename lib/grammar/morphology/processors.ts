@@ -13,7 +13,7 @@ import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteTon
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
-import { declineWordAutomatically, declineModernPluralVariants } from '../declineNoun';
+import { declineWordAutomatically, declineModernPluralVariants, asNStemIfMisfiled } from '../declineNoun';
 import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
     conjugateFullVerb,
@@ -48,7 +48,7 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
     // форме (word.isv) — getEnding() сам добавляет падежное окончание к корню, и если
     // подать вместо корня уже готовую словарную форму (у которой это окончание уже
     // есть, напр. "selo" для среднего рода), окончание наложится второй раз ("seloo").
-    const dbItem: EnhancedDbItem = {
+    const dbItem: EnhancedDbItem = asNStemIfMisfiled({
         interslavic: word.stem || word.isv,
         protoSlavic: word.isv, // Используем лемму как фоллбэк для расчета вокалических ядер
         paradigm: (word.paradigm as 'A' | 'B' | 'C') || 'A',
@@ -58,7 +58,7 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         animacy: word.animacy || undefined,
         stressPosition: word.stressPosition,
         morphemes: word.morphemes,
-    };
+    });
 
     // 2. Разворачиваем полную матрицу форм (7 падежей * 3 числа = 21 словоформа)
     const cases = ALL_CASES as GrammaticalCase[];
@@ -411,6 +411,15 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
             tense: verbModel.aspect === VerbalAspect.PF ? 'fut' : 'pres',
             mood: 'ind',
         });
+    }
+
+    // У вспомогательных и модальных глаголов (iměti, mogti, htěti) страдательных
+    // причастий нет, а порождённые "iměn/iměna/iměni" перехватывали формы
+    // существительного imę (imena, imenom). iměti/byti/hotěti/věděti заведены и
+    // как VERB — для них то же самое.
+    const NO_PASSIVE_PARTICIPLES = new Set(['iměti', 'imeti', 'byti', 'hotěti', 'hoteti', 'htěti', 'hteti', 'věděti', 'vedeti']);
+    if (word.pos?.toUpperCase() === 'AUX' || NO_PASSIVE_PARTICIPLES.has(verbModel.infinitive)) {
+        return results.filter((form) => !(form.feats.verbForm === 'part' && form.feats.voice === 'pass'));
     }
 
     return results;
