@@ -230,7 +230,7 @@ export async function refreshCorpusForChangedLexemes(options: {
   }
 
   const reconciled = await reconcileProposals()
-  log(`Закрыто кластеров как распознанные: ${reconciled.closedClusters}`)
+  log(`Закрыто кластеров как распознанные: ${reconciled.closedClusters}, отклонено как не-слова: ${reconciled.rejectedNonWords}`)
 
   // Генерируем только по тем словам, что затронуты этой правкой: остальные
   // 186 тысяч кластеров не изменились.

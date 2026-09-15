@@ -72,6 +72,7 @@ export const isvToCyrOld = (text: string) => {
         'Ě': 'Ѣ', 'ě': 'ѣ',
         'Ę': 'Ѧ', 'ę': 'ѧ',
         'Ų': 'Ѫ', 'ų': 'ѫ',
+        ...JER_AND_LENGTH_CYR,
     };
 
     let result = "";
@@ -96,9 +97,13 @@ export const isvToCyrOld = (text: string) => {
         .replace(/Ś/g, 'СЬ').replace(/ś/g, 'сь')
         .replace(/Ź/g, 'ЗЬ').replace(/ź/g, 'зь')
         .replace(/Ć/g, 'Ћ').replace(/ć/g, 'ћ')
-        .replace(/Đ/g, 'ДЬ').replace(/đ/g, 'дь');
+        .replace(/Đ/g, 'ДЬ').replace(/đ/g, 'дь')
+        // Слоговые ŕ/ĺ и ń — по тому же правилу, что и мягкие выше.
+        .replace(/Ŕ/g, 'РЬ').replace(/ŕ/g, 'рь')
+        .replace(/Ĺ/g, 'ЛЬ').replace(/ĺ/g, 'ль')
+        .replace(/Ń/g, 'НЬ').replace(/ń/g, 'нь');
 
-    return result;
+    return transliterateAccented(result, rules);
 }
 
 export const isvToCyrNew = (text: string) => {
@@ -151,6 +156,7 @@ export const isvToCyrNew = (text: string) => {
         'Ě': 'Ѣ', 'ě': 'ѣ',
         'Ę': 'Ѧ', 'ę': 'ѧ',
         'Ų': 'Ѫ', 'ų': 'ѫ',
+        ...JER_AND_LENGTH_CYR,
     };
 
     let result = "";
@@ -175,9 +181,12 @@ export const isvToCyrNew = (text: string) => {
         .replace(/Ś/g, 'СІ').replace(/ś/g, 'сі')
         .replace(/Ź/g, 'ЗІ').replace(/ź/g, 'зі')
         .replace(/Ć/g, 'Ћ').replace(/ć/g, 'ћ')
-        .replace(/Đ/g, 'ДІ').replace(/đ/g, 'ді');
+        .replace(/Đ/g, 'ДІ').replace(/đ/g, 'ді')
+        .replace(/Ŕ/g, 'РІ').replace(/ŕ/g, 'рі')
+        .replace(/Ĺ/g, 'ЛІ').replace(/ĺ/g, 'лі')
+        .replace(/Ń/g, 'НІ').replace(/ń/g, 'ні');
 
-    return result;
+    return transliterateAccented(result, rules);
 }
 
 export const isvToCyr = isvToCyrOld;
@@ -279,6 +288,8 @@ export const standardToSimple = (text: string) => {
         'Ę': 'E', 'ę': 'e', // Малый юс -> E
         'Ǫ': 'U', 'ǫ': 'u', // Большой юс (устар. написание o+огонек) -> U
         'Ų': 'U', 'ų': 'u', // Большой юс (совр. написание u+огонек) -> U
+        'Å': 'A', 'å': 'a', 'Ė': 'E', 'ė': 'e', 'Ȯ': 'O', 'ȯ': 'o', // долгое a и еры
+        'Ŕ': 'R', 'ŕ': 'r', 'Ĺ': 'L', 'ĺ': 'l', 'Ń': 'N', 'ń': 'n', // слоговые и мягкое n
     };
 
     const step2 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');
@@ -327,11 +338,41 @@ export const standardToSimple = (text: string) => {
     return result;
 }
 
-export const isvToGlagolitic = (text: string): string => {
-  if (!text) return "";
+// Еры и долгое å в этимологической кириллице (выбор мейнтейнера, 2026-09-15):
+// сильные еры ȯ/ė пишутся самими ерами, å — «а» с кольцом (U+030A). Слоговые
+// ŕ/ĺ и ń идут через ерь по тому же правилу, что уже действовало для ľ/ť/ď
+// (шаг 4 в isvToCyrOld/isvToCyrNew). Раньше все шесть букв проходили в
+// кириллицу латиницей: «подвŕгнѫти», «актоŕскы».
+const JER_AND_LENGTH_CYR: Record<string, string> = {
+    'Ȯ': 'Ъ', 'ȯ': 'ъ',
+    'Ė': 'Ь', 'ė': 'ь',
+    'Å': 'А̊', 'å': 'а̊',
+};
+
+// Латинская буква с тоновым знаком, которой нет в таблице (ó, è, ȁ...):
+// базовая буква транслитерируется, знак остаётся комбинирующим — «мо́ре»,
+// а не «мóре» с латинской ó посреди кириллицы.
+function transliterateAccented(text: string, rules: Record<string, string>): string {
+    let out = "";
+    for (const ch of text) {
+        const decomposed = ch.normalize("NFD");
+        const mapped = decomposed.length > 1 ? rules[decomposed[0]] : undefined;
+        out += mapped ? mapped + decomposed.slice(1) : ch;
+    }
+    return out;
+}
+
+export const isvToGlagolitic = (input: string): string => {
+  if (!input) return "";
+
+  // Та же нормализация мягких перед i/e/ę/ě, что и в кириллице.
+  const text = normalizeSoftConsonants(input.normalize("NFC"));
 
   const lower = (ch: string) => ch.toLowerCase();
 
+  // Мягкие и слоговые согласные — базовая буква + ерь (ⱐ), как в кириллице
+  // (ľ -> ль); ȯ/ė — сами еры. ć — джерв ⰼ (глаголический источник ћ, которым
+  // ć передаётся в кириллице), đ — ⰴⱐ, как «дь».
   const glagoliticLower: Record<string, string> = {
     'a': 'ⰰ', 'b': 'ⰱ', 'v': 'ⰲ', 'g': 'ⰳ', 'd': 'ⰴ',
     'e': 'ⰵ', 'ž': 'ⰶ', 'z': 'ⰸ', 'i': 'ⰹ', 'j': 'ⰻ',
@@ -339,6 +380,10 @@ export const isvToGlagolitic = (text: string): string => {
     'p': 'ⱂ', 'r': 'ⱃ', 's': 'ⱄ', 't': 'ⱅ', 'u': 'ⱆ',
     'f': 'ⱇ', 'h': 'ⱈ', 'c': 'ⱌ', 'y': 'ⱏⰹ',
     'ě': 'ⱑ', 'ę': 'ⱗ', 'ǫ': 'ⱘ', 'ų': 'ⱘ',
+    'č': 'ⱍ', 'š': 'ⱎ', 'ć': 'ⰼ', 'đ': 'ⰴⱐ',
+    'ľ': 'ⰾⱐ', 'ĺ': 'ⰾⱐ', 'ť': 'ⱅⱐ', 'ď': 'ⰴⱐ', 'ň': 'ⱀⱐ', 'ń': 'ⱀⱐ',
+    'ś': 'ⱄⱐ', 'ź': 'ⰸⱐ', 'ŕ': 'ⱃⱐ',
+    'ȯ': 'ⱏ', 'ė': 'ⱐ', 'å': 'ⰰ̊',
   };
 
   const glagoliticUpper: Record<string, string> = {
@@ -348,6 +393,10 @@ export const isvToGlagolitic = (text: string): string => {
     'P': 'Ⱂ', 'R': 'Ⱃ', 'S': 'Ⱄ', 'T': 'Ⱅ', 'U': 'Ⱆ',
     'F': 'Ⱇ', 'H': 'Ⱈ', 'C': 'Ⱌ', 'Y': 'ⰟⰉ',
     'Ě': 'Ⱑ', 'Ę': 'Ⱗ', 'Ǫ': 'Ⱘ', 'Ų': 'Ⱘ',
+    'Č': 'Ⱍ', 'Š': 'Ⱎ', 'Ć': 'Ⰼ', 'Đ': 'Ⰴⱐ',
+    'Ľ': 'Ⰾⱐ', 'Ĺ': 'Ⰾⱐ', 'Ť': 'Ⱅⱐ', 'Ď': 'Ⰴⱐ', 'Ň': 'Ⱀⱐ', 'Ń': 'Ⱀⱐ',
+    'Ś': 'Ⱄⱐ', 'Ź': 'Ⰸⱐ', 'Ŕ': 'Ⱃⱐ',
+    'Ȯ': 'Ⱏ', 'Ė': 'Ⱐ', 'Å': 'Ⰰ̊',
   };
 
   let result = "";
@@ -393,7 +442,12 @@ export const isvToGlagolitic = (text: string): string => {
     } else if (glagoliticLower[ch]) {
       result += glagoliticLower[ch];
     } else {
-      result += ch;
+      // Гласная с тоновым знаком вне таблицы: буква по таблице, знак сохраняется.
+      const decomposed = ch.normalize("NFD");
+      const base = decomposed.length > 1
+        ? glagoliticUpper[decomposed[0]] ?? glagoliticLower[decomposed[0]]
+        : undefined;
+      result += base ? base + decomposed.slice(1) : ch;
     }
     i++;
   }
@@ -441,6 +495,8 @@ export const standardToSimpleCyr = (text: string) => {
         'Ę': 'Е', 'ę': 'e', // Малый юс упрощается до Е/е
         'Ǫ': 'У', 'ǫ': 'у', // Большой юс (устар. написание o+огонек) упрощается до У/у
         'Ų': 'У', 'ų': 'у', // Большой юс (совр. написание u+огонек) упрощается до У/у
+        'Å': 'А', 'å': 'а', 'Ė': 'Е', 'ė': 'е', 'Ȯ': 'О', 'ȯ': 'о', // долгое a и еры
+        'Ŕ': 'Р', 'ŕ': 'р', 'Ĺ': 'Л', 'ĺ': 'л', 'Ń': 'Н', 'ń': 'н', // слоговые и мягкое n
     };
 
     const step3 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');

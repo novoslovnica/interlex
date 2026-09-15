@@ -226,8 +226,8 @@ export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
     where: HAS_MEANING,
     select: {
       id: true, slug: true, value: true, pos: true, protoStemClass: true,
-      stemExtension: true, paradigm: true, stem: true, gender: true,
-      animacy: true, isCollocation: true,
+      stemExtension: true, paradigm: true, stem: true, secondaryStem: true,
+      tertiaryStem: true, gender: true, animacy: true, isCollocation: true,
     },
   })
 
@@ -249,6 +249,10 @@ export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
           stemExtension: l.stemExtension,
           paradigm: l.paradigm,
           stem: variant.stem,
+          // Без основ настоящего времени и l-причастия движок строит их от
+          // инфинитива: "pisaje" вместо "piše", "najdl" вместо "našel".
+          secondaryStem: l.secondaryStem,
+          tertiaryStem: l.tertiaryStem,
           gender: l.gender,
           animacy: l.animacy,
           alternationType: null,
@@ -371,6 +375,8 @@ export function createQueryWordsByBase(
         stemExtension: true,
         paradigm: true,
         stem: true,
+        secondaryStem: true,
+        tertiaryStem: true,
         gender: true,
         animacy: true,
         isCollocation: true,
@@ -386,6 +392,8 @@ export function createQueryWordsByBase(
       stemExtension: r.stemExtension,
       paradigm: r.paradigm,
       stem: r.stem,
+      secondaryStem: r.secondaryStem,
+      tertiaryStem: r.tertiaryStem,
       gender: r.gender,
       animacy: r.animacy,
       base: null,

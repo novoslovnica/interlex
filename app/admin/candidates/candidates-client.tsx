@@ -202,14 +202,34 @@ function CandidatesClientInner() {
 
   const handlePromote = useCallback(async () => {
     setIsPromoting(true)
-    const result = await promoteCandidatesAction(promoteForms)
+    let result = await promoteCandidatesAction(promoteForms)
+    if (!result.success && result.conflicts?.length) {
+      // Совпадение со словарём — вопрос, а не ошибка: это может быть омоним
+      // (нужно новое слово со slug с суффиксом), а может быть ложный кандидат.
+      const lines = result.conflicts
+        .map((c) => `• ${c.value} (${c.pos}) — уже есть: ${c.existing.map((e) => e.slug).join(", ")}`)
+        .join("\n")
+      const confirmed = confirm(
+        `Эти слова уже есть в словаре:\n${lines}\n\n` +
+          "Добавить их как отдельные слова (омонимы)? Slug получит числовой суффикс.\n" +
+          "Отмена — не переносить ничего.",
+      )
+      if (!confirmed) {
+        setIsPromoting(false)
+        return
+      }
+      const conflictIds = new Set(result.conflicts.map((c) => c.candidateId))
+      result = await promoteCandidatesAction(
+        promoteForms.map((f) => (conflictIds.has(f.candidateId) ? { ...f, allowDuplicate: true } : f)),
+      )
+    }
     setIsPromoting(false)
     if (result.success) {
       setPromoteModalOpen(false)
       setSelectedIds([])
       refetch()
     } else {
-      alert(`Ошибка: ${result.error}`)
+      alert(`Ошибка: ${result.error ?? "совпадение со словарём"}`)
     }
   }, [promoteForms, refetch])
 
@@ -453,7 +473,7 @@ function CandidatesClientInner() {
 
                   <div>
                     <label className="block text-xs font-semibold mb-1">
-                      Slug (авто): {form.value}-{form.pos}
+                      Slug (авто): {form.value}-{form.pos} — если занят, после подтверждения добавится числовой суффикс
                     </label>
                   </div>
 

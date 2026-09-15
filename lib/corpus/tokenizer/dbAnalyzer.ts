@@ -2,7 +2,7 @@ import { generateWordForms } from '@/lib/grammar/morphology/engine';
 import { EngineWordInput, GeneratedForm, MorphoGrammarFeats } from '@/lib/grammar/morphology';
 import { PosType, isValidPos } from '@/lib/grammar/common';
 import { MorphoAnalysis, MorphoCandidate, MorphoCandidateSource } from './types';
-import { etymCyrToEtymLat } from '@/lib/transliteration';
+import { etymCyrToEtymLat, isCyrillic } from '@/lib/transliteration';
 import { getExpectedCasesForPreposition } from '@/lib/corpus/syntax/government';
 import { CASE_WEIGHTS } from '@/lib/corpus/priorities/types';
 import { normalizeCaseValue } from './caseNormalize';
@@ -24,6 +24,10 @@ export interface WordBaseRecord {
     stemExtension: string | null;
     paradigm: string | null;
     stem: string | null;
+    // Основы настоящего времени и l-причастия ("piše" у pisati, "naš" у
+    // najdti). Без них движок строит презенс и прошедшее от инфинитива.
+    secondaryStem?: string | null;
+    tertiaryStem?: string | null;
     base: string | null;
     gender: string | null;
     animacy: string | null;
@@ -104,7 +108,7 @@ export class DbAnalyzer {
             };
         }
 
-        if (/[а-яѢѣѦѧѪѫ]/i.test(clean)) {
+        if (isCyrillic(clean)) {
             clean = etymCyrToEtymLat(clean);
         }
 
@@ -324,6 +328,8 @@ export class DbAnalyzer {
                     stemExtension: word.stemExtension,
                     paradigm: word.paradigm,
                     stem: variant.stem,
+                    secondaryStem: word.secondaryStem,
+                    tertiaryStem: word.tertiaryStem,
                     gender: word.gender,
                     animacy: word.animacy,
                     alternationType: word.alternationType,

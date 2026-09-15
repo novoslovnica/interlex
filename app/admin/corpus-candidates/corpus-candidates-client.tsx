@@ -16,6 +16,8 @@ export interface HypothesisDTO {
   siblingWordSlug: string | null
   possibleEndingGap: boolean
   exampleTokenIds: string[]
+  /** Лексемы, чья словарная форма совпадает с reconstructedForm с точностью до диакритики. */
+  existingLexemes: { slug: string; value: string | null; pos: string | null }[]
 }
 
 export type QueueKey = "words" | "endings" | "deferred"
@@ -57,9 +59,9 @@ function HypothesisCard({ h }: { h: HypothesisDTO }) {
 
   const edited = value !== h.reconstructedForm || pos !== h.guessedPos
 
-  const handleApprove = () => {
+  const handleApprove = (confirmDuplicate = false) => {
     startTransition(async () => {
-      const result = await approveHypothesisAction(h.id, { value, pos })
+      const result = await approveHypothesisAction(h.id, { value, pos, confirmDuplicate })
       if (result.success) {
         setDone("promoted")
         if (result.mergedClusters) {
@@ -68,6 +70,11 @@ function HypothesisCard({ h }: { h: HypothesisDTO }) {
           alert(`Готово. Заодно закрыто других словоформ этого слова: ${result.mergedClusters}`)
         }
         router.refresh()
+      } else if (result.duplicates?.length) {
+        const list = result.duplicates.map((d) => `${d.value} (${d.pos ?? "—"}, ${d.slug})`).join(", ")
+        if (confirm(`В словаре уже есть: ${list}.\n\nЭто отдельное слово (омоним), и его нужно добавить?`)) {
+          handleApprove(true)
+        }
       } else {
         alert(`Ошибка: ${result.error}`)
       }
@@ -127,9 +134,24 @@ function HypothesisCard({ h }: { h: HypothesisDTO }) {
             ⚠ Основа совпадает с уже существующим словом целиком — возможно, это пробел в парадигме, а не новое слово
           </div>
         )}
+        {h.existingLexemes.length > 0 && (
+          <div className="text-red-600 dark:text-red-400">
+            ⚠ Уже есть в словаре:{" "}
+            {h.existingLexemes.map((l, i) => (
+              <span key={l.slug}>
+                {i > 0 && ", "}
+                <Link href={`/words/${l.slug}`} target="_blank" className="underline">
+                  {l.value}
+                </Link>{" "}
+                ({l.pos ?? "—"})
+              </span>
+            ))}
+            {" "}— скорее всего, это не новое слово
+          </div>
+        )}
       </div>
       <button
-        onClick={handleApprove}
+        onClick={() => handleApprove()}
         disabled={isPending}
         className="self-start px-3 py-1 text-xs font-medium rounded bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
       >

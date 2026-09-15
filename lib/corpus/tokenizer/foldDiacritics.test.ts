@@ -14,6 +14,17 @@ describe("foldDiacritics", () => {
         expect(foldDiacritics("noć")).toBe("noc");
     });
 
+    it("writes a soft consonant before a back vowel with j, as plain spelling does", () => {
+        expect(foldDiacritics("stolěťa")).toBe("stoletja");
+        expect(foldDiacritics("końa")).toBe("konja");
+        expect(foldDiacritics("ľudi")).toBe("ljudi");
+        expect(foldDiacritics("zemľų")).toBe("zemlju");
+        // no j before front vowels, matching normalizeSoftConsonants
+        expect(foldDiacritics("pęťe")).toBe("pete");
+        // ć/đ are č/dž in plain spelling, never followed by j
+        expect(foldDiacritics("noća")).toBe("noca");
+    });
+
     it("keeps the folds the old DbAnalyzer.normalizeForm already did", () => {
         expect(foldDiacritics("človek")).toBe("clovek");
         expect(foldDiacritics("žena")).toBe("zena");
@@ -30,9 +41,18 @@ describe("foldDiacritics", () => {
         expect(foldDiacritics("dėn")).toBe("den");
     });
 
+    it("strips stress marks outside the table, precomposed or combining", () => {
+        expect(foldDiacritics("tògda")).toBe("togda");
+        expect(foldDiacritics("tògda")).toBe("togda");
+        expect(foldDiacritics("dȁn")).toBe("dan");
+        // Cyrillic letters with a built-in diacritic are left alone
+        expect(foldDiacritics("мой")).toBe("мой");
+    });
+
     it("is idempotent and leaves undiacriticized text alone", () => {
-        const plain = "jezyk pisati velmi";
+        const plain = "jezyk pisati velmi stoletja";
         expect(foldDiacritics(plain)).toBe(plain);
         expect(foldDiacritics(foldDiacritics("języku"))).toBe(foldDiacritics("języku"));
+        expect(foldDiacritics(foldDiacritics("stolěťa"))).toBe("stoletja");
     });
 });

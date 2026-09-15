@@ -2,7 +2,7 @@ import { prismaData } from "@/lib/prisma"
 import { PosType, GrammaticalGender } from "@/lib/grammar/common"
 import { getEnding } from "@/lib/grammar/endingLoader"
 import { buildGrammeme } from "@/lib/grammar/grammemes"
-import { etymCyrToEtymLat } from "@/lib/transliteration"
+import { etymCyrToEtymLat, isCyrillic } from "@/lib/transliteration"
 import { identifyStemTypeByDb, resolveGender, EnhancedDbItem } from "@/lib/grammar/stemClassifier"
 
 // Тот же перебор длин окончания, что и DbAnalyzer.generateHypotheticalBases —
@@ -164,10 +164,20 @@ export const MIN_STEM_TYPE_SUPPORT = 0.01
 
 export function normalizeSurfaceForm(rawSurfaceForm: string): string {
   let clean = rawSurfaceForm.toLowerCase().trim()
-  if (/[а-яѢѣѦѧѪѫ]/i.test(clean)) {
+  if (isCyrillic(clean)) {
     clean = etymCyrToEtymLat(clean)
   }
   return clean
+}
+
+/**
+ * Может ли кластер вообще быть словом. Одиночные символы и токены без единой
+ * буквы — нет: на живом корпусе это перечисления букв алфавита ("a, e, ı, i"),
+ * обозначения ("asteroid B 612"), вариационные селекторы эмодзи и "_1". Среди
+ * 3 000 самых частотных кластеров очереди таких 63, 7,9% всех вхождений.
+ */
+export function isProposableClusterKey(key: string): boolean {
+  return [...key].length >= 2 && /\p{L}/u.test(key)
 }
 
 export async function buildEndingReverseIndex(): Promise<EndingReverseIndex> {

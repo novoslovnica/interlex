@@ -5,6 +5,7 @@ import { prismaCorpus } from "@/lib/prisma"
 import { requirePermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import type { Metadata } from "next"
+import { findExistingLexemesMany } from "@/lib/corpus/candidates/existingLexemes"
 import CorpusCandidatesClient, { ClusterDTO, QueueKey } from "./corpus-candidates-client"
 
 export const metadata: Metadata = {
@@ -111,6 +112,11 @@ export default async function CorpusCandidatesPage({
     else proposalsByCluster.set(p.clusterKey, [p])
   }
 
+  // Гипотеза, чья словарная форма уже есть в словаре, — скорее всего не новое
+  // слово, а форма, которую анализатор не распознал. Модератор должен видеть
+  // это до одобрения, а не узнавать о дубле на промоуте.
+  const existingByForm = await findExistingLexemesMany(proposals.map((p) => p.reconstructedForm))
+
   const clusters: ClusterDTO[] = clusterRows.map((c) => ({
     clusterKey: c.clusterKey,
     occurrenceCount: c.occurrenceCount,
@@ -124,6 +130,7 @@ export default async function CorpusCandidatesPage({
       siblingWordSlug: p.siblingWordSlug,
       possibleEndingGap: p.possibleEndingGap,
       exampleTokenIds: p.exampleTokenIds as string[],
+      existingLexemes: (existingByForm.get(p.reconstructedForm) ?? []).map(({ slug, value, pos }) => ({ slug, value, pos })),
     })),
   }))
 

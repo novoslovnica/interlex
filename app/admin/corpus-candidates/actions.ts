@@ -6,10 +6,13 @@ import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
 import { prismaCorpus, prismaData } from "@/lib/prisma"
 import { logAudit } from "@/lib/audit-log"
+import { findExistingLexemes } from "@/lib/corpus/candidates/existingLexemes"
 
 interface ActionResult {
   success: boolean
   error?: string
+  /** Лексемы с той же формой и частью речи — одобрение не выполнено, нужно подтверждение. */
+  duplicates?: { slug: string; value: string | null; pos: string | null }[]
   candidateId?: number
   /** Сколько других кластеров закрылось как другие словоформы того же слова. */
   mergedClusters?: number
@@ -37,6 +40,8 @@ export interface ApproveOverrides {
   value?: string
   /** Правленая часть речи: гипотезы для одного слова часто расходятся именно в ней. */
   pos?: string
+  /** Модератор подтвердил: слово с той же формой и частью речи в словаре есть, но это омоним. */
+  confirmDuplicate?: boolean
 }
 
 export async function approveHypothesisAction(
@@ -55,6 +60,17 @@ export async function approveHypothesisAction(
   const value = overrides?.value?.trim() || hypothesis.reconstructedForm
   const pos = overrides?.pos?.trim() || hypothesis.guessedPos
   if (!value) return { success: false, error: "Пустая словарная форма" }
+
+  // Слово с той же формой (с точностью до диакритики) и частью речи уже есть:
+  // это либо ложный кандидат, либо омоним. Решает модератор — спрашиваем.
+  if (!overrides?.confirmDuplicate) {
+    const duplicates = (await findExistingLexemes(value)).filter(
+      (l) => (l.pos ?? "").toUpperCase() === pos.toUpperCase(),
+    )
+    if (duplicates.length > 0) {
+      return { success: false, duplicates: duplicates.map(({ slug, value, pos }) => ({ slug, value, pos })) }
+    }
+  }
 
   // Одно слово попадает в очередь столькими кластерами, сколько его
   // словоформ встретилось в корпусе: "medžuslovjansky", "medžuslovjanskom" и

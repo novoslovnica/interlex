@@ -18,8 +18,11 @@ export const SCRIPT_LABELS: Record<Script, string> = {
   simple_cyr: "Простой, кириллица",
 }
 
-function isCyrillic(text: string): boolean {
-  return /[а-яѢѣѦѧѪѫћЋ]/i.test(text)
+// Любая кириллическая буква, включая ј/љ/њ/ћ/ђ/ѕ стандартной кириллицы: в
+// корпусе есть такие тексты ("је", "људи"), а прежний диапазон а-я их не
+// замечал — слово оставалось кириллическим и не распознавалось вовсе.
+export function isCyrillic(text: string): boolean {
+  return /[Ѐ-ӿ]/.test(text)
 }
 
 export function detectScript(text: string): Script | null {
@@ -63,6 +66,12 @@ export function etymCyrToEtymLat(text: string): string {
     'Ѣ': 'Ě', 'ѣ': 'ě',
     'Ѧ': 'Ę', 'ѧ': 'ę',
     'Ѫ': 'Ų', 'ѫ': 'ų',
+    // Буквы стандартной (сербско-македонской) кириллицы, которыми написана
+    // часть корпуса: "је", "људи", "моћ".
+    'Ј': 'J', 'ј': 'j',
+    'Љ': 'Lj', 'љ': 'lj', 'Њ': 'Nj', 'њ': 'nj',
+    'Ћ': 'Ć', 'ћ': 'ć', 'Ђ': 'Đ', 'ђ': 'đ',
+    'Ѕ': 'Dz', 'ѕ': 'dz', 'Ї': 'Ji', 'ї': 'ji',
   }
 
   let result = ""

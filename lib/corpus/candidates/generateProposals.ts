@@ -3,6 +3,7 @@ import {
   buildEndingReverseIndex,
   buildHypothesesForSurfaceForm,
   buildStemTypeSupport,
+  isProposableClusterKey,
   normalizeSurfaceForm,
   CandidateHypothesis,
   ReconstructionRuleSource,
@@ -241,6 +242,7 @@ async function syncUnreviewedStatuses(pendingMinOccurrences: number): Promise<{
 export async function reconcileProposals(): Promise<{
   closedClusters: number
   closedRows: number
+  rejectedNonWords: number
 }> {
   const live = new Set<string>()
 
@@ -267,11 +269,29 @@ export async function reconcileProposals(): Promise<{
     select: { clusterKey: true },
     distinct: ["clusterKey"],
   })
-  const stale = open.map((o) => o.clusterKey).filter((key) => !live.has(key))
-  if (stale.length === 0) return { closedClusters: 0, closedRows: 0 }
-
   // Разбиваем на части: SQLite ограничивает число параметров в IN.
   const CHUNK = 500
+
+  // Кластеры, которые словом быть не могут (одиночный символ, нет букв),
+  // генератор больше не создаёт. Уже созданные закрываются отдельно и
+  // отклонёнными: 'resolved_recognized' соврал бы, будто корпус их распознаёт.
+  const openKeys = open.map((o) => o.clusterKey)
+  const nonWords = openKeys.filter((key) => !isProposableClusterKey(key))
+  let rejectedNonWords = 0
+  for (let i = 0; i < nonWords.length; i += CHUNK) {
+    const result = await prismaCorpus.corpusCandidateProposal.updateMany({
+      where: { clusterKey: { in: nonWords.slice(i, i + CHUNK) }, status: { in: ["pending", "deferred"] } },
+      data: {
+        status: "rejected",
+        resolutionNote: "автоматически: не слово (одиночный символ или нет букв)",
+        reviewedAt: new Date(),
+      },
+    })
+    rejectedNonWords += result.count
+  }
+
+  const stale = openKeys.filter((key) => isProposableClusterKey(key) && !live.has(key))
+  if (stale.length === 0) return { closedClusters: 0, closedRows: 0, rejectedNonWords }
   let closedRows = 0
   for (let i = 0; i < stale.length; i += CHUNK) {
     const result = await prismaCorpus.corpusCandidateProposal.updateMany({
@@ -285,7 +305,7 @@ export async function reconcileProposals(): Promise<{
     closedRows += result.count
   }
 
-  return { closedClusters: stale.length, closedRows }
+  return { closedClusters: stale.length, closedRows, rejectedNonWords }
 }
 
 function groupIntoClusters(
@@ -294,7 +314,7 @@ function groupIntoClusters(
   const clusters = new Map<string, Cluster>()
   for (const t of tokens) {
     const key = normalizeSurfaceForm(t.surfaceForm)
-    if (!key) continue
+    if (!key || !isProposableClusterKey(key)) continue
     const existing = clusters.get(key)
     if (existing) {
       existing.tokenIds.push(t.id)

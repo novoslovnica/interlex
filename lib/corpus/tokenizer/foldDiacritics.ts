@@ -21,7 +21,7 @@ const FOLD_MAP: Record<string, string> = {
     'ę': 'e', 'Ę': 'E',
     'ǫ': 'u', 'Ǫ': 'U',
     'ų': 'u', 'Ų': 'U',
-    // мягкие согласные
+    // мягкие согласные (перед гласной заднего ряда см. SOFT_WITH_J ниже)
     'ľ': 'l', 'Ľ': 'L',
     'ť': 't', 'Ť': 'T',
     'ď': 'd', 'Ď': 'D',
@@ -59,15 +59,51 @@ const FOLD_MAP: Record<string, string> = {
     'ъ': '', 'ь': '',
 };
 
+// Мягкая согласная перед гласной заднего ряда в упрощённом письме пишется
+// через j: движок порождает "stolěťa", а в корпусе это "stoletja" (915
+// вхождений одной только этой формы), "końa" — это "konja". Когда ť
+// сворачивалась в голое t, получалось "stoleta", и форма не находилась.
+// Перед e/i/ě/ę j не пишется — та же граница, что у normalizeSoftConsonants
+// в lib/isv.ts. ć и đ сюда не входят: в упрощённом письме это č и dž, без j.
+const SOFT_WITH_J: Record<string, string> = {
+    'ľ': 'lj', 'Ľ': 'Lj',
+    'ť': 'tj', 'Ť': 'Tj',
+    'ď': 'dj', 'Ď': 'Dj',
+    'ň': 'nj', 'Ň': 'Nj',
+    'ń': 'nj', 'Ń': 'Nj',
+    'ś': 'sj', 'Ś': 'Sj',
+    'ź': 'zj', 'Ź': 'Zj',
+};
+
+function foldChar(ch: string): string {
+    if (ch.charCodeAt(0) < 128) return ch;
+    const mapped = FOLD_MAP[ch];
+    if (mapped !== undefined) return mapped;
+    // Тоновые знаки, которых нет в таблице (ò, è, ȁ, ȍ...), приходят из
+    // текстов с разметкой ударения: "tògda" — 799 вхождений, "kògda" — 562.
+    // Снимается любой комбинирующий знак, но только у латинской буквы:
+    // у кириллической "й" бреве — часть самой буквы.
+    const decomposed = ch.normalize('NFD');
+    if (decomposed.length > 1 && /[A-Za-z]/.test(decomposed[0])) return decomposed[0];
+    return ch;
+}
+
 /**
  * Сворачивает слово к бездиакритическому виду. Идемпотентна: применение к
  * уже свёрнутой строке ничего не меняет.
  */
 export function foldDiacritics(text: string): string {
+    // NFC: гравис может прийти и прекомпозированным "ò", и парой "o" + U+0300.
+    const chars = [...text.normalize('NFC')];
     let out = '';
-    for (const ch of text) {
-        const folded = FOLD_MAP[ch];
-        out += folded === undefined ? ch : folded;
+    for (let i = 0; i < chars.length; i++) {
+        const withJ = SOFT_WITH_J[chars[i]];
+        if (withJ !== undefined) {
+            const next = i + 1 < chars.length ? foldChar(chars[i + 1]).toLowerCase() : '';
+            out += /^[aouy]/.test(next) ? withJ : withJ[0];
+            continue;
+        }
+        out += foldChar(chars[i]);
     }
     return out;
 }
