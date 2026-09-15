@@ -25,16 +25,23 @@ async function main() {
     const analyzer = await createDbAnalyzer()
     const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
 
+    // Порядок по slug стабилен, поэтому прерванный прогон продолжается с offset:
+    // на корпусе из 3 509 документов полный проход идёт часами.
+    //   npx tsx scripts/db/2026-07-28-retokenize-all-corpus-documents.ts [offset]
+    const offset = process.argv[2] ? parseInt(process.argv[2], 10) : 0
     const documents = await prismaCorpus.corpusDocument.findMany({
         select: { slug: true, title: true, rawText: true, author: true, language: true, genre: true, externalId: true, sourceUrl: true },
+        orderBy: { slug: "asc" },
+        skip: offset,
     })
 
-    console.log(`Документов к перетокенизации: ${documents.length}`)
+    console.log(`Документов к перетокенизации: ${documents.length} (с offset ${offset})`)
 
     let done = 0
     let failed = 0
 
     for (const doc of documents) {
+        console.log(`# ${offset + done + failed}`)
         try {
             const result = await upsertCorpusDocument(
                 {
