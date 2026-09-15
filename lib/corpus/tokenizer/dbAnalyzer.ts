@@ -346,7 +346,14 @@ export class DbAnalyzer {
                 for (const form of forms) {
                     const lowered = form.surfaceForm.toLowerCase();
                     if (normalizedVariants.has(this.normalizeForm(lowered))) {
-                        matches.push({ word, form, exact: exactVariants.has(lowered) });
+                        // Буквальный приоритет — только основным современным формам.
+                        // Аорист/имперфект и распознавательные варианты находят
+                        // лексему, но не перебивают другие: иначе аорист "vi" от viti
+                        // обыгрывал частотное "vy", а голое "naj" от "najesti se" —
+                        // служебное слово.
+                        const literal = exactVariants.has(lowered) && !form.variant
+                            && form.feats.tense !== 'aor' && form.feats.tense !== 'impf';
+                        matches.push({ word, form, exact: literal });
                         matched = true;
                     }
                 }

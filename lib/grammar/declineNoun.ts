@@ -334,6 +334,22 @@ export function asNStemIfMisfiled(dbItem: EnhancedDbItem): EnhancedDbItem {
     return dbItem;
 }
 
+const SOFT_TO_PLAIN_BEFORE_J: Record<string, string> = {
+    'ť': 't', 'ď': 'd', 'ľ': 'l', 'ň': 'n', 'ń': 'n', 'ś': 's', 'ź': 'z', 'ć': 'č', 'đ': 'dž',
+};
+
+/**
+ * Творительный ед. i-основ на -ju рядом с -ejų из ending_allophones: pomočju
+ * (545 в корпусе), čestju (304), nočju (100). Мягкая согласная перед j
+ * пишется простой буквой (čęsť -> čęstju), ć — как č (pomoć -> pomočju).
+ */
+export function declineIStemInstrumentalVariant(dbItem: EnhancedDbItem): string | null {
+    if (identifyStemTypeByDb(dbItem) !== 'i_basis') return null;
+    const stem = dbItem.interslavic;
+    const plain = SOFT_TO_PLAIN_BEFORE_J[stem.slice(-1)];
+    return (plain ? stem.slice(0, -1) + plain : stem) + 'ju';
+}
+
 export function declineModernPluralVariants(dbItem: EnhancedDbItem, flavor: string = 'CORE'): { targetCase: Case; form: string }[] {
     const stemType = identifyStemTypeByDb(dbItem);
     const variants = MODERN_PLURAL_VARIANTS[stemType];

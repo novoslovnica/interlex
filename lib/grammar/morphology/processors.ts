@@ -13,7 +13,7 @@ import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteTon
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
-import { declineWordAutomatically, declineModernPluralVariants, asNStemIfMisfiled } from '../declineNoun';
+import { declineWordAutomatically, declineModernPluralVariants, declineIStemInstrumentalVariant, asNStemIfMisfiled } from '../declineNoun';
 import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
     conjugateFullVerb,
@@ -88,38 +88,41 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         }
     }
 
-    // Современные окончания множественного числа (-ov/-am/-ami/-ah) — варианты
-    // для распознавания рядом с основными, см. declineModernPluralVariants.
+    // Дальше — формы для распознавания рядом с основными. Все помечены variant:
+    // находят лексему, но не перебивают другие лексемы как буквальные совпадения.
+    const numberFeat = (num: NumberType) =>
+        (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber;
+    const pushVariant = (surfaceForm: string, cas: GrammaticalCase, number: GrammaticalNumber) => {
+        results.push({ surfaceForm, feats: { case: cas, number, gender: genderFeat }, variant: true });
+    };
+
+    // Современные окончания множественного числа (-ov/-am/-ami/-ah), см. declineModernPluralVariants.
     for (const { targetCase, form } of declineModernPluralVariants(dbItem, word.flavor)) {
-        results.push({
-            surfaceForm: form,
-            feats: { case: targetCase as GrammaticalCase, number: 'pl' as GrammaticalNumber, gender: genderFeat },
-        });
+        pushVariant(form, targetCase as GrammaticalCase, 'pl' as GrammaticalNumber);
     }
 
-    // s-основы (slovo/sloves-, nebo/nebes-) в современном ISV в основном
-    // склоняются без наращения, как обычный средний род: в корпусе slov (2 747),
-    // slovami, slovu, slovom. Регулярные формы — варианты рядом с sloves-.
-    // u-основы (syn, dom) — то же: в корпусе syna (189), synom, domu, doma, а
-    // не только synu/synovi. Формы u-склонения остаются, o-склонение добавляется.
-    const isSStem = String(dbItem.protoStemClass).toLowerCase() === 'consonant'
-        && String(dbItem.stemExtension).toLowerCase() === 'es';
-    const isUStem = String(dbItem.protoStemClass).toLowerCase() === 'u';
-    if (isSStem || isUStem) {
-        const regularItem: EnhancedDbItem = { ...dbItem, protoStemClass: 'o', stemExtension: undefined };
+    // Творительный ед. i-основ на -ju (pomočju, čestju), см. declineIStemInstrumentalVariant.
+    const iStemInstrumental = declineIStemInstrumentalVariant(dbItem);
+    if (iStemInstrumental) pushVariant(iStemInstrumental, 'ins' as GrammaticalCase, 'sg' as GrammaticalNumber);
+
+    // Склонение по соседнему классу основы, которое живёт в корпусе:
+    // - s-основы (slovo/sloves-, nebo/nebes-) без наращения: slov (2 747), slovami, slovu;
+    // - u-основы (syn, dom) как o-основы: syna (189), synom, domu, doma;
+    // - мягкие основы на c с твёрдыми окончаниями: kirilicy (99) рядом с kirilicę.
+    // Формы собственного класса остаются, эти добавляются.
+    const psc = String(dbItem.protoStemClass).toLowerCase();
+    const isSStem = psc === 'consonant' && String(dbItem.stemExtension).toLowerCase() === 'es';
+    const isUStem = psc === 'u';
+    const isSoftCStem = (psc === 'jo' || psc === 'jā') && dbItem.interslavic.endsWith('c');
+    if (isSStem || isUStem || isSoftCStem) {
+        const regularItem: EnhancedDbItem = { ...dbItem, protoStemClass: psc === 'jā' ? 'ā' : 'o', stemExtension: undefined };
         for (const num of numbers) {
             for (const cas of cases) {
-                results.push({
-                    surfaceForm: declineWordAutomatically({ dbItem: regularItem, targetCase: cas, targetNumber: num, flavor: word.flavor }),
-                    feats: { case: cas, number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber, gender: genderFeat },
-                });
+                pushVariant(declineWordAutomatically({ dbItem: regularItem, targetCase: cas, targetNumber: num, flavor: word.flavor }), cas, numberFeat(num));
             }
         }
         for (const { targetCase, form } of declineModernPluralVariants(regularItem, word.flavor)) {
-            results.push({
-                surfaceForm: form,
-                feats: { case: targetCase as GrammaticalCase, number: 'pl' as GrammaticalNumber, gender: genderFeat },
-            });
+            pushVariant(form, targetCase as GrammaticalCase, 'pl' as GrammaticalNumber);
         }
     }
 
@@ -440,8 +443,8 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         if (!head.endsWith('mo') || head.includes(' ')) continue;
         const shortForm = head.slice(0, -1) + tailSuffix;
         shortFirstPlural.push(
-            { surfaceForm: shortForm, feats: { ...f } },
-            { surfaceForm: shortForm, feats: { ...f, number: 'sg' as GrammaticalNumber } },
+            { surfaceForm: shortForm, feats: { ...f }, variant: true },
+            { surfaceForm: shortForm, feats: { ...f, number: 'sg' as GrammaticalNumber }, variant: true },
         );
     }
     const finalResults = [...withoutPassives, ...shortFirstPlural];
@@ -453,7 +456,7 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     if (!tailSuffix) return finalResults;
     const withoutTail = finalResults
         .filter((form) => form.surfaceForm.endsWith(tailSuffix))
-        .map((form) => ({ ...form, surfaceForm: form.surfaceForm.slice(0, -tailSuffix.length) }));
+        .map((form) => ({ ...form, surfaceForm: form.surfaceForm.slice(0, -tailSuffix.length), variant: true }));
     return [...finalResults, ...withoutTail];
 }
 
@@ -477,12 +480,21 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
     const paradigm = (word.paradigm as AccentParadigm) || AccentParadigm.A;
     const protoStemClass = (word.protoStemClass as ProtoStemClass) || ProtoStemClass.O_SHORT;
 
+    // Каноническая словарная форма: value часто без диакритики ("nasy"), а стем
+    // с ней ("naš") — тогда форма собирается из стема и окончания value.
+    const adjLemma = (() => {
+        const value = word.isv.toLowerCase().trim();
+        const stem = (word.stem ?? '').toLowerCase().trim();
+        const withEnding = stem + value.slice(-1);
+        return stem && withEnding !== value && canonicalPronounLemma(value, withEnding) === withEnding ? withEnding : word.isv;
+    })();
+
     // Детекшн типа прилагательного — единая функция, см. lib/grammar/adjective/index.ts
-    const adjClass: AdjectiveTypeClass = classifyAdjectiveType(word.isv);
+    const adjClass: AdjectiveTypeClass = classifyAdjectiveType(adjLemma);
 
     const dbItem: EnhancedAdjDbItem = {
-        interslavic: word.isv,
-        protoSlavic: word.isv,
+        interslavic: adjLemma,
+        protoSlavic: adjLemma,
         paradigm,
         protoStemClass,
         adjClass,
@@ -521,6 +533,31 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
                             gender: gen,
                             degree: deg // Напрямую пишем 'pos' | 'comp' | 'sup' в аналитический атлас
                         }
+                    });
+                }
+            }
+        }
+    }
+
+    // Прилагательные с основой на шипящую, c или j (naš, vaš, pěšy) в корпусе
+    // склоняются мягко: našego (303), našej (419), našem. В словаре у таких основ
+    // часто нет признака jo, и они шли по твёрдому склонению — мягкие формы
+    // добавляются вариантами, твёрдые остаются.
+    const adjBase = adjLemma.slice(0, -1);
+    if (/(?:[čšžcjćđľťďńśź]|dž|šč)$/.test(adjBase) && protoStemClass !== ProtoStemClass.JO_SHORT) {
+        const softItem: EnhancedAdjDbItem = { ...dbItem, protoStemClass: ProtoStemClass.JO_SHORT, interslavic: adjBase + 'i' };
+        for (const num of numbers) {
+            for (const gen of genders) {
+                for (const cas of cases) {
+                    results.push({
+                        surfaceForm: generateAdjectiveForm({ dbItem: softItem, targetCase: cas, targetNumber: num, targetGender: gen }),
+                        feats: {
+                            case: cas,
+                            number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber,
+                            gender: gen,
+                            degree: 'pos',
+                        },
+                        variant: true,
                     });
                 }
             }

@@ -64,6 +64,30 @@ describe("short first person plural", () => {
     })
 })
 
+describe("i-stem instrumental", () => {
+    it("recognises -ju next to -ejų, with the soft consonant written plain", () => {
+        expect(forms({ isv: "cest", pos: "NOUN", stem: "čęsť", protoStemClass: "i", gender: "Fem" }).has("čęstju")).toBe(true)
+        expect(forms({ isv: "pomoc", pos: "NOUN", stem: "pomoć", protoStemClass: "i", gender: "Fem" }).has("pomočju")).toBe(true)
+    })
+})
+
+describe("soft stems ending in c", () => {
+    it("also take the hard endings writers use after c", () => {
+        const f = forms({ isv: "kirilica", pos: "NOUN", stem: "kirilic", protoStemClass: "jā", gender: "Fem" })
+        expect(f.has("kirilicy")).toBe(true)
+        expect(f.has("kirilicę")).toBe(true)
+    })
+})
+
+describe("adjectives with a stem in a palatal", () => {
+    it("decline softly next to the hard forms, from the canonical stem", () => {
+        const f = forms({ isv: "nasy", pos: "ADJ", stem: "naš" })
+        for (const form of ["našy", "našego", "našej", "našem"]) {
+            expect(f.has(form), form).toBe(true)
+        }
+    })
+})
+
 describe("u-stems", () => {
     it("also decline like o-stems", () => {
         const f = forms({ isv: "syn", pos: "NOUN", stem: "syn", protoStemClass: "u", gender: "Masc" })

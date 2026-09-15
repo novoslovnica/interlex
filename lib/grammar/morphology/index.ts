@@ -13,6 +13,12 @@ export interface GeneratedForm {
     surfaceForm: string;
     accentedForm?: string;
     feats: MorphoGrammarFeats;
+    /**
+     * Форма добавлена для распознавания рядом с основной (без возвратного хвоста,
+     * краткое 1 л. мн., современное окончание, упрощённое написание). Такая форма
+     * находит лексему, но не получает приоритета буквального совпадения.
+     */
+    variant?: boolean;
 }
 
 export interface EngineWordInput {
