@@ -1,4 +1,5 @@
 import { prismaCorpus, prismaData } from "@/lib/prisma"
+import { FOREIGN_CONTEXT_NOTE } from "./clusterSignals"
 import {
   buildEndingReverseIndex,
   buildHypothesesForSurfaceForm,
@@ -214,15 +215,17 @@ async function syncUnreviewedStatuses(pendingMinOccurrences: number): Promise<{
   restoredToPending: number
   movedToDeferred: number
 }> {
-  const restored = await prismaCorpus.corpusCandidateProposal.updateMany({
-    where: { status: "deferred", occurrenceCount: { gte: pendingMinOccurrences } },
-    data: { status: "pending" },
-  })
+  // Отложенные из-за иностранного контекста (см. clusterSignals.ts) частота в
+  // работу не возвращает — только пропажа самого признака при пересчёте.
+  const restored = await prismaCorpus.$executeRaw`
+    UPDATE "CorpusCandidateProposal" SET status = 'pending'
+    WHERE status = 'deferred' AND occurrenceCount >= ${pendingMinOccurrences}
+      AND (resolutionNote IS NULL OR resolutionNote <> ${FOREIGN_CONTEXT_NOTE})`
   const deferred = await prismaCorpus.corpusCandidateProposal.updateMany({
     where: { status: "pending", occurrenceCount: { lt: pendingMinOccurrences } },
     data: { status: "deferred" },
   })
-  return { restoredToPending: restored.count, movedToDeferred: deferred.count }
+  return { restoredToPending: restored, movedToDeferred: deferred.count }
 }
 
 /**

@@ -77,6 +77,11 @@ export type CorpusDependency = Prisma.CorpusDependencyModel
  */
 export type CorpusCandidateProposal = Prisma.CorpusCandidateProposalModel
 /**
+ * Model CorpusClusterSignal
+ * 
+ */
+export type CorpusClusterSignal = Prisma.CorpusClusterSignalModel
+/**
  * Model VerbGovernment
  * 
  */

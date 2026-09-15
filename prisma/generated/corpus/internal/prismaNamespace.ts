@@ -391,6 +391,7 @@ export const ModelName = {
   CorpusTokenCandidate: 'CorpusTokenCandidate',
   CorpusDependency: 'CorpusDependency',
   CorpusCandidateProposal: 'CorpusCandidateProposal',
+  CorpusClusterSignal: 'CorpusClusterSignal',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
   CorpusNgram: 'CorpusNgram',
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusTokenCandidate" | "corpusDependency" | "corpusCandidateProposal" | "verbGovernment" | "wordFormPriority" | "corpusNgram" | "corpusConfig"
+    modelProps: "corpusDocument" | "corpusSegment" | "corpusSentence" | "corpusToken" | "corpusTokenCandidate" | "corpusDependency" | "corpusCandidateProposal" | "corpusClusterSignal" | "verbGovernment" | "wordFormPriority" | "corpusNgram" | "corpusConfig"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -932,6 +933,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CorpusClusterSignal: {
+      payload: Prisma.$CorpusClusterSignalPayload<ExtArgs>
+      fields: Prisma.CorpusClusterSignalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CorpusClusterSignalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CorpusClusterSignalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        findFirst: {
+          args: Prisma.CorpusClusterSignalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CorpusClusterSignalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        findMany: {
+          args: Prisma.CorpusClusterSignalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>[]
+        }
+        create: {
+          args: Prisma.CorpusClusterSignalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        createMany: {
+          args: Prisma.CorpusClusterSignalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CorpusClusterSignalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>[]
+        }
+        delete: {
+          args: Prisma.CorpusClusterSignalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        update: {
+          args: Prisma.CorpusClusterSignalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        deleteMany: {
+          args: Prisma.CorpusClusterSignalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CorpusClusterSignalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CorpusClusterSignalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>[]
+        }
+        upsert: {
+          args: Prisma.CorpusClusterSignalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CorpusClusterSignalPayload>
+        }
+        aggregate: {
+          args: Prisma.CorpusClusterSignalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCorpusClusterSignal>
+        }
+        groupBy: {
+          args: Prisma.CorpusClusterSignalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusClusterSignalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CorpusClusterSignalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CorpusClusterSignalCountAggregateOutputType> | number
+        }
+      }
+    }
     VerbGovernment: {
       payload: Prisma.$VerbGovernmentPayload<ExtArgs>
       fields: Prisma.VerbGovernmentFieldRefs
@@ -1380,6 +1455,19 @@ export const CorpusCandidateProposalScalarFieldEnum = {
 export type CorpusCandidateProposalScalarFieldEnum = (typeof CorpusCandidateProposalScalarFieldEnum)[keyof typeof CorpusCandidateProposalScalarFieldEnum]
 
 
+export const CorpusClusterSignalScalarFieldEnum = {
+  clusterKey: 'clusterKey',
+  occurrenceCount: 'occurrenceCount',
+  documentCount: 'documentCount',
+  isvContextShare: 'isvContextShare',
+  inflectedSiblings: 'inflectedSiblings',
+  signal: 'signal',
+  computedAt: 'computedAt'
+} as const
+
+export type CorpusClusterSignalScalarFieldEnum = (typeof CorpusClusterSignalScalarFieldEnum)[keyof typeof CorpusClusterSignalScalarFieldEnum]
+
+
 export const VerbGovernmentScalarFieldEnum = {
   id: 'id',
   verbLemma: 'verbLemma',
@@ -1659,6 +1747,7 @@ export type GlobalOmitConfig = {
   corpusTokenCandidate?: Prisma.CorpusTokenCandidateOmit
   corpusDependency?: Prisma.CorpusDependencyOmit
   corpusCandidateProposal?: Prisma.CorpusCandidateProposalOmit
+  corpusClusterSignal?: Prisma.CorpusClusterSignalOmit
   verbGovernment?: Prisma.VerbGovernmentOmit
   wordFormPriority?: Prisma.WordFormPriorityOmit
   corpusNgram?: Prisma.CorpusNgramOmit

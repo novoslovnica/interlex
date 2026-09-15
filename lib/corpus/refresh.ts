@@ -242,6 +242,12 @@ export async function refreshCorpusForChangedLexemes(options: {
     : { clustersProcessed: 0 }
   log(`Пересобрано предложений по ${generated.clustersProcessed} кластерам`)
 
+  // Признаки иностранного контекста и словоизменения зависят от всего корпуса,
+  // а не только от затронутых слов, поэтому пересчитываются целиком.
+  const { computeClusterSignals } = await import("@/lib/corpus/candidates/clusterSignals")
+  const signals = await computeClusterSignals()
+  log(`Признаки кластеров: ${signals.functionWords} служебных английских (отклонено ${signals.rejected}), ${signals.foreignContext} в иностранном контексте (отложено ${signals.deferred}, возвращено ${signals.restored})`)
+
   if (!options.dryWatermark && !options.deferWatermark) await writeWatermark(startedAt)
 
   return {

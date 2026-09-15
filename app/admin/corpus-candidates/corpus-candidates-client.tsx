@@ -22,9 +22,21 @@ export interface HypothesisDTO {
 
 export type QueueKey = "words" | "endings" | "deferred"
 
+export interface ClusterSignalDTO {
+  documentCount: number
+  /** Средняя доля распознанных межславянских слов в предложениях с этим словом. */
+  isvContextShare: number | null
+  /** Кластеры той же основы с межславянскими окончаниями (googla, diskordu). */
+  inflectedSiblings: string[]
+  signal: string | null
+}
+
 export interface ClusterDTO {
   clusterKey: string
   occurrenceCount: number
+  /** Почему кластер отложен или отклонён автоматически, если так. */
+  resolutionNote: string | null
+  signal: ClusterSignalDTO | null
   hypotheses: HypothesisDTO[]
 }
 
@@ -225,6 +237,27 @@ function ClusterCard({ cluster }: { cluster: ClusterDTO }) {
           )}
         </div>
       </div>
+      {(cluster.signal || cluster.resolutionNote) && (
+        <div className="text-xs text-muted-foreground space-y-0.5">
+          {cluster.signal && (
+            <div>
+              В {cluster.signal.documentCount} документах
+              {cluster.signal.isvContextShare !== null && (
+                <> · доля межславянских слов в этих предложениях {Math.round(cluster.signal.isvContextShare * 100)}%</>
+              )}
+              {cluster.signal.documentCount <= 10 && cluster.occurrenceCount >= 100 && (
+                <span className="text-amber-600 dark:text-amber-500"> · почти всё в немногих документах — возможно, имя или ник</span>
+              )}
+            </div>
+          )}
+          {cluster.signal && cluster.signal.inflectedSiblings.length > 0 && (
+            <div className="text-emerald-700 dark:text-emerald-400">
+              Та же основа с межславянскими окончаниями: {cluster.signal.inflectedSiblings.join(", ")} — слово склоняется
+            </div>
+          )}
+          {cluster.resolutionNote && <div>Причина: {cluster.resolutionNote}</div>}
+        </div>
+      )}
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {cluster.hypotheses.map((h) => (
           <HypothesisCard key={h.id} h={h} />

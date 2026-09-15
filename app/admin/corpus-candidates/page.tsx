@@ -117,9 +117,28 @@ export default async function CorpusCandidatesPage({
   // это до одобрения, а не узнавать о дубле на промоуте.
   const existingByForm = await findExistingLexemesMany(proposals.map((p) => p.reconstructedForm))
 
+  // Признаки кластера (clusterSignals.ts): распределённость, контекст,
+  // словоизменение — помогают отличить заимствование от цитаты и ника.
+  const signalRows = clusterKeys.length > 0
+    ? await prismaCorpus.corpusClusterSignal.findMany({ where: { clusterKey: { in: clusterKeys } } })
+    : []
+  const signalByCluster = new Map(signalRows.map((s) => [s.clusterKey, s]))
+
   const clusters: ClusterDTO[] = clusterRows.map((c) => ({
     clusterKey: c.clusterKey,
     occurrenceCount: c.occurrenceCount,
+    resolutionNote: proposalsByCluster.get(c.clusterKey)?.find((p) => p.resolutionNote)?.resolutionNote ?? null,
+    signal: (() => {
+      const s = signalByCluster.get(c.clusterKey)
+      return s
+        ? {
+            documentCount: s.documentCount,
+            isvContextShare: s.isvContextShare,
+            inflectedSiblings: s.inflectedSiblings as string[],
+            signal: s.signal,
+          }
+        : null
+    })(),
     hypotheses: (proposalsByCluster.get(c.clusterKey) ?? []).map((p) => ({
       id: p.id,
       ruleSource: p.ruleSource,

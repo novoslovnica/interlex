@@ -225,6 +225,23 @@ model CorpusCandidateProposal {
   @@index([status, occurrenceCount])
 }
 
+// Признаки кластера очереди кандидатов, по одному ряду на clusterKey (см.
+// lib/corpus/candidates/clusterSignals.ts): насколько межславянский контекст,
+// во скольких документах слово встречается, есть ли та же основа с
+// межславянскими окончаниями. Производная таблица — пересчитывается целиком,
+// применяется миграцией scripts/db/2026-09-15-add-corpus-cluster-signals.ts.
+model CorpusClusterSignal {
+  clusterKey        String   @id
+  occurrenceCount   Int
+  documentCount     Int
+  isvContextShare   Float?   // средняя доля распознанных слов в предложениях с этим словом
+  inflectedSiblings Json     // другие кластеры той же основы с межславянскими окончаниями
+  signal            String?  // 'foreign_function_word' | 'foreign_context' | null
+  computedAt        DateTime @default(now())
+
+  @@index([signal])
+}
+
 // Управление падежом: какой падеж требует глагол (или частица-возвратность
 // sę меняет управление, ср. "bojati sę" + gen). В отличие от предложного
 // управления (lib/corpus/syntax/government.ts, PREPOSITION_GOVERNMENT —

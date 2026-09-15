@@ -58,6 +58,7 @@ export const ModelName = {
   CorpusTokenCandidate: 'CorpusTokenCandidate',
   CorpusDependency: 'CorpusDependency',
   CorpusCandidateProposal: 'CorpusCandidateProposal',
+  CorpusClusterSignal: 'CorpusClusterSignal',
   VerbGovernment: 'VerbGovernment',
   WordFormPriority: 'WordFormPriority',
   CorpusNgram: 'CorpusNgram',
@@ -191,6 +192,19 @@ export const CorpusCandidateProposalScalarFieldEnum = {
 } as const
 
 export type CorpusCandidateProposalScalarFieldEnum = (typeof CorpusCandidateProposalScalarFieldEnum)[keyof typeof CorpusCandidateProposalScalarFieldEnum]
+
+
+export const CorpusClusterSignalScalarFieldEnum = {
+  clusterKey: 'clusterKey',
+  occurrenceCount: 'occurrenceCount',
+  documentCount: 'documentCount',
+  isvContextShare: 'isvContextShare',
+  inflectedSiblings: 'inflectedSiblings',
+  signal: 'signal',
+  computedAt: 'computedAt'
+} as const
+
+export type CorpusClusterSignalScalarFieldEnum = (typeof CorpusClusterSignalScalarFieldEnum)[keyof typeof CorpusClusterSignalScalarFieldEnum]
 
 
 export const VerbGovernmentScalarFieldEnum = {
