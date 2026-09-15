@@ -304,7 +304,10 @@ export class DbAnalyzer {
         // "ony" оный / "on" он). Если словоформа совпала с одной лексемой
         // буквально, а с другой — только после свёртки, буквальное совпадение
         // должно побеждать независимо от частотности.
-        const exactVariants = new Set(cleanVariants.map((v) => v.toLowerCase()));
+        // Буквально — только само написание из текста (cleanVariants[0]), а не
+        // расширенные варианты: иначе "mi" (дат. от ja) и "my" (мы) были бы
+        // одинаково «буквальными» для токена "mi", как и "sut"/"sųt".
+        const exactVariants = new Set([cleanVariants[0].toLowerCase()]);
         const matches: Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean }> = [];
         for (const word of words) {
             if (!word.isv || !word.pos) continue;

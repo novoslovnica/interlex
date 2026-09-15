@@ -18,6 +18,24 @@ describe("expandSpellingVariants", () => {
         expect(expandSpellingVariants("sųt")).toEqual(["sųt"]);
     });
 
+    it("tries y for an i written after a consonant", () => {
+        expect(expandSpellingVariants("bil")).toEqual(["bil", "byl"]);
+        // "drugih" also has a u, so ų-variants are expected alongside.
+        expect(expandSpellingVariants("drugih")).toContain("drugyh");
+    });
+
+    it("keeps i as i at the start of a word, after a vowel and after j", () => {
+        expect(expandSpellingVariants("ime")).toEqual(["ime"]);
+        expect(expandSpellingVariants("moi")).toEqual(["moi"]);
+        expect(expandSpellingVariants("jih")).toEqual(["jih"]);
+    });
+
+    it("caps the number of variants for long words", () => {
+        const result = expandSpellingVariants("inicijativnimi");
+        expect(result[0]).toBe("inicijativnimi");
+        expect(result.length).toBeLessThanOrEqual(64);
+    });
+
     it("produces the full cartesian product for multiple occurrences", () => {
         // "uput" has u at two positions -> 2^2 = 4 variants.
         const result = expandSpellingVariants("uput");

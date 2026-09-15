@@ -47,6 +47,32 @@ describe("numerals 2-4", () => {
     })
 })
 
+describe("verbs with a reflexive tail", () => {
+    it("also yield the forms without the separately written se", () => {
+        const f = forms({ isv: "pojaviti se", pos: "VERB", stem: "pojavi", knownPrepositions: [] })
+        for (const form of ["pojavil se", "pojavil", "pojavila", "pojaviti"]) {
+            expect(f.has(form), form).toBe(true)
+        }
+    })
+})
+
+describe("short first person plural", () => {
+    it("adds -m next to -mo, tagged both plural and singular", () => {
+        const all = generateWordForms({ id: 1, slug: "test", flavor: "CORE", isv: "mogti", pos: "AUX", stem: "mogti" }, true)
+        expect(all.some((f) => f.surfaceForm === "možemo")).toBe(true)
+        expect(all.filter((f) => f.surfaceForm === "možem").map((f) => f.feats.number).sort()).toEqual(["pl", "sg"])
+    })
+})
+
+describe("u-stems", () => {
+    it("also decline like o-stems", () => {
+        const f = forms({ isv: "syn", pos: "NOUN", stem: "syn", protoStemClass: "u", gender: "Masc" })
+        for (const form of ["syna", "synom", "synu"]) {
+            expect(f.has(form), form).toBe(true)
+        }
+    })
+})
+
 describe("verb lexemes whose citation form is not an infinitive", () => {
     it("are left invariant instead of being cut into letter fragments", () => {
         // "je, jest" is a VERB lexeme holding forms of byti.

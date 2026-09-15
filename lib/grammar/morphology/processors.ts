@@ -100,9 +100,12 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
     // s-основы (slovo/sloves-, nebo/nebes-) в современном ISV в основном
     // склоняются без наращения, как обычный средний род: в корпусе slov (2 747),
     // slovami, slovu, slovom. Регулярные формы — варианты рядом с sloves-.
+    // u-основы (syn, dom) — то же: в корпусе syna (189), synom, domu, doma, а
+    // не только synu/synovi. Формы u-склонения остаются, o-склонение добавляется.
     const isSStem = String(dbItem.protoStemClass).toLowerCase() === 'consonant'
         && String(dbItem.stemExtension).toLowerCase() === 'es';
-    if (isSStem) {
+    const isUStem = String(dbItem.protoStemClass).toLowerCase() === 'u';
+    if (isSStem || isUStem) {
         const regularItem: EnhancedDbItem = { ...dbItem, protoStemClass: 'o', stemExtension: undefined };
         for (const num of numbers) {
             for (const cas of cases) {
@@ -418,11 +421,40 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     // существительного imę (imena, imenom). iměti/byti/hotěti/věděti заведены и
     // как VERB — для них то же самое.
     const NO_PASSIVE_PARTICIPLES = new Set(['iměti', 'imeti', 'byti', 'hotěti', 'hoteti', 'htěti', 'hteti', 'věděti', 'vedeti']);
-    if (word.pos?.toUpperCase() === 'AUX' || NO_PASSIVE_PARTICIPLES.has(verbModel.infinitive)) {
-        return results.filter((form) => !(form.feats.verbForm === 'part' && form.feats.voice === 'pass'));
-    }
+    const withoutPassives = word.pos?.toUpperCase() === 'AUX' || NO_PASSIVE_PARTICIPLES.has(verbModel.infinitive)
+        ? results.filter((form) => !(form.feats.verbForm === 'part' && form.feats.voice === 'pass'))
+        : results;
 
-    return results;
+    // Н. Краткое 1 л. мн. без -o: možem (345 в корпусе), budem (174), hčem (162)
+    // рядом с možemo/budemo/hčemo. Та же форма бывает и 1 л. ед. (idem, pišem),
+    // поэтому она пишется с обоими признаками — выбор остаётся за контекстом.
+    // Форма на -mo не заменяется, краткая добавляется рядом.
+    const accentMarkChars = /[̀́̂̑]/g;
+    const shortFirstPlural: GeneratedForm[] = [];
+    for (const form of withoutPassives) {
+        const f = form.feats;
+        if (f.verbForm !== 'fin' || f.mood !== 'ind' || f.person !== '1' || f.number !== 'pl') continue;
+        if (f.tense !== 'pres' && f.tense !== 'fut') continue;
+        const bare = form.surfaceForm.replace(accentMarkChars, '');
+        const head = tailSuffix && bare.endsWith(tailSuffix) ? bare.slice(0, -tailSuffix.length) : bare;
+        if (!head.endsWith('mo') || head.includes(' ')) continue;
+        const shortForm = head.slice(0, -1) + tailSuffix;
+        shortFirstPlural.push(
+            { surfaceForm: shortForm, feats: { ...f } },
+            { surfaceForm: shortForm, feats: { ...f, number: 'sg' as GrammaticalNumber } },
+        );
+    }
+    const finalResults = [...withoutPassives, ...shortFirstPlural];
+
+    // О. Возвратный или предложный хвост в тексте — отдельный токен: "pojavil se"
+    // приходит как "pojavil" + "se". Все формы были с приклеенным хвостом, и ни
+    // одна не совпадала с токеном (pojavila, pojavil, pojavili, zavisi — сотни
+    // вхождений в очереди). Формы без хвоста добавляются рядом, с хвостом остаются.
+    if (!tailSuffix) return finalResults;
+    const withoutTail = finalResults
+        .filter((form) => form.surfaceForm.endsWith(tailSuffix))
+        .map((form) => ({ ...form, surfaceForm: form.surfaceForm.slice(0, -tailSuffix.length) }));
+    return [...finalResults, ...withoutTail];
 }
 
 /**
