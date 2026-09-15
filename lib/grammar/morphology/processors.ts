@@ -13,7 +13,7 @@ import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteTon
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
-import { declineWordAutomatically } from '../declineNoun';
+import { declineWordAutomatically, declineModernPluralVariants } from '../declineNoun';
 import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
     conjugateFullVerb,
@@ -27,7 +27,7 @@ import {
 } from '../verb';
 import { splitMechanicalVerbTail, appendTailToConjugation } from '../verb/mechanicalTail';
 import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType } from '../adjective';
-import { generatePronounForm, EnhancedPronounDbItem, PronounClass } from '../pronoun';
+import { generatePronounForm, generatePronounForms, classifyPronoun, canonicalPronounLemma, EnhancedPronounDbItem, PronounAnalysis, PronounClass } from '../pronoun';
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 
 /**
@@ -88,6 +88,70 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         }
     }
 
+    // Современные окончания множественного числа (-ov/-am/-ami/-ah) — варианты
+    // для распознавания рядом с основными, см. declineModernPluralVariants.
+    for (const { targetCase, form } of declineModernPluralVariants(dbItem, word.flavor)) {
+        results.push({
+            surfaceForm: form,
+            feats: { case: targetCase as GrammaticalCase, number: 'pl' as GrammaticalNumber, gender: genderFeat },
+        });
+    }
+
+    return results;
+}
+
+/**
+ * Все формы местоимения, кроме личных ja/ty (у них своя ветка в processPronoun,
+ * с энклитиками): местоименные прилагательные, on, sebe, семейство kto/čto и
+ * неизменяемые. Одна клетка может дать несколько написаний (česo/čego,
+ * jemu/njemu) — распознаваться должны все. Используется и для jedin (NUM).
+ */
+function generatePronounParadigm(word: EngineWordInput, lemma: string, analysis: PronounAnalysis): GeneratedForm[] {
+    const paradigm = (word.paradigm as AccentParadigm) || (lemma === 'on' ? AccentParadigm.C : AccentParadigm.A);
+    const dbItem: EnhancedPronounDbItem = {
+        interslavic: lemma,
+        protoSlavic: lemma,
+        paradigm,
+        pronClass: analysis.pronClass,
+        stressPosition: word.stressPosition,
+        morphemes: word.morphemes,
+    };
+    const results: GeneratedForm[] = [];
+    const seen = new Set<string>();
+    const push = (surfaceForm: string, feats: MorphoGrammarFeats) => {
+        const key = `${surfaceForm}|${feats.case}|${feats.number}|${feats.gender}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        results.push({ surfaceForm, feats });
+    };
+    const numberFeat = (num: NumberType) =>
+        (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber;
+    const cases = ALL_CASES as GrammaticalCase[];
+
+    if (analysis.pronClass === 'anaphoric' || analysis.pronClass === 'pronominal') {
+        const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
+        for (const num of ALL_NUMBERS) {
+            for (const gen of genders) {
+                for (const cas of cases) {
+                    for (const form of generatePronounForms({ dbItem, targetCase: cas, targetNumber: num, targetGender: gen })) {
+                        push(form, { case: cas, number: numberFeat(num), gender: gen });
+                    }
+                }
+            }
+        }
+        return results;
+    }
+
+    const numbers = analysis.onlyNumber ? [analysis.onlyNumber] : [NumberType.SINGULAR];
+    for (const num of numbers) {
+        for (const cas of cases) {
+            for (const isEnclitic of [false, true]) {
+                for (const form of generatePronounForms({ dbItem, targetCase: cas, targetNumber: num, isEnclitic })) {
+                    push(form, { case: cas, number: numberFeat(num) });
+                }
+            }
+        }
+    }
     return results;
 }
 
@@ -349,6 +413,14 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
         return [{ surfaceForm: '', feats: {} }];
     }
 
+    // Лемма — каноническое написание (см. canonicalPronounLemma): по value "cto"
+    // классификатор не узнал бы даже čto.
+    const lemma = canonicalPronounLemma(word.isv, word.stem);
+    const analysis = classifyPronoun(lemma);
+    if (analysis.pronClass !== 'personal' || analysis.onlyNumber) {
+        return generatePronounParadigm(word, lemma, analysis);
+    }
+
     const results: GeneratedForm[] = [];
 
     // Местоимения ja/ty/on по умолчанию мобильны (C), остальные — стационарны (A)
@@ -442,6 +514,17 @@ export function processPronoun(word: EngineWordInput): GeneratedForm[] {
 export function processNumeral(word: EngineWordInput): GeneratedForm[] {
     if (!word.isv) {
         return [{ surfaceForm: '', feats: {} }];
+    }
+
+    // jedin/jeden склоняется как местоименное прилагательное (jednogo, jednu,
+    // jednoj), а не по сетке "edin" ниже, которая до словарного "jedin" не
+    // доходила и выдавала "jedinj"/"jedinejų".
+    const numeralLemma = canonicalPronounLemma(word.isv, word.stem);
+    const asPronoun = classifyPronoun(numeralLemma);
+    // Только семейство с кратким именительным: порядковые на -y (pęty) классификатор
+    // тоже считает местоименными, но у них своя, уже рабочая ветка ниже.
+    if (asPronoun.pronClass === 'pronominal' && asPronoun.pronominal?.shortMasc) {
+        return generatePronounParadigm(word, numeralLemma, asPronoun);
     }
 
     const results: GeneratedForm[] = [];

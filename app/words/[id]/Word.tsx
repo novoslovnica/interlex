@@ -16,6 +16,7 @@ import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
 import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
 import {classifyAdjectiveType} from "@/lib/grammar/adjective/index";
+import {canonicalPronounLemma} from "@/lib/grammar/pronoun/index";
 import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
 import {getExternalDictionaryUrl} from "@/lib/dictionary/helper";
 import SynonymGraph from "@/app/words/[id]/SynonymGraph";
@@ -417,7 +418,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                 />
                             ) : isPron ? (
                                 <PronounDeclensionTables
-                                    isv={item.value}
+                                    isv={canonicalPronounLemma(item.value, item.stem)}
                                     paradigm={item.paradigm || 'A'}
                                     properNoun={meta.properNoun}
                                 />

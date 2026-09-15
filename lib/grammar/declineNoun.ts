@@ -257,6 +257,78 @@ export interface FinalUserRequest {
     flavor?: string; // Региональный/диалектный вариант окончаний (напр. NSL) — по умолчанию CORE
 }
 
+const VOWEL_INITIAL = /^[aeiouyěęǫųåėȯ]/;
+const JER_IN_FINAL_SYLLABLE = /^(.*[^\s])[ėȯ]([bcčćdďđfghklľmnňprŕsśštťvzźž]{1,2})$/;
+// Основа уже мягкая сама по себе: мягкая согласная, шипящая, c или j.
+const SOFT_FINAL = /(?:[ťľňďśźćđčšžjc]|dž|šč)$/;
+
+/**
+ * Беглая гласная: ė/ȯ в последнем закрытом слоге основы выпадают перед
+ * гласным окончанием — "članėk" / "članka", "sȯn" / "sna", "dėn" / "dnja".
+ * Только если сама словарная форма кончается на эту основу (нулевое окончание
+ * им. ед.): в "dȯska" ер стоит перед гласной уже в именительном и не выпадает.
+ */
+export function dropFleetingVowel(stem: string, ending: string, citationEnding: string): string {
+    // Окончание им. ед. "j" у мягких основ (konj, afrikanėc) — только знак
+    // мягкости, словарная форма фактически с нулевым окончанием.
+    const zeroCitation = citationEnding === '' || citationEnding === 'j';
+    if (!zeroCitation || !VOWEL_INITIAL.test(ending)) return stem;
+    const match = stem.match(JER_IN_FINAL_SYLLABLE);
+    return match ? match[1] + match[2] : stem;
+}
+
+const SOFT_LETTER_TO_J: Record<string, string> = { 'ť': 'tj', 'ľ': 'lj', 'ň': 'nj', 'ń': 'nj', 'ď': 'dj', 'ś': 'sj', 'ź': 'zj' };
+
+/**
+ * Мягкие (jo/jā) основы хранятся в словаре без j: "pol" у polje, "rosi" у
+ * rosija — 1 143 из 1 709 jo- и 891 из 1 205 jā-существительных. Окончания
+ * мягкого склонения j не содержат, поэтому получались "pole", "rosia",
+ * "rosię" вместо "polje", "rosija", "rosije". Если основа не мягкая сама по
+ * себе, j дописывается. Конечная мягкая согласная (stolěť) пишется через j
+ * ("stolětje"): иначе normalizeSoftConsonants отвердила бы её перед -e/-i и
+ * вышло бы "stolěte".
+ */
+export function softStemWithJ(stem: string, stemType: StemType): string {
+    if (stemType !== 'o_soft' && stemType !== 'a_soft' || !stem) return stem;
+    const softLetter = SOFT_LETTER_TO_J[stem.slice(-1)];
+    if (softLetter) return stem.slice(0, -1) + softLetter;
+    return SOFT_FINAL.test(stem) ? stem : stem + 'j';
+}
+
+// После основы на c/č/š/ž/ć/đ окончание "j" избыточно: "afrikanėcj" -> "afrikanėc".
+export function dropRedundantJ(form: string): string {
+    return form.replace(/([cčšžćđ])j$/, '$1');
+}
+
+function nounStemForCase(dbItem: EnhancedDbItem, stemType: StemType, ending: string, flavor: string): string {
+    const citationEnding = getEnding(stemType, 'singular', 'nom', flavor, dbItem.gender, dbItem.animacy);
+    return softStemWithJ(dropFleetingVowel(dbItem.interslavic, ending, citationEnding), stemType);
+}
+
+// Современные окончания множественного числа мужского и среднего рода
+// (-ov/-ev, -am, -ami, -ah) рядом с теми, что стоят в ending_allophones
+// (нулевое, -om, -y, -ěh). В корпусе живут прежде всего современные: jezykov
+// (2 956), jezykah (2 343), narodov, ljudam, slovami. Как и краткая парадигма
+// глаголов на -ati, это вариант для распознавания, а не замена: основные
+// окончания по-прежнему решаются в /admin/endings. У женского рода a-основ
+// -am/-ami/-ah уже основные.
+const MODERN_PLURAL_VARIANTS: Partial<Record<StemType, Partial<Record<Case, string>>>> = {
+    o_hard: { gen: 'ov', dat: 'am', ins: 'ami', loc: 'ah' },
+    o_soft: { gen: 'ev', dat: 'am', ins: 'ami', loc: 'ah' },
+    a_hard: { dat: 'am', ins: 'ami', loc: 'ah' },
+    a_soft: { dat: 'am', ins: 'ami', loc: 'ah' },
+};
+
+export function declineModernPluralVariants(dbItem: EnhancedDbItem, flavor: string = 'CORE'): { targetCase: Case; form: string }[] {
+    const stemType = identifyStemTypeByDb(dbItem);
+    const variants = MODERN_PLURAL_VARIANTS[stemType];
+    if (!variants) return [];
+    return (Object.entries(variants) as [Case, string][]).map(([targetCase, ending]) => ({
+        targetCase,
+        form: dropRedundantJ(collapseDoubleJ(normalizeSoftConsonants(nounStemForCase(dbItem, stemType, ending, flavor) + ending))),
+    }));
+}
+
 /**
  * Главная точка входа автоматического словаря акцентуированных форм
  */
@@ -268,13 +340,14 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
 
     // 2. Вычисляем позицию ударения: морфемы → stressPosition на лексеме → penultimate
     const ending = getEnding(stemType, targetNumber, targetCase, flavor, dbItem.gender, dbItem.animacy);
-    const fullForm = stemWithExtension(dbItem.interslavic, stemType, targetCase, targetNumber) + ending;
+    const stem = nounStemForCase(dbItem, stemType, ending, flavor);
+    const fullForm = stemWithExtension(stem, stemType, targetCase, targetNumber) + ending;
 
     const effectiveStressPosition = resolveStressOverride(fullForm, dbItem.morphemes, dbItem.stressPosition) ?? undefined;
 
     // 3. Генерируем форму с точным расчетом одного из 4 тонов Зализняка
     const baseAccentedNoun = generateBaseNounFormWithFourTones(
-        dbItem.interslavic,
+        stem,
         dbItem.paradigm,
         stemType,
         targetCase,
@@ -288,7 +361,7 @@ export function declineWordAutomatically(request: FinalUserRequest): string {
     // 4. Убираем задвоенную мягкость (напр. noć + j -> noć, noć + i -> noči) —
     // то же самое пост-обработочное правило, что движок разметки корпуса уже
     // применяет в lib/grammar/morphology/engine.ts
-    const normalizedNoun = collapseDoubleJ(normalizeSoftConsonants(baseAccentedNoun));
+    const normalizedNoun = dropRedundantJ(collapseDoubleJ(normalizeSoftConsonants(baseAccentedNoun)));
 
     // 5. Если предлога нет — возвращаем форму
     if (!preposition) {

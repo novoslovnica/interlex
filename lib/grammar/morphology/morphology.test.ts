@@ -34,8 +34,10 @@ describe('1. Существительные (NOUN)', () => {
     };
     const bobForms = processNoun(nounBob);
 
-    it('bob: Общее количество падежных форм должно быть 21', () => {
-        expect(bobForms.length).toBe(21);
+    // 21 клетка парадигмы + 4 современных варианта мн. числа (-ov/-am/-ami/-ah),
+    // см. declineModernPluralVariants.
+    it('bob: Общее количество падежных форм должно быть 25', () => {
+        expect(bobForms.length).toBe(25);
     });
 
     // Краткий циркумфлекс ̑ на корне в Nom.Sg (2026-07-24: окончание -ъ убрано —
