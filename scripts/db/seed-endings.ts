@@ -223,17 +223,19 @@ async function seedEndings() {
   }
 
   // === 8. Verb Present Active Participle endings ===
+  // Современные -ęči/-ųči вместо праславянских -ęťi/-ųšti (2026-09-15, см.
+  // scripts/db/2026-09-15-modernize-participle-endings.ts — там частоты в корпусе).
   const PRES_ACT_PART = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęťi',
-    'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęťa',
-    'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęťe',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Act': 'ęťi',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęči',
+    'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęča',
+    'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ęče',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Act': 'ęči',
   };
   const PRES_ACT_PART_TH = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųšti',
-    'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųťa',
-    'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųťe',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Act': 'ųťi',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųči',
+    'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųča',
+    'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Act': 'ųče',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Act': 'ųči',
   };
 
   for (const [grammeme, value] of Object.entries(PRES_ACT_PART)) {
@@ -246,23 +248,24 @@ async function seedEndings() {
   }
 
   // === 9. Verb Present Passive Participle endings ===
+  // Твёрдое прилагательное: -y в им. ед. муж. р., -i в им. мн. муж. р.
   const PRES_PASS_PART_I = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'imyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'imy',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'ima',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'imo',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'ime',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'imi',
   };
   const PRES_PASS_PART_TH = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'omyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'omy',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'oma',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'omo',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'ome',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'omi',
   };
   const PRES_PASS_PART_E = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'emyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'emy',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'ema',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Pres|Voice=Pass': 'emo',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'eme',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Pres|Voice=Pass': 'emi',
   };
 
   for (const [grammeme, value] of Object.entries(PRES_PASS_PART_I)) {
@@ -280,22 +283,22 @@ async function seedEndings() {
 
   // === 10. Verb Past Passive Participle endings ===
   const PAST_PASS_PART_EN: Record<string, string> = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'enyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'eny',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'ena',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'eno',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'ene',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'eni',
   };
   const PAST_PASS_PART_N: Record<string, string> = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'nyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'ny',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'na',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'no',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'ne',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'ni',
   };
   const PAST_PASS_PART_T: Record<string, string> = {
-    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'tyj',
+    'Gender=Masc|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'ty',
     'Gender=Fem|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'ta',
     'Gender=Neut|Number=Sing|VerbForm=Part|Tense=Past|Voice=Pass': 'to',
-    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'te',
+    'Gender=Masc|Number=Plur|VerbForm=Part|Tense=Past|Voice=Pass': 'ti',
   };
 
   for (const [grammeme, value] of Object.entries(PAST_PASS_PART_EN)) {

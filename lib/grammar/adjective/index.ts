@@ -15,6 +15,17 @@ import { resolveStressOverride } from '@/lib/grammar/stress';
 
 export type AdjStemType = 'adj_hard' | 'adj_soft';
 
+/**
+ * Окончание полного прилагательного: сначала ending_allophones, затем реестр
+ * ниже. Нужен всему, что склоняется по-адъективно, но не является
+ * прилагательным в словаре: причастиям (napisanyh, slědujučih), местоимениям.
+ */
+export function adjectiveEnding(soft: boolean, targetNumber: NumberType, targetCase: Case, targetGender: GrammaticalGender): string {
+    const stemType: AdjStemType = soft ? 'adj_soft' : 'adj_hard';
+    return getEnding(stemType, targetNumber, targetCase, 'CORE', targetGender)
+        || ADJECTIVE_ENDINGS_REGISTRY[stemType][targetNumber][targetGender][targetCase];
+}
+
 export interface EnhancedAdjDbItem {
     interslavic: string;      // Базовая форма (н-р: "novy", "pěšy")
     protoSlavic: string;

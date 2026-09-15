@@ -26,7 +26,7 @@ import {
     conditionalParticles
 } from '../verb';
 import { splitMechanicalVerbTail, appendTailToConjugation } from '../verb/mechanicalTail';
-import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType } from '../adjective';
+import { generateAdjectiveForm, EnhancedAdjDbItem, classifyAdjectiveType, adjectiveEnding } from '../adjective';
 import { generatePronounForm, generatePronounForms, classifyPronoun, canonicalPronounLemma, EnhancedPronounDbItem, PronounAnalysis, PronounClass } from '../pronoun';
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 
@@ -349,6 +349,48 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         { surfaceForm: ppa.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
         { surfaceForm: ppa.plural, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
     );
+
+    // Л. Причастия склоняются как прилагательные: в корпусе slědujučih, stvorjenyh,
+    // napisanoj, govorečih. Выше — по одной форме на род (как на странице слова),
+    // здесь — полная сетка. Действительные настоящего — мягкие (govoreči,
+    // govorečego), страдательные — твёрдые (napisany, napisanogo), у страдательного
+    // прошедшего есть и краткая форма мужского рода (dozvoljen — 452, napisan).
+    const accentMarks = /[̀́̂̑]/g;
+    const pushDeclinedParticiple = (masculine: string, soft: boolean, baseFeats: MorphoGrammarFeats, shortMasculine: boolean) => {
+        const bare = (tailSuffix && masculine.endsWith(tailSuffix) ? masculine.slice(0, -tailSuffix.length) : masculine)
+            .replace(accentMarks, '');
+        const stem = bare.slice(0, -1);
+        const genders = Object.values(GrammaticalGender) as GrammaticalGender[];
+        for (const num of ALL_NUMBERS) {
+            const number = (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber;
+            for (const gen of genders) {
+                for (const cas of ALL_CASES as GrammaticalCase[]) {
+                    results.push({
+                        surfaceForm: stem + adjectiveEnding(soft, num, cas, gen) + tailSuffix,
+                        feats: { ...baseFeats, case: cas, number, gender: gen },
+                    });
+                }
+            }
+        }
+        if (shortMasculine) {
+            results.push({
+                surfaceForm: stem + tailSuffix,
+                feats: { ...baseFeats, number: 'sg' as GrammaticalNumber, gender: GrammaticalGender.MASC },
+            });
+        }
+    };
+    pushDeclinedParticiple(conj.participles.presentActive.masculine, true, { verbForm: 'part', tense: 'pres', voice: 'act' }, false);
+    pushDeclinedParticiple(conj.participles.presentPassive.masculine, false, { verbForm: 'part', tense: 'pres', voice: 'pass' }, false);
+    pushDeclinedParticiple(conj.participles.pastPassive.masculine, false, { verbForm: 'part', tense: 'past', voice: 'pass' }, true);
+
+    // М. Действительное прошедшего на -vši (byvši 86, viděvši 18, sdělavši 7) —
+    // от основы инфинитива на гласный.
+    if (/[aeiouyěęųå]$/.test(verbModel.infStem)) {
+        results.push({
+            surfaceForm: `${verbModel.infStem}vši${tailSuffix}`,
+            feats: { verbForm: 'part', tense: 'past', voice: 'act' },
+        });
+    }
 
     // И. byti: будущее (bųdų/bųdeš/bųdųt) и частицы условного наклонения
     // (byh/bys/by/byhmo/byste). Их порождал только processAuxiliary, а byti в

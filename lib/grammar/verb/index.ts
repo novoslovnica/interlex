@@ -455,18 +455,19 @@ export function generateParticiples(verb: VerbModel): Participles {
     let paNeut: string;
     let paPl: string;
     if (verbClass === 'IV') {
-        const iotated = applyIotation(presentStem.slice(0, -1));
+        // Без йотации: govoreči (277 в корпусе), а не govorječi/govorjęti.
+        const root = presentStem.slice(0, -1);
         const st = 'verb_part_act_pres_i';
-        paMasc = iotated + getPartEnding(st, 'Masc', 'sg', PRES_ACT_EXTRA, 'ęťi');
-        paFem = iotated + getPartEnding(st, 'Fem', 'sg', PRES_ACT_EXTRA, 'ęťa');
-        paNeut = iotated + getPartEnding(st, 'Neut', 'sg', PRES_ACT_EXTRA, 'ęťe');
-        paPl = iotated + getPartEnding(st, 'Masc', 'pl', PRES_ACT_EXTRA, 'ęťi');
+        paMasc = root + getPartEnding(st, 'Masc', 'sg', PRES_ACT_EXTRA, 'ęči');
+        paFem = root + getPartEnding(st, 'Fem', 'sg', PRES_ACT_EXTRA, 'ęča');
+        paNeut = root + getPartEnding(st, 'Neut', 'sg', PRES_ACT_EXTRA, 'ęče');
+        paPl = root + getPartEnding(st, 'Masc', 'pl', PRES_ACT_EXTRA, 'ęči');
     } else {
         const st = 'verb_part_act_pres_th';
-        paMasc = baseForVowels + getPartEnding(st, 'Masc', 'sg', PRES_ACT_EXTRA, 'ųšti');
-        paFem = baseForVowels + getPartEnding(st, 'Fem', 'sg', PRES_ACT_EXTRA, 'ųťa');
-        paNeut = baseForVowels + getPartEnding(st, 'Neut', 'sg', PRES_ACT_EXTRA, 'ųťe');
-        paPl = baseForVowels + getPartEnding(st, 'Masc', 'pl', PRES_ACT_EXTRA, 'ųťi');
+        paMasc = baseForVowels + getPartEnding(st, 'Masc', 'sg', PRES_ACT_EXTRA, 'ųči');
+        paFem = baseForVowels + getPartEnding(st, 'Fem', 'sg', PRES_ACT_EXTRA, 'ųča');
+        paNeut = baseForVowels + getPartEnding(st, 'Neut', 'sg', PRES_ACT_EXTRA, 'ųče');
+        paPl = baseForVowels + getPartEnding(st, 'Masc', 'pl', PRES_ACT_EXTRA, 'ųči');
     }
 
     let ppm: string;
@@ -476,54 +477,58 @@ export function generateParticiples(verb: VerbModel): Participles {
     if (verbClass === 'IV') {
         const root = presentStem.slice(0, -1);
         const st = 'verb_part_pass_pres_i';
-        ppm = root + getPartEnding(st, 'Masc', 'sg', PRES_PASS_EXTRA, 'imyj');
+        ppm = root + getPartEnding(st, 'Masc', 'sg', PRES_PASS_EXTRA, 'imy');
         ppf = root + getPartEnding(st, 'Fem', 'sg', PRES_PASS_EXTRA, 'ima');
         ppn = root + getPartEnding(st, 'Neut', 'sg', PRES_PASS_EXTRA, 'imo');
-        pppl = root + getPartEnding(st, 'Masc', 'pl', PRES_PASS_EXTRA, 'ime');
+        pppl = root + getPartEnding(st, 'Masc', 'pl', PRES_PASS_EXTRA, 'imi');
     } else {
         const isJStem = baseForVowels.endsWith('j');
         const st = isJStem ? 'verb_part_pass_pres_e' : 'verb_part_pass_pres_th';
-        const fallbackMasc = isJStem ? 'emyj' : 'omyj';
+        const fallbackMasc = isJStem ? 'emy' : 'omy';
         const fallbackFem = isJStem ? 'ema' : 'oma';
         const fallbackNeut = isJStem ? 'emo' : 'omo';
-        const fallbackPl = isJStem ? 'eme' : 'ome';
+        const fallbackPl = isJStem ? 'emi' : 'omi';
         ppm = baseForVowels + getPartEnding(st, 'Masc', 'sg', PRES_PASS_EXTRA, fallbackMasc);
         ppf = baseForVowels + getPartEnding(st, 'Fem', 'sg', PRES_PASS_EXTRA, fallbackFem);
         ppn = baseForVowels + getPartEnding(st, 'Neut', 'sg', PRES_PASS_EXTRA, fallbackNeut);
         pppl = baseForVowels + getPartEnding(st, 'Masc', 'pl', PRES_PASS_EXTRA, fallbackPl);
     }
 
-    let ppaMasc: string;
-    let ppaStemType: string;
-    let ppaFallback: string;
-    if (verbClass === 'IV') {
+    // Страдательное прошедшего: основа + суффикс из ending_allophones (-eny/-ny/-ty).
+    // Раньше суффикс был вписан строкой ("enyj"), а таблица не читалась вовсе.
+    // IV класс на -iti йотирует корень — stvorjeny (198 в корпусе) против stvoreny
+    // (28), rodženy (52) против rodeny (0), — но губные получают просто j:
+    // upotrěbjeny (41) против upotrěbljeny (1). У -ěti суффикс идёт после ě: viděny.
+    type PastPassiveStemType = 'verb_part_pass_past_en' | 'verb_part_pass_past_n' | 'verb_part_pass_past_t';
+    let ppaBase: string;
+    let ppaStemType: PastPassiveStemType;
+    if (verbClass === 'IV' && !infStem.endsWith('ě')) {
         const root = infStem.slice(0, -1);
-        ppaMasc = applyFirstPalatalization(root) + 'enyj';
+        ppaBase = LABIALS.includes(root.slice(-1)) ? root + 'j' : applyIotation(root);
         ppaStemType = 'verb_part_pass_past_en';
-        ppaFallback = 'enyj';
-    } else if (verbClass === 'III') {
-        ppaMasc = infStem + 'nyj';
+    } else if (verbClass === 'IV' || verbClass === 'III') {
+        ppaBase = infStem;
         ppaStemType = 'verb_part_pass_past_n';
-        ppaFallback = 'nyj';
     } else if (verbClass === 'II') {
-        ppaMasc = infStem.slice(0, -1) + 'enyj';
+        ppaBase = infStem.slice(0, -1);
         ppaStemType = 'verb_part_pass_past_en';
-        ppaFallback = 'enyj';
+    } else if ('aeiouyěęǫų'.includes(infStem.slice(-1))) {
+        ppaBase = infStem;
+        ppaStemType = 'verb_part_pass_past_t';
     } else {
-        const lastChar = infStem.slice(-1);
-        if ('aeiouyěęǫ'.includes(lastChar)) {
-            ppaMasc = infStem + 'tyj';
-            ppaStemType = 'verb_part_pass_past_t';
-            ppaFallback = 'tyj';
-        } else {
-            ppaMasc = applyFirstPalatalization(infStem) + 'enyj';
-            ppaStemType = 'verb_part_pass_past_en';
-            ppaFallback = 'enyj';
-        }
+        ppaBase = applyFirstPalatalization(infStem);
+        ppaStemType = 'verb_part_pass_past_en';
     }
-    const ppaFem = ppaMasc.replace('yj', 'a');
-    const ppaNeut = ppaMasc.replace('yj', 'o');
-    const ppaPl = ppaMasc.replace('yj', 'e');
+    const PAST_PASSIVE_FALLBACKS: Record<PastPassiveStemType, [string, string, string, string]> = {
+        verb_part_pass_past_en: ['eny', 'ena', 'eno', 'eni'],
+        verb_part_pass_past_n: ['ny', 'na', 'no', 'ni'],
+        verb_part_pass_past_t: ['ty', 'ta', 'to', 'ti'],
+    };
+    const [ppaMascFallback, ppaFemFallback, ppaNeutFallback, ppaPlFallback] = PAST_PASSIVE_FALLBACKS[ppaStemType];
+    const ppaMasc = ppaBase + getPartEnding(ppaStemType, 'Masc', 'sg', PAST_PASS_EXTRA, ppaMascFallback);
+    const ppaFem = ppaBase + getPartEnding(ppaStemType, 'Fem', 'sg', PAST_PASS_EXTRA, ppaFemFallback);
+    const ppaNeut = ppaBase + getPartEnding(ppaStemType, 'Neut', 'sg', PAST_PASS_EXTRA, ppaNeutFallback);
+    const ppaPl = ppaBase + getPartEnding(ppaStemType, 'Masc', 'pl', PAST_PASS_EXTRA, ppaPlFallback);
 
     return {
         presentActive: {
