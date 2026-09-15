@@ -152,8 +152,8 @@ export class DbAnalyzer {
             // лексема это слово" она так же авторитетна, как точное
             // совпадение парадигмы; стем-префиксный кандидат остаётся
             // самым слабым (isPartial), как и раньше.
-            type Candidate = { word: WordBaseRecord; form: GeneratedForm; forcedSource?: MorphoCandidateSource; isPartial?: boolean; exact?: boolean };
-            const combined: Candidate[] = [
+            type Candidate = { word: WordBaseRecord; form: GeneratedForm; forcedSource?: MorphoCandidateSource; isPartial?: boolean; exact?: boolean; primary?: boolean };
+            const pool: Candidate[] = [
                 ...exactMatches,
                 // Аномальные (суппletивные) формы ищутся по несвёрнутому
                 // написанию, поэтому их совпадение всегда буквальное.
@@ -162,9 +162,16 @@ export class DbAnalyzer {
                     form: { surfaceForm: clean, feats: {} },
                     forcedSource: 'anomaly',
                     exact: true,
+                    primary: true,
                 })),
-                ...(stemPrefixWord ? [{ word: stemPrefixWord, form: { surfaceForm: clean, feats: {} }, isPartial: true, exact: false }] : []),
+                ...(stemPrefixWord ? [{ word: stemPrefixWord, form: { surfaceForm: clean, feats: {} }, isPartial: true, exact: false, primary: false }] : []),
             ];
+            // Лексемы, найденные только через расширенное написание (i→y, u→ų)
+            // или распознавательный вариант формы, отбрасываются, если хоть одна
+            // лексема совпала основной формой с самим написанием токена: они лишь
+            // размножали омонимию. Без основного совпадения остаются все.
+            const primarySlugs = new Set(pool.filter((m) => m.primary).map((m) => m.word.slug));
+            const combined = primarySlugs.size > 0 ? pool.filter((m) => primarySlugs.has(m.word.slug)) : pool;
 
             const scored = combined
                 .map((m) => {
@@ -296,8 +303,11 @@ export class DbAnalyzer {
     private matchForms(
         cleanVariants: string[],
         words: WordBaseRecord[]
-    ): Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean }> {
+    ): Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean; primary: boolean }> {
         const normalizedVariants = new Set(cleanVariants.map((v) => this.normalizeForm(v)));
+        // Основное совпадение: основная форма (не вариант, не аорист/имперфект)
+        // совпала с самим написанием токена, а не с расширенным (i→y, u→ų).
+        const normalizedOriginal = this.normalizeForm(cleanVariants[0]);
         // Точное написание (без свёртки диакритики) — отдельный класс:
         // свёртка нужна для полноты, но она склеивает и по-настоящему разные
         // слова ("ješte" ещё / "jeste" 2pl от byti, "šut" клоун / "sųt" суть,
@@ -308,7 +318,7 @@ export class DbAnalyzer {
         // расширенные варианты: иначе "mi" (дат. от ja) и "my" (мы) были бы
         // одинаково «буквальными» для токена "mi", как и "sut"/"sųt".
         const exactVariants = new Set([cleanVariants[0].toLowerCase()]);
-        const matches: Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean }> = [];
+        const matches: Array<{ word: WordBaseRecord; form: GeneratedForm; exact: boolean; primary: boolean }> = [];
         for (const word of words) {
             if (!word.isv || !word.pos) continue;
             const posTag = word.pos.toUpperCase();
@@ -345,26 +355,33 @@ export class DbAnalyzer {
                 const forms = generateWordForms(engineInput, true);
                 for (const form of forms) {
                     const lowered = form.surfaceForm.toLowerCase();
-                    if (normalizedVariants.has(this.normalizeForm(lowered))) {
+                    const normalized = this.normalizeForm(lowered);
+                    if (normalizedVariants.has(normalized)) {
                         // Буквальный приоритет — только основным современным формам.
                         // Аорист/имперфект и распознавательные варианты находят
                         // лексему, но не перебивают другие: иначе аорист "vi" от viti
                         // обыгрывал частотное "vy", а голое "naj" от "najesti se" —
                         // служебное слово.
-                        const literal = exactVariants.has(lowered) && !form.variant
-                            && form.feats.tense !== 'aor' && form.feats.tense !== 'impf';
-                        matches.push({ word, form, exact: literal });
+                        const regular = !form.variant && form.feats.tense !== 'aor' && form.feats.tense !== 'impf';
+                        matches.push({
+                            word,
+                            form,
+                            exact: exactVariants.has(lowered) && regular,
+                            primary: regular && normalized === normalizedOriginal,
+                        });
                         matched = true;
                     }
                 }
 
                 if (!matched) {
                     const lowered = variant.value.toLowerCase();
-                    if (normalizedVariants.has(this.normalizeForm(lowered))) {
+                    const normalized = this.normalizeForm(lowered);
+                    if (normalizedVariants.has(normalized)) {
                         matches.push({
                             word,
                             form: { surfaceForm: variant.value, feats: {} },
                             exact: exactVariants.has(lowered),
+                            primary: normalized === normalizedOriginal,
                         });
                         matched = true;
                     }

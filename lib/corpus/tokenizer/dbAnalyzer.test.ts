@@ -206,3 +206,26 @@ describe("DbAnalyzer literal spelling beats folded spelling", () => {
         expect(result!.wordSlug).toBe('sut-AUX');
     });
 });
+
+describe("DbAnalyzer drops lexemes reached only through an expanded spelling", () => {
+    // i→y after a consonant makes "vi" also look up "vy". When "vi" itself is a
+    // lexeme, the "vy" reading only multiplied ambiguity.
+    const vi_ = makeWord({ id: 9, slug: 'vi-ADP', isv: 'vi', stem: 'vi', corpusFrequencyPerMln: 1 });
+    const vy = makeWord({ id: 10, slug: 'vy-ADP', isv: 'vy', stem: 'vy', corpusFrequencyPerMln: 9000 });
+
+    it("keeps only the lexeme matching the spelling as written", async () => {
+        const analyzer = new DbAnalyzer(vi.fn(async () => [vi_, vy]), new Set());
+        const result = await analyzer.analyzeWord('vi');
+
+        expect(result!.wordSlug).toBe('vi-ADP');
+        expect(result!.matchCount).toBe(1);
+    });
+
+    it("keeps the expanded match when nothing matches as written", async () => {
+        const analyzer = new DbAnalyzer(vi.fn(async () => [vy]), new Set());
+        const result = await analyzer.analyzeWord('vi');
+
+        expect(result!.wordSlug).toBe('vy-ADP');
+        expect(result!.matchCount).toBe(1);
+    });
+});
