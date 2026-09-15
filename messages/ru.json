@@ -474,6 +474,13 @@
     "yandex": "Войти через Яндекс",
     "google": "Войти через Google"
   },
+  "unauthorized": {
+    "title": "Нет доступа",
+    "signInRequired": "Эта страница доступна только после входа в аккаунт.",
+    "noPermission": "У вашего аккаунта нет прав на эту страницу. Если они нужны, обратитесь к администратору.",
+    "signIn": "Войти",
+    "home": "На главную"
+  },
   "changelog": {
     "title": "Istorija versij / История версий",
     "description": "История изменений платформы Interslavic Lexicon.",

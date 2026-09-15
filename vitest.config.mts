@@ -22,10 +22,6 @@ export default defineConfig({
             // resolve in this project's four-separate-generated-clients setup,
             // see AGENTS.md) and opens a nonexistent `analytics.db`.
             "lib/cql/cqlTranslator.test.ts",
-            // Hits the live corpus.db via CorpusInjector, which is itself
-            // documented dead code (zero real importers, see AGENTS.md) -
-            // must not run as part of an automated suite.
-            "lib/corpus/CorpusInjector.test.ts",
             // Empty file (just a commented-out usage example, no code at all).
             "lib/grammar/common/common.test.ts",
         ],

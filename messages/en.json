@@ -464,6 +464,13 @@
     "yandex": "Log in with Yandex",
     "google": "Log in with Google"
   },
+  "unauthorized": {
+    "title": "Access denied",
+    "signInRequired": "You need to log in to view this page.",
+    "noPermission": "Your account doesn't have permission to view this page. Contact an administrator if you need access.",
+    "signIn": "Log in",
+    "home": "Go to home page"
+  },
   "changelog": {
     "title": "Istorija versij / Version History",
     "description": "History of changes to the Interslavic Lexicon platform.",

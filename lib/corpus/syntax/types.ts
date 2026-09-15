@@ -3,8 +3,7 @@ import { PosType, MorphoGrammarFeats } from '@/lib/grammar/common';
 /**
  * Минимальный набор полей токена, нужный парсеру. Не привязан напрямую к
  * Prisma CorpusToken, чтобы модуль можно было тестировать без БД —
- * маппинг из реальной записи делает вызывающий код (см. lib/corpus/CorpusInjector.ts
- * для аналогичного паттерна маппинга CorpusTokenInput).
+ * маппинг из реальной записи делает вызывающий код.
  */
 export interface SyntaxToken {
     id: string | number | bigint;

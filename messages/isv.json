@@ -464,6 +464,13 @@
     "yandex": "Vniti črz Yandex",
     "google": "Vniti črz Google"
   },
+  "unauthorized": {
+    "title": "Nemaje dostupa",
+    "signInRequired": "Ta stranica jest dostupna jedino po vhodu v akkont.",
+    "noPermission": "Vaš akkont ne imaje prav na tu stranicu. Ako li jih potrěbujete, obrnite sę k administratoru.",
+    "signIn": "Vniti",
+    "home": "Na glavnu stranicu"
+  },
   "changelog": {
     "title": "Istorija versij",
     "description": "Istorija izměnenij platformy Interslavic Lexicon.",
