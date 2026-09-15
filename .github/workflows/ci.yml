@@ -27,23 +27,15 @@ jobs:
       - run: npm run db:gen-library
       - run: npm run db:gen-corpus
 
-      # ~320 pre-existing lint problems as of 2026-08-12 (see docs/roadmap.md
-      # #12 "Сократить any") - not something this CI setup is scoped to fix.
-      # Runs and reports so the count is visible and doesn't silently grow,
-      # but doesn't block merges until that debt is paid down.
-      - run: npm run lint
-        continue-on-error: true
+      # Both gates are ratchets over pre-existing debt (see
+      # scripts/ci/check-baseline.mjs): they fail on any error that isn't
+      # already in scripts/ci/baselines/, not on the old ones.
+      - run: npm run lint:gate
 
-      # Standalone `tsc --noEmit` is not wired up here: this project's
-      # tsconfig.json pairs module=nodenext with moduleResolution=bundler,
-      # a combination the tsc CLI itself rejects (TS5095/TS5109) even though
-      # Next's own internal type-checker (used by `next build` when
-      # typescript.ignoreBuildErrors is false) accepts it. Forcing a
-      # different moduleResolution via CLI flag to work around this produces
-      # false-positive "Cannot find module" errors from resolution-algorithm
-      # differences, not real bugs. next.config.ts currently sets
-      # ignoreBuildErrors: true, so there is effectively no type-checking
-      # gate anywhere yet - tracked as a follow-up, not solved by this CI.
+      # tsconfig.ci.json exists because the main tsconfig.json pairs
+      # module=nodenext with moduleResolution=bundler, which the tsc CLI
+      # rejects (TS5095) even though Next's own type-checker accepts it.
+      - run: npm run typecheck:gate
 
       - run: npm run test:run
 

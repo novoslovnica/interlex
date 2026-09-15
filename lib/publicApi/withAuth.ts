@@ -35,7 +35,7 @@ function applyRateLimitHeaders(response: NextResponse, category: PublicApiCatego
  * the category default for every category uniformly (not a per-category
  * matrix) - see the field's comment in prisma/auth.schema.prisma.
  */
-export function withPublicApiAuth<Ctx = Record<string, never>>(
+export function withPublicApiAuth<Ctx = { params: Promise<unknown> }>(
     category: PublicApiCategory,
     handler: PublicApiHandler<Ctx>,
 ) {

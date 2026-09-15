@@ -28,7 +28,10 @@ const playgroundRateLimiters: Record<PublicApiCategory, RateLimiter> = {
 
 type PlaygroundHandler<Ctx> = (req: NextRequest, ctx: Ctx) => Promise<NextResponse>
 
-export function withPlaygroundLimit<Ctx = Record<string, never>>(
+// The default must accept the `{ params: Promise<{}> }` context Next passes
+// to a static route - `Record<string, never>` rejects its `params` key, which
+// fails Next's generated route-type validation.
+export function withPlaygroundLimit<Ctx = { params: Promise<unknown> }>(
     category: PublicApiCategory,
     handler: PlaygroundHandler<Ctx>,
 ) {
