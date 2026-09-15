@@ -145,7 +145,7 @@ function main() {
 
   let updated = 0;
   let skipped_no_gender = 0;
-  let skipped_other: string[] = [];
+  const skipped_other: string[] = [];
 
   const BATCH = 100;
   const tx = db.transaction(() => {

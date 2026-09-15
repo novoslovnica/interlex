@@ -78,7 +78,7 @@ export const isvToCyrOld = (text: string) => {
 
     // Шаг 3 (старый): Посимвольная сборка текста
     for (let i = 0; i < processed.length; i++) {
-        let char = processed[i];
+        const char = processed[i];
 
         if (rules.hasOwnProperty(char)) {
             result += rules[char];
@@ -157,7 +157,7 @@ export const isvToCyrNew = (text: string) => {
 
     // Шаг 3: Посимвольная сборка текста
     for (let i = 0; i < processed.length; i++) {
-        let char = processed[i];
+        const char = processed[i];
 
         if (rules.hasOwnProperty(char)) {
             result += rules[char];
@@ -214,15 +214,15 @@ export const isvToTranscription = (etymologicalWord: string) => {
         .replace(/h/g, 'x'); // х передается как велярный [x]
 
     // 3. Контекстная обработка 'j' (Смягчение согласных vs Звук [j])
-    let ipaChars = [];
+    const ipaChars = [];
     const vowels = ['a', 'e', 'ě', 'i', 'y', 'o', 'u', 'ę', 'ǫ', 'ų'];
 
     for (let i = 0; i < str.length; i++) {
-        let char = str[i];
+        const char = str[i];
 
         if (char === 'j') {
-            let prevChar = i > 0 ? str[i - 1] : '';
-            let nextChar = i < str.length - 1 ? str[i + 1] : '';
+            const prevChar = i > 0 ? str[i - 1] : '';
+            const nextChar = i < str.length - 1 ? str[i + 1] : '';
 
             // Если 'j' стоит МЕЖДУ согласной и гласной (например, "zemjla")
             // или после согласной на конце слова, она обозначает мягкость (палатализацию)
@@ -264,10 +264,10 @@ export const standardToSimple = (text: string) => {
     if (!text) return "";
 
     // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
-    let normalized = normalizeSoftConsonants(text);
+    const normalized = normalizeSoftConsonants(text);
 
     // Шаг 1: Сжатие этимологических окончаний прилагательных на границах слов (-yj/-ij -> -y/-i)
-    let processed = normalized
+    const processed = normalized
         .replace(/yj(?![▲\p{L}])/gu, 'y')
         .replace(/ij(?![▲\p{L}])/gu, 'i')
         .replace(/YJ(?![▲\p{L}])/gu, 'Y')
@@ -281,18 +281,18 @@ export const standardToSimple = (text: string) => {
         'Ų': 'U', 'ų': 'u', // Большой юс (совр. написание u+огонек) -> U
     };
 
-    let step2 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');
+    const step2 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');
 
     // Шаг 3: Перевод сочетаний с 'j' в формат 'i' + твёрдая гласная (согласно правилу первой функции)
     // Исключение: если перед 'j' уже стоит 'i', то 'j' просто поглощается (чтобы не было триплексов 'iia')
     let result = "";
 
     for (let i = 0; i < step2.length; i++) {
-        let char = step2[i];
+        const char = step2[i];
 
         if (char === 'j' || char === 'J') {
-            let prevChar = result.length > 0 ? result[result.length - 1].toLowerCase() : '';
-            let nextChar = i < step2.length - 1 ? step2[i + 1].toLowerCase() : '';
+            const prevChar = result.length > 0 ? result[result.length - 1].toLowerCase() : '';
+            const nextChar = i < step2.length - 1 ? step2[i + 1].toLowerCase() : '';
             const softableVowels = ['a', 'u', 'e', 'o'];
 
             // Если после j идет гласная, которую нужно смягчить
@@ -405,7 +405,7 @@ export const standardToSimpleCyr = (text: string) => {
     if (!text) return "";
 
     // Шаг 0: Нормализация мягких согласных перед i, e, ę, ě
-    let normalized = normalizeSoftConsonants(text);
+    const normalized = normalizeSoftConsonants(text);
 
     // Шаг 1: Сжатие этимологических окончаний прилагательных на границах слов (-yj/-ij -> -ы/-и)
     let processed = normalized
@@ -443,17 +443,17 @@ export const standardToSimpleCyr = (text: string) => {
         'Ų': 'У', 'ų': 'у', // Большой юс (совр. написание u+огонек) упрощается до У/у
     };
 
-    let step3 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');
+    const step3 = processed.split('').map(char => fixedRules.hasOwnProperty(char) ? fixedRules[char] : char).join('');
 
     // Шаг 4: Перевод латинского 'j/J' в кириллический йот 'і/І' с контролем окружения
     let result = "";
 
     for (let i = 0; i < step3.length; i++) {
-        let char = step3[i];
+        const char = step3[i];
 
         if (char === 'j' || char === 'J') {
-            let prevChar = result.length > 0 ? result[result.length - 1].toLowerCase() : '';
-            let nextChar = i < step3.length - 1 ? step3[i + 1].toLowerCase() : '';
+            const prevChar = result.length > 0 ? result[result.length - 1].toLowerCase() : '';
+            const nextChar = i < step3.length - 1 ? step3[i + 1].toLowerCase() : '';
 
             // Если после j идет гласная, которую нужно смягчить через і
             if (nextChar && ['а', 'у', 'е', 'о'].includes(nextChar)) {

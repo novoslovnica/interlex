@@ -28,7 +28,7 @@ export interface TextAnalysisResult {
 const PUNCTUATION_REGEX = /[^a-zA-Zа-яА-ЯёЁѢѣѦѧѪѫіІїЇџЂђЋћЌќ0-9-]/g;
 
 function normalizeWord(token: string): string {
-  let word = token.toLowerCase().trim().replace(PUNCTUATION_REGEX, '');
+  const word = token.toLowerCase().trim().replace(PUNCTUATION_REGEX, '');
 
   if (!word || word.length <= 1) return word;
 

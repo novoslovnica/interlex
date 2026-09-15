@@ -31,7 +31,7 @@ const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?
     let res: any[];
 
     const lexemeIds = data.map(item => item.id).filter(Boolean);
-    let allMeaningIds: number[] = [];
+    const allMeaningIds: number[] = [];
     const lexemeToMeanings: Record<number, number[]> = {};
     const meaningMap: Record<number, { id: number; meaning: string | null; examples: string | null; meaningVerified: number | null }> = {};
     if (lexemeIds.length > 0) {

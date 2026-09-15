@@ -31,7 +31,7 @@ async function downloadAndParseOlanderList() {
         while ((match = regex.exec(rawText)) !== null) {
             totalMatches++;
             const word = match[1].toLowerCase();
-            let rawParadigm = match[2].toLowerCase();
+            const rawParadigm = match[2].toLowerCase();
 
             let finalParadigm: 'A' | 'B' | 'C';
 

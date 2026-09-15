@@ -49,8 +49,8 @@ export const getItem = cache(async (id: string) => {
 
   const meaningIds = meanings.map(m => m.id);
 
-  let synonymsByMeaning: Record<number, any[]> = {};
-  let antonymsByMeaning: Record<number, any[]> = {};
+  const synonymsByMeaning: Record<number, any[]> = {};
+  const antonymsByMeaning: Record<number, any[]> = {};
 
   if (meaningIds.length > 0) {
     const synonymMap = fetchSymmetricSemanticRelations(db, 'synonym', meaningIds);
