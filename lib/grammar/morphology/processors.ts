@@ -17,7 +17,7 @@ import { declineWordAutomatically, declineModernPluralVariants } from '../declin
 import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
     conjugateFullVerb,
-    extractProtoStems,
+    buildVerbModel,
     VerbModel,
     FullParadigm,
     bytiPresent,
@@ -202,31 +202,24 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
     // (гейт в engine.ts).
     const { head: verbHead, tailSuffix } = splitMechanicalVerbTail(word.isv, word.knownPrepositions ?? []);
 
-    // 1. Сначала добавляем сам инфинитив как базовую форму
-    results.push({
-        surfaceForm: verbHead + tailSuffix,
-        feats: { verbForm: 'inf' }
-    });
-
-    // 2. Автоматически восстанавливаем праславянские основы по Лескину (инфинитив, презенс, аорист)
-    const stems = extractProtoStems(verbHead);
-
-    // 3. Если есть secondaryStem (из колонки addition в CSV), используем его как presentStem
-    const presentStem = word.secondaryStem || stems.presentStem;
-
-    // 4. Формируем строгую модель VerbModel для передачи в акцентологический калькулятор
-    const verbModel: VerbModel = {
-        infinitive: verbHead,
-        infStem: stems.infStem,
-        presentStem: presentStem,
-        aoristStem: stems.aoristStem,
-        tertiaryStem: word.tertiaryStem || undefined,
-        verbClass: stems.verbClass,
+    // 1-3. Модель глагола: канонический инфинитив (value часто без диакритики —
+    // "uciti" при стеме "uči"), основы из лексемы и класс. См. buildVerbModel.
+    const verbModel: VerbModel = buildVerbModel({
+        head: verbHead,
+        stem: word.stem,
+        secondaryStem: word.secondaryStem,
+        tertiaryStem: word.tertiaryStem,
         aspect: (word.aspect as VerbalAspect) || VerbalAspect.IPF,
         paradigm: (word.paradigm as AccentParadigm) || AccentParadigm.A,
         stressPosition: word.stressPosition,
         morphemes: word.morphemes,
-    };
+    });
+
+    // Сам инфинитив как базовая форма
+    results.push({
+        surfaceForm: verbModel.infinitive + tailSuffix,
+        feats: { verbForm: 'inf' }
+    });
 
     // 4. Запускаем генерацию полной глагольной матрицы
     const conj = appendTailToConjugation(conjugateFullVerb(verbModel), tailSuffix);
@@ -326,6 +319,27 @@ export function processVerb(word: EngineWordInput): GeneratedForm[] {
         { surfaceForm: ppa.neuter, feats: { verbForm: 'part', gender: 'Neut' as GrammaticalGender, number: 'sg' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
         { surfaceForm: ppa.plural, feats: { verbForm: 'part', gender: 'Masc' as GrammaticalGender, number: 'pl' as GrammaticalNumber, tense: 'past', voice: 'pass' } },
     );
+
+    // И. byti: будущее (bųdų/bųdeš/bųdųt) и частицы условного наклонения
+    // (byh/bys/by/byhmo/byste). Их порождал только processAuxiliary, а byti в
+    // словаре — VERB, поэтому budut (2 720), budeš, byh (3 635) не распознавались.
+    if (verbModel.infinitive === 'byti') {
+        pushParadigmToResults(results, bytiFuture, { verbForm: 'fin', tense: 'fut', mood: 'ind' });
+        pushParadigmToResults(results, conditionalParticles, { verbForm: 'fin', mood: 'sub' });
+    }
+
+    // К. -čati/-žati/-šati/-jati без записанной основы настоящего: многие из них
+    // спрягаются по IV классу (zvučati/zvuči, kričati/kriči, stojati/stoji), но
+    // не все (slušati/slušaje) — поэтому IV-презенс добавляется вариантом.
+    if (!word.secondaryStem && /[čžšj]ati$/.test(verbModel.infinitive)) {
+        const iStemModel: VerbModel = { ...verbModel, presentStem: verbModel.infinitive.slice(0, -3) + 'i', verbClass: 'IV' };
+        const iConj = appendTailToConjugation(conjugateFullVerb(iStemModel), tailSuffix);
+        pushParadigmToResults(results, iConj.indicative.presentOrFutureDirect, {
+            verbForm: 'fin',
+            tense: verbModel.aspect === VerbalAspect.PF ? 'fut' : 'pres',
+            mood: 'ind',
+        });
+    }
 
     return results;
 }
@@ -800,7 +814,12 @@ export function processAuxiliary(word: EngineWordInput): GeneratedForm[] {
         pushAux(bytiPresent, 'pres', 'ind');
         pushAux(bytiFuture, 'fut', 'ind');
         pushAux(bytiImperfect, 'impf', 'ind');
-        pushAux(conditionalParticles, 'pres', 'sub'); // Частицы кондиционала (bim, biš)
+        pushAux(conditionalParticles, 'pres', 'sub'); // Частицы кондиционала (byh, bys, by)
+    } else if (lemma.endsWith('ti')) {
+        // Модальные и прочие AUX-глаголы (mogti, htěti, iměti, uměti, morati) по форме
+        // обычные глаголы и спрягаются полностью. Раньше отдавалась только словарная
+        // форма, и mogu/možeš/mogut (8 000+ вхождений) не распознавались.
+        return processVerb(word);
     } else {
         // Для изолированных частиц сослагательности/императивности (daby, nehaj)
         results.push({

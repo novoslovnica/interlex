@@ -6,6 +6,7 @@ import {
 } from "@/lib/grammar/common/aspect";
 import { getEndingByGrammeme } from '@/lib/grammar/endingLoader';
 import { resolveStressOverride } from '@/lib/grammar/stress';
+import { foldDiacritics } from '@/lib/corpus/tokenizer/foldDiacritics';
 
 const PRES_GRAMMEME = 'Tense=Pres|VerbForm=Fin';
 const AOR_GRAMMEME = 'Tense=Aor|VerbForm=Fin';
@@ -161,18 +162,60 @@ export const bytiFuture: FullParadigm = {
     '1pl': 'bųdemo', '2pl': 'bųdete', '3pl': 'bųdųt'
 };
 
+// Частицы условного наклонения. Были старославянскими (bim/biš/bi/bimo/bite/
+// bišę) — в корпусе этих форм практически нет (biš: 2), тогда как byh — 3 635,
+// bys — 535, byhmo — 419, byste — 344, by — 10 000+.
 export const conditionalParticles: FullParadigm = {
-    '1sg': 'bim',   '2sg': 'biš',   '3sg': 'bi',
-    '1du': 'bivě',  '2du': 'bita',  '3du': 'bita',
-    '1pl': 'bimo',  '2pl': 'bite',  '3pl': 'bišę'
+    '1sg': 'byh',   '2sg': 'bys',   '3sg': 'by',
+    '1du': 'byhvě', '2du': 'bysta', '3du': 'bysta',
+    '1pl': 'byhmo', '2pl': 'byste', '3pl': 'by'
 };
+
+// Нерегулярные (атематические и супплетивные) презенсы. Правилами их не
+// вывести: dati — dam/dadųt, věděti — věm/vědųt, iměti — imam/imajųt. У
+// hotěti в корпусе живы два ряда: hoču/hočeš (901/587) и hču/hčeš (1 320/1 014).
+// Ключ — инфинитив; приставочные глаголы (prodati, odpověděti) берут ту же сетку.
+const IRREGULAR_PRESENTS: Record<string, FullParadigm[]> = {
+    byti: [bytiPresent],
+    dati: [{
+        '1sg': 'dam', '2sg': 'daš', '3sg': 'da', '1du': 'davě', '2du': 'data', '3du': 'data',
+        '1pl': 'damo', '2pl': 'date', '3pl': 'dadųt',
+    }],
+    jesti: [{
+        '1sg': 'jem', '2sg': 'ješ', '3sg': 'je', '1du': 'jevě', '2du': 'jeta', '3du': 'jeta',
+        '1pl': 'jemo', '2pl': 'jete', '3pl': 'jedųt',
+    }],
+    věděti: [{
+        '1sg': 'věm', '2sg': 'věš', '3sg': 'vě', '1du': 'věvě', '2du': 'věta', '3du': 'věta',
+        '1pl': 'věmo', '2pl': 'věte', '3pl': 'vědųt',
+    }],
+    iměti: [{
+        '1sg': 'imam', '2sg': 'imaš', '3sg': 'ima', '1du': 'imavě', '2du': 'imata', '3du': 'imata',
+        '1pl': 'imamo', '2pl': 'imate', '3pl': 'imajųt',
+    }],
+    hotěti: [{
+        '1sg': 'hočų', '2sg': 'hočeš', '3sg': 'hoče', '1du': 'hočevě', '2du': 'hočeta', '3du': 'hočeta',
+        '1pl': 'hočemo', '2pl': 'hočete', '3pl': 'hočųt',
+    }, {
+        '1sg': 'hčų', '2sg': 'hčeš', '3sg': 'hče', '1du': 'hčevě', '2du': 'hčeta', '3du': 'hčeta',
+        '1pl': 'hčemo', '2pl': 'hčete', '3pl': 'hčųt',
+    }],
+};
+IRREGULAR_PRESENTS['htěti'] = IRREGULAR_PRESENTS['hotěti'];
+
+const VERBAL_PREFIXES = new Set([
+    '', 'do', 'iz', 'na', 'nad', 'o', 'ob', 'od', 'po', 'pod', 'pre', 'prě', 'pred', 'prěd',
+    'pri', 'pro', 'raz', 's', 'sȯ', 'so', 'u', 'v', 'vȯ', 'vo', 'vy', 'za',
+]);
 
 const FIRST_PALATALIZATION: Record<string, string> = {
     'k': 'č', 'g': 'ž', 'h': 'š', 'ch': 'š'
 };
 
+// d + j даёт dž (vidžu, hodžu), а не старославянское ž: в корпусе vidžu — 1 515,
+// vižu — 35.
 const IOTATION: Record<string, string> = {
-    't': 'č', 'd': 'ž', 's': 'š', 'z': 'ž', 'k': 'č', 'g': 'ž', 'h': 'š', 'ch': 'š', 'c': 'č'
+    't': 'č', 'd': 'dž', 's': 'š', 'z': 'ž', 'k': 'č', 'g': 'ž', 'h': 'š', 'ch': 'š', 'c': 'č'
 };
 
 const LABIALS = ['p', 'b', 'm', 'v', 'f'];
@@ -248,12 +291,27 @@ function accentSyllable(word: string, position: number | 'first', tone: AccentTy
 // 4. ВОССТАНОВЛЕНИЕ ОСНОВ ПО ЛЕСКИНУ С УЧЕТОМ ПАЛАТАЛИЗАЦИИ
 // =========================================================================
 
+// -ěti: чаще всего IV класс с презенсом на -i- (viděti/vidi, letěti/leti,
+// zavisěti/zavisi). На -ěje- — uměti (с razuměti) и spěti.
+const JE_CLASS_ETI = /(uměti|spěti)$/;
+const FINAL_VOWEL = /[aeiouyěęųå]$/;
+
 export function extractProtoStems(infinitive: string): ExtractedStems {
     const lemma = infinitive.toLowerCase().trim();
 
-    if (lemma.endsWith('iti') && lemma.length > 5) {
+    // Корень минимум из двух букв: učiti — IV класс (uči), а piti/biti/šiti —
+    // односложные основы на гласный с презенсом на -je- (pije), см. ниже.
+    // Прежний порог длины > 5 отправлял и učiti туда же.
+    if (lemma.endsWith('iti') && lemma.length >= 5) {
         const root = lemma.slice(0, -3);
         return { infStem: root + 'i', presentStem: root + 'i', aoristStem: root + 'i', verbClass: 'IV' };
+    }
+    if (lemma.endsWith('ěti') && lemma.length > 4) {
+        const root = lemma.slice(0, -3);
+        if (JE_CLASS_ETI.test(lemma)) {
+            return { infStem: root + 'ě', presentStem: root + 'ěje', aoristStem: root + 'ě', verbClass: 'I' };
+        }
+        return { infStem: root + 'ě', presentStem: root + 'i', aoristStem: root + 'ě', verbClass: 'IV' };
     }
     if (lemma.endsWith('ovati')) {
         const root = lemma.slice(0, -5);
@@ -270,8 +328,93 @@ export function extractProtoStems(infinitive: string): ExtractedStems {
     }
 
     const rawRoot = lemma.slice(0, -2);
+    // Основа на гласный (čuti, piti, kryti, byti): презенс на -je- — čuje, pije.
+    // Без j получалось "cueš"/"cue".
+    if (FINAL_VOWEL.test(rawRoot)) {
+        return { infStem: rawRoot, presentStem: rawRoot + 'je', aoristStem: rawRoot, verbClass: 'I' };
+    }
     const palatalizedRoot = applyFirstPalatalization(rawRoot);
     return { infStem: rawRoot, presentStem: palatalizedRoot + 'e', aoristStem: rawRoot, verbClass: 'I' };
+}
+
+const FOLDED_VERBAL_PREFIXES = new Set([...VERBAL_PREFIXES].map((p) => foldDiacritics(p)));
+
+/**
+ * Нерегулярный презенс глагола (см. IRREGULAR_PRESENTS), с приставкой, если
+ * она есть: prodati -> prodam. Приставка проверяется по списку, иначе
+ * "gledati" сошло бы за gle + dati.
+ */
+export function irregularPresent(infinitive: string): FullParadigm[] | null {
+    const lemma = infinitive.toLowerCase().trim();
+    const folded = foldDiacritics(lemma);
+    for (const [key, paradigms] of Object.entries(IRREGULAR_PRESENTS)) {
+        const foldedKey = foldDiacritics(key);
+        if (!folded.endsWith(foldedKey)) continue;
+        const prefixLength = folded.length - foldedKey.length;
+        // Приставочные от byti (zabyti, dobyti) спрягаются иначе — только сам byti.
+        if (key === 'byti' && prefixLength > 0) continue;
+        if (!FOLDED_VERBAL_PREFIXES.has(folded.slice(0, prefixLength))) continue;
+        const prefix = lemma.slice(0, prefixLength);
+        return paradigms.map((paradigm) => {
+            const prefixed = {} as FullParadigm;
+            (Object.keys(paradigm) as Array<keyof FullParadigm>).forEach((k) => {
+                prefixed[k] = prefix + paradigm[k];
+            });
+            return prefixed;
+        });
+    }
+    return null;
+}
+
+/**
+ * Инфинитив в каноническом написании. value глагола часто записан без
+ * диакритики ("uciti", "videti", "cuti"), а стем — с ней ("uči", "vidě", "ču"),
+ * и по value классы и чередования выводились неверно: "ucių" вместо "uču",
+ * "cueš" вместо "čuješ". У AUX-лексем стем — сам инфинитив ("mogti").
+ */
+export function canonicalInfinitive(head: string, stem?: string | null): string {
+    const h = head.toLowerCase().trim();
+    const s = (stem ?? '').toLowerCase().trim();
+    if (!s) return h;
+    if (foldDiacritics(s + 'ti') === foldDiacritics(h)) return s + 'ti';
+    if (foldDiacritics(s) === foldDiacritics(h)) return s;
+    return h;
+}
+
+export interface VerbLexemeInput {
+    /** Инфинитив без механического хвоста, как он записан в value. */
+    head: string;
+    stem?: string | null;
+    secondaryStem?: string | null;
+    tertiaryStem?: string | null;
+    aspect: VerbalAspect;
+    paradigm: AccentParadigm;
+    stressPosition?: number | null;
+    morphemes?: { value: string; stressPosition?: number | null }[];
+}
+
+/**
+ * Модель глагола из полей лексемы — одна на корпусный движок (processVerb) и
+ * страницу слова (Word.tsx). До неё страница собирала модель сама и не
+ * передавала secondaryStem вовсе, так что "pisati" спрягалось как "pisajų".
+ */
+export function buildVerbModel(input: VerbLexemeInput): VerbModel {
+    const infinitive = canonicalInfinitive(input.head, input.stem);
+    const stems = extractProtoStems(infinitive);
+    const secondary = input.secondaryStem?.trim() || null;
+    return {
+        infinitive,
+        infStem: stems.infStem,
+        presentStem: secondary || stems.presentStem,
+        aoristStem: stems.aoristStem,
+        tertiaryStem: input.tertiaryStem || undefined,
+        // Основа настоящего на -i (vidi, leži, slyši) — IV класс, какой бы класс ни дал инфинитив.
+        verbClass: secondary?.endsWith('i') ? 'IV' : stems.verbClass,
+        aspect: input.aspect,
+        paradigm: input.paradigm,
+        stressPosition: input.stressPosition,
+        morphemes: input.morphemes,
+    };
 }
 
 // =========================================================================
@@ -413,6 +556,11 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
     const hasThematicE = presentStem.endsWith('e');
     const baseForVowels = hasThematicE ? presentStem.slice(0, -1) : presentStem;
 
+    // Заднеязычный I класса палатализуется только перед e: 1 л. ед. и 3 л. мн.
+    // сохраняют исходный согласный — mogų/možeš/mogųt, pekų/pečeš/pekųt.
+    const velarBase = verbClass === 'I' && hasThematicE && infStem !== baseForVowels
+        && applyFirstPalatalization(infStem) === baseForVowels ? infStem : baseForVowels;
+
     const presentStemType = verbClass === 'IV' ? 'verb_present_athematic_i' : 'verb_present_thematic_e';
 
     let p1sg = '';
@@ -420,12 +568,12 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         const root = presentStem.slice(0, -1);
         p1sg = `${applyIotation(root)}${getVE(presentStemType, '1sg', PRES_GRAMMEME, 'ų')}`;
     } else {
-        p1sg = `${baseForVowels}${getVE(presentStemType, '1sg', PRES_GRAMMEME, 'ų')}`;
+        p1sg = `${velarBase}${getVE(presentStemType, '1sg', PRES_GRAMMEME, 'ų')}`;
     }
 
     const p3pl = verbClass === 'IV'
         ? `${presentStem.slice(0, -1)}${getVE(presentStemType, '3pl', PRES_GRAMMEME, 'ęt')}`
-        : `${baseForVowels}${getVE(presentStemType, '3pl', PRES_GRAMMEME, 'ųt')}`;
+        : `${velarBase}${getVE(presentStemType, '3pl', PRES_GRAMMEME, 'ųt')}`;
 
     const accentPresentForm = (form: string, person: string): string => {
         const override = overrideFor(form);
@@ -445,7 +593,19 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         return form;
     };
 
-    const directParadigm: FullParadigm = {
+    const accentParadigmForms = (forms: FullParadigm): FullParadigm => {
+        const accented = {} as FullParadigm;
+        (Object.keys(forms) as Array<keyof FullParadigm>).forEach((person) => {
+            accented[person] = accentPresentForm(forms[person], person);
+        });
+        return accented;
+    };
+
+    // Атематические и супплетивные глаголы (dati, věděti, iměti, hotěti, byti)
+    // берут готовую сетку вместо правил.
+    const irregular = irregularPresent(infinitive);
+
+    const directParadigm: FullParadigm = irregular ? accentParadigmForms(irregular[0]) : {
         '1sg': accentPresentForm(p1sg, '1sg'),
         '2sg': accentPresentForm(`${presentStem}${getVE(presentStemType, '2sg', PRES_GRAMMEME, 'š')}`, '2sg'),
         '3sg': accentPresentForm(`${presentStem}${getVE(presentStemType, '3sg', PRES_GRAMMEME, '')}`, '3sg'),
@@ -457,14 +617,14 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         '3pl': accentPresentForm(p3pl, '3pl'),
     };
 
-    // Краткая парадигма настоящего времени для глаголов на -ati. Основа —
-    // презентная без тематического "je" ("znaje" -> "zna"); 3 л. мн. берёт
-    // "jut" и восстанавливает j ("znajut"). Класс III в extractProtoStems
-    // покрывает и -ati (presentStem на "aje"), и -ovati (на "uje") — краткую
-    // парадигму берут только первые, поэтому проверяем именно окончание
-    // основы, а не verbClass.
-    const shortPresentStem = presentStem.endsWith('aje') ? presentStem.slice(0, -2) : null;
-    const shortPresent: FullParadigm | undefined = shortPresentStem
+    // Краткая парадигма настоящего времени для глаголов на -ati и -ěti с
+    // презенсом на -ěje- (razuměm). Основа — презентная без тематического "je"
+    // ("znaje" -> "zna"); 3 л. мн. берёт "jut" и восстанавливает j ("znajut").
+    // Класс III в extractProtoStems покрывает и -ati (presentStem на "aje"), и
+    // -ovati (на "uje") — краткую парадигму берут только первые, поэтому
+    // проверяем именно окончание основы, а не verbClass.
+    const shortPresentStem = presentStem.endsWith('aje') || presentStem.endsWith('ěje') ? presentStem.slice(0, -2) : null;
+    let shortPresent: FullParadigm | undefined = shortPresentStem
         ? {
             '1sg': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '1sg', PRES_GRAMMEME, 'm')}`, '1sg'),
             '2sg': accentPresentForm(`${shortPresentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '2sg', PRES_GRAMMEME, 'š')}`, '2sg'),
@@ -478,8 +638,22 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         }
         : undefined;
 
+    // IV класс: краткое 1 л. ед. на -m рядом с йотированным (učim 1 157 и uču 365
+    // в корпусе, govorim/govorjų); остальные лица у обеих форм общие.
+    if (!shortPresent && verbClass === 'IV' && presentStem.endsWith('i')) {
+        shortPresent = {
+            ...directParadigm,
+            '1sg': accentPresentForm(`${presentStem}${getVE(SHORT_PRESENT_STEM_TYPE, '1sg', PRES_GRAMMEME, 'm')}`, '1sg'),
+        };
+    }
+    if (irregular) {
+        shortPresent = irregular[1] ? accentParadigmForms(irregular[1]) : undefined;
+    }
+
     // --- Б. АОРИСТ ---
-    const isVowelStem = ['III', 'IV'].includes(verbClass) || infStem.endsWith('a') || infStem.endsWith('i');
+    // Любая основа на гласный даёт сигматический аорист: byh/by/byste у byti,
+    // а не "bye".
+    const isVowelStem = ['III', 'IV'].includes(verbClass) || FINAL_VOWEL.test(infStem);
 
     const accentAoristForm = (form: string, person: string): string => {
         const override = overrideFor(form);
@@ -529,8 +703,12 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
     };
 
     const lStem = tertiaryStem || infStem;
+    // Основа на š (šьd- у idti и приставочных) получает в мужском роде беглое e:
+    // šel, prišel, našel — в корпусе 221/446/770 против единичных šl/prišl. У
+    // прочих согласных e не пишется: mogl — 1 436, mogel — 3.
+    const lStemMasc = lStem.endsWith('š') ? `${lStem}e` : lStem;
     const lParticiple: LParticiple = {
-        masculine: accentLPart(`${lStem}${getLPartEnding('Masc', 'sg', 'l')}`, 'm'),
+        masculine: accentLPart(`${lStemMasc}${getLPartEnding('Masc', 'sg', 'l')}`, 'm'),
         feminine: accentLPart(`${lStem}${getLPartEnding('Fem', 'sg', 'la')}`, 'f'),
         neuter: accentLPart(`${lStem}${getLPartEnding('Neut', 'sg', 'lo')}`, 'n'),
         dual_masculine: accentLPart(`${lStem}${getLPartEnding('Masc', 'du', 'la')}`, 'pl'),
@@ -582,7 +760,11 @@ export function conjugateFullVerb(verb: VerbModel): ConjugationResult {
         impBaseForm = `${presentStem}`;
     } else {
         const rootWithoutE = hasThematicE ? presentStem.slice(0, -1) : presentStem;
-        impBaseForm = rootWithoutE.endsWith('j') ? rootWithoutE : `${rootWithoutE}j`;
+        // После согласной — -i (idi, piši), после гласной — -j (znaj, čuj).
+        // Раньше -j ставился всегда: "idj", "jesj".
+        if (rootWithoutE.endsWith('j')) impBaseForm = rootWithoutE;
+        else if (FINAL_VOWEL.test(rootWithoutE)) impBaseForm = `${rootWithoutE}j`;
+        else impBaseForm = `${rootWithoutE}i`;
     }
 
     const accentImperative = (form: string) => {

@@ -3,7 +3,7 @@ import {isvToCyr, isvToGlagolitic, isvToTranscription, standardToSimple, standar
 import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {useTranslations} from "next-intl";
-import {extractProtoStems, conjugateFullVerb} from "@/lib/grammar/verb";
+import {buildVerbModel, conjugateFullVerb} from "@/lib/grammar/verb";
 import {splitMechanicalVerbTail, appendTailToConjugation} from "@/lib/grammar/verb/mechanicalTail";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
 import {NounDeclensionTables} from "@/app/words/[id]/NounDeclensionTables";
@@ -74,17 +74,16 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
             // спрягается только head, tailSuffix приклеивается ко всем формам.
             // См. lib/grammar/verb/mechanicalTail.ts.
             const { head, tailSuffix } = splitMechanicalVerbTail(item.value, knownPrepositions ?? []);
-            const stems = extractProtoStems(head);
-            verbData = appendTailToConjugation(conjugateFullVerb({
-                infinitive: head,
-                infStem: stems.infStem,
-                presentStem: stems.presentStem,
-                aoristStem: stems.aoristStem,
-                tertiaryStem: item.tertiaryStem || undefined,
-                verbClass: stems.verbClass,
+            // Та же модель, что у корпусного движка (processVerb): канонический
+            // инфинитив по стему, основы настоящего времени и l-причастия, класс.
+            verbData = appendTailToConjugation(conjugateFullVerb(buildVerbModel({
+                head,
+                stem: item.stem,
+                secondaryStem: item.secondaryStem,
+                tertiaryStem: item.tertiaryStem,
                 aspect: (meta.aspect as VerbalAspect) || VerbalAspect.IPF,
                 paradigm: (item.paradigm as AccentParadigm) || AccentParadigm.A,
-            }), tailSuffix);
+            })), tailSuffix);
         } catch (e) {
             console.error("Error generating verb paradigm:", e);
         }
