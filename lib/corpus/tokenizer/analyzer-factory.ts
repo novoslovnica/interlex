@@ -221,7 +221,7 @@ function parseWordIds(raw: string): Map<number, string> {
 // расхождение было бы молчаливым. Цена — 7,7 с и ~53 МБ на процесс,
 // измерено на 24 440 лексемах / 883 355 формах; собирается лениво, один раз
 // (см. createDbAnalyzer и getAnalyzer в вызывающих роутах).
-export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
+export async function buildGeneratedFormIndex(knownPrepositions: string[] = []): Promise<FoldedBaseIndex> {
   const lexemes = await prismaData.lexeme.findMany({
     where: HAS_MEANING,
     select: {
@@ -259,6 +259,7 @@ export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
           fleetingVowelAt: null,
           flavor: "CORE",
           isCollocation: l.isCollocation ?? false,
+          knownPrepositions,
         }, true))
       } catch {
         // Одна лексема с кривыми грамматическими полями не должна ронять
@@ -290,12 +291,14 @@ export async function buildGeneratedFormIndex(): Promise<FoldedBaseIndex> {
 // добавление нового индекса требовало не забыть 11 файлов (ровно так
 // InflectionAnomaly и оставался годами write-only, см. AGENTS.md).
 export async function createDbAnalyzer(): Promise<DbAnalyzer> {
-  const [validEndings, knownPrepositions, inflectionAnomalies, foldedBases, generatedForms] = await Promise.all([
+  // Предлоги нужны индексу форм: без них глагол с хвостом ("zaviseti od")
+  // не отделяет голову от предлога и порождает мусор вместо "zavisi".
+  const knownPrepositions = await buildKnownPrepositions()
+  const [validEndings, inflectionAnomalies, foldedBases, generatedForms] = await Promise.all([
     buildValidEndings(),
-    buildKnownPrepositions(),
     buildInflectionAnomalyIndex(),
     buildFoldedBaseIndex(),
-    buildGeneratedFormIndex(),
+    buildGeneratedFormIndex(knownPrepositions),
   ])
   return new DbAnalyzer(
     createQueryWordsByBase(foldedBases, generatedForms),

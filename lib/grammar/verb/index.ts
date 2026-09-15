@@ -293,7 +293,8 @@ function accentSyllable(word: string, position: number | 'first', tone: AccentTy
 
 // -ěti: чаще всего IV класс с презенсом на -i- (viděti/vidi, letěti/leti,
 // zavisěti/zavisi). На -ěje- — uměti (с razuměti) и spěti.
-const JE_CLASS_ETI = /(uměti|spěti)$/;
+// Сравнивается со свёрнутой леммой, поэтому без ě.
+const JE_CLASS_ETI = /(umeti|speti)$/;
 const FINAL_VOWEL = /[aeiouyěęųå]$/;
 
 export function extractProtoStems(infinitive: string): ExtractedStems {
@@ -306,12 +307,15 @@ export function extractProtoStems(infinitive: string): ExtractedStems {
         const root = lemma.slice(0, -3);
         return { infStem: root + 'i', presentStem: root + 'i', aoristStem: root + 'i', verbClass: 'IV' };
     }
-    if (lemma.endsWith('ěti') && lemma.length > 4) {
+    // Без диакритики "-eti" почти всегда то же -ěti ("zaviseti", "videti"):
+    // настоящих глаголов на -eti в ISV единицы. Гласная сохраняется как написана.
+    if ((lemma.endsWith('ěti') || lemma.endsWith('eti')) && lemma.length > 4) {
         const root = lemma.slice(0, -3);
-        if (JE_CLASS_ETI.test(lemma)) {
-            return { infStem: root + 'ě', presentStem: root + 'ěje', aoristStem: root + 'ě', verbClass: 'I' };
+        const yat = lemma.slice(-3, -2);
+        if (JE_CLASS_ETI.test(foldDiacritics(lemma))) {
+            return { infStem: root + yat, presentStem: root + yat + 'je', aoristStem: root + yat, verbClass: 'I' };
         }
-        return { infStem: root + 'ě', presentStem: root + 'i', aoristStem: root + 'ě', verbClass: 'IV' };
+        return { infStem: root + yat, presentStem: root + 'i', aoristStem: root + yat, verbClass: 'IV' };
     }
     if (lemma.endsWith('ovati')) {
         const root = lemma.slice(0, -5);
@@ -374,7 +378,8 @@ export function irregularPresent(infinitive: string): FullParadigm[] | null {
  */
 export function canonicalInfinitive(head: string, stem?: string | null): string {
     const h = head.toLowerCase().trim();
-    const s = (stem ?? '').toLowerCase().trim();
+    // Стем глагола с хвостом хранит и хвост ("zavisěti od") — голова одна.
+    const s = (stem ?? '').toLowerCase().trim().split(/\s+/)[0];
     if (!s) return h;
     if (foldDiacritics(s + 'ti') === foldDiacritics(h)) return s + 'ti';
     if (foldDiacritics(s) === foldDiacritics(h)) return s;

@@ -18,7 +18,12 @@ export function generateWordForms(word: EngineWordInput, stripAccents?: boolean)
     // рендерятся инвариантно. "Глагол + sę/se/предлог" сюда не попадает (см.
     // scripts/db/2026-07-28-backfill-collocation-flag.ts) — такие случаи
     // регулярно спрягаются в processVerb.
-    if (word.isCollocation) {
+    // Флаг ставится на лексему целиком, а сюда приходит один её вариант
+    // написания: у "imeti, imati" или "slovjan, slovjanin" пробел есть только
+    // после запятой, и обычное слово "imeti" отдавалось неизменяемым — iměl,
+    // slovjani, slovjanov (тысячи вхождений) не распознавались. Одно слово
+    // словосочетанием быть не может.
+    if (word.isCollocation && /\s/.test(word.isv.trim())) {
         return [{ surfaceForm: stripAccents ? stripCombiningAccents(word.isv) : word.isv, feats: {} }];
     }
 

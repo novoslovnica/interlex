@@ -67,7 +67,7 @@ function analyzeSentence(
       continue
     }
 
-    const collocationMatch = collocationMatcher.matchAt(surfaceForms, i)
+    const collocationMatch = collocationMatcher.matchAt(surfaceForms, i) ?? collocationMatcher.matchJoined(surfaceForms[i])
     if (collocationMatch) {
       const span = sentenceTokens.slice(i, i + collocationMatch.length)
       const spanHasManual = span.some((t) => t.resolutionSource === "manual")

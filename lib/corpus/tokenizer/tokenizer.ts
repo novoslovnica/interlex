@@ -16,6 +16,12 @@ const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
 export const TOKEN_PATTERN = /[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]+/gu;
 export const PUNCTUATION_TEST = /^[^\p{L}\p{M}\p{N}_]+$/u;
 
+// Не текст, а разметка чата и веба: Discord-эмодзи "<:NAME:id>", ссылки,
+// команды TeX из формул Википедии. Без этого их куски становились токенами —
+// "ZLUNSKYSMIEH" (1 306 вхождений), "https", "www", "displaystyle" — и уходили
+// в очередь кандидатов как нераспознанные слова.
+export const NON_TEXT_SPANS = /<a?:\w+:\d+>|https?:\/\/\S+|www\.\S+|\\[A-Za-z]+/g;
+
 export class Tokenizer {
     public static splitIntoSegments(rawText: string): string[] {
         return rawText
@@ -36,7 +42,7 @@ export class Tokenizer {
         analyzer?: DbAnalyzer,
         collocationMatcher?: CollocationMatcher
     ): Promise<TokenPayload[]> {
-        const rawTokens = sentenceText.match(TOKEN_PATTERN) || [];
+        const rawTokens = sentenceText.replace(NON_TEXT_SPANS, ' ').match(TOKEN_PATTERN) || [];
         const results: TokenPayload[] = [];
 
         let i = 0;
@@ -49,7 +55,7 @@ export class Tokenizer {
             // Без него такие лексемы никогда не находятся по-токенному
             // анализатором ниже.
             if (!isPunct && collocationMatcher) {
-                const match = collocationMatcher.matchAt(rawTokens, i);
+                const match = collocationMatcher.matchAt(rawTokens, i) ?? collocationMatcher.matchJoined(t);
                 if (match) {
                     const analysis: MorphoAnalysis = {
                         lemma: match.record.lemma,

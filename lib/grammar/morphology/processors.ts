@@ -97,6 +97,29 @@ export function processNoun(word: EngineWordInput): GeneratedForm[] {
         });
     }
 
+    // s-основы (slovo/sloves-, nebo/nebes-) в современном ISV в основном
+    // склоняются без наращения, как обычный средний род: в корпусе slov (2 747),
+    // slovami, slovu, slovom. Регулярные формы — варианты рядом с sloves-.
+    const isSStem = String(dbItem.protoStemClass).toLowerCase() === 'consonant'
+        && String(dbItem.stemExtension).toLowerCase() === 'es';
+    if (isSStem) {
+        const regularItem: EnhancedDbItem = { ...dbItem, protoStemClass: 'o', stemExtension: undefined };
+        for (const num of numbers) {
+            for (const cas of cases) {
+                results.push({
+                    surfaceForm: declineWordAutomatically({ dbItem: regularItem, targetCase: cas, targetNumber: num, flavor: word.flavor }),
+                    feats: { case: cas, number: (num === NumberType.SINGULAR ? 'sg' : num === NumberType.PLURAL ? 'pl' : 'du') as GrammaticalNumber, gender: genderFeat },
+                });
+            }
+        }
+        for (const { targetCase, form } of declineModernPluralVariants(regularItem, word.flavor)) {
+            results.push({
+                surfaceForm: form,
+                feats: { case: targetCase as GrammaticalCase, number: 'pl' as GrammaticalNumber, gender: genderFeat },
+            });
+        }
+    }
+
     return results;
 }
 
@@ -629,8 +652,20 @@ export function processNumeral(word: EngineWordInput): GeneratedForm[] {
     // СТРАТЕГИЯ 3: КОЛИЧЕСТВЕННЫЕ ЧИСЛИТЕЛЬНЫЕ (Базовые подклассы 1, 2-4, 5-10)
     // =========================================================================
     let numClass: 'one' | 'two_to_four' | 'five_to_ten' = 'five_to_ten';
-    if (word.isv === 'edin') numClass = 'one';
-    else if (['dva', 'tri', 'četyri', 'četyre'].includes(word.isv)) numClass = 'two_to_four';
+    if (numeralLemma === 'edin') numClass = 'one';
+    else if (['dva', 'tri', 'četyri', 'četyre'].includes(numeralLemma)) numClass = 'two_to_four';
+
+    // Косвенные падежи 2-4 в современном ISV: dvoh/dvom/dvoma, trěh/trěm/trěmi,
+    // četyrěh/četyrěm/četyrmi. Сетка ниже даёт двойственные dvoju/dvyma, а в
+    // корпусе dvoh — 749, dvoma — 222. Добавляются вариантами.
+    const TWO_TO_FOUR_OBLIQUE: Record<string, [string, string][]> = {
+        dva: [['dvoh', 'gen'], ['dvoh', 'loc'], ['dvom', 'dat'], ['dvoma', 'ins'], ['dvoma', 'dat']],
+        tri: [['trěh', 'gen'], ['trěh', 'loc'], ['trěm', 'dat'], ['trěmi', 'ins']],
+        četyri: [['četyrěh', 'gen'], ['četyrěh', 'loc'], ['četyrěm', 'dat'], ['četyrmi', 'ins']],
+    };
+    for (const [form, cas] of TWO_TO_FOUR_OBLIQUE[numeralLemma] ?? []) {
+        results.push({ surfaceForm: form, feats: { case: cas as GrammaticalCase } });
+    }
 
     const cardItem: EnhancedNumDbItem = {
         interslavic: word.isv,
