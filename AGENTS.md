@@ -493,3 +493,21 @@ While working through the roadmap's P3 feature backlog (`docs/roadmap.md`), the 
 ### Key Files
 - `app/api/synonyms/second-level/route.ts` — session check removed
 - `app/words/[id]/SynonymGraph.tsx` — defensive fetch handling (`r.ok` check, `.catch()`, `Array.isArray` guard before `.filter()`)
+
+---
+
+## Corpus recognition pass over the candidate queue (2026-09-15)
+
+Measured by running the current `DbAnalyzer` over the 3 000 most frequent pending `CorpusCandidateProposal` clusters (406 500 occurrences). Before this pass it recognized **none** of them — the queue was full of forms of existing lexemes the engine could not produce, not new words. After it: 1 259 clusters, 218 264 occurrences (53.7%). The corpus itself was **not** reanalyzed and proposals were **not** regenerated — the maintainer is batching that for later; until then the queue still shows these clusters.
+
+Causes found and fixed, in commits 938cd5e..85917db (each commit message has the numbers):
+- **Lexeme.value is often undiacriticized while `stem` has the real spelling** ("uciti"/"uči", "cto"/"čto", "tutoj"/"tutȯj"). Verbs and pronouns now take the canonical form from the stem (`buildVerbModel`/`canonicalInfinitive` in `lib/grammar/verb/index.ts`, `canonicalPronounLemma` in `lib/grammar/pronoun/index.ts`). Nouns already used the stem.
+- **secondaryStem/tertiaryStem never reached the engine** from the analyzer or the form index, and the word page never passed secondaryStem. `buildVerbModel` is now the single verb-model builder for `processVerb` and `Word.tsx`.
+- **`isCollocation` is lexeme-level but the engine sees one spelling variant**: "imeti, imati" was flagged only for the space after the comma. The invariant rule now requires whitespace in the variant (`engine.ts`). A VERB lexeme whose citation form is not an infinitive ("je, jest", `kot-v`) is emitted as-is.
+- **Pronouns other than ja/ty/on returned the lemma in every cell.** `classifyPronoun` routes possessive/determiner pronouns to the `adj_soft`/`adj_hard` endings with a short masculine nominative, handles kto/čto prefixes and particles, on's plural and n- forms, sebe.
+- **Nouns**: jo/jā stems are stored without j (~2 000 lexemes) → `softStemWithJ`; ė/ȯ fleeting vowels → `dropFleetingVowel`; s-stems also decline regularly; modern plural endings (-ov/-ev/-am/-ami/-ah) are recognition **variants** — primary endings in `ending_allophones` were deliberately left for `/admin/endings`.
+- **Verbs**: vowel stems take -je-, -ěti is class IV except uměti/spěti, velar 1sg/3pl, d+j→dž, -el after š, imperative -i, sigmatic aorist for vowel stems, short 1sg -im/-ěm, an irregular-present table (dati/jesti/věděti/iměti/hotěti/byti, with verbal prefixes from a list), conditional particles byh/bys/by, AUX conjugated like VERB. Every contested choice was decided by corpus frequency (vidžu 1 515 vs vižu 35, byh 3 635 vs bim ~0, mogl 1 436 vs mogel 3) — check the corpus the same way before changing any of them.
+- `foldDiacritics`: soft consonant before a back vowel folds to Cj (stolěťa = stoletja); any stress mark is stripped. `etymCyrToEtymLat`/`isCyrillic`: standard Cyrillic ј/љ/њ/ћ/ђ/ѕ.
+- Tokenizer drops Discord emoji, links and TeX commands (`NON_TEXT_SPANS`) — effective only on retokenization. `CollocationMatcher.matchJoined` matches "daby" = "da by".
+
+**Still open**: participle endings (verb_part_*) are still Proto-Slavic-shaped (govorjęti for govoreći); vėś/ves as a noun competes with the pronoun; the 1 373 still-red clusters in the sample are mostly genuine new words, names, English and single letters (the latter are closed as rejected by `reconcileProposals` on the next `corpus:refresh`).
