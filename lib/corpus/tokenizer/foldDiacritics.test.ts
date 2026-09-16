@@ -56,3 +56,21 @@ describe("foldDiacritics", () => {
         expect(foldDiacritics(foldDiacritics("stolěťa"))).toBe("stoletja");
     });
 });
+
+describe("đ and dž are the same letter in two orthographies", () => {
+    it("folds đ where dž folds, so the dictionary stem meets the corpus spelling", () => {
+        // Стем словаря пишется через đ, корпус — через dž (18 228 токенов
+        // medžu- против 419 među-). Раньше đ сворачивалась в голое d, и слово
+        // не находилось ни в одной форме.
+        expect(foldDiacritics("međuslovjańsk")).toBe(foldDiacritics("medžuslovjansk"));
+        expect(foldDiacritics("međuslovjańsk")).toBe("medzuslovjansk");
+        expect(foldDiacritics("rođeńje")).toBe(foldDiacritics("rodženje"));
+        expect(foldDiacritics("prěđe")).toBe(foldDiacritics("predže"));
+    });
+
+    it("keeps matching the plain dz spelling the dictionary uses in value", () => {
+        // medža-n: value "medza", stem "medž" — обе стороны дают medz.
+        expect(foldDiacritics("medž")).toBe("medz");
+        expect(foldDiacritics("medza")).toBe("medza");
+    });
+});
