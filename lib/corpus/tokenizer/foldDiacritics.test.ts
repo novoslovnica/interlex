@@ -57,20 +57,15 @@ describe("foldDiacritics", () => {
     });
 });
 
-describe("đ and dž are the same letter in two orthographies", () => {
-    it("folds đ where dž folds, so the dictionary stem meets the corpus spelling", () => {
-        // Стем словаря пишется через đ, корпус — через dž (18 228 токенов
-        // medžu- против 419 među-). Раньше đ сворачивалась в голое d, и слово
-        // не находилось ни в одной форме.
-        expect(foldDiacritics("međuslovjańsk")).toBe(foldDiacritics("medžuslovjansk"));
-        expect(foldDiacritics("međuslovjańsk")).toBe("medzuslovjansk");
-        expect(foldDiacritics("rođeńje")).toBe(foldDiacritics("rodženje"));
-        expect(foldDiacritics("prěđe")).toBe(foldDiacritics("predže"));
+describe("đ folds like the value spelling of the same lexemes", () => {
+    it("folds đ to d, matching value against stem", () => {
+        // meduslovjansky-ADJ: value "meduslovjansky", stem "međuslovjańsk".
+        expect(foldDiacritics("međuslovjańsk")).toBe("meduslovjansk");
+        expect(foldDiacritics("rođeń")).toBe("roden");
     });
 
-    it("keeps matching the plain dz spelling the dictionary uses in value", () => {
-        // medža-n: value "medza", stem "medž" — обе стороны дают medz.
+    it("still folds the dž digraph the dictionary uses in other values", () => {
+        // medza-NOUN: value "medza", stem "medž".
         expect(foldDiacritics("medž")).toBe("medz");
-        expect(foldDiacritics("medza")).toBe("medza");
     });
 });

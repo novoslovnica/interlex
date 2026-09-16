@@ -19,6 +19,16 @@ const SIMPLIFIED_TO_CANONICAL: Record<string, string[]> = {
     i: ['y'],
 };
 
+// Диграф: "dž" — обычная запись канонической "đ" (medža = međa). В корпусе
+// через dž пишут на порядок чаще, чем через đ (18 228 токенов medžu- против
+// 419 među-), а стем словаря хранит đ, поэтому без этой пары слово не
+// находилось ни в одной форме. Свёрткой это не решается: đ упрощают и до
+// голого d ("meduslovjansky" при стеме "međuslovjańsk"), так что свёртка
+// обязана вести đ в d, иначе стем перестаёт совпадать со своим же value.
+const DIGRAPH_TO_CANONICAL: Record<string, string> = {
+    'dž': 'đ',
+};
+
 // y is only written after a consonant; after a vowel, j or at the start of a
 // word an "i" is just an "i".
 const NOT_BEFORE_Y = /[aeiouyěęǫųåėȯj]/;
@@ -45,7 +55,7 @@ function alternativesAt(form: string, index: number, ch: string): string[] | und
  * input. Always returns the original form first. Cartesian product over
  * the expandable positions, capped at MAX_VARIANTS.
  */
-export function expandSpellingVariants(form: string): string[] {
+function expandLetters(form: string): string[] {
     const chars = [...form];
     let variants = [''];
     for (let i = 0; i < chars.length; i++) {
@@ -65,4 +75,21 @@ export function expandSpellingVariants(form: string): string[] {
 
     const rest = variants.filter((v) => v !== form);
     return [form, ...rest];
+}
+
+export function expandSpellingVariants(form: string): string[] {
+    const bases = [form];
+    for (const [digraph, canonical] of Object.entries(DIGRAPH_TO_CANONICAL)) {
+        if (form.includes(digraph)) bases.push(form.split(digraph).join(canonical));
+    }
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const base of bases) {
+        for (const variant of expandLetters(base)) {
+            if (seen.has(variant) || out.length >= MAX_VARIANTS) continue;
+            seen.add(variant);
+            out.push(variant);
+        }
+    }
+    return out;
 }

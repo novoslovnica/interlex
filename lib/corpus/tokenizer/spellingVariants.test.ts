@@ -44,3 +44,15 @@ describe("expandSpellingVariants", () => {
         expect(result[0]).toBe("uput");
     });
 });
+
+describe("dž stands in for the canonical đ", () => {
+    it("offers the đ spelling the dictionary stem uses", () => {
+        const variants = expandSpellingVariants("medžuslovjanskogo");
+        expect(variants[0]).toBe("medžuslovjanskogo");
+        expect(variants).toContain("međuslovjanskogo");
+    });
+
+    it("leaves words without the digraph alone", () => {
+        expect(expandSpellingVariants("dom")).toEqual(["dom"]);
+    });
+});
