@@ -104,6 +104,29 @@ describe("verb lexemes whose citation form is not an infinitive", () => {
     })
 })
 
+describe("uninflected words whose value drops the diacritics", () => {
+    it("take the canonical spelling from the stem, keeping the plain one as a variant", () => {
+        const all = generateWordForms({ id: 1, slug: "treba-ADV", flavor: "CORE", isv: "treba", pos: "ADV", stem: "trěba" }, true)
+        expect(all.find((f) => f.surfaceForm === "trěba")?.variant).toBeFalsy()
+        expect(all.find((f) => f.surfaceForm === "treba")?.variant).toBe(true)
+    })
+
+    it("does the same for adpositions and conjunctions", () => {
+        expect(forms({ isv: "velmi", pos: "ADV", stem: "veľmi" }).has("veľmi")).toBe(true)
+        expect(forms({ isv: "ze", pos: "CCONJ", stem: "že" }).has("že")).toBe(true)
+        expect(forms({ isv: "crez", pos: "ADP", stem: "črěz" }).has("črěz")).toBe(true)
+    })
+
+    it("keeps the value when the stem is not merely its diacritical twin", () => {
+        expect([...forms({ isv: "no", pos: "CCONJ", stem: "no" })]).toEqual(["no"])
+        // У наречия стем — база для степеней сравнения ("dobr"), не другое
+        // написание: канон остаётся за value, степени строятся как прежде.
+        const dobro = forms({ isv: "dobro", pos: "ADV", stem: "dobr" })
+        expect(dobro.has("dobro")).toBe(true)
+        expect(dobro.has("dobrěje")).toBe(true)
+    })
+})
+
 describe("verbs with a prepositional tail", () => {
     it("conjugate the head taken from the stem", () => {
         const f = forms({

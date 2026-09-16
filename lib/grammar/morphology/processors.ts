@@ -13,6 +13,7 @@ import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteTon
 import { declineOrdinalNumeral, OrdinalDbItem } from '../numerals/ordinal';
 import { declineCollectiveNumeral, CollectiveDbItem, CollectiveClass } from '../numerals/collective';
 import { ALL_CASES, ALL_NUMBERS, NumberType } from '../endingsRegistry';
+import { canonicalFromStem } from '../common/stem';
 import { declineWordAutomatically, declineModernPluralVariants, declineIStemInstrumentalVariant, asNStemIfMisfiled } from '../declineNoun';
 import { EnhancedDbItem, resolveGender } from '../stemClassifier';
 import {
@@ -916,12 +917,18 @@ export function processDeterminer(word: EngineWordInput): GeneratedForm[] {
  */
 export function processAdverb(word: EngineWordInput): GeneratedForm[] {
     if (!word.isv) return [{ surfaceForm: '', feats: {} }];
-    const lemma = word.isv.toLowerCase().trim();
+    // Канон — со стема, как у неизменяемых (см. processUninflected): value часто
+    // записан без диакритики ("velmi", "tutcas", "naprimer"), а стем с ней. Без
+    // этого наречие совпадало со своим написанием только через свёртку и
+    // проигрывало лексеме, порождающей ту же форму буквально.
+    const lemma = canonicalFromStem(word.isv, word.stem);
+    const plain = word.isv.toLowerCase().trim();
 
     const results: GeneratedForm[] = [];
 
     const posForm = applyFourTonesMark(lemma, 1, getAcuteToneType(lemma, 1));
     results.push({ surfaceForm: posForm, feats: { degree: 'pos' } });
+    if (plain !== lemma) results.push({ surfaceForm: plain, feats: { degree: 'pos' }, variant: true });
 
     const isQualitative = lemma.endsWith('o') || lemma.endsWith('ě') || lemma.endsWith('e');
 
@@ -1009,10 +1016,22 @@ export function processUninflected(word: EngineWordInput): GeneratedForm[] {
         ? word.isv.replace(/[\u0301\u0300\u0302\u0311]/g, '')
         : word.isv;
 
-    return [
+    // Основная форма — каноническая, со стема: корпус пишет "trěba", "veľmi",
+    // "že", а value хранит "treba", "velmi", "ze". Без этого наречие совпадало
+    // со своим написанием только через свёртку диакритики и проигрывало любой
+    // лексеме, которая порождает ту же форму буквально ("trěba" — ещё и 3 л.
+    // ед. от trěbati). Написание из value остаётся распознавательным
+    // вариантом, чтобы упрощённое написание тоже находило слово.
+    const isSymbol = word.pos?.toUpperCase() === 'PUNCT' || word.pos?.toUpperCase() === 'SYM';
+    const plain = surfaceForm.toLowerCase().trim();
+    const canonical = isSymbol ? surfaceForm : canonicalFromStem(surfaceForm, word.stem);
+
+    const forms: GeneratedForm[] = [
         {
-            surfaceForm,
+            surfaceForm: canonical,
             feats: {} // Пустой объект признаков — маркер синтаксического инварианта
         }
     ];
+    if (!isSymbol && plain !== canonical) forms.push({ surfaceForm: plain, feats: {}, variant: true });
+    return forms;
 }

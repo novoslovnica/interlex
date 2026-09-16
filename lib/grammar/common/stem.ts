@@ -1,3 +1,21 @@
+import { foldDiacritics } from '@/lib/corpus/tokenizer/foldDiacritics';
+
+/**
+ * Каноническое написание слова: value в словаре часто записан без диакритики
+ * ("treba", "velmi", "ze"), а стем — с ней ("trěba", "veľmi", "že"). Если они
+ * различаются только диакритикой, канон — стем.
+ *
+ * Тот же приём, что у canonicalInfinitive (verb/index.ts) и
+ * canonicalPronounLemma (pronoun/index.ts); у глаголов правило шире — там
+ * стем ещё достраивается до инфинитива и отбрасывается механический хвост,
+ * поэтому та функция не сводится к этой.
+ */
+export function canonicalFromStem(value: string | null | undefined, stem: string | null | undefined): string {
+    const v = (value ?? '').toLowerCase().trim();
+    const s = (stem ?? '').toLowerCase().trim();
+    return s && foldDiacritics(s) === foldDiacritics(v) ? s : v;
+}
+
 export enum ProtoStemClass {
     A_LONG    = 'A_LONG',    // Основы на *-ā (древние твердые женского/мужского рода: *voda, *sluga)
     JA_LONG   = 'JA_LONG',   // Основы на *-jā (древние мягкие женского/мужского рода: *zemlja, *duša)
