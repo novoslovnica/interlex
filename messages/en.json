@@ -346,6 +346,24 @@
     },
     "saving": "Saving..."
   },
+  "downloads": {
+    "title": "Downloads",
+    "description": "Interslavic spell-checking dictionaries for LibreOffice, Firefox and any editor that supports Hunspell.",
+    "spellcheck": {
+      "heading": "Spell checking (Hunspell)",
+      "about": "Two dictionaries — Latin and Cyrillic — built from the lexicon: every public word in every form the grammar engine produces.",
+      "version": "Version {version} of {date}: {latin} Latin forms, {cyrillic} Cyrillic ones.",
+      "notBuilt": "The dictionaries have not been built yet."
+    },
+    "install": {
+      "heading": "How to install",
+      "libreoffice": "Download isv-spellcheck.oxt and double-click it (or Tools → Extension Manager → Add). Then select the text and choose the language in Format → Character → Language.",
+      "firefox": "Firefox and Thunderbird install dictionaries only as signed add-ons, and there is none yet. The files from the archive can be added by hand to Chromium-based browsers and to the system spell checker.",
+      "editorsHeading": "Other editors",
+      "editors": "isv-hunspell.zip contains isv_Latn.dic/.aff and isv_Cyrl.dic/.aff. They work with VS Code (Hunspell-based extensions), Obsidian, Vim/Neovim (via hunspell), Emacs and the Linux system spell checker.",
+      "spelling": "The Latin dictionary accepts the standard spelling (člověk, jezyk, sut) and the common simplified one (človek); suggestions lead to the standard."
+    }
+  },
   "flashcards": {
     "title": "Flashcards",
     "description": "Review vocabulary with spaced repetition. Cards you know well appear less often; cards you struggle with come back sooner.",

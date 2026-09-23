@@ -67,3 +67,6 @@ prod-translation-disagreements.json
 logs/
 corpus-manual-export.json
 .db-run.lock
+
+# scripts/export-hunspell.ts output
+exports/

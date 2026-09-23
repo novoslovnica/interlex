@@ -13,7 +13,19 @@ import { foldDiacritics } from '@/lib/corpus/tokenizer/foldDiacritics';
 export function canonicalFromStem(value: string | null | undefined, stem: string | null | undefined): string {
     const v = (value ?? '').toLowerCase().trim();
     const s = (stem ?? '').toLowerCase().trim();
-    return s && foldDiacritics(s) === foldDiacritics(v) ? s : v;
+    if (!s) return v;
+    const fv = foldDiacritics(v);
+    const fs = foldDiacritics(s);
+    if (fs === fv) return s;
+    // Стем без конечной гласной: у ~600 наречий value "takoze", стем "takož".
+    // Канон - стем с дописанным хвостом value ("takože"), иначе движок не
+    // порождает правильное написание вовсе, а только упрощённое.
+    const tailLength = fv.length - fs.length;
+    if (tailLength > 0 && tailLength <= 2 && fv.startsWith(fs)) {
+        const candidate = s + v.slice(v.length - tailLength);
+        if (foldDiacritics(candidate) === fv) return candidate;
+    }
+    return v;
 }
 
 export enum ProtoStemClass {

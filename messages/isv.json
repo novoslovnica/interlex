@@ -346,6 +346,24 @@
     },
     "saving": "Sohranjaju..."
   },
+  "downloads": {
+    "title": "Skačati",
+    "description": "Slovniky prověrky pravopisa medžuslovjanskogo jezyka za LibreOffice, Firefox i vsake redaktory s podporoju Hunspell.",
+    "spellcheck": {
+      "heading": "Prověrka pravopisa (Hunspell)",
+      "about": "Dva slovnika — latinica i kirilica, — sobrane iz leksikona: vse javne slova vo vsih formah, ktore tvori gramatičny motor.",
+      "version": "Versija {version} od {date}: {latin} form latinicoju, {cyrillic} — kiriliceju.",
+      "notBuilt": "Slovniky ješče ne sut sobrane."
+    },
+    "install": {
+      "heading": "Kako instalovati",
+      "libreoffice": "Skačajte isv-spellcheck.oxt i otvorite jego dvojnym kliknutjem (ili Servis → Upravjanje rozšireniami → Dodati). Potom označite tekst i izberite jezyk v Format → Znaky → Jezyk.",
+      "firefox": "Firefox i Thunderbird instalujut slovniky jedino kako podpisane rozširenja — takogo ješče ne jest. Fajly iz arhiva možno dodati ručno v brauzery na osnově Chromium i v sistemnu prověrku pravopisa.",
+      "editorsHeading": "Drugi redaktory",
+      "editors": "V arhivu isv-hunspell.zip sut fajly isv_Latn.dic/.aff i isv_Cyrl.dic/.aff. Razuměju je VS Code (rozširenja na Hunspell), Obsidian, Vim/Neovim (črez hunspell), Emacs i sistemna prověrka pravopisa v Linux.",
+      "spelling": "Latinsky slovnik prijima standardno pisanje (člověk, jezyk, sut) i rasprostranjeno uprosčeno (človek); podskazky vedut k standardnomu."
+    }
+  },
   "flashcards": {
     "title": "Kartočky",
     "description": "Povtarjajte slova s pomoćų sistemy intervalnogo povtorenja. Dobro znane kartočky pojavjajų sę rěže, a te, ke su trudne — čęsťěje.",

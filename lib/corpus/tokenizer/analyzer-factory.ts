@@ -1,6 +1,8 @@
 import { prismaData } from "@/lib/prisma"
 import { DbAnalyzer, WordBaseRecord, AnomalyMatch, InflectionAnomalyIndex, FoldedBaseIndex } from "./dbAnalyzer"
 import { generateWordForms } from "@/lib/grammar/morphology/engine"
+import type { GeneratedForm } from "@/lib/grammar/morphology"
+import type { Prisma } from "@/prisma/generated/data/client"
 import { CollocationRecord } from "./collocationMatcher"
 import { normalizeSurfaceForm } from "@/lib/corpus/candidates/reconstruct"
 import { isValidPos } from "@/lib/grammar/common"
@@ -222,22 +224,59 @@ function parseWordIds(raw: string): Map<number, string> {
 // измерено на 24 440 лексемах / 883 355 формах; собирается лениво, один раз
 // (см. createDbAnalyzer и getAnalyzer в вызывающих роутах).
 export async function buildGeneratedFormIndex(knownPrepositions: string[] = []): Promise<FoldedBaseIndex> {
+  const index: FoldedBaseIndex = new Map()
+  await forEachLexemeForms(knownPrepositions, HAS_MEANING, (l, forms) => {
+    for (const form of forms) {
+      const key = foldDiacritics(form.surfaceForm.toLowerCase())
+      // Односимвольные ключи не индексируем — по той же причине, что и в
+      // createQueryWordsByBase: они дают ложные совпадения на артефактах
+      // токенизации, а реальные однобуквенные слова находятся точным
+      // поиском по base_homonyms.
+      if (key.length < 2) continue
+      const ids = index.get(key)
+      if (ids) {
+        if (!ids.includes(l.id)) ids.push(l.id)
+      } else {
+        index.set(key, [l.id])
+      }
+    }
+  })
+  return index
+}
+
+export interface LexemeFormsSource {
+  id: number
+  slug: string
+  pos: string
+  isPublic: boolean
+  properNoun: boolean
+}
+
+// Все формы, которые движок порождает для каждой лексемы, - общий обход для
+// индекса форм (выше) и экспорта словаря проверки орфографии
+// (lib/export/hunspell). Один обход вместо двух копий: иначе они разошлись бы
+// в том, какие основы и варианты подаются движку.
+export async function forEachLexemeForms(
+  knownPrepositions: string[],
+  where: Prisma.LexemeWhereInput,
+  onLexeme: (lexeme: LexemeFormsSource, forms: GeneratedForm[]) => void,
+): Promise<void> {
   const lexemes = await prismaData.lexeme.findMany({
-    where: HAS_MEANING,
+    where,
     select: {
       id: true, slug: true, value: true, pos: true, protoStemClass: true,
       stemExtension: true, paradigm: true, stem: true, secondaryStem: true,
       tertiaryStem: true, gender: true, animacy: true, isCollocation: true,
+      isPublic: true, properNoun: true,
     },
   })
 
-  const index: FoldedBaseIndex = new Map()
   for (const l of lexemes) {
     if (!l.value || !l.pos || !isValidPos(l.pos.toUpperCase())) continue
     // Каждый вариант склоняется отдельно: подать движку стем
     // "altana, altank" целиком — значит получить мусорную парадигму.
     const variantPairs = lexemeVariants(l.value, l.stem)
-    const forms = []
+    const forms: GeneratedForm[] = []
     for (const variant of variantPairs) {
       try {
         forms.push(...generateWordForms({
@@ -268,22 +307,8 @@ export async function buildGeneratedFormIndex(knownPrepositions: string[] = []):
         continue
       }
     }
-    for (const form of forms) {
-      const key = foldDiacritics(form.surfaceForm.toLowerCase())
-      // Односимвольные ключи не индексируем — по той же причине, что и в
-      // createQueryWordsByBase: они дают ложные совпадения на артефактах
-      // токенизации, а реальные однобуквенные слова находятся точным
-      // поиском по base_homonyms.
-      if (key.length < 2) continue
-      const ids = index.get(key)
-      if (ids) {
-        if (!ids.includes(l.id)) ids.push(l.id)
-      } else {
-        index.set(key, [l.id])
-      }
-    }
+    onLexeme({ id: l.id, slug: l.slug, pos: l.pos.toUpperCase(), isPublic: l.isPublic, properNoun: l.properNoun }, forms)
   }
-  return index
 }
 
 // Единая точка сборки анализатора. До неё все 11 мест конструирования
