@@ -2,6 +2,11 @@ import { auth } from "@/auth"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import ProfileContent from "./ProfileContent"
+import Link from "next/link"
+import { getTranslations } from "next-intl/server"
+import { init } from "@/lib/sqlite"
+import { fetchContributorSummary } from "@/lib/community/publicStats"
+import { ContributionStats } from "@/components/community/ContributionStats"
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -23,6 +28,18 @@ export default async function ProfilePage() {
 
   const wordIds = collections.map(c => c.wordId)
 
+  const [profile, tCommunity, db] = await Promise.all([
+    dbAuth.userProfile.findUnique({ where: { userId: user.id }, select: { handle: true } }),
+    getTranslations("community.contribute"),
+    init(),
+  ])
+  let summary
+  try {
+    summary = fetchContributorSummary(db, user.id)
+  } finally {
+    db.close()
+  }
+
   return (
     <main className="max-w-3xl mx-auto px-4 py-8">
       <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-8">
@@ -43,6 +60,16 @@ export default async function ProfilePage() {
           Saved words: <strong>{wordIds.length}</strong>
         </p>
       </div>
+
+      {summary && (
+        <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-8 space-y-3">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">{tCommunity("yourStats")}</h2>
+            {profile && <Link href={`/u/${profile.handle}`} className="text-xs text-blue-600">{tCommunity("profileLink")} →</Link>}
+          </div>
+          <ContributionStats summary={summary} />
+        </div>
+      )}
 
       <ProfileContent wordIds={wordIds} translationLang={translationLang} />
     </main>
