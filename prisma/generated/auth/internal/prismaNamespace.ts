@@ -393,7 +393,10 @@ export const ModelName = {
   UserWordCollection: 'UserWordCollection',
   TelegramAuthNonce: 'TelegramAuthNonce',
   FlashcardProgress: 'FlashcardProgress',
-  ApiKey: 'ApiKey'
+  ApiKey: 'ApiKey',
+  UserLanguage: 'UserLanguage',
+  UserProfile: 'UserProfile',
+  RoleAudit: 'RoleAudit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection" | "telegramAuthNonce" | "flashcardProgress" | "apiKey"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "featurePermission" | "userSettings" | "userWordCollection" | "telegramAuthNonce" | "flashcardProgress" | "apiKey" | "userLanguage" | "userProfile" | "roleAudit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1156,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserLanguage: {
+      payload: Prisma.$UserLanguagePayload<ExtArgs>
+      fields: Prisma.UserLanguageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserLanguageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserLanguageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        findFirst: {
+          args: Prisma.UserLanguageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserLanguageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        findMany: {
+          args: Prisma.UserLanguageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>[]
+        }
+        create: {
+          args: Prisma.UserLanguageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        createMany: {
+          args: Prisma.UserLanguageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserLanguageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>[]
+        }
+        delete: {
+          args: Prisma.UserLanguageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        update: {
+          args: Prisma.UserLanguageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserLanguageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserLanguageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserLanguageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserLanguageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserLanguagePayload>
+        }
+        aggregate: {
+          args: Prisma.UserLanguageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserLanguage>
+        }
+        groupBy: {
+          args: Prisma.UserLanguageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserLanguageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserLanguageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserLanguageCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserProfile: {
+      payload: Prisma.$UserProfilePayload<ExtArgs>
+      fields: Prisma.UserProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.UserProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        findMany: {
+          args: Prisma.UserProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
+        }
+        create: {
+          args: Prisma.UserProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        createMany: {
+          args: Prisma.UserProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.UserProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        update: {
+          args: Prisma.UserProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.UserProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>[]
+        }
+        upsert: {
+          args: Prisma.UserProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.UserProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserProfile>
+        }
+        groupBy: {
+          args: Prisma.UserProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    RoleAudit: {
+      payload: Prisma.$RoleAuditPayload<ExtArgs>
+      fields: Prisma.RoleAuditFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RoleAuditFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RoleAuditFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        findFirst: {
+          args: Prisma.RoleAuditFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RoleAuditFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        findMany: {
+          args: Prisma.RoleAuditFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>[]
+        }
+        create: {
+          args: Prisma.RoleAuditCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        createMany: {
+          args: Prisma.RoleAuditCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RoleAuditCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>[]
+        }
+        delete: {
+          args: Prisma.RoleAuditDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        update: {
+          args: Prisma.RoleAuditUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        deleteMany: {
+          args: Prisma.RoleAuditDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RoleAuditUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RoleAuditUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>[]
+        }
+        upsert: {
+          args: Prisma.RoleAuditUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoleAuditPayload>
+        }
+        aggregate: {
+          args: Prisma.RoleAuditAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRoleAudit>
+        }
+        groupBy: {
+          args: Prisma.RoleAuditGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleAuditGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RoleAuditCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoleAuditCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1310,6 +1535,42 @@ export const ApiKeyScalarFieldEnum = {
 } as const
 
 export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+export const UserLanguageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  language: 'language',
+  level: 'level',
+  createdAt: 'createdAt'
+} as const
+
+export type UserLanguageScalarFieldEnum = (typeof UserLanguageScalarFieldEnum)[keyof typeof UserLanguageScalarFieldEnum]
+
+
+export const UserProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  handle: 'handle',
+  bio: 'bio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
+
+
+export const RoleAuditScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  targetUserId: 'targetUserId',
+  action: 'action',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  createdAt: 'createdAt'
+} as const
+
+export type RoleAuditScalarFieldEnum = (typeof RoleAuditScalarFieldEnum)[keyof typeof RoleAuditScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1502,6 +1763,9 @@ export type GlobalOmitConfig = {
   telegramAuthNonce?: Prisma.TelegramAuthNonceOmit
   flashcardProgress?: Prisma.FlashcardProgressOmit
   apiKey?: Prisma.ApiKeyOmit
+  userLanguage?: Prisma.UserLanguageOmit
+  userProfile?: Prisma.UserProfileOmit
+  roleAudit?: Prisma.RoleAuditOmit
 }
 
 /* Types for Logging */

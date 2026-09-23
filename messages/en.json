@@ -16,7 +16,8 @@
       "flashcards": "Flashcards",
       "admin": "Admin",
       "logout": "Log out",
-      "login": "Log in"
+      "login": "Log in",
+      "contribute": "Contribute"
     },
     "footer": {
       "protoslavic": "Proto-Slavic",
@@ -757,7 +758,10 @@
       "eo": "Esperanto",
       "hsb": "Upper Sorbian",
       "dsb": "Lower Sorbian"
-    }
+    },
+    "verifiedByModerator": "Checked by a moderator",
+    "verifiedByCommunity": "Checked by the community",
+    "helpVerify": "Speak one of these languages? Help check the translations"
   },
   "admin": {
     "title": "Admin Panel",
@@ -1160,6 +1164,98 @@
         "verify": "Verify",
         "unverify": "Unverify"
       }
+    }
+  },
+  "community": {
+    "settings": {
+      "languagesTitle": "My languages",
+      "languagesDescription": "Mark the languages you speak fluently. You will be offered translation review cards in them.",
+      "levelNative": "native",
+      "levelFluent": "fluent",
+      "languagesEmpty": "No languages selected — review cards are unavailable.",
+      "profileTitle": "Public handle",
+      "profileDescription": "Optional. Until you set a handle, your contributions are signed “Anonymous” and you have no public page. Your account name and e-mail are never published.",
+      "handleLabel": "Handle",
+      "handleHint": "3–30 characters: Latin letters, digits, “_” and “-”.",
+      "bioLabel": "About (optional)",
+      "save": "Save",
+      "saved": "Saved",
+      "remove": "Become anonymous",
+      "removeConfirm": "Remove your public handle? Your contributions stay but will be signed “Anonymous”.",
+      "profileLink": "Your page",
+      "errors": {
+        "too_short": "The handle is too short.",
+        "too_long": "The handle is too long.",
+        "invalid_chars": "Only Latin letters, digits, “_” and “-” are allowed; it must start and end with a letter or digit.",
+        "reserved": "This handle is reserved.",
+        "taken": "This handle is already taken.",
+        "bio_too_long": "The “About” text is too long.",
+        "generic": "Could not save."
+      }
+    },
+    "contribute": {
+      "title": "Help the dictionary",
+      "description": "Check translations of Interslavic words into your native language — a couple of minutes a day helps the dictionary.",
+      "heading": "Help the dictionary",
+      "intro": "Is the translation into your language correct? One answer takes a few seconds, and three agreeing answers from different people confirm a translation.",
+      "loginPrompt": "Sign in to answer the cards.",
+      "login": "Sign in",
+      "noLanguages": "Tell us which languages you speak fluently — cards will be offered in them.",
+      "chooseLanguages": "Choose languages",
+      "answered": "Answers this session: {count}",
+      "loading": "Loading…",
+      "done": "No more cards for this language. Thank you!",
+      "question": "Is this translation correct?",
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "unknown": "Don't know",
+      "skip": "Skip",
+      "suggestLabel": "What would be right? (optional)",
+      "confirmWrong": "Submit “wrong”",
+      "cancel": "Cancel",
+      "openWord": "word page",
+      "retry": "Retry",
+      "howItWorks": "Your answer does not change the dictionary directly. A translation is marked “checked by the community” when several participants agree; disputed cases go to a moderator.",
+      "errors": {
+        "generic": "Something went wrong.",
+        "rateLimited": "Too many answers in a row — take a short break."
+      },
+      "caseNote": "Judge the meaning. A capital first letter is not an error.",
+      "yourStats": "Your contribution",
+      "profileLink": "Public page"
+    },
+    "profile": {
+      "title": "Contributor {handle}",
+      "memberSince": "Member since {date}",
+      "answers": "Answers",
+      "accuracy": "Accuracy",
+      "accuracyHint": "share of answers that matched the outcome",
+      "confirmed": "Confirmed translations",
+      "streak": "Day streak",
+      "languages": "Languages",
+      "noStats": "No answers yet.",
+      "weekly": "Activity over 12 weeks",
+      "notFound": "No such contributor."
+    },
+    "leaderboard": {
+      "title": "Contributor ranking",
+      "description": "Who helped check the most translations.",
+      "week": "This week",
+      "all": "All time",
+      "allLanguages": "All languages",
+      "answers": "answers",
+      "agreed": "matched the outcome",
+      "empty": "Nobody yet — be the first.",
+      "anonymous": "Anonymous"
+    },
+    "completeness": {
+      "title": "How much is checked",
+      "moderator": "moderator",
+      "community": "community",
+      "inProgress": "in progress",
+      "queued": "with a moderator",
+      "unchecked": "unchecked",
+      "leaderboardLink": "Contributor ranking"
     }
   }
 }

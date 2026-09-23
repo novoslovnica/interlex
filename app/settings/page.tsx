@@ -4,7 +4,11 @@ import Link from "next/link"
 import { prismaAuth as dbAuth } from "@/lib/prisma"
 import {ScriptPreference, ThemePreference} from "@/prisma/generated/auth/enums";
 import { SettingsClient } from "./settings-client"
-import { saveScriptPreference, saveThemePreference, saveLanguagePreference } from "./actions"
+import { CommunitySettings } from "./community-settings"
+import {
+    saveScriptPreference, saveThemePreference, saveLanguagePreference,
+    saveUserLanguages, savePublicProfile, deletePublicProfile,
+} from "./actions"
 import type { Metadata } from "next";
 import {ScriptMode} from "@/lib/script-mode";
 import { getTranslations } from "next-intl/server"
@@ -20,10 +24,20 @@ export default async function UserSettingsPage() {
         redirect("/")
     }
 
-    const userSettings = await dbAuth.userSettings.findUnique({
-        where: { userId: session.user.id },
-        select: { script: true, theme: true, language: true }
-    })
+    const [userSettings, userLanguages, userProfile] = await Promise.all([
+        dbAuth.userSettings.findUnique({
+            where: { userId: session.user.id },
+            select: { script: true, theme: true, language: true }
+        }),
+        dbAuth.userLanguage.findMany({
+            where: { userId: session.user.id },
+            select: { language: true, level: true },
+        }),
+        dbAuth.userProfile.findUnique({
+            where: { userId: session.user.id },
+            select: { handle: true, bio: true },
+        }),
+    ])
 
     const currentScript = (userSettings?.script || ScriptPreference.CYRILLIC) as ScriptMode
     const currentTheme = (userSettings?.theme || ThemePreference.SYSTEM) as "LIGHT" | "DARK" | "SYSTEM"
@@ -45,6 +59,14 @@ export default async function UserSettingsPage() {
                 onSaveScript={saveScriptPreference}
                 onSaveTheme={saveThemePreference}
                 onSaveLanguage={saveLanguagePreference}
+            />
+            <CommunitySettings
+                initialLanguages={userLanguages}
+                initialHandle={userProfile?.handle ?? null}
+                initialBio={userProfile?.bio ?? null}
+                onSaveLanguages={saveUserLanguages}
+                onSaveProfile={savePublicProfile}
+                onDeleteProfile={deletePublicProfile}
             />
             <Link
                 href="/settings/api-keys"

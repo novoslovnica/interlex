@@ -60,7 +60,10 @@ export const ModelName = {
   UserWordCollection: 'UserWordCollection',
   TelegramAuthNonce: 'TelegramAuthNonce',
   FlashcardProgress: 'FlashcardProgress',
-  ApiKey: 'ApiKey'
+  ApiKey: 'ApiKey',
+  UserLanguage: 'UserLanguage',
+  UserProfile: 'UserProfile',
+  RoleAudit: 'RoleAudit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -197,6 +200,42 @@ export const ApiKeyScalarFieldEnum = {
 } as const
 
 export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+export const UserLanguageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  language: 'language',
+  level: 'level',
+  createdAt: 'createdAt'
+} as const
+
+export type UserLanguageScalarFieldEnum = (typeof UserLanguageScalarFieldEnum)[keyof typeof UserLanguageScalarFieldEnum]
+
+
+export const UserProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  handle: 'handle',
+  bio: 'bio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
+
+
+export const RoleAuditScalarFieldEnum = {
+  id: 'id',
+  actorUserId: 'actorUserId',
+  targetUserId: 'targetUserId',
+  action: 'action',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
+  createdAt: 'createdAt'
+} as const
+
+export type RoleAuditScalarFieldEnum = (typeof RoleAuditScalarFieldEnum)[keyof typeof RoleAuditScalarFieldEnum]
 
 
 export const SortOrder = {

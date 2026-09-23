@@ -16,7 +16,8 @@
       "settings": "Nastavljenja",
       "admin": "Administracia",
       "logout": "Izidti",
-      "login": "Vnidti"
+      "login": "Vnidti",
+      "contribute": "Pomogti"
     },
     "footer": {
       "protoslavic": "Praslověnsky",
@@ -757,7 +758,10 @@
       "eo": "Esperanto",
       "hsb": "Gornolužicky",
       "dsb": "Dolnolužicky"
-    }
+    },
+    "verifiedByModerator": "Pověreno moderatorom",
+    "verifiedByCommunity": "Pověreno občinojų",
+    "helpVerify": "Znajete jedin iz tyh językov? Pomozite pověriti prěvody"
   },
   "admin": {
     "title": "Admin-panel",
@@ -1160,6 +1164,98 @@
         "verify": "Verificirovati",
         "unverify": "Sneti verifikaciju"
       }
+    }
+  },
+  "community": {
+    "settings": {
+      "languagesTitle": "Moje języky",
+      "languagesDescription": "Označite języky, ktorymi vladajete svobodno. Na nih vam bųdųt prědlagane kartky pověrky prěvodov.",
+      "levelNative": "rodny",
+      "levelFluent": "svobodno",
+      "languagesEmpty": "Języky ne sųt vybrane — kartky pověrky ne sųt dostųpne.",
+      "profileTitle": "Publično imę",
+      "profileDescription": "Po želanju. Poka imę ne jest zadano, vaš vklad jest podpisany «Anonim», a publičnoj stranice nema. Imę i e-mail iz akkonta nikogda ne sųt publikovane.",
+      "handleLabel": "Imę (nik)",
+      "handleHint": "3–30 znakov: latinske bukvy, cifry, «_» i «-».",
+      "bioLabel": "O sebě (ne objazateljno)",
+      "save": "Sohraniti",
+      "saved": "Sohraneno",
+      "remove": "Stati anonimom",
+      "removeConfirm": "Udaliti publično imę? Vaš vklad ostane, ale bųde podpisany «Anonim».",
+      "profileLink": "Vaša stranica",
+      "errors": {
+        "too_short": "Imę jest sliškom kratko.",
+        "too_long": "Imę jest sliškom dolgo.",
+        "invalid_chars": "Dopustime sųt toliko latinske bukvy, cifry, «_» i «-»; načętok i konec — bukva ili cifra.",
+        "reserved": "To imę jest rezervovano.",
+        "taken": "To imę jest už zajęto.",
+        "bio_too_long": "Tekst «O sebě» jest sliškom dolgy.",
+        "generic": "Ne udalo sę sohraniti."
+      }
+    },
+    "contribute": {
+      "title": "Pomogti slovniku",
+      "description": "Pověrite prěvody medžuslovjanskyh slov na svoj rodny język — několiko minut na denj pomagaje slovniku.",
+      "heading": "Pomogti slovniku",
+      "intro": "Jest li prěvod na vaš język pravilny? Jedin odgovor trvaje několiko sekund, a tri soglasne odgovory različnyh ljudij potvŕdžajųt prěvod.",
+      "loginPrompt": "Da byste odgovarjali na kartky, vojdite v akkont.",
+      "login": "Vojdti",
+      "noLanguages": "Ukažite języky, ktorymi vladajete svobodno — kartky bųdųt prědlagane na nih.",
+      "chooseLanguages": "Vybrati języky",
+      "answered": "Odgovorov v sesiji: {count}",
+      "loading": "Zagružajų…",
+      "done": "Kartky na tom języku sę končili. Hvala!",
+      "question": "Jest li toj prěvod pravilny?",
+      "correct": "Pravilno",
+      "wrong": "Nepravilno",
+      "unknown": "Ne znajų",
+      "skip": "Propustiti",
+      "suggestLabel": "Kako jest pravilno? (ne objazateljno)",
+      "confirmWrong": "Poslati «nepravilno»",
+      "cancel": "Otměniti",
+      "openWord": "stranica slova",
+      "retry": "Povtoriti",
+      "howItWorks": "Vaš odgovor ne měnjaje slovnik naprjamo. Prěvod dostavaje označenje «pověreno občinojų», kogda několiko učestnikov sę soglašajųt; sporne slučaje razbiraje moderator.",
+      "errors": {
+        "generic": "Něčto pošlo ne tako.",
+        "rateLimited": "Sliškom mnogo odgovorov podrěd — sdělajte pauzų."
+      },
+      "caseNote": "Ocěnjajte smysl. Velika bukva na načętku — to ne jest pogrěška.",
+      "yourStats": "Vaš vklad",
+      "profileLink": "Publična stranica"
+    },
+    "profile": {
+      "title": "Učestnik {handle}",
+      "memberSince": "S nami od {date}",
+      "answers": "Odgovorov",
+      "accuracy": "Točnost",
+      "accuracyHint": "dělj odgovorov, ktore sę sovpali s rezultatom",
+      "confirmed": "Potvŕdženyh prěvodov",
+      "streak": "Dnjev podrěd",
+      "languages": "Języky",
+      "noStats": "Ješče ni jednogo odgovora.",
+      "weekly": "Aktivnost za 12 tydnjev",
+      "notFound": "Takogo učestnika nema."
+    },
+    "leaderboard": {
+      "title": "Rejting učestnikov",
+      "description": "Kto najviše pomogl pověriti prěvody.",
+      "week": "Za tydenj",
+      "all": "Za vse vrěme",
+      "allLanguages": "Vse języky",
+      "answers": "odgovorov",
+      "agreed": "sovpali s rezultatom",
+      "empty": "Poka nikogo — bųdite prvym.",
+      "anonymous": "Anonim"
+    },
+    "completeness": {
+      "title": "Koliko jest pověreno",
+      "moderator": "moderator",
+      "community": "občina",
+      "inProgress": "v rabotě",
+      "queued": "u moderatora",
+      "unchecked": "ne pověreno",
+      "leaderboardLink": "Rejting učestnikov"
     }
   }
 }

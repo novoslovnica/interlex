@@ -28,6 +28,8 @@ model User {
   collections   UserWordCollection[]
   flashcardProgress FlashcardProgress[]
   apiKeys       ApiKey[]
+  languages     UserLanguage[]
+  profile       UserProfile?
 }
 
 model Account {
@@ -190,4 +192,54 @@ model ApiKey {
 
   @@index([userId])
   @@map("api_keys")
+}
+
+// Языки, в которых пользователь может оценивать переводы (публичные
+// карточки верификации, docs/community-plan-2026-09-19.md). Не то же, что
+// UserSettings.language: то поле - "какой перевод показывать", допускает
+// "isv" и одно значение; здесь несколько языков и уровень владения.
+model UserLanguage {
+  id        String   @id @default(cuid())
+  userId    String
+  language  String   // код из TRANSLATION_LANGUAGE_CODES (lib/translations.ts)
+  level     String   @default("native") // 'native' | 'fluent'
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, language])
+  @@index([language])
+  @@map("user_languages")
+}
+
+// Публичный ник - по желанию. Нет строки = участник везде "Аноним" и
+// публичной страницы у него нет. name/email из User наружу не отдаются
+// никогда (email Telegram-пользователя раскрывает его ник) - единственный
+// путь имени наружу - lib/community/identity.ts.
+model UserProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  handle    String   @unique
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+// Кто кому менял роль/права. Без FK - запись переживает удаление
+// пользователя. AuditLog не подходит: он в interlex.db и с entityId Int.
+model RoleAudit {
+  id           String   @id @default(cuid())
+  actorUserId  String
+  targetUserId String
+  action       String   // 'role_change' | 'permission_grant' | 'permission_revoke'
+  oldValue     String?
+  newValue     String?
+  createdAt    DateTime @default(now())
+
+  @@index([targetUserId, createdAt])
+  @@map("role_audit")
 }

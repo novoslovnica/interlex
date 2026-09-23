@@ -67,3 +67,18 @@ export type FlashcardProgress = Prisma.FlashcardProgressModel
  * 
  */
 export type ApiKey = Prisma.ApiKeyModel
+/**
+ * Model UserLanguage
+ * 
+ */
+export type UserLanguage = Prisma.UserLanguageModel
+/**
+ * Model UserProfile
+ * 
+ */
+export type UserProfile = Prisma.UserProfileModel
+/**
+ * Model RoleAudit
+ * 
+ */
+export type RoleAudit = Prisma.RoleAuditModel
