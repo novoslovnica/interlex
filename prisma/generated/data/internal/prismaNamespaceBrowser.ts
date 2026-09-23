@@ -63,6 +63,7 @@ export const ModelName = {
   MorphemeAllophone: 'MorphemeAllophone',
   EndingAllophone: 'EndingAllophone',
   Translation: 'Translation',
+  TranslationVote: 'TranslationVote',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
@@ -76,7 +77,9 @@ export const ModelName = {
   CoreVocabularyConcept: 'CoreVocabularyConcept',
   CoreVocabularyExponent: 'CoreVocabularyExponent',
   ValencyFrame: 'ValencyFrame',
-  ValencyArgument: 'ValencyArgument'
+  ValencyArgument: 'ValencyArgument',
+  ContributorStats: 'ContributorStats',
+  ProperNounSignal: 'ProperNounSignal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -327,10 +330,34 @@ export const TranslationScalarFieldEnum = {
   verified: 'verified',
   message: 'message',
   meaningId: 'meaningId',
-  legacyWordId: 'legacyWordId'
+  legacyWordId: 'legacyWordId',
+  communityStatus: 'communityStatus',
+  communityYes: 'communityYes',
+  communityNo: 'communityNo',
+  communityResolvedAt: 'communityResolvedAt'
 } as const
 
 export type TranslationScalarFieldEnum = (typeof TranslationScalarFieldEnum)[keyof typeof TranslationScalarFieldEnum]
+
+
+export const TranslationVoteScalarFieldEnum = {
+  id: 'id',
+  translationId: 'translationId',
+  language: 'language',
+  userId: 'userId',
+  verdict: 'verdict',
+  suggestedValue: 'suggestedValue',
+  comment: 'comment',
+  valueSnapshot: 'valueSnapshot',
+  weight: 'weight',
+  isControl: 'isControl',
+  stale: 'stale',
+  agreed: 'agreed',
+  controlExpected: 'controlExpected',
+  createdAt: 'createdAt'
+} as const
+
+export type TranslationVoteScalarFieldEnum = (typeof TranslationVoteScalarFieldEnum)[keyof typeof TranslationVoteScalarFieldEnum]
 
 
 export const BaseHomonymScalarFieldEnum = {
@@ -501,6 +528,35 @@ export const ValencyArgumentScalarFieldEnum = {
 } as const
 
 export type ValencyArgumentScalarFieldEnum = (typeof ValencyArgumentScalarFieldEnum)[keyof typeof ValencyArgumentScalarFieldEnum]
+
+
+export const ContributorStatsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  language: 'language',
+  votesTotal: 'votesTotal',
+  votesResolved: 'votesResolved',
+  votesAgreed: 'votesAgreed',
+  controlTotal: 'controlTotal',
+  controlCorrect: 'controlCorrect',
+  accuracy: 'accuracy',
+  weight: 'weight',
+  flagged: 'flagged',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContributorStatsScalarFieldEnum = (typeof ContributorStatsScalarFieldEnum)[keyof typeof ContributorStatsScalarFieldEnum]
+
+
+export const ProperNounSignalScalarFieldEnum = {
+  lexemeId: 'lexemeId',
+  refCapitalized: 'refCapitalized',
+  corpusMidCap: 'corpusMidCap',
+  corpusMidTotal: 'corpusMidTotal',
+  computedAt: 'computedAt'
+} as const
+
+export type ProperNounSignalScalarFieldEnum = (typeof ProperNounSignalScalarFieldEnum)[keyof typeof ProperNounSignalScalarFieldEnum]
 
 
 export const SortOrder = {

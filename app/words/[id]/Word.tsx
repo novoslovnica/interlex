@@ -3,6 +3,8 @@ import {isvToCyr, isvToGlagolitic, isvToTranscription, standardToSimple, standar
 import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {useTranslations} from "next-intl";
+import type {TranslationRow} from "@/lib/translations";
+import {TRANSLATION_LANGUAGES} from "@/config/features";
 import {buildVerbModel, conjugateFullVerb} from "@/lib/grammar/verb";
 import {splitMechanicalVerbTail, appendTailToConjugation} from "@/lib/grammar/verb/mechanicalTail";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
@@ -149,6 +151,21 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
             }
         }
         return result;
+    };
+
+    // Кто проверял перевод: отметка модератора (verified) старше согласия
+    // волонтёров (communityStatus) - показываем одну, более сильную.
+    const getTranslationMarksForMeaning = (meaningId: number) => {
+        const marks: Record<string, "moderator" | "community"> = {};
+        for (const {code} of TRANSLATION_LANGUAGES) {
+            const data = item[code];
+            if (!Array.isArray(data)) continue;
+            const match = data.find((row: TranslationRow) => row.meaningId === meaningId);
+            if (!match?.value) continue;
+            if (match.verified === 1) marks[code] = "moderator";
+            else if (match.communityStatus === "confirmed") marks[code] = "community";
+        }
+        return marks;
     };
 
     const etymologyLinks = [
@@ -464,6 +481,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
 
                 {meaningsArray.map((m: any, idx: number) => {
                     const meaningTranslations = m.id ? getTranslationsForMeaning(m.id) : {};
+                    const translationMarks = m.id ? getTranslationMarksForMeaning(m.id) : {};
                     const hasTranslations = Object.keys(meaningTranslations).length > 0;
 
                     return (
@@ -537,7 +555,17 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                                 className="flex items-start justify-between gap-1 p-2.5 bg-slate-50 border border-slate-100 rounded-lg shadow-sm"
                                             >
                                                 <div className="flex flex-col justify-center">
-                                                    <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">{languageLabel(lang)}</span>
+                                                    <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase mb-0.5">
+                                                        {languageLabel(lang)}
+                                                        {translationMarks[lang] && (
+                                                            <span
+                                                                title={t(translationMarks[lang] === "moderator" ? "verifiedByModerator" : "verifiedByCommunity")}
+                                                                className={`ml-1 cursor-help ${translationMarks[lang] === "moderator" ? "text-blue-500" : "text-green-600"}`}
+                                                            >
+                                                                ✓
+                                                            </span>
+                                                        )}
+                                                    </span>
                                                     <span className="text-base font-medium text-slate-800">
                                                         {val.split(",").map((word, index) => (
                                                             <Link
@@ -563,6 +591,13 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {/* Один раз на страницу, у первого значения, и только если есть что проверять */}
+                                {idx === 0 && hasTranslations && Object.keys(meaningTranslations).some((lang) => !translationMarks[lang]) && (
+                                    <Link href="/contribute" className="inline-block text-xs text-slate-400 hover:text-blue-600">
+                                        {t("helpVerify")} →
+                                    </Link>
                                 )}
 
                                 {m.synonyms?.length > 0 && (

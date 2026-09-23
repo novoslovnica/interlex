@@ -43,6 +43,7 @@ export default function HeaderNav({ session }: HeaderNavProps) {
                 <li><Link href="/lexicon" className="nav-link" onClick={closeAll}>{t("lexicon")}</Link></li>
                 <li><Link href="/translate" className="nav-link" onClick={closeAll}>{t("translate")}</Link></li>
                 <li><Link href="/library" className="nav-link" onClick={closeAll}>{t("library")}</Link></li>
+                <li><Link href="/contribute" className="nav-link" onClick={closeAll}>{t("contribute")}</Link></li>
                 <li className="nav-item-submenu">
                     <button
                         className="nav-link submenu-toggle"

@@ -1,5 +1,7 @@
 import type Database from "better-sqlite3"
 import { randomUUID as _randomUUID } from "crypto"
+import { resetCommunityReview } from "@/lib/community/translationCards"
+import { settleVotes } from "@/lib/community/stats"
 
 /**
  * Operates on the consolidated `translations` table (2026-07-23), which
@@ -30,6 +32,8 @@ export interface TranslationRow {
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
+  // Согласие волонтёров (lib/community/translationCards.ts); приходит через SELECT t.*
+  communityStatus?: string | null
 }
 
 export interface FieldChange {
@@ -194,6 +198,21 @@ export function upsertTranslation(
   db.prepare(`
     UPDATE translations SET value = ?, verified = ?, message = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?
   `).run(updateData.value, updateData.verified, updateData.message, existing.id)
+
+  // Ответы волонтёров относились к прежнему значению - по новому согласие
+  // собирается заново. Смена одного verified их не трогает: решение
+  // модератора само выводит перевод из пула карточек, а ответы остаются
+  // нужны для оценки точности участников.
+  if ((existing.value ?? "") !== (updateData.value ?? "")) {
+    resetCommunityReview(db, existing.id)
+  } else if (existing.verified !== 1 && updateData.verified === 1) {
+    // Модератор подтвердил перевод как есть - это итог для оценки
+    // участников, и он главнее предварительного итога согласия. Обратный
+    // случай (значение заменено = прежнее было неверным) здесь не судится:
+    // правка может быть и исправлением регистра/опечатки; "неверно"
+    // выставляет только явное действие в очереди /admin/community-review.
+    settleVotes(db, existing.id, "yes")
+  }
 
   const row = db.prepare(`SELECT * FROM translations WHERE id = ?`).get(existing.id) as TranslationRow
   return { row, changes, created: false }

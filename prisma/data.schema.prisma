@@ -59,6 +59,7 @@ model Lexeme {
 
   // Публичность в поиске/листингах (скрытые лексемы остаются доступны по прямой ссылке)
   isPublic Boolean @default(true)
+  properNounSignal ProperNounSignal?
 
   // Частотность на основе корпусных данных
   corpusFrequency       Int?
@@ -362,11 +363,56 @@ model Translation {
 
   legacyWordId Int?
 
+  // Согласие волонтёров (lib/community/translationCards.ts). Намеренно
+  // отдельно от verified: verified - отметка модератора, согласие
+  // сообщества её не пишет никогда. Счётчики - сумма весов действующих
+  // (stale=0, isControl=0) ответов, пересчитываются при каждом голосе.
+  communityStatus     String? // null - идёт сбор | 'confirmed' | 'rejected' | 'disputed'
+  communityYes        Float   @default(0)
+  communityNo         Float   @default(0)
+  communityResolvedAt DateTime?
+  votes               TranslationVote[]
+
   @@index([meaningId])
   @@index([meaningId, verified])
   @@index([language, meaningId])
   @@index([language, verified])
+  @@index([language, communityStatus])
   @@map("translations")
+}
+
+// Ответ волонтёра на публичной карточке проверки перевода
+// (docs/community-plan-2026-09-19.md). userId - строка без FK: User живёт в
+// auth.db (та же конвенция, что ContentReport.submitterUserId).
+// Один ДЕЙСТВУЮЩИЙ ответ на пару (translationId, userId) держит частичный
+// уникальный индекс `... WHERE stale = 0` из
+// scripts/db/2026-09-19-add-community-translation-votes.ts - Prisma
+// частичные индексы не выражает, поэтому здесь нет @@unique.
+model TranslationVote {
+  id             Int      @id @default(autoincrement())
+  translationId  Int
+  language       String
+  userId         String
+  verdict        String // 'yes' | 'no' | 'unknown'
+  suggestedValue String?
+  comment        String?
+  valueSnapshot  String? // значение перевода на момент ответа
+  weight         Float    @default(1) // вес участника на момент ответа, задним числом не пересчитывается
+  isControl      Int      @default(0) // контрольная карточка - в согласие не идёт
+  stale          Int      @default(0) // перевод с тех пор изменился
+  // 1/0 - совпал ли ответ с итогом (согласие, решение модератора, для
+  // контрольной - известный ответ); null - итога ещё нет. Хранится на
+  // голосе, а не выводится при чтении: после замены значения голоса
+  // становятся stale, а вердикт "эти люди были правы" должен остаться.
+  agreed          Int?
+  controlExpected String? // 'yes' | 'no' - только у контрольных карточек
+  createdAt      DateTime @default(now())
+
+  translation Translation @relation(fields: [translationId], references: [id], onDelete: Cascade)
+
+  @@index([translationId])
+  @@index([userId, createdAt])
+  @@map("translation_votes")
 }
 
 // Карта основ → массив lexemeId омонимов (хеш-таблица для префиксного поиска омонимов)
@@ -670,4 +716,42 @@ model ValencyArgument {
   @@index([frameId])
   @@index([prepositionLexemeId])
   @@map("valency_arguments")
+}
+
+// Агрегат по translation_votes на пару (участник, язык) + вес голоса
+// (lib/community/reputation.ts). Не источник истины - всегда пересобирается
+// из голосов: scripts/db/recompute-contributor-stats.ts.
+model ContributorStats {
+  id             Int      @id @default(autoincrement())
+  userId         String
+  language       String
+  votesTotal     Int      @default(0)
+  votesResolved  Int      @default(0)
+  votesAgreed    Int      @default(0)
+  controlTotal   Int      @default(0)
+  controlCorrect Int      @default(0)
+  accuracy       Float?
+  weight         Float    @default(1)
+  flagged        Int      @default(0) // провалил контрольные - вес 0, нужен взгляд модератора
+  updatedAt      DateTime @default(now())
+
+  @@unique([userId, language])
+  @@index([language, votesAgreed])
+  @@map("contributor_stats")
+}
+
+// Очередь /admin/proper-nouns: лексемы без properNoun с переводами с
+// заглавной буквы + сигналы для предварительной отметки. Заполняется
+// scripts/db/compute-proper-noun-signals.ts, строки удаляются страницей по
+// мере решений.
+model ProperNounSignal {
+  lexemeId       Int      @id
+  refCapitalized Int      @default(0) // все вычитанные языки пишут с заглавной
+  corpusMidCap   Int      @default(0) // с заглавной не в начале предложения (корпус)
+  corpusMidTotal Int      @default(0)
+  computedAt     DateTime @default(now())
+
+  lexeme Lexeme @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+
+  @@map("proper_noun_signals")
 }

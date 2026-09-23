@@ -102,6 +102,11 @@ export type EndingAllophone = Prisma.EndingAllophoneModel
  */
 export type Translation = Prisma.TranslationModel
 /**
+ * Model TranslationVote
+ * 
+ */
+export type TranslationVote = Prisma.TranslationVoteModel
+/**
  * Model BaseHomonym
  * 
  */
@@ -171,3 +176,13 @@ export type ValencyFrame = Prisma.ValencyFrameModel
  * 
  */
 export type ValencyArgument = Prisma.ValencyArgumentModel
+/**
+ * Model ContributorStats
+ * 
+ */
+export type ContributorStats = Prisma.ContributorStatsModel
+/**
+ * Model ProperNounSignal
+ * 
+ */
+export type ProperNounSignal = Prisma.ProperNounSignalModel

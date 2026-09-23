@@ -31,6 +31,8 @@ export type TranslationAvgAggregateOutputType = {
   verified: number | null
   meaningId: number | null
   legacyWordId: number | null
+  communityYes: number | null
+  communityNo: number | null
 }
 
 export type TranslationSumAggregateOutputType = {
@@ -38,6 +40,8 @@ export type TranslationSumAggregateOutputType = {
   verified: number | null
   meaningId: number | null
   legacyWordId: number | null
+  communityYes: number | null
+  communityNo: number | null
 }
 
 export type TranslationMinAggregateOutputType = {
@@ -50,6 +54,10 @@ export type TranslationMinAggregateOutputType = {
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
+  communityStatus: string | null
+  communityYes: number | null
+  communityNo: number | null
+  communityResolvedAt: Date | null
 }
 
 export type TranslationMaxAggregateOutputType = {
@@ -62,6 +70,10 @@ export type TranslationMaxAggregateOutputType = {
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
+  communityStatus: string | null
+  communityYes: number | null
+  communityNo: number | null
+  communityResolvedAt: Date | null
 }
 
 export type TranslationCountAggregateOutputType = {
@@ -74,6 +86,10 @@ export type TranslationCountAggregateOutputType = {
   message: number
   meaningId: number
   legacyWordId: number
+  communityStatus: number
+  communityYes: number
+  communityNo: number
+  communityResolvedAt: number
   _all: number
 }
 
@@ -83,6 +99,8 @@ export type TranslationAvgAggregateInputType = {
   verified?: true
   meaningId?: true
   legacyWordId?: true
+  communityYes?: true
+  communityNo?: true
 }
 
 export type TranslationSumAggregateInputType = {
@@ -90,6 +108,8 @@ export type TranslationSumAggregateInputType = {
   verified?: true
   meaningId?: true
   legacyWordId?: true
+  communityYes?: true
+  communityNo?: true
 }
 
 export type TranslationMinAggregateInputType = {
@@ -102,6 +122,10 @@ export type TranslationMinAggregateInputType = {
   message?: true
   meaningId?: true
   legacyWordId?: true
+  communityStatus?: true
+  communityYes?: true
+  communityNo?: true
+  communityResolvedAt?: true
 }
 
 export type TranslationMaxAggregateInputType = {
@@ -114,6 +138,10 @@ export type TranslationMaxAggregateInputType = {
   message?: true
   meaningId?: true
   legacyWordId?: true
+  communityStatus?: true
+  communityYes?: true
+  communityNo?: true
+  communityResolvedAt?: true
 }
 
 export type TranslationCountAggregateInputType = {
@@ -126,6 +154,10 @@ export type TranslationCountAggregateInputType = {
   message?: true
   meaningId?: true
   legacyWordId?: true
+  communityStatus?: true
+  communityYes?: true
+  communityNo?: true
+  communityResolvedAt?: true
   _all?: true
 }
 
@@ -225,6 +257,10 @@ export type TranslationGroupByOutputType = {
   message: string | null
   meaningId: number | null
   legacyWordId: number | null
+  communityStatus: string | null
+  communityYes: number
+  communityNo: number
+  communityResolvedAt: Date | null
   _count: TranslationCountAggregateOutputType | null
   _avg: TranslationAvgAggregateOutputType | null
   _sum: TranslationSumAggregateOutputType | null
@@ -260,7 +296,12 @@ export type TranslationWhereInput = {
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
+  communityStatus?: Prisma.StringNullableFilter<"Translation"> | string | null
+  communityYes?: Prisma.FloatFilter<"Translation"> | number
+  communityNo?: Prisma.FloatFilter<"Translation"> | number
+  communityResolvedAt?: Prisma.DateTimeNullableFilter<"Translation"> | Date | string | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  votes?: Prisma.TranslationVoteListRelationFilter
 }
 
 export type TranslationOrderByWithRelationInput = {
@@ -273,7 +314,12 @@ export type TranslationOrderByWithRelationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
   legacyWordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  communityStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+  communityResolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   meaning?: Prisma.MeaningOrderByWithRelationInput
+  votes?: Prisma.TranslationVoteOrderByRelationAggregateInput
 }
 
 export type TranslationWhereUniqueInput = Prisma.AtLeast<{
@@ -289,7 +335,12 @@ export type TranslationWhereUniqueInput = Prisma.AtLeast<{
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
+  communityStatus?: Prisma.StringNullableFilter<"Translation"> | string | null
+  communityYes?: Prisma.FloatFilter<"Translation"> | number
+  communityNo?: Prisma.FloatFilter<"Translation"> | number
+  communityResolvedAt?: Prisma.DateTimeNullableFilter<"Translation"> | Date | string | null
   meaning?: Prisma.XOR<Prisma.MeaningNullableScalarRelationFilter, Prisma.MeaningWhereInput> | null
+  votes?: Prisma.TranslationVoteListRelationFilter
 }, "id">
 
 export type TranslationOrderByWithAggregationInput = {
@@ -302,6 +353,10 @@ export type TranslationOrderByWithAggregationInput = {
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   meaningId?: Prisma.SortOrderInput | Prisma.SortOrder
   legacyWordId?: Prisma.SortOrderInput | Prisma.SortOrder
+  communityStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+  communityResolvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TranslationCountOrderByAggregateInput
   _avg?: Prisma.TranslationAvgOrderByAggregateInput
   _max?: Prisma.TranslationMaxOrderByAggregateInput
@@ -322,6 +377,10 @@ export type TranslationScalarWhereWithAggregatesInput = {
   message?: Prisma.StringNullableWithAggregatesFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableWithAggregatesFilter<"Translation"> | number | null
+  communityStatus?: Prisma.StringNullableWithAggregatesFilter<"Translation"> | string | null
+  communityYes?: Prisma.FloatWithAggregatesFilter<"Translation"> | number
+  communityNo?: Prisma.FloatWithAggregatesFilter<"Translation"> | number
+  communityResolvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Translation"> | Date | string | null
 }
 
 export type TranslationCreateInput = {
@@ -332,7 +391,12 @@ export type TranslationCreateInput = {
   verified?: number | null
   message?: string | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
   meaning?: Prisma.MeaningCreateNestedOneWithoutTranslationsInput
+  votes?: Prisma.TranslationVoteCreateNestedManyWithoutTranslationInput
 }
 
 export type TranslationUncheckedCreateInput = {
@@ -345,6 +409,11 @@ export type TranslationUncheckedCreateInput = {
   message?: string | null
   meaningId?: number | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
+  votes?: Prisma.TranslationVoteUncheckedCreateNestedManyWithoutTranslationInput
 }
 
 export type TranslationUpdateInput = {
@@ -355,7 +424,12 @@ export type TranslationUpdateInput = {
   verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   meaning?: Prisma.MeaningUpdateOneWithoutTranslationsNestedInput
+  votes?: Prisma.TranslationVoteUpdateManyWithoutTranslationNestedInput
 }
 
 export type TranslationUncheckedUpdateInput = {
@@ -368,6 +442,11 @@ export type TranslationUncheckedUpdateInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  votes?: Prisma.TranslationVoteUncheckedUpdateManyWithoutTranslationNestedInput
 }
 
 export type TranslationCreateManyInput = {
@@ -380,6 +459,10 @@ export type TranslationCreateManyInput = {
   message?: string | null
   meaningId?: number | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
 }
 
 export type TranslationUpdateManyMutationInput = {
@@ -390,6 +473,10 @@ export type TranslationUpdateManyMutationInput = {
   verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TranslationUncheckedUpdateManyInput = {
@@ -402,6 +489,10 @@ export type TranslationUncheckedUpdateManyInput = {
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TranslationListRelationFilter = {
@@ -424,6 +515,10 @@ export type TranslationCountOrderByAggregateInput = {
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
+  communityStatus?: Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+  communityResolvedAt?: Prisma.SortOrder
 }
 
 export type TranslationAvgOrderByAggregateInput = {
@@ -431,6 +526,8 @@ export type TranslationAvgOrderByAggregateInput = {
   verified?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
 }
 
 export type TranslationMaxOrderByAggregateInput = {
@@ -443,6 +540,10 @@ export type TranslationMaxOrderByAggregateInput = {
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
+  communityStatus?: Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+  communityResolvedAt?: Prisma.SortOrder
 }
 
 export type TranslationMinOrderByAggregateInput = {
@@ -455,6 +556,10 @@ export type TranslationMinOrderByAggregateInput = {
   message?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
+  communityStatus?: Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+  communityResolvedAt?: Prisma.SortOrder
 }
 
 export type TranslationSumOrderByAggregateInput = {
@@ -462,6 +567,13 @@ export type TranslationSumOrderByAggregateInput = {
   verified?: Prisma.SortOrder
   meaningId?: Prisma.SortOrder
   legacyWordId?: Prisma.SortOrder
+  communityYes?: Prisma.SortOrder
+  communityNo?: Prisma.SortOrder
+}
+
+export type TranslationScalarRelationFilter = {
+  is?: Prisma.TranslationWhereInput
+  isNot?: Prisma.TranslationWhereInput
 }
 
 export type TranslationCreateNestedManyWithoutMeaningInput = {
@@ -506,6 +618,28 @@ export type TranslationUncheckedUpdateManyWithoutMeaningNestedInput = {
   deleteMany?: Prisma.TranslationScalarWhereInput | Prisma.TranslationScalarWhereInput[]
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type TranslationCreateNestedOneWithoutVotesInput = {
+  create?: Prisma.XOR<Prisma.TranslationCreateWithoutVotesInput, Prisma.TranslationUncheckedCreateWithoutVotesInput>
+  connectOrCreate?: Prisma.TranslationCreateOrConnectWithoutVotesInput
+  connect?: Prisma.TranslationWhereUniqueInput
+}
+
+export type TranslationUpdateOneRequiredWithoutVotesNestedInput = {
+  create?: Prisma.XOR<Prisma.TranslationCreateWithoutVotesInput, Prisma.TranslationUncheckedCreateWithoutVotesInput>
+  connectOrCreate?: Prisma.TranslationCreateOrConnectWithoutVotesInput
+  upsert?: Prisma.TranslationUpsertWithoutVotesInput
+  connect?: Prisma.TranslationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TranslationUpdateToOneWithWhereWithoutVotesInput, Prisma.TranslationUpdateWithoutVotesInput>, Prisma.TranslationUncheckedUpdateWithoutVotesInput>
+}
+
 export type TranslationCreateWithoutMeaningInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -514,6 +648,11 @@ export type TranslationCreateWithoutMeaningInput = {
   verified?: number | null
   message?: string | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
+  votes?: Prisma.TranslationVoteCreateNestedManyWithoutTranslationInput
 }
 
 export type TranslationUncheckedCreateWithoutMeaningInput = {
@@ -525,6 +664,11 @@ export type TranslationUncheckedCreateWithoutMeaningInput = {
   verified?: number | null
   message?: string | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
+  votes?: Prisma.TranslationVoteUncheckedCreateNestedManyWithoutTranslationInput
 }
 
 export type TranslationCreateOrConnectWithoutMeaningInput = {
@@ -565,6 +709,88 @@ export type TranslationScalarWhereInput = {
   message?: Prisma.StringNullableFilter<"Translation"> | string | null
   meaningId?: Prisma.IntNullableFilter<"Translation"> | number | null
   legacyWordId?: Prisma.IntNullableFilter<"Translation"> | number | null
+  communityStatus?: Prisma.StringNullableFilter<"Translation"> | string | null
+  communityYes?: Prisma.FloatFilter<"Translation"> | number
+  communityNo?: Prisma.FloatFilter<"Translation"> | number
+  communityResolvedAt?: Prisma.DateTimeNullableFilter<"Translation"> | Date | string | null
+}
+
+export type TranslationCreateWithoutVotesInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  language: string
+  value?: string | null
+  verified?: number | null
+  message?: string | null
+  legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
+  meaning?: Prisma.MeaningCreateNestedOneWithoutTranslationsInput
+}
+
+export type TranslationUncheckedCreateWithoutVotesInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  language: string
+  value?: string | null
+  verified?: number | null
+  message?: string | null
+  meaningId?: number | null
+  legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
+}
+
+export type TranslationCreateOrConnectWithoutVotesInput = {
+  where: Prisma.TranslationWhereUniqueInput
+  create: Prisma.XOR<Prisma.TranslationCreateWithoutVotesInput, Prisma.TranslationUncheckedCreateWithoutVotesInput>
+}
+
+export type TranslationUpsertWithoutVotesInput = {
+  update: Prisma.XOR<Prisma.TranslationUpdateWithoutVotesInput, Prisma.TranslationUncheckedUpdateWithoutVotesInput>
+  create: Prisma.XOR<Prisma.TranslationCreateWithoutVotesInput, Prisma.TranslationUncheckedCreateWithoutVotesInput>
+  where?: Prisma.TranslationWhereInput
+}
+
+export type TranslationUpdateToOneWithWhereWithoutVotesInput = {
+  where?: Prisma.TranslationWhereInput
+  data: Prisma.XOR<Prisma.TranslationUpdateWithoutVotesInput, Prisma.TranslationUncheckedUpdateWithoutVotesInput>
+}
+
+export type TranslationUpdateWithoutVotesInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  meaning?: Prisma.MeaningUpdateOneWithoutTranslationsNestedInput
+}
+
+export type TranslationUncheckedUpdateWithoutVotesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  meaningId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TranslationCreateManyMeaningInput = {
@@ -576,6 +802,10 @@ export type TranslationCreateManyMeaningInput = {
   verified?: number | null
   message?: string | null
   legacyWordId?: number | null
+  communityStatus?: string | null
+  communityYes?: number
+  communityNo?: number
+  communityResolvedAt?: Date | string | null
 }
 
 export type TranslationUpdateWithoutMeaningInput = {
@@ -586,6 +816,11 @@ export type TranslationUpdateWithoutMeaningInput = {
   verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  votes?: Prisma.TranslationVoteUpdateManyWithoutTranslationNestedInput
 }
 
 export type TranslationUncheckedUpdateWithoutMeaningInput = {
@@ -597,6 +832,11 @@ export type TranslationUncheckedUpdateWithoutMeaningInput = {
   verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  votes?: Prisma.TranslationVoteUncheckedUpdateManyWithoutTranslationNestedInput
 }
 
 export type TranslationUncheckedUpdateManyWithoutMeaningInput = {
@@ -608,8 +848,41 @@ export type TranslationUncheckedUpdateManyWithoutMeaningInput = {
   verified?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   legacyWordId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  communityStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communityYes?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityNo?: Prisma.FloatFieldUpdateOperationsInput | number
+  communityResolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
+
+/**
+ * Count Type TranslationCountOutputType
+ */
+
+export type TranslationCountOutputType = {
+  votes: number
+}
+
+export type TranslationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  votes?: boolean | TranslationCountOutputTypeCountVotesArgs
+}
+
+/**
+ * TranslationCountOutputType without action
+ */
+export type TranslationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TranslationCountOutputType
+   */
+  select?: Prisma.TranslationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TranslationCountOutputType without action
+ */
+export type TranslationCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TranslationVoteWhereInput
+}
 
 
 export type TranslationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -622,7 +895,13 @@ export type TranslationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
+  communityStatus?: boolean
+  communityYes?: boolean
+  communityNo?: boolean
+  communityResolvedAt?: boolean
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
+  votes?: boolean | Prisma.Translation$votesArgs<ExtArgs>
+  _count?: boolean | Prisma.TranslationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["translation"]>
 
 export type TranslationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -635,6 +914,10 @@ export type TranslationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
+  communityStatus?: boolean
+  communityYes?: boolean
+  communityNo?: boolean
+  communityResolvedAt?: boolean
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["translation"]>
 
@@ -648,6 +931,10 @@ export type TranslationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
+  communityStatus?: boolean
+  communityYes?: boolean
+  communityNo?: boolean
+  communityResolvedAt?: boolean
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
 }, ExtArgs["result"]["translation"]>
 
@@ -661,11 +948,17 @@ export type TranslationSelectScalar = {
   message?: boolean
   meaningId?: boolean
   legacyWordId?: boolean
+  communityStatus?: boolean
+  communityYes?: boolean
+  communityNo?: boolean
+  communityResolvedAt?: boolean
 }
 
-export type TranslationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "language" | "value" | "verified" | "message" | "meaningId" | "legacyWordId", ExtArgs["result"]["translation"]>
+export type TranslationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "language" | "value" | "verified" | "message" | "meaningId" | "legacyWordId" | "communityStatus" | "communityYes" | "communityNo" | "communityResolvedAt", ExtArgs["result"]["translation"]>
 export type TranslationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
+  votes?: boolean | Prisma.Translation$votesArgs<ExtArgs>
+  _count?: boolean | Prisma.TranslationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TranslationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meaning?: boolean | Prisma.Translation$meaningArgs<ExtArgs>
@@ -678,6 +971,7 @@ export type $TranslationPayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "Translation"
   objects: {
     meaning: Prisma.$MeaningPayload<ExtArgs> | null
+    votes: Prisma.$TranslationVotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -689,6 +983,10 @@ export type $TranslationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     message: string | null
     meaningId: number | null
     legacyWordId: number | null
+    communityStatus: string | null
+    communityYes: number
+    communityNo: number
+    communityResolvedAt: Date | null
   }, ExtArgs["result"]["translation"]>
   composites: {}
 }
@@ -1084,6 +1382,7 @@ readonly fields: TranslationFieldRefs;
 export interface Prisma__TranslationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   meaning<T extends Prisma.Translation$meaningArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Translation$meaningArgs<ExtArgs>>): Prisma.Prisma__MeaningClient<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  votes<T extends Prisma.Translation$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Translation$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TranslationVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1122,6 +1421,10 @@ export interface TranslationFieldRefs {
   readonly message: Prisma.FieldRef<"Translation", 'String'>
   readonly meaningId: Prisma.FieldRef<"Translation", 'Int'>
   readonly legacyWordId: Prisma.FieldRef<"Translation", 'Int'>
+  readonly communityStatus: Prisma.FieldRef<"Translation", 'String'>
+  readonly communityYes: Prisma.FieldRef<"Translation", 'Float'>
+  readonly communityNo: Prisma.FieldRef<"Translation", 'Float'>
+  readonly communityResolvedAt: Prisma.FieldRef<"Translation", 'DateTime'>
 }
     
 
@@ -1537,6 +1840,30 @@ export type Translation$meaningArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.MeaningInclude<ExtArgs> | null
   where?: Prisma.MeaningWhereInput
+}
+
+/**
+ * Translation.votes
+ */
+export type Translation$votesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TranslationVote
+   */
+  select?: Prisma.TranslationVoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TranslationVote
+   */
+  omit?: Prisma.TranslationVoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TranslationVoteInclude<ExtArgs> | null
+  where?: Prisma.TranslationVoteWhereInput
+  orderBy?: Prisma.TranslationVoteOrderByWithRelationInput | Prisma.TranslationVoteOrderByWithRelationInput[]
+  cursor?: Prisma.TranslationVoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TranslationVoteScalarFieldEnum | Prisma.TranslationVoteScalarFieldEnum[]
 }
 
 /**

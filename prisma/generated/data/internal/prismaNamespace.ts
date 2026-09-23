@@ -396,6 +396,7 @@ export const ModelName = {
   MorphemeAllophone: 'MorphemeAllophone',
   EndingAllophone: 'EndingAllophone',
   Translation: 'Translation',
+  TranslationVote: 'TranslationVote',
   BaseHomonym: 'BaseHomonym',
   InflectionAnomaly: 'InflectionAnomaly',
   ProtoSlavicWord: 'ProtoSlavicWord',
@@ -409,7 +410,9 @@ export const ModelName = {
   CoreVocabularyConcept: 'CoreVocabularyConcept',
   CoreVocabularyExponent: 'CoreVocabularyExponent',
   ValencyFrame: 'ValencyFrame',
-  ValencyArgument: 'ValencyArgument'
+  ValencyArgument: 'ValencyArgument',
+  ContributorStats: 'ContributorStats',
+  ProperNounSignal: 'ProperNounSignal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "rootDiscoveryProposal" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument"
+    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "translationVote" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "rootDiscoveryProposal" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument" | "contributorStats" | "properNounSignal"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1314,6 +1317,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TranslationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TranslationCountAggregateOutputType> | number
+        }
+      }
+    }
+    TranslationVote: {
+      payload: Prisma.$TranslationVotePayload<ExtArgs>
+      fields: Prisma.TranslationVoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TranslationVoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TranslationVoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        findFirst: {
+          args: Prisma.TranslationVoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TranslationVoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        findMany: {
+          args: Prisma.TranslationVoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>[]
+        }
+        create: {
+          args: Prisma.TranslationVoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        createMany: {
+          args: Prisma.TranslationVoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TranslationVoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>[]
+        }
+        delete: {
+          args: Prisma.TranslationVoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        update: {
+          args: Prisma.TranslationVoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        deleteMany: {
+          args: Prisma.TranslationVoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TranslationVoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TranslationVoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>[]
+        }
+        upsert: {
+          args: Prisma.TranslationVoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TranslationVotePayload>
+        }
+        aggregate: {
+          args: Prisma.TranslationVoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTranslationVote>
+        }
+        groupBy: {
+          args: Prisma.TranslationVoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TranslationVoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TranslationVoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TranslationVoteCountAggregateOutputType> | number
         }
       }
     }
@@ -2353,6 +2430,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ContributorStats: {
+      payload: Prisma.$ContributorStatsPayload<ExtArgs>
+      fields: Prisma.ContributorStatsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContributorStatsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContributorStatsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        findFirst: {
+          args: Prisma.ContributorStatsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContributorStatsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        findMany: {
+          args: Prisma.ContributorStatsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>[]
+        }
+        create: {
+          args: Prisma.ContributorStatsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        createMany: {
+          args: Prisma.ContributorStatsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContributorStatsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>[]
+        }
+        delete: {
+          args: Prisma.ContributorStatsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        update: {
+          args: Prisma.ContributorStatsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContributorStatsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContributorStatsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContributorStatsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContributorStatsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContributorStatsPayload>
+        }
+        aggregate: {
+          args: Prisma.ContributorStatsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContributorStats>
+        }
+        groupBy: {
+          args: Prisma.ContributorStatsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContributorStatsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContributorStatsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContributorStatsCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProperNounSignal: {
+      payload: Prisma.$ProperNounSignalPayload<ExtArgs>
+      fields: Prisma.ProperNounSignalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProperNounSignalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProperNounSignalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        findFirst: {
+          args: Prisma.ProperNounSignalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProperNounSignalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        findMany: {
+          args: Prisma.ProperNounSignalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>[]
+        }
+        create: {
+          args: Prisma.ProperNounSignalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        createMany: {
+          args: Prisma.ProperNounSignalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProperNounSignalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>[]
+        }
+        delete: {
+          args: Prisma.ProperNounSignalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        update: {
+          args: Prisma.ProperNounSignalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProperNounSignalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProperNounSignalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProperNounSignalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProperNounSignalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProperNounSignalPayload>
+        }
+        aggregate: {
+          args: Prisma.ProperNounSignalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProperNounSignal>
+        }
+        groupBy: {
+          args: Prisma.ProperNounSignalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProperNounSignalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProperNounSignalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProperNounSignalCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2624,10 +2849,34 @@ export const TranslationScalarFieldEnum = {
   verified: 'verified',
   message: 'message',
   meaningId: 'meaningId',
-  legacyWordId: 'legacyWordId'
+  legacyWordId: 'legacyWordId',
+  communityStatus: 'communityStatus',
+  communityYes: 'communityYes',
+  communityNo: 'communityNo',
+  communityResolvedAt: 'communityResolvedAt'
 } as const
 
 export type TranslationScalarFieldEnum = (typeof TranslationScalarFieldEnum)[keyof typeof TranslationScalarFieldEnum]
+
+
+export const TranslationVoteScalarFieldEnum = {
+  id: 'id',
+  translationId: 'translationId',
+  language: 'language',
+  userId: 'userId',
+  verdict: 'verdict',
+  suggestedValue: 'suggestedValue',
+  comment: 'comment',
+  valueSnapshot: 'valueSnapshot',
+  weight: 'weight',
+  isControl: 'isControl',
+  stale: 'stale',
+  agreed: 'agreed',
+  controlExpected: 'controlExpected',
+  createdAt: 'createdAt'
+} as const
+
+export type TranslationVoteScalarFieldEnum = (typeof TranslationVoteScalarFieldEnum)[keyof typeof TranslationVoteScalarFieldEnum]
 
 
 export const BaseHomonymScalarFieldEnum = {
@@ -2798,6 +3047,35 @@ export const ValencyArgumentScalarFieldEnum = {
 } as const
 
 export type ValencyArgumentScalarFieldEnum = (typeof ValencyArgumentScalarFieldEnum)[keyof typeof ValencyArgumentScalarFieldEnum]
+
+
+export const ContributorStatsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  language: 'language',
+  votesTotal: 'votesTotal',
+  votesResolved: 'votesResolved',
+  votesAgreed: 'votesAgreed',
+  controlTotal: 'controlTotal',
+  controlCorrect: 'controlCorrect',
+  accuracy: 'accuracy',
+  weight: 'weight',
+  flagged: 'flagged',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContributorStatsScalarFieldEnum = (typeof ContributorStatsScalarFieldEnum)[keyof typeof ContributorStatsScalarFieldEnum]
+
+
+export const ProperNounSignalScalarFieldEnum = {
+  lexemeId: 'lexemeId',
+  refCapitalized: 'refCapitalized',
+  corpusMidCap: 'corpusMidCap',
+  corpusMidTotal: 'corpusMidTotal',
+  computedAt: 'computedAt'
+} as const
+
+export type ProperNounSignalScalarFieldEnum = (typeof ProperNounSignalScalarFieldEnum)[keyof typeof ProperNounSignalScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3016,6 +3294,7 @@ export type GlobalOmitConfig = {
   morphemeAllophone?: Prisma.MorphemeAllophoneOmit
   endingAllophone?: Prisma.EndingAllophoneOmit
   translation?: Prisma.TranslationOmit
+  translationVote?: Prisma.TranslationVoteOmit
   baseHomonym?: Prisma.BaseHomonymOmit
   inflectionAnomaly?: Prisma.InflectionAnomalyOmit
   protoSlavicWord?: Prisma.ProtoSlavicWordOmit
@@ -3030,6 +3309,8 @@ export type GlobalOmitConfig = {
   coreVocabularyExponent?: Prisma.CoreVocabularyExponentOmit
   valencyFrame?: Prisma.ValencyFrameOmit
   valencyArgument?: Prisma.ValencyArgumentOmit
+  contributorStats?: Prisma.ContributorStatsOmit
+  properNounSignal?: Prisma.ProperNounSignalOmit
 }
 
 /* Types for Logging */
