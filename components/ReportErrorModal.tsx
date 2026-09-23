@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react"
 import { useTranslations } from "next-intl"
 
 interface ReportErrorModalProps {
-  entityType: "Meaning" | "Translation" | "Lexeme"
+  entityType: "Meaning" | "Translation" | "Lexeme" | "Comment"
   entityId: number
   lexemeId: number
   field?: string
@@ -14,12 +14,14 @@ interface ReportErrorModalProps {
 }
 
 const REASON_CODES = ["wrong_translation", "wrong_meaning", "typo", "grammar", "other"] as const
+// Для комментария причины другие: жалуются на оскорбление/спам, а не на перевод.
+const COMMENT_REASON_CODES = ["abuse", "other"] as const
 
 export default function ReportErrorModal({ entityType, entityId, lexemeId, field, reportedValue, className }: ReportErrorModalProps) {
   const t = useTranslations("report")
   const { data: session } = useSession()
   const [open, setOpen] = useState(false)
-  const [reasonCode, setReasonCode] = useState<typeof REASON_CODES[number]>("wrong_meaning")
+  const [reasonCode, setReasonCode] = useState<string>(entityType === "Comment" ? "abuse" : "wrong_meaning")
   const [comment, setComment] = useState("")
   const [contact, setContact] = useState("")
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
@@ -29,7 +31,7 @@ export default function ReportErrorModal({ entityType, entityId, lexemeId, field
     setStatus("idle")
     setComment("")
     setContact("")
-    setReasonCode("wrong_meaning")
+    setReasonCode(entityType === "Comment" ? "abuse" : "wrong_meaning")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,10 +104,10 @@ export default function ReportErrorModal({ entityType, entityId, lexemeId, field
                   <label className="text-xs font-semibold text-muted-foreground">{t("reasonLabel")}</label>
                   <select
                     value={reasonCode}
-                    onChange={(e) => setReasonCode(e.target.value as typeof REASON_CODES[number])}
+                    onChange={(e) => setReasonCode(e.target.value)}
                     className="w-full px-2 py-1.5 text-sm rounded border bg-background"
                   >
-                    {REASON_CODES.map((code) => (
+                    {(entityType === "Comment" ? COMMENT_REASON_CODES : REASON_CODES).map((code) => (
                       <option key={code} value={code}>{t(`reasons.${code}`)}</option>
                     ))}
                   </select>

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { resolveReportAction, dismissReportAction } from "./actions"
+import { resolveReportAction, dismissReportAction, hideCommentAction } from "./actions"
 
 export interface ReportDTO {
   id: number
@@ -24,6 +24,7 @@ const REASON_LABEL: Record<string, string> = {
   wrong_meaning: "Неверное значение",
   typo: "Опечатка",
   grammar: "Грамматическая ошибка",
+  abuse: "Оскорбление или спам",
   other: "Другое",
 }
 
@@ -48,6 +49,19 @@ function ReportCard({ report }: { report: ReportDTO }) {
   const handleDismiss = () => {
     startTransition(async () => {
       const result = await dismissReportAction(report.id, note || undefined)
+      if (result.success) {
+        setHidden(true)
+        router.refresh()
+      } else {
+        alert(`Ошибка: ${result.error}`)
+      }
+    })
+  }
+
+  const handleHideComment = () => {
+    if (!confirm("Скрыть комментарий и закрыть жалобу?")) return
+    startTransition(async () => {
+      const result = await hideCommentAction(report.id, report.entityId, note || undefined)
       if (result.success) {
         setHidden(true)
         router.refresh()
@@ -91,6 +105,16 @@ function ReportCard({ report }: { report: ReportDTO }) {
       />
 
       <div className="flex items-center gap-2">
+        {report.entityType === "Comment" && (
+          <button
+            type="button"
+            onClick={handleHideComment}
+            disabled={isPending}
+            className="px-3 py-1 text-xs font-medium rounded bg-red-600 text-white disabled:opacity-50"
+          >
+            Скрыть комментарий
+          </button>
+        )}
         <Link
           href={`/admin/words/${report.lexemeId}/edit`}
           target="_blank"

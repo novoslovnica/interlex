@@ -3,3 +3,4 @@
 // серверными зависимостями (crypto, better-sqlite3).
 export const SUGGESTED_VALUE_MAX_LENGTH = 200
 export const VOTE_COMMENT_MAX_LENGTH = 500
+export const COMMENT_MAX_LENGTH = 4000

@@ -99,7 +99,8 @@
       "wrong_meaning": "Nevěrno značenje",
       "typo": "Pravopisna pogrěška",
       "grammar": "Gramatična pogrěška",
-      "other": "Drugo"
+      "other": "Drugo",
+      "abuse": "Oskrbjenje ili spam"
     },
     "commentLabel": "Komentar (neobovjazkovo)",
     "commentPlaceholder": "Opišite, čto ne tak...",
@@ -797,6 +798,33 @@
         "translation_communityStatus": "pověrka občinojų ({language})",
         "translation_created": "prěvod ({language})"
       }
+    },
+    "comments": {
+      "sectionTitle": "Obsųdženje",
+      "sectionHint": "Pytanja i zaměčanja k slovu. Komentary sųt vidime odrazu; na neuměstne možno požalovati sę.",
+      "empty": "Poka nikto ničto ne napisal.",
+      "loginToWrite": "Da byste pisali, vojdite v akkont.",
+      "handleRequired": "Dlja učęstja v obsųdženju jest trěbno publično imę.",
+      "chooseHandle": "Zadati imę",
+      "placeholder": "Vaš komentar…",
+      "replyPlaceholder": "Vaš odgovor…",
+      "send": "Poslati",
+      "save": "Sohraniti",
+      "cancel": "Otměniti",
+      "reply": "Odgovoriti",
+      "edit": "Izměniti",
+      "delete": "Udaliti",
+      "deleteConfirm": "Udaliti komentar?",
+      "edited": "izměneno",
+      "anonymous": "Anonim",
+      "hiddenByModerator": "Komentar jest skryty moderatorom.",
+      "deletedByAuthor": "Komentar jest udaljeny avtorom.",
+      "errors": {
+        "generic": "Ne udalo sę poslati.",
+        "rate_limited": "Sliškom često — počekajte trohu.",
+        "handle_required": "Jest trěbno publično imę.",
+        "too_long": "Komentar jest sliškom dolgy."
+      }
     }
   },
   "admin": {
@@ -1258,7 +1286,8 @@
       },
       "caseNote": "Ocěnjajte smysl. Velika bukva na načętku — to ne jest pogrěška.",
       "yourStats": "Vaš vklad",
-      "profileLink": "Publična stranica"
+      "profileLink": "Publična stranica",
+      "recentDiscussions": "Poslědnje obsųdženja"
     },
     "profile": {
       "title": "Učestnik {handle}",

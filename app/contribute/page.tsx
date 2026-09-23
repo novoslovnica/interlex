@@ -10,6 +10,7 @@ import { ContributeClient } from "./contribute-client"
 import { init } from "@/lib/sqlite"
 import { fetchCompleteness, fetchContributorSummary } from "@/lib/community/publicStats"
 import { CompletenessBoard } from "@/components/community/CompletenessBoard"
+import { loadRecentComments } from "@/lib/community/loadComments"
 import { ContributionStats } from "@/components/community/ContributionStats"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,6 +44,7 @@ export default async function ContributePage() {
     } finally {
         db.close()
     }
+    const recentComments = await loadRecentComments(8)
 
     return (
         <div className="h-full overflow-y-auto max-w-2xl mx-auto space-y-6 px-4 md:px-6 py-10 no-scrollbar">
@@ -84,6 +86,20 @@ export default async function ContributePage() {
             )}
 
             <CompletenessBoard rows={completeness} />
+
+            {recentComments.length > 0 && (
+                <div className="border rounded-xl bg-background p-6 shadow-sm border-border/60 space-y-2">
+                    <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">{t("recentDiscussions")}</h2>
+                    <ul className="space-y-1.5 text-sm">
+                        {recentComments.map((comment) => (
+                            <li key={comment.id} className="flex gap-2 min-w-0">
+                                <Link href={`/words/${comment.lexemeId}`} className="font-semibold text-blue-600 shrink-0">{comment.isv}</Link>
+                                <span className="text-muted-foreground truncate">{comment.handle ? `@${comment.handle}: ` : ""}{comment.excerpt}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     )
 }

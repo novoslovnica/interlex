@@ -11,6 +11,9 @@ import {PosType} from "@/lib/grammar/common";
 import {fetchWordExamples} from "@/lib/corpus/fetchWordExamples";
 import {fetchHistoricalAttestations} from "@/lib/historical/fetchHistoricalAttestations";
 import {loadWordHistory} from "@/lib/community/loadWordHistory";
+import {loadCommentThread} from "@/lib/community/loadComments";
+import {auth} from "@/auth";
+import {prismaAuth} from "@/lib/prisma";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -52,6 +55,12 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const historicalAttestations = item?.id ? await fetchHistoricalAttestations(item.id) : [];
     // audit_logs (interlex.db) + ники из auth.db - lib/community/loadWordHistory.ts.
     const history = item?.id ? await loadWordHistory(item.id, { offset: 0 }) : { entries: [], total: 0 };
+    // Обсуждение (фаза 5): нить + кто смотрит (для "мой комментарий" и права писать - нужен ник).
+    const session = await auth();
+    const viewerId = session?.user?.id ?? null;
+    const viewerProfile = viewerId ? await prismaAuth.userProfile.findUnique({ where: { userId: viewerId }, select: { handle: true } }) : null;
+    const commentViewer = viewerId ? { handle: viewerProfile?.handle ?? null } : null;
+    const comments = item?.id ? await loadCommentThread(item.id, viewerId) : { comments: [], total: 0 };
 
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
 
@@ -109,7 +118,7 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             )}
             <div className="scroll-container w-full pt-6 px-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} historicalAttestations={historicalAttestations} history={history} />
+                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} historicalAttestations={historicalAttestations} history={history} comments={comments} commentViewer={commentViewer} />
                 </Suspense>
             </div>
         </main>

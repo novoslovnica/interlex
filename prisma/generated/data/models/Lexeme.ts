@@ -565,6 +565,7 @@ export type LexemeWhereInput = {
   usageScore?: Prisma.FloatNullableFilter<"Lexeme"> | number | null
   cefrLevel?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   properNounSignal?: Prisma.XOR<Prisma.ProperNounSignalNullableScalarRelationFilter, Prisma.ProperNounSignalWhereInput> | null
+  comments?: Prisma.WordCommentListRelationFilter
   meanings?: Prisma.MeaningListRelationFilter
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
   anomalies?: Prisma.InflectionAnomalyListRelationFilter
@@ -618,6 +619,7 @@ export type LexemeOrderByWithRelationInput = {
   usageScore?: Prisma.SortOrderInput | Prisma.SortOrder
   cefrLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   properNounSignal?: Prisma.ProperNounSignalOrderByWithRelationInput
+  comments?: Prisma.WordCommentOrderByRelationAggregateInput
   meanings?: Prisma.MeaningOrderByRelationAggregateInput
   lexemes_morphemes?: Prisma.LexemeMorphemeOrderByRelationAggregateInput
   anomalies?: Prisma.InflectionAnomalyOrderByRelationAggregateInput
@@ -674,6 +676,7 @@ export type LexemeWhereUniqueInput = Prisma.AtLeast<{
   usageScore?: Prisma.FloatNullableFilter<"Lexeme"> | number | null
   cefrLevel?: Prisma.StringNullableFilter<"Lexeme"> | string | null
   properNounSignal?: Prisma.XOR<Prisma.ProperNounSignalNullableScalarRelationFilter, Prisma.ProperNounSignalWhereInput> | null
+  comments?: Prisma.WordCommentListRelationFilter
   meanings?: Prisma.MeaningListRelationFilter
   lexemes_morphemes?: Prisma.LexemeMorphemeListRelationFilter
   anomalies?: Prisma.InflectionAnomalyListRelationFilter
@@ -828,6 +831,7 @@ export type LexemeCreateInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -881,6 +885,7 @@ export type LexemeUncheckedCreateInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -933,6 +938,7 @@ export type LexemeUpdateInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -986,6 +992,7 @@ export type LexemeUncheckedUpdateInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1442,6 +1449,20 @@ export type LexemeUpdateOneRequiredWithoutProperNounSignalNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LexemeUpdateToOneWithWhereWithoutProperNounSignalInput, Prisma.LexemeUpdateWithoutProperNounSignalInput>, Prisma.LexemeUncheckedUpdateWithoutProperNounSignalInput>
 }
 
+export type LexemeCreateNestedOneWithoutCommentsInput = {
+  create?: Prisma.XOR<Prisma.LexemeCreateWithoutCommentsInput, Prisma.LexemeUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.LexemeCreateOrConnectWithoutCommentsInput
+  connect?: Prisma.LexemeWhereUniqueInput
+}
+
+export type LexemeUpdateOneRequiredWithoutCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.LexemeCreateWithoutCommentsInput, Prisma.LexemeUncheckedCreateWithoutCommentsInput>
+  connectOrCreate?: Prisma.LexemeCreateOrConnectWithoutCommentsInput
+  upsert?: Prisma.LexemeUpsertWithoutCommentsInput
+  connect?: Prisma.LexemeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LexemeUpdateToOneWithWhereWithoutCommentsInput, Prisma.LexemeUpdateWithoutCommentsInput>, Prisma.LexemeUncheckedUpdateWithoutCommentsInput>
+}
+
 export type LexemeCreateWithoutMeaningsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1487,6 +1508,7 @@ export type LexemeCreateWithoutMeaningsInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneCreateNestedManyWithoutLexemeInput
@@ -1539,6 +1561,7 @@ export type LexemeUncheckedCreateWithoutMeaningsInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedCreateNestedManyWithoutLexemeInput
@@ -1606,6 +1629,7 @@ export type LexemeUpdateWithoutMeaningsInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUpdateManyWithoutLexemeNestedInput
@@ -1658,6 +1682,7 @@ export type LexemeUncheckedUpdateWithoutMeaningsInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1709,6 +1734,7 @@ export type LexemeCreateWithoutLexemes_morphemesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneCreateNestedManyWithoutLexemeInput
@@ -1761,6 +1787,7 @@ export type LexemeUncheckedCreateWithoutLexemes_morphemesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedCreateNestedManyWithoutLexemeInput
@@ -1828,6 +1855,7 @@ export type LexemeUpdateWithoutLexemes_morphemesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUpdateManyWithoutLexemeNestedInput
@@ -1880,6 +1908,7 @@ export type LexemeUncheckedUpdateWithoutLexemes_morphemesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedUpdateManyWithoutLexemeNestedInput
@@ -1931,6 +1960,7 @@ export type LexemeCreateWithoutLexemeAllophonesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -1983,6 +2013,7 @@ export type LexemeUncheckedCreateWithoutLexemeAllophonesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -2050,6 +2081,7 @@ export type LexemeUpdateWithoutLexemeAllophonesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -2102,6 +2134,7 @@ export type LexemeUncheckedUpdateWithoutLexemeAllophonesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -2153,6 +2186,7 @@ export type LexemeCreateWithoutAnomaliesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneCreateNestedManyWithoutLexemeInput
@@ -2205,6 +2239,7 @@ export type LexemeUncheckedCreateWithoutAnomaliesInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedCreateNestedManyWithoutLexemeInput
@@ -2272,6 +2307,7 @@ export type LexemeUpdateWithoutAnomaliesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUpdateManyWithoutLexemeNestedInput
@@ -2324,6 +2360,7 @@ export type LexemeUncheckedUpdateWithoutAnomaliesInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   lexemeAllophones?: Prisma.LexemeAllophoneUncheckedUpdateManyWithoutLexemeNestedInput
@@ -2375,6 +2412,7 @@ export type LexemeCreateWithoutValencyArgumentsAsPrepositionInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -2427,6 +2465,7 @@ export type LexemeUncheckedCreateWithoutValencyArgumentsAsPrepositionInput = {
   usageScore?: number | null
   cefrLevel?: string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -2494,6 +2533,7 @@ export type LexemeUpdateWithoutValencyArgumentsAsPrepositionInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -2546,6 +2586,7 @@ export type LexemeUncheckedUpdateWithoutValencyArgumentsAsPrepositionInput = {
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -2596,6 +2637,7 @@ export type LexemeCreateWithoutProperNounSignalInput = {
   distributionD?: number | null
   usageScore?: number | null
   cefrLevel?: string | null
+  comments?: Prisma.WordCommentCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
@@ -2648,6 +2690,7 @@ export type LexemeUncheckedCreateWithoutProperNounSignalInput = {
   distributionD?: number | null
   usageScore?: number | null
   cefrLevel?: string | null
+  comments?: Prisma.WordCommentUncheckedCreateNestedManyWithoutLexemeInput
   meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
   anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
@@ -2715,6 +2758,7 @@ export type LexemeUpdateWithoutProperNounSignalInput = {
   distributionD?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  comments?: Prisma.WordCommentUpdateManyWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
@@ -2767,6 +2811,233 @@ export type LexemeUncheckedUpdateWithoutProperNounSignalInput = {
   distributionD?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  comments?: Prisma.WordCommentUncheckedUpdateManyWithoutLexemeNestedInput
+  meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
+  anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
+  lexemeAllophones?: Prisma.LexemeAllophoneUncheckedUpdateManyWithoutLexemeNestedInput
+  valencyArgumentsAsPreposition?: Prisma.ValencyArgumentUncheckedUpdateManyWithoutPrepositionLexemeNestedInput
+}
+
+export type LexemeCreateWithoutCommentsInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  slug: string
+  external_id?: number | null
+  value?: string | null
+  transcription?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
+  pos?: string | null
+  aspect?: string | null
+  transitivity?: string | null
+  animacy?: string | null
+  degree?: string | null
+  pronType?: string | null
+  numType?: string | null
+  frequency?: string | null
+  intelligibility?: string | null
+  addition?: string | null
+  sameInLanguages?: string | null
+  etymology?: string | null
+  proto?: string | null
+  paradigm?: string | null
+  protoStemClass?: string | null
+  stemExtension?: string | null
+  genesis?: string | null
+  stem?: string | null
+  secondaryStem?: string | null
+  tertiaryStem?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  stressPosition?: number | null
+  properNoun?: boolean
+  isCollocation?: boolean
+  hasAnomalies?: boolean
+  isPublic?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
+  distributionD?: number | null
+  usageScore?: number | null
+  cefrLevel?: string | null
+  properNounSignal?: Prisma.ProperNounSignalCreateNestedOneWithoutLexemeInput
+  meanings?: Prisma.MeaningCreateNestedManyWithoutLexemeInput
+  lexemes_morphemes?: Prisma.LexemeMorphemeCreateNestedManyWithoutLexemeInput
+  anomalies?: Prisma.InflectionAnomalyCreateNestedManyWithoutLexemeInput
+  lexemeAllophones?: Prisma.LexemeAllophoneCreateNestedManyWithoutLexemeInput
+  valencyArgumentsAsPreposition?: Prisma.ValencyArgumentCreateNestedManyWithoutPrepositionLexemeInput
+}
+
+export type LexemeUncheckedCreateWithoutCommentsInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  slug: string
+  external_id?: number | null
+  value?: string | null
+  transcription?: string | null
+  mainCategory?: string | null
+  usageType?: string | null
+  pos?: string | null
+  aspect?: string | null
+  transitivity?: string | null
+  animacy?: string | null
+  degree?: string | null
+  pronType?: string | null
+  numType?: string | null
+  frequency?: string | null
+  intelligibility?: string | null
+  addition?: string | null
+  sameInLanguages?: string | null
+  etymology?: string | null
+  proto?: string | null
+  paradigm?: string | null
+  protoStemClass?: string | null
+  stemExtension?: string | null
+  genesis?: string | null
+  stem?: string | null
+  secondaryStem?: string | null
+  tertiaryStem?: string | null
+  gender?: string | null
+  declension?: number | null
+  conjugation?: number | null
+  stressPosition?: number | null
+  properNoun?: boolean
+  isCollocation?: boolean
+  hasAnomalies?: boolean
+  isPublic?: boolean
+  corpusFrequency?: number | null
+  corpusFrequencyPerMln?: number | null
+  corpusRank?: number | null
+  corpusHapax?: boolean | null
+  distributionD?: number | null
+  usageScore?: number | null
+  cefrLevel?: string | null
+  properNounSignal?: Prisma.ProperNounSignalUncheckedCreateNestedOneWithoutLexemeInput
+  meanings?: Prisma.MeaningUncheckedCreateNestedManyWithoutLexemeInput
+  lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedCreateNestedManyWithoutLexemeInput
+  anomalies?: Prisma.InflectionAnomalyUncheckedCreateNestedManyWithoutLexemeInput
+  lexemeAllophones?: Prisma.LexemeAllophoneUncheckedCreateNestedManyWithoutLexemeInput
+  valencyArgumentsAsPreposition?: Prisma.ValencyArgumentUncheckedCreateNestedManyWithoutPrepositionLexemeInput
+}
+
+export type LexemeCreateOrConnectWithoutCommentsInput = {
+  where: Prisma.LexemeWhereUniqueInput
+  create: Prisma.XOR<Prisma.LexemeCreateWithoutCommentsInput, Prisma.LexemeUncheckedCreateWithoutCommentsInput>
+}
+
+export type LexemeUpsertWithoutCommentsInput = {
+  update: Prisma.XOR<Prisma.LexemeUpdateWithoutCommentsInput, Prisma.LexemeUncheckedUpdateWithoutCommentsInput>
+  create: Prisma.XOR<Prisma.LexemeCreateWithoutCommentsInput, Prisma.LexemeUncheckedCreateWithoutCommentsInput>
+  where?: Prisma.LexemeWhereInput
+}
+
+export type LexemeUpdateToOneWithWhereWithoutCommentsInput = {
+  where?: Prisma.LexemeWhereInput
+  data: Prisma.XOR<Prisma.LexemeUpdateWithoutCommentsInput, Prisma.LexemeUncheckedUpdateWithoutCommentsInput>
+}
+
+export type LexemeUpdateWithoutCommentsInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  animacy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  degree?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pronType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  intelligibility?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sameInLanguages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCollocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  distributionD?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  properNounSignal?: Prisma.ProperNounSignalUpdateOneWithoutLexemeNestedInput
+  meanings?: Prisma.MeaningUpdateManyWithoutLexemeNestedInput
+  lexemes_morphemes?: Prisma.LexemeMorphemeUpdateManyWithoutLexemeNestedInput
+  anomalies?: Prisma.InflectionAnomalyUpdateManyWithoutLexemeNestedInput
+  lexemeAllophones?: Prisma.LexemeAllophoneUpdateManyWithoutLexemeNestedInput
+  valencyArgumentsAsPreposition?: Prisma.ValencyArgumentUpdateManyWithoutPrepositionLexemeNestedInput
+}
+
+export type LexemeUncheckedUpdateWithoutCommentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  external_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  value?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transcription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mainCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usageType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aspect?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transitivity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  animacy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  degree?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pronType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  intelligibility?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sameInLanguages?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etymology?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proto?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paradigm?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  protoStemClass?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stemExtension?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genesis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  secondaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tertiaryStem?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  declension?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  conjugation?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stressPosition?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  properNoun?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCollocation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasAnomalies?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  corpusFrequency?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusFrequencyPerMln?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  corpusRank?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  corpusHapax?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  distributionD?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  usageScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  cefrLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  properNounSignal?: Prisma.ProperNounSignalUncheckedUpdateOneWithoutLexemeNestedInput
   meanings?: Prisma.MeaningUncheckedUpdateManyWithoutLexemeNestedInput
   lexemes_morphemes?: Prisma.LexemeMorphemeUncheckedUpdateManyWithoutLexemeNestedInput
   anomalies?: Prisma.InflectionAnomalyUncheckedUpdateManyWithoutLexemeNestedInput
@@ -2780,6 +3051,7 @@ export type LexemeUncheckedUpdateWithoutProperNounSignalInput = {
  */
 
 export type LexemeCountOutputType = {
+  comments: number
   meanings: number
   lexemes_morphemes: number
   anomalies: number
@@ -2788,6 +3060,7 @@ export type LexemeCountOutputType = {
 }
 
 export type LexemeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  comments?: boolean | LexemeCountOutputTypeCountCommentsArgs
   meanings?: boolean | LexemeCountOutputTypeCountMeaningsArgs
   lexemes_morphemes?: boolean | LexemeCountOutputTypeCountLexemes_morphemesArgs
   anomalies?: boolean | LexemeCountOutputTypeCountAnomaliesArgs
@@ -2803,6 +3076,13 @@ export type LexemeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
    * Select specific fields to fetch from the LexemeCountOutputType
    */
   select?: Prisma.LexemeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LexemeCountOutputType without action
+ */
+export type LexemeCountOutputTypeCountCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WordCommentWhereInput
 }
 
 /**
@@ -2887,6 +3167,7 @@ export type LexemeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   usageScore?: boolean
   cefrLevel?: boolean
   properNounSignal?: boolean | Prisma.Lexeme$properNounSignalArgs<ExtArgs>
+  comments?: boolean | Prisma.Lexeme$commentsArgs<ExtArgs>
   meanings?: boolean | Prisma.Lexeme$meaningsArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>
   anomalies?: boolean | Prisma.Lexeme$anomaliesArgs<ExtArgs>
@@ -3039,6 +3320,7 @@ export type LexemeSelectScalar = {
 export type LexemeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "slug" | "external_id" | "value" | "transcription" | "mainCategory" | "usageType" | "pos" | "aspect" | "transitivity" | "animacy" | "degree" | "pronType" | "numType" | "frequency" | "intelligibility" | "addition" | "sameInLanguages" | "etymology" | "proto" | "paradigm" | "protoStemClass" | "stemExtension" | "genesis" | "stem" | "secondaryStem" | "tertiaryStem" | "gender" | "declension" | "conjugation" | "stressPosition" | "properNoun" | "isCollocation" | "hasAnomalies" | "isPublic" | "corpusFrequency" | "corpusFrequencyPerMln" | "corpusRank" | "corpusHapax" | "distributionD" | "usageScore" | "cefrLevel", ExtArgs["result"]["lexeme"]>
 export type LexemeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   properNounSignal?: boolean | Prisma.Lexeme$properNounSignalArgs<ExtArgs>
+  comments?: boolean | Prisma.Lexeme$commentsArgs<ExtArgs>
   meanings?: boolean | Prisma.Lexeme$meaningsArgs<ExtArgs>
   lexemes_morphemes?: boolean | Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>
   anomalies?: boolean | Prisma.Lexeme$anomaliesArgs<ExtArgs>
@@ -3053,6 +3335,7 @@ export type $LexemePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Lexeme"
   objects: {
     properNounSignal: Prisma.$ProperNounSignalPayload<ExtArgs> | null
+    comments: Prisma.$WordCommentPayload<ExtArgs>[]
     meanings: Prisma.$MeaningPayload<ExtArgs>[]
     lexemes_morphemes: Prisma.$LexemeMorphemePayload<ExtArgs>[]
     anomalies: Prisma.$InflectionAnomalyPayload<ExtArgs>[]
@@ -3499,6 +3782,7 @@ readonly fields: LexemeFieldRefs;
 export interface Prisma__LexemeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   properNounSignal<T extends Prisma.Lexeme$properNounSignalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lexeme$properNounSignalArgs<ExtArgs>>): Prisma.Prisma__ProperNounSignalClient<runtime.Types.Result.GetResult<Prisma.$ProperNounSignalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  comments<T extends Prisma.Lexeme$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lexeme$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WordCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meanings<T extends Prisma.Lexeme$meaningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lexeme$meaningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeaningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lexemes_morphemes<T extends Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lexeme$lexemes_morphemesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LexemeMorphemePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   anomalies<T extends Prisma.Lexeme$anomaliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lexeme$anomaliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InflectionAnomalyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3984,6 +4268,30 @@ export type Lexeme$properNounSignalArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.ProperNounSignalInclude<ExtArgs> | null
   where?: Prisma.ProperNounSignalWhereInput
+}
+
+/**
+ * Lexeme.comments
+ */
+export type Lexeme$commentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WordComment
+   */
+  select?: Prisma.WordCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WordComment
+   */
+  omit?: Prisma.WordCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WordCommentInclude<ExtArgs> | null
+  where?: Prisma.WordCommentWhereInput
+  orderBy?: Prisma.WordCommentOrderByWithRelationInput | Prisma.WordCommentOrderByWithRelationInput[]
+  cursor?: Prisma.WordCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WordCommentScalarFieldEnum | Prisma.WordCommentScalarFieldEnum[]
 }
 
 /**

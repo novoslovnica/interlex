@@ -79,7 +79,8 @@ export const ModelName = {
   ValencyFrame: 'ValencyFrame',
   ValencyArgument: 'ValencyArgument',
   ContributorStats: 'ContributorStats',
-  ProperNounSignal: 'ProperNounSignal'
+  ProperNounSignal: 'ProperNounSignal',
+  WordComment: 'WordComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -557,6 +558,22 @@ export const ProperNounSignalScalarFieldEnum = {
 } as const
 
 export type ProperNounSignalScalarFieldEnum = (typeof ProperNounSignalScalarFieldEnum)[keyof typeof ProperNounSignalScalarFieldEnum]
+
+
+export const WordCommentScalarFieldEnum = {
+  id: 'id',
+  lexemeId: 'lexemeId',
+  parentId: 'parentId',
+  userId: 'userId',
+  body: 'body',
+  status: 'status',
+  hiddenByUserId: 'hiddenByUserId',
+  moderatorNote: 'moderatorNote',
+  createdAt: 'createdAt',
+  editedAt: 'editedAt'
+} as const
+
+export type WordCommentScalarFieldEnum = (typeof WordCommentScalarFieldEnum)[keyof typeof WordCommentScalarFieldEnum]
 
 
 export const SortOrder = {

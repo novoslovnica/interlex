@@ -1,6 +1,7 @@
 import type Database from 'better-sqlite3';
 import { randomUUID } from 'crypto';
 import { rewireMeaningId } from '@/lib/translations';
+import { rewireCommentsLexeme } from '@/lib/community/comments';
 
 export function getDataDbPath(): string {
     return process.env.SQLITE_DB || (() => {
@@ -181,6 +182,8 @@ export function mergeLexemes(
 
     db.prepare(`UPDATE lexemes_morphemes SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
     db.prepare(`UPDATE inflection_anomalies SET lexemeId = ? WHERE lexemeId = ?`).run(targetId, sourceId);
+    // Обсуждение у слова тоже едет к цели (фаза 5 сообщества).
+    rewireCommentsLexeme(db, { fromLexemeId: sourceId, toLexemeId: targetId });
 
     db.prepare(`DELETE FROM lexemes WHERE id = ?`).run(sourceId);
 

@@ -162,3 +162,8 @@ export type ContributorStats = Prisma.ContributorStatsModel
  * 
  */
 export type ProperNounSignal = Prisma.ProperNounSignalModel
+/**
+ * Model WordComment
+ * 
+ */
+export type WordComment = Prisma.WordCommentModel

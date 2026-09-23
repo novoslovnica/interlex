@@ -105,6 +105,10 @@ export enum SystemFeature {
     // проваливших контрольные карточки. Просмотр - этим флагом; само
     // решение по переводу дополнительно требует translate_<язык>.
     CommunityReview = "community_review",
+    // Скрывать/возвращать комментарии в обсуждениях у слов (постмодерация
+    // по жалобам через ContentReport). Писать комментарии может любой
+    // участник с ником - это не гейтится.
+    CommentsModerate = "comments_moderate",
 
     // Управление API-ключами всех пользователей (roadmap п.38) - выдача
     // per-key override лимита, отзыв при злоупотреблении. Самообслуживание
@@ -453,6 +457,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.CommunityReview]: {
         label: "Разбор ответов сообщества",
         description: "Очередь переводов, отклонённых или оспоренных волонтёрами на публичных карточках; решение по переводу требует ещё и права на его язык",
+        category: "Обратная связь",
+    },
+    [SystemFeature.CommentsModerate]: {
+        label: "Модерация обсуждений",
+        description: "Скрывать и возвращать комментарии в обсуждениях у слов (по жалобам в очереди 'Жалобы на ошибки')",
         category: "Обратная связь",
     },
     [SystemFeature.ReportsReview]: {

@@ -8,8 +8,8 @@ import { auth } from "@/auth"
 // surface in proxy.ts (PUBLIC_WRITE_PATHS). Session is only used to attach
 // submitterUserId automatically when the visitor happens to be logged in;
 // it is never required.
-const ENTITY_TYPES = new Set(["Meaning", "Translation", "Lexeme"])
-const REASON_CODES = new Set(["wrong_translation", "wrong_meaning", "typo", "grammar", "other"])
+const ENTITY_TYPES = new Set(["Meaning", "Translation", "Lexeme", "Comment"])
+const REASON_CODES = new Set(["wrong_translation", "wrong_meaning", "typo", "grammar", "abuse", "other"])
 const MAX_COMMENT_LENGTH = 2000
 const MAX_CONTACT_LENGTH = 200
 

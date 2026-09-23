@@ -554,9 +554,9 @@ Three changes to how a token picks its lexeme, plus two batches of merges the ma
 
 ---
 
-## Community & participation model, phases 0–4 (2026-09-19/23)
+## Community & participation model, phases 0–5 (2026-09-19/23)
 
-Plan: `docs/community-plan-2026-09-19.md` (six phases; decisions taken with the maintainer are listed at its top). Built so far: phases 0–3 (user languages, opt-in public handle, role audit; public translation review cards; moderator queue, control cards, reputation; public profile, leaderboard, completeness dashboard, moderator-role proposals). Phase 4 (public word history) built 2026-09-23. **Not built yet**: word discussions (5).
+Plan: `docs/community-plan-2026-09-19.md` (six phases; decisions taken with the maintainer are listed at its top). Built so far: phases 0–3 (user languages, opt-in public handle, role audit; public translation review cards; moderator queue, control cards, reputation; public profile, leaderboard, completeness dashboard, moderator-role proposals). Phases 4 (public word history) and 5 (word discussions) built 2026-09-23 — every phase of the plan is now in place; phase 6 (launch, further micro-task types) is operational, not code.
 
 **Rules that hold for everything in this direction:**
 - A participant's name reaches public output only through `lib/community/identity.ts::resolvePublicNames` (handle from `UserProfile`, or nothing → "Anonymous"). Never read `User.name`/`User.email` or `AuditLog.userEmail` for public pages — a Telegram user's email is `<username>@telegram.user`.
@@ -606,3 +606,13 @@ Plan: `docs/community-plan-2026-09-19.md` (six phases; decisions taken with the 
 - `lib/community/wordHistory.ts` (tested): `audit_logs` for `(entityType='Lexeme', entityId)` grouped by `actionId` (one save = one entry, newest first, paginated by action), restricted to public fields — `value stem pos gender animacy declension conjugation properNoun isv nsl mergedFrom` and `<lang>.value / .communityStatus / .created`. `*.message`, `*.verified`, frequency, valency, inflection anomalies never leave the server; an action with only such fields is not listed at all. **`userEmail` is never selected into the DTO** — `classifyAuthor` turns it into `community` / `script` (`script:*`/`system:*` with no userId) / `moderator`, and `loadWordHistory.ts` attaches the handle via `resolvePublicNames` (two DBs, two phases). Without a handle a moderator is shown as "модератор".
 - First page (10 actions) is server-rendered in `app/words/[id]/page.tsx` and passed to `Word.tsx` → `WordHistory.tsx`; further pages come from the public `GET /api/lexicon/[id]/history?offset=` (no session; the proxy's general /api limiter applies). Field/author/status labels live under `word.history` in the messages; the language name comes from `TRANSLATION_LANGUAGES`.
 - Roadmap #96 (visual diff of two versions) is still open; this is the plain list #61 asked for.
+
+### Phase 5: discussion thread on the word page (2026-09-23)
+
+- `word_comments` (interlex.db, `WordComment`, migration `scripts/db/2026-09-23-add-word-comments.ts`): one thread per lexeme, **one level of replies** (`createComment` refuses a reply to a reply), `status` `visible | hidden (moderator) | deleted (author)`. Hidden/deleted rows are never removed: replies hang off them and reports point at them; a hidden root shows as a placeholder only while it has visible replies, a hidden root without them is not listed. A hidden comment keeps its body in the DB for the moderator; a deleted one has it wiped.
+- Writing needs a session **and a public handle** (`POST /api/words/[id]/comments` → 403 `handle_required`); reading is public. No `Feature` for participants; `Feature.CommentsModerate` only for hiding. Own edit/delete via `PATCH/DELETE /api/community/comments/[id]`, only while `visible`.
+- Rate limits in `checkCommentAllowance`, counted from the table (survive restarts): 5 per 10 min; a user with no `contributor_stats.votesTotal > 0` gets 2 per hour.
+- Post-moderation through the existing reports queue: `ReportErrorModal` accepts `entityType="Comment"` (reasons `abuse | other`, `entityId` = comment id, `reportedValue` = excerpt), `app/api/reports/route.ts` allows the type, `/admin/reports` shows a "Скрыть комментарий" button that hides the comment and resolves the report in one action (`hideCommentAction`, needs `ReportsReview` + `CommentsModerate`). There is no separate comments admin page — hiding is only ever a reaction to a report.
+- `loadComments.ts` attaches handles via `resolvePublicNames` and computes `own` for the viewer; the public DTO carries no `userId`. `/contribute` lists the 8 latest comments.
+- `lib/dedup/mergeLexemes.ts` now calls `rewireCommentsLexeme` — any other lexeme-merge script must do the same (grep for `inflection_anomalies` rewiring to find the spot).
+- Data finding, not fixed: the CORE `lexeme_allophones` row of `voda` (id 21153) is `vođa` — a stray đ (193 CORE forms differ from the value by đ, but the rest are genuine: međučasny, obmeđati). Every community card/feed shows the CORE form, so a wrong allophone surfaces there first.

@@ -99,7 +99,8 @@
       "wrong_meaning": "Wrong meaning",
       "typo": "Typo",
       "grammar": "Grammar error",
-      "other": "Other"
+      "other": "Other",
+      "abuse": "Abuse or spam"
     },
     "commentLabel": "Comment (optional)",
     "commentPlaceholder": "Describe what's wrong...",
@@ -797,6 +798,33 @@
         "translation_communityStatus": "community check ({language})",
         "translation_created": "translation ({language})"
       }
+    },
+    "comments": {
+      "sectionTitle": "Discussion",
+      "sectionHint": "Questions and remarks about the word. Comments appear at once; inappropriate ones can be reported.",
+      "empty": "Nobody has written anything yet.",
+      "loginToWrite": "Sign in to write.",
+      "handleRequired": "A public handle is required to take part.",
+      "chooseHandle": "Set a handle",
+      "placeholder": "Your comment…",
+      "replyPlaceholder": "Your reply…",
+      "send": "Send",
+      "save": "Save",
+      "cancel": "Cancel",
+      "reply": "Reply",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete the comment?",
+      "edited": "edited",
+      "anonymous": "Anonymous",
+      "hiddenByModerator": "Comment hidden by a moderator.",
+      "deletedByAuthor": "Comment deleted by its author.",
+      "errors": {
+        "generic": "Could not send.",
+        "rate_limited": "Too often — wait a little.",
+        "handle_required": "A public handle is required.",
+        "too_long": "The comment is too long."
+      }
     }
   },
   "admin": {
@@ -1258,7 +1286,8 @@
       },
       "caseNote": "Judge the meaning. A capital first letter is not an error.",
       "yourStats": "Your contribution",
-      "profileLink": "Public page"
+      "profileLink": "Public page",
+      "recentDiscussions": "Recent discussions"
     },
     "profile": {
       "title": "Contributor {handle}",

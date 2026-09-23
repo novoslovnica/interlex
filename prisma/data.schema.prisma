@@ -60,6 +60,7 @@ model Lexeme {
   // Публичность в поиске/листингах (скрытые лексемы остаются доступны по прямой ссылке)
   isPublic Boolean @default(true)
   properNounSignal ProperNounSignal?
+  comments         WordComment[]
 
   // Частотность на основе корпусных данных
   corpusFrequency       Int?
@@ -754,4 +755,31 @@ model ProperNounSignal {
   lexeme Lexeme @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
 
   @@map("proper_noun_signals")
+}
+
+// Обсуждение у слова (фаза 5, lib/community/comments.ts). Один уровень
+// вложенности. userId - строка без FK (User в auth.db). status:
+// 'visible' | 'hidden' (модератор, тело остаётся для разбора) |
+// 'deleted' (автор, тело стёрто); скрытые/удалённые строки не удаляются -
+// на них висят ответы и жалобы (ContentReport entityType 'Comment').
+model WordComment {
+  id             Int       @id @default(autoincrement())
+  lexemeId       Int
+  parentId       Int?
+  userId         String
+  body           String
+  status         String    @default("visible")
+  hiddenByUserId String?
+  moderatorNote  String?
+  createdAt      DateTime  @default(now())
+  editedAt       DateTime?
+
+  lexeme  Lexeme        @relation(fields: [lexemeId], references: [id], onDelete: Cascade)
+  parent  WordComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies WordComment[] @relation("CommentReplies")
+
+  @@index([lexemeId, createdAt])
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@map("word_comments")
 }

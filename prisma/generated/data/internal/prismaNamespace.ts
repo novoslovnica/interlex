@@ -412,7 +412,8 @@ export const ModelName = {
   ValencyFrame: 'ValencyFrame',
   ValencyArgument: 'ValencyArgument',
   ContributorStats: 'ContributorStats',
-  ProperNounSignal: 'ProperNounSignal'
+  ProperNounSignal: 'ProperNounSignal',
+  WordComment: 'WordComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "translationVote" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "rootDiscoveryProposal" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument" | "contributorStats" | "properNounSignal"
+    modelProps: "lexeme" | "candidate" | "wordSuggestion" | "contentReport" | "meaning" | "morpheme" | "lexemeMorpheme" | "allophoneFlavor" | "lexemeAllophone" | "morphemeAllophone" | "endingAllophone" | "translation" | "translationVote" | "baseHomonym" | "inflectionAnomaly" | "protoSlavicWord" | "rootDiscoveryProposal" | "synset" | "meaningSynset" | "auditLog" | "semanticRelation" | "semanticPrime" | "primeExponent" | "coreVocabularyConcept" | "coreVocabularyExponent" | "valencyFrame" | "valencyArgument" | "contributorStats" | "properNounSignal" | "wordComment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2578,6 +2579,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WordComment: {
+      payload: Prisma.$WordCommentPayload<ExtArgs>
+      fields: Prisma.WordCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WordCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WordCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.WordCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WordCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        findMany: {
+          args: Prisma.WordCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>[]
+        }
+        create: {
+          args: Prisma.WordCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        createMany: {
+          args: Prisma.WordCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WordCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.WordCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        update: {
+          args: Prisma.WordCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.WordCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WordCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WordCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.WordCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WordCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.WordCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWordComment>
+        }
+        groupBy: {
+          args: Prisma.WordCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WordCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WordCommentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3078,6 +3153,22 @@ export const ProperNounSignalScalarFieldEnum = {
 export type ProperNounSignalScalarFieldEnum = (typeof ProperNounSignalScalarFieldEnum)[keyof typeof ProperNounSignalScalarFieldEnum]
 
 
+export const WordCommentScalarFieldEnum = {
+  id: 'id',
+  lexemeId: 'lexemeId',
+  parentId: 'parentId',
+  userId: 'userId',
+  body: 'body',
+  status: 'status',
+  hiddenByUserId: 'hiddenByUserId',
+  moderatorNote: 'moderatorNote',
+  createdAt: 'createdAt',
+  editedAt: 'editedAt'
+} as const
+
+export type WordCommentScalarFieldEnum = (typeof WordCommentScalarFieldEnum)[keyof typeof WordCommentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3311,6 +3402,7 @@ export type GlobalOmitConfig = {
   valencyArgument?: Prisma.ValencyArgumentOmit
   contributorStats?: Prisma.ContributorStatsOmit
   properNounSignal?: Prisma.ProperNounSignalOmit
+  wordComment?: Prisma.WordCommentOmit
 }
 
 /* Types for Logging */
