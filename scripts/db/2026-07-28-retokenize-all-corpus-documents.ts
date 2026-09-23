@@ -27,12 +27,16 @@ async function main() {
 
     // Порядок по slug стабилен, поэтому прерванный прогон продолжается с offset:
     // на корпусе из 3 509 документов полный проход идёт часами.
-    //   npx tsx scripts/db/2026-07-28-retokenize-all-corpus-documents.ts [offset]
+    // Второй аргумент ограничивает число документов: из-за утечки памяти в
+    // Prisma 7 (см. AGENTS.md) полный прогон лучше резать на процессы.
+    //   npx tsx scripts/db/2026-07-28-retokenize-all-corpus-documents.ts [offset] [limit]
     const offset = process.argv[2] ? parseInt(process.argv[2], 10) : 0
+    const limit = process.argv[3] ? parseInt(process.argv[3], 10) : undefined
     const documents = await prismaCorpus.corpusDocument.findMany({
         select: { slug: true, title: true, rawText: true, author: true, language: true, genre: true, externalId: true, sourceUrl: true },
         orderBy: { slug: "asc" },
         skip: offset,
+        ...(limit ? { take: limit } : {}),
     })
 
     console.log(`Документов к перетокенизации: ${documents.length} (с offset ${offset})`)
