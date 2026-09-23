@@ -100,6 +100,12 @@ export enum SystemFeature {
     SuggestionsReview = "suggestions_review",
     ReportsReview = "reports_review",
 
+    // Очередь переводов, которые волонтёры отклонили или по которым не
+    // сошлись (публичные карточки /contribute), и список участников,
+    // проваливших контрольные карточки. Просмотр - этим флагом; само
+    // решение по переводу дополнительно требует translate_<язык>.
+    CommunityReview = "community_review",
+
     // Управление API-ключами всех пользователей (roadmap п.38) - выдача
     // per-key override лимита, отзыв при злоупотреблении. Самообслуживание
     // (создание/отзыв СВОИХ ключей) не гейтится этим - см. app/api/api-keys
@@ -442,6 +448,11 @@ export const FEATURE_METADATA: Record<string, { label: string; description: stri
     [SystemFeature.SuggestionsReview]: {
         label: "Ревью предложенных слов",
         description: "Просмотр и обработка публичных заявок 'предложить слово' (создание кандидата или отклонение)",
+        category: "Обратная связь",
+    },
+    [SystemFeature.CommunityReview]: {
+        label: "Разбор ответов сообщества",
+        description: "Очередь переводов, отклонённых или оспоренных волонтёрами на публичных карточках; решение по переводу требует ещё и права на его язык",
         category: "Обратная связь",
     },
     [SystemFeature.ReportsReview]: {

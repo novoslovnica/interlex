@@ -36,7 +36,7 @@ export default async function ModerationDashboardPage() {
 
   // Параллельно, чтобы не сериализовать 4 независимых count-запроса по 2
   // разным БД (data.db, corpus.db) - каждый дешёвый сам по себе.
-  const [candidatesPending, corpusClusters, corpusHomonyms, suggestionsPending, reportsPending] = await Promise.all([
+  const [candidatesPending, corpusClusters, corpusHomonyms, suggestionsPending, reportsPending, properNounsPending, communityReviewPending] = await Promise.all([
     canSee(Feature.CandidatesPromote) ? prismaData.candidate.count({ where: { promotedAt: null } }) : Promise.resolve(0),
     // COUNT(DISTINCT ...) вместо groupBy: тот тянул в память по строке на
     // каждый кластер (на живых данных это 77 588 строк) только чтобы взять
@@ -62,6 +62,14 @@ export default async function ModerationDashboardPage() {
       : Promise.resolve(0),
     canSee(Feature.SuggestionsReview) ? prismaData.wordSuggestion.count({ where: { status: "pending" } }) : Promise.resolve(0),
     canSee(Feature.ReportsReview) ? prismaData.contentReport.count({ where: { status: "pending" } }) : Promise.resolve(0),
+    // OR вместо NOT { verified: 1 }: SQL-ное NOT (verified = 1) отбросило бы
+    // строки с verified = NULL, а это вся массовая заливка hsb/dsb.
+    canSee(Feature.WordsEdit) ? prismaData.properNounSignal.count() : Promise.resolve(0),
+    canSee(Feature.CommunityReview)
+      ? prismaData.translation.count({
+          where: { communityStatus: { in: ["rejected", "disputed"] }, OR: [{ verified: null }, { verified: { not: 1 } }] },
+        })
+      : Promise.resolve(0),
   ])
 
   const allTiles: QueueTile[] = [
@@ -77,6 +85,8 @@ export default async function ModerationDashboardPage() {
     },
     { key: "suggestions", label: "Предложенные слова", href: "/admin/suggestions", feature: Feature.SuggestionsReview, count: suggestionsPending },
     { key: "reports", label: "Жалобы на ошибки", href: "/admin/reports", feature: Feature.ReportsReview, count: reportsPending },
+    { key: "proper-nouns", label: "Имена собственные", href: "/admin/proper-nouns", feature: Feature.WordsEdit, count: properNounsPending },
+    { key: "community-review", label: "Ответы сообщества", href: "/admin/community-review", feature: Feature.CommunityReview, count: communityReviewPending },
     {
       key: "deduplication",
       label: "Дедупликация",
