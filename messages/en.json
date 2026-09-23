@@ -761,7 +761,43 @@
     },
     "verifiedByModerator": "Checked by a moderator",
     "verifiedByCommunity": "Checked by the community",
-    "helpVerify": "Speak one of these languages? Help check the translations"
+    "helpVerify": "Speak one of these languages? Help check the translations",
+    "history": {
+      "sectionTitle": "Change history",
+      "sectionHint": "Who changed this word and when. Moderator notes and service fields are not shown.",
+      "empty": "empty",
+      "added": "added",
+      "yes": "yes",
+      "no": "no",
+      "showMore": "Show more ({remaining})",
+      "loadFailed": "Could not load.",
+      "author": {
+        "community": "community",
+        "script": "automatic",
+        "moderator": "moderator"
+      },
+      "status": {
+        "confirmed": "confirmed",
+        "rejected": "rejected",
+        "disputed": "disputed"
+      },
+      "fields": {
+        "value": "spelling",
+        "stem": "stem",
+        "pos": "part of speech",
+        "gender": "gender",
+        "animacy": "animacy",
+        "declension": "declension",
+        "conjugation": "conjugation",
+        "properNoun": "proper noun",
+        "isv": "CORE form",
+        "nsl": "NSL form",
+        "mergedFrom": "merged from",
+        "translation_value": "translation ({language})",
+        "translation_communityStatus": "community check ({language})",
+        "translation_created": "translation ({language})"
+      }
+    }
   },
   "admin": {
     "title": "Admin Panel",

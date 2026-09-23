@@ -28,9 +28,11 @@ import BookmarkButton from "@/components/BookmarkButton";
 import ShareButton from "@/components/ShareButton";
 import AccentLegend from "@/components/AccentLegend";
 import ReportErrorModal from "@/components/ReportErrorModal";
+import WordHistory from "@/app/words/[id]/WordHistory";
+import type {WordHistoryEntry} from "@/lib/community/loadWordHistory";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples, historicalAttestations }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[]; historicalAttestations?: HistoricalAttestationDTO[] }) => {
+const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples, historicalAttestations, history }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[]; historicalAttestations?: HistoricalAttestationDTO[]; history?: { entries: WordHistoryEntry[]; total: number } }) => {
     const t = useTranslations("word");
     const [cognateWords, setCognateWords] = useState<any[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
@@ -717,6 +719,14 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                             </li>
                         ))}
                     </ul>
+                </section>
+            )}
+
+            {history && history.total > 0 && (
+                <section className="mt-8 pt-4 border-t border-slate-100">
+                    <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-1">{t("history.sectionTitle")}</h2>
+                    <p className="text-xs text-slate-400 mb-3">{t("history.sectionHint")}</p>
+                    <WordHistory lexemeId={item.id} initialEntries={history.entries} total={history.total} />
                 </section>
             )}
 

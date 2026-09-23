@@ -771,7 +771,43 @@
     },
     "verifiedByModerator": "Проверено модератором",
     "verifiedByCommunity": "Проверено сообществом",
-    "helpVerify": "Знаете один из этих языков? Помогите проверить переводы"
+    "helpVerify": "Знаете один из этих языков? Помогите проверить переводы",
+    "history": {
+      "sectionTitle": "История изменений",
+      "sectionHint": "Кто и когда менял это слово. Заметки модераторов и служебные поля не показываются.",
+      "empty": "пусто",
+      "added": "добавлен",
+      "yes": "да",
+      "no": "нет",
+      "showMore": "Показать ещё ({remaining})",
+      "loadFailed": "Не удалось загрузить.",
+      "author": {
+        "community": "сообщество",
+        "script": "автоматически",
+        "moderator": "модератор"
+      },
+      "status": {
+        "confirmed": "подтверждено",
+        "rejected": "отклонено",
+        "disputed": "спорно"
+      },
+      "fields": {
+        "value": "написание",
+        "stem": "основа",
+        "pos": "часть речи",
+        "gender": "род",
+        "animacy": "одушевлённость",
+        "declension": "склонение",
+        "conjugation": "спряжение",
+        "properNoun": "имя собственное",
+        "isv": "форма CORE",
+        "nsl": "форма NSL",
+        "mergedFrom": "объединено с",
+        "translation_value": "перевод ({language})",
+        "translation_communityStatus": "проверка сообществом ({language})",
+        "translation_created": "перевод ({language})"
+      }
+    }
   },
   "admin": {
     "title": "Админ-панель",

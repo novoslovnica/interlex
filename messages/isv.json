@@ -761,7 +761,43 @@
     },
     "verifiedByModerator": "Pověreno moderatorom",
     "verifiedByCommunity": "Pověreno občinojų",
-    "helpVerify": "Znajete jedin iz tyh językov? Pomozite pověriti prěvody"
+    "helpVerify": "Znajete jedin iz tyh językov? Pomozite pověriti prěvody",
+    "history": {
+      "sectionTitle": "Historija izměn",
+      "sectionHint": "Kto i kogda měnjal to slovo. Zapisky moderatorov i služebne polja ne sųt pokazane.",
+      "empty": "prazdno",
+      "added": "dodany",
+      "yes": "da",
+      "no": "ne",
+      "showMore": "Pokazati ješče ({remaining})",
+      "loadFailed": "Ne udalo sę zagruziti.",
+      "author": {
+        "community": "občina",
+        "script": "avtomatično",
+        "moderator": "moderator"
+      },
+      "status": {
+        "confirmed": "potvŕdženo",
+        "rejected": "otklonjeno",
+        "disputed": "sporno"
+      },
+      "fields": {
+        "value": "pisanje",
+        "stem": "osnova",
+        "pos": "čęst rěči",
+        "gender": "rod",
+        "animacy": "oduševjenost",
+        "declension": "sklonjenje",
+        "conjugation": "sprěženje",
+        "properNoun": "vlastno imę",
+        "nsl": "forma NSL",
+        "isv": "forma CORE",
+        "mergedFrom": "objedinjeno s",
+        "translation_value": "prěvod ({language})",
+        "translation_communityStatus": "pověrka občinojų ({language})",
+        "translation_created": "prěvod ({language})"
+      }
+    }
   },
   "admin": {
     "title": "Admin-panel",
