@@ -95,15 +95,21 @@ export class RateLimiter {
 }
 
 /**
- * Best-effort client identity from standard proxy headers. `x-forwarded-for`
- * may carry a comma-separated chain when passed through multiple proxies -
- * the first entry is the original client. Falls back to a single shared
+ * Best-effort client identity from standard proxy headers. The app runs
+ * behind exactly one reverse proxy (nginx), which appends the address it saw
+ * to `x-forwarded-for` - so the LAST entry is the real client. The first
+ * entry is whatever the client itself sent in the header and must not be
+ * trusted: taking it let anyone dodge the limit by sending a fresh fake
+ * `x-forwarded-for` on every request. Falls back to a single shared
  * "unknown" bucket when neither header is present (e.g. no reverse proxy in
  * front of the app at all) - degraded to a coarse global limit rather than
  * no limit, not a per-client one.
  */
 export function getClientKey(headers: Pick<Headers, "get">): string {
     const forwardedFor = headers.get("x-forwarded-for");
-    if (forwardedFor) return forwardedFor.split(",")[0].trim();
+    if (forwardedFor) {
+        const hops = forwardedFor.split(",").map((h) => h.trim()).filter(Boolean);
+        if (hops.length > 0) return hops[hops.length - 1];
+    }
     return headers.get("x-real-ip") ?? "unknown";
 }

@@ -1,5 +1,6 @@
 import {getItem, getKnownPrepositions} from "@/app/words/[id]/api";
 import {Suspense} from "react";
+import {notFound} from "next/navigation";
 import Word from "@/app/words/[id]/Word";
 import './word-page.css';
 import {getUserScript} from "@/lib/get-user-script";
@@ -46,6 +47,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const item = await getItem(id);
+    // Раньше несуществующий id рендерил пустую страницу с кодом 200 - для
+    // поисковика это "мягкий 404" на каждый битый адрес.
+    if (!item?.id) notFound();
     const currentScript = await getUserScript();
     const knownPrepositions = item?.pos === PosType.VERB ? await getKnownPrepositions() : [];
     // corpus.db is a separate database from interlex.db (item.slug) - fetched

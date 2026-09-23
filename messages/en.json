@@ -473,6 +473,16 @@
     "signIn": "Log in",
     "home": "Go to home page"
   },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "This page doesn't exist: the link may be outdated or the address mistyped. You can look the word up in the lexicon.",
+    "searchLexicon": "Search the lexicon",
+    "errorTitle": "Something went wrong",
+    "errorText": "An error occurred while loading this page. Please try again; if it keeps happening, let us know.",
+    "retry": "Try again",
+    "errorCode": "Error code",
+    "home": "Go to home page"
+  },
   "changelog": {
     "title": "Istorija versij / Version History",
     "description": "History of changes to the Interslavic Lexicon platform.",

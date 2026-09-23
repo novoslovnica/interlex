@@ -473,6 +473,16 @@
     "signIn": "Vniti",
     "home": "Na glavnu stranicu"
   },
+  "errors": {
+    "notFoundTitle": "Stranica ne jest najdena",
+    "notFoundText": "Takoj stranice ne jest: možno, link jest zastarěly ili v adresu jest opečatka. Slovo možno iskati v leksikonu.",
+    "searchLexicon": "Iskati v leksikonu",
+    "errorTitle": "Něčto pošlo ne tako",
+    "errorText": "Pri zagrųžanju stranice pojavila sę jest grěška. Poprobujte ješče raz; ako li grěška sę povtarja, dajte nam znati.",
+    "retry": "Poprobovati ješče raz",
+    "errorCode": "Kod grěšky",
+    "home": "Na glavnu stranicu"
+  },
   "changelog": {
     "title": "Istorija versij",
     "description": "Istorija izměnenij platformy Interslavic Lexicon.",

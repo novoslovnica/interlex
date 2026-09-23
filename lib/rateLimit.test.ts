@@ -43,9 +43,13 @@ describe("RateLimiter", () => {
 });
 
 describe("getClientKey", () => {
-    it("uses the first entry of x-forwarded-for", () => {
+    it("uses the entry appended by our proxy (the last one), not the client-supplied first one", () => {
         const headers = new Headers({ "x-forwarded-for": "1.2.3.4, 5.6.7.8" });
-        expect(getClientKey(headers)).toBe("1.2.3.4");
+        expect(getClientKey(headers)).toBe("5.6.7.8");
+    });
+
+    it("a single x-forwarded-for entry is the client", () => {
+        expect(getClientKey(new Headers({ "x-forwarded-for": "5.6.7.8" }))).toBe("5.6.7.8");
     });
 
     it("falls back to x-real-ip when x-forwarded-for is absent", () => {
