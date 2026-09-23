@@ -50,6 +50,22 @@ echo "==> stopping $SERVICE"
 sudo systemctl stop "$SERVICE"
 
 for db in "${DBS[@]}"; do
+    [ "$db" = corpus ] || continue
+    # Правки модераторов выгружены release.sh, пока служба работала. Если с тех
+    # пор их стало больше - снимок их не содержит, и замена бы их стёрла.
+    [ -f corpus-manual-export.json ] || { echo "corpus-manual-export.json missing - run the corpus release through release.sh" >&2; sudo systemctl start "$SERVICE"; exit 1; }
+    exported=$(node -e 'const c=JSON.parse(require("fs").readFileSync("corpus-manual-export.json","utf8")).counts; console.log(JSON.stringify(c))')
+    current=$(npx tsx scripts/db/corpus-export-manual.ts --count)
+    if [ "$exported" != "$current" ]; then
+        echo "manual corpus edits changed since the export ($exported -> $current) - not replacing corpus.db." >&2
+        echo "Re-run: bash release.sh --db=corpus --keep-snapshot" >&2
+        sudo systemctl start "$SERVICE"
+        exit 1
+    fi
+    echo "==> corpus manual edits unchanged since the export: $current"
+done
+
+for db in "${DBS[@]}"; do
     snapshot="$db-release.db"
     [ -f "$snapshot" ] || { echo "$snapshot missing on the server" >&2; sudo systemctl start "$SERVICE"; exit 1; }
     echo "==> swapping $db.db for the uploaded snapshot"
@@ -61,13 +77,14 @@ for db in "${DBS[@]}"; do
     echo "    quick_check: $(sqlite3 "$db.db" 'PRAGMA quick_check;' | head -1)"
 done
 
-echo "==> migrations (idempotent; auth.db is migrated in place - it is never replaced)"
-AUTH_SQLITE_DB="$PWD/auth.db" npx tsx scripts/db/2026-09-19-add-community-auth-tables.ts
-# interlex.db: после замены снимком уже содержит всё; иначе скрипты тоже
-# безопасны (каждый проверяет, применён ли).
-SQLITE_DB="$PWD/interlex.db" npx tsx scripts/db/2026-09-19-add-community-translation-votes.ts
-SQLITE_DB="$PWD/interlex.db" npx tsx scripts/db/2026-09-19-add-community-reputation.ts
-SQLITE_DB="$PWD/interlex.db" npx tsx scripts/db/2026-09-23-add-word-comments.ts
+echo "==> schema migrations (scripts/db/manifest.ts, registry _applied_scripts in each database)"
+# Скрипты с данными здесь не запускаются - только руками: bash prod.sh run <script>.
+npx tsx scripts/db/run.ts migrate || {
+    # .next ещё старая: лучше поднять прежний код, чем оставить сайт лежать.
+    echo "schema migration failed - starting the previous build; see logs/db-runs/" >&2
+    sudo systemctl start "$SERVICE"
+    exit 1
+}
 
 echo "==> build"
 rm -rf .next

@@ -629,3 +629,29 @@ What the comparison established — check these before trusting any id across th
 - Case-only differences are resolved toward the lowercase form (the local capitalization pass), never toward production's import capitals; a local `verified=1` is never cleared by a production 0/NULL.
 - Production's `sqlite3` is old; `USERNAME` is a special read-only variable in zsh, so `.env.release`'s login must be read into another variable (release.sh only works because it runs under bash).
 - Still on production only after the upload: nothing — but `2052 no-pron` (deleted locally without a merge record) and `25508 značenje-NOUN` (promoted on production, probable duplicate of 22199) deserve a look in `/admin/deduplication`. `corpus.db` was not part of this reconciliation: production's copy still carries pre-merge slugs.
+
+---
+
+## Production data changes (2026-09-24)
+
+After the 2026-09-23 snapshot upload, **production is the source of truth** for `interlex.db`, `auth.db` and `library.db`: moderators, votes, comments and profiles accumulate there and exist nowhere else. They are changed by scripts through a registry, never by replacing the file (`release.sh --db=interlex|library` refuses without `--replace-source-of-truth`). The local databases are disposable copies.
+
+**Workflow for a data change:**
+1. `bash scripts/local/pull-prod.sh --db=interlex` — fresh copy of production (server-side `.backup`, never a raw copy of a live WAL file; `auth.db` is never pulled).
+2. Write the script, add it to `scripts/db/manifest.ts` (`db`, `kind`, `dryRun`), run it locally: `npm run db:run -- scripts/db/<file>.ts` (dry run), then `--apply`.
+3. Commit, push, `bash release.sh` (the server must be on that commit — `prod.sh` checks).
+4. `bash prod.sh run scripts/db/<file>.ts` — dry run on production; read the output.
+5. `bash prod.sh run scripts/db/<file>.ts --apply` — refused unless a successful dry run of the same file version exists from the last 24h; takes a backup `<db>.db.backup-before-run-<stamp>-<name>` first (5 kept per database); refused a second time unless `--again`. Long scripts: `--detach`, then `bash prod.sh log -f`.
+
+**Registry**: `_applied_scripts` inside the database the script changes (`scripts/db/lib/registry.ts`) — one row per attempt (dry-run / apply / baseline), with checksum, commit, exit code, backup and log path (`logs/db-runs/`, gitignored). `npm run db:status` / `bash prod.sh status` list what is applied and flag a script whose file changed after it was applied; status is read-only. `mark-applied` records a script that was applied by other means.
+
+**Manifest kinds**: `schema` — idempotent DDL, applied by `run.ts migrate` inside `rebuild-remote.sh` while the service is stopped (replaces the old hardcoded list; if it fails, the previous build is started again); `data` — one-off, run by hand only, must support dry run; `repeatable` — recomputations (frequency, contributor stats, proper-noun signals). Dated scripts before `LEGACY_CUTOFF` (2026-09-25) are history already applied on production and are not in the manifest; the runner refuses them.
+
+**Data-script contract** (what the runner relies on): dry run by default — without `--apply` open the DB read-only or roll the transaction back; idempotent; read paths from `SQLITE_DB` / `AUTH_SQLITE_DB` / `CORPUS_SQLITE_DB` / `*_DATABASE_URL` (the runner sets all of them to absolute paths); write `audit_logs` rows as `userEmail='script:<name>'` for lexical changes; set `Lexeme.updatedAt` explicitly in raw SQL; no long write transactions on `corpus.db`; carry frequencies onto merge targets (traps in "Duplicate service lexemes" above).
+
+**corpus.db is still rebuilt locally and uploaded as a file** — but moderators' corpus work on production survives: `release.sh --db=corpus` exports it (`scripts/db/corpus-export-manual.ts`: tokens with `resolutionSource='manual'`, `CorpusDependency.source='manual'`, proposals with `reviewedByEmail`) and applies it to the snapshot (`corpus-import-manual.ts`, stable keys: document + tokenIndex + surfaceForm, falling back to sentence text + occurrence number, since ids change on retokenization). Edits that find no place abort the release (`CORPUS_ALLOW_MISSING=1` to drop them knowingly); with the service stopped, `rebuild-remote.sh` re-counts the manual edits and refuses the swap if there are new ones. Rebuild the corpus against a fresh `pull-prod` of `interlex.db` (the corpus refers to lexeme slugs), and after the swap run `bash prod.sh run scripts/compute-lexicon-frequency.ts --apply`.
+
+### Key Files
+- `scripts/db/run.ts`, `scripts/db/manifest.ts`, `scripts/db/lib/registry.ts` (+ `registry.test.ts`)
+- `prod.sh`, `scripts/ops/remote.sh` (ssh helpers shared with `release.sh`), `scripts/local/pull-prod.sh` (replaced `sync-data.sh`)
+- `scripts/db/corpus-export-manual.ts`, `scripts/db/corpus-import-manual.ts` (+ `corpus-manual.test.ts`)

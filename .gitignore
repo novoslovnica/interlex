@@ -62,3 +62,8 @@ candidates-export.json
 translation-capitalization-report*.json
 prod-translation-disagreements.json
 *-release.db
+
+# scripts/db/run.ts logs
+logs/
+corpus-manual-export.json
+.db-run.lock
