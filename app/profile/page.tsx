@@ -10,9 +10,10 @@ import { ContributionStats } from "@/components/community/ContributionStats"
 
 export default async function ProfilePage() {
   const session = await auth()
-  if (!session?.user) redirect("/login")
+  if (!session?.user?.id) redirect("/login")
 
   const user = session.user
+  const userId = session.user.id
   const collections = await dbAuth.userWordCollection.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
@@ -35,7 +36,7 @@ export default async function ProfilePage() {
   ])
   let summary
   try {
-    summary = fetchContributorSummary(db, user.id)
+    summary = fetchContributorSummary(db, userId)
   } finally {
     db.close()
   }
