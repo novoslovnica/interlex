@@ -60,3 +60,4 @@ candidates-export.json
 
 # отчёты scripts/db/2026-09-19-normalize-translation-capitalization.ts (запись для отката)
 translation-capitalization-report*.json
+prod-translation-disagreements.json
