@@ -1,4 +1,6 @@
-// Написания словоформы для словарей проверки орфографии.
+// Стандартная орфография межславянского: написания словоформы для словарей
+// проверки орфографии (lib/export/hunspell) и транслитерация текста для ботов
+// (lib/bots).
 //
 // Движок порождает формы в этимологической орфографии (ę, ų, ė, ȯ, å, ŕ,
 // мягкие ľ/ń/ť), а пишут на межславянском официальной стандартной - это
@@ -7,7 +9,9 @@
 // против međuslovjansky 38, člověk 2 530 против človek 315. Кириллица в
 // корпусе - стандартная с ј (језык, сут, меджусловјанскы), а не та, что
 // показывает сайт (isvToCyr: іезык), поэтому существующие конвертеры из
-// lib/isv.ts и lib/transliteration.ts здесь не годятся.
+// lib/isv.ts и lib/transliteration.ts здесь не годятся. Письменности
+// равноправны: у каждой - стандарт (člověk / чловєк), этимологическое ě
+// кириллицей (чловѣк) и упрощённое (človek / чловек).
 //
 // Первое написание в списке - стандартное (к нему ведут подсказки), остальные -
 // принятые варианты: упрощённое ě→e, i вместо y, необязательные ć/đ.
@@ -121,7 +125,11 @@ function latinToCyrillicWord(latin: string, digraphs: { dz: string; lj: string; 
     return out
 }
 
+// ě кириллицей - є (стандарт, 4 872 токена в корпусе) или ѣ (этимологическое,
+// 570): латинскому ě соответствуют оба, упрощённому e - е. ѧ/ѫ не принимаются,
+// как и ę/ų в латинице.
 const CYRILLIC_VARIANTS: [RegExp, string][] = [
+    [/є/g, "ѣ"], [/Є/g, "Ѣ"],
     [/є/g, "е"], [/Є/g, "Е"],
     [/ы/g, "и"], [/Ы/g, "И"],
 ]
@@ -145,4 +153,55 @@ const PLAIN_LATIN = /^[a-zA-ZčćđěšžČĆĐĚŠŽ]+(?:-[a-zA-ZčćđěšžČ
 /** После перевода в стандарт в слове остались только буквы стандартного алфавита. */
 export function isPlainLatin(word: string): boolean {
     return PLAIN_LATIN.test(word)
+}
+
+// --- Транслитерация текста (боты): латиница <-> стандартная кириллица.
+
+const CYRILLIC_TO_LATIN: Record<string, string> = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "є": "ě", "ѣ": "ě", "ж": "ž", "з": "z",
+    "и": "i", "ј": "j", "й": "j", "к": "k", "л": "l", "љ": "lj", "м": "m", "н": "n", "њ": "nj", "о": "o",
+    "п": "p", "р": "r", "с": "s", "т": "t", "ћ": "ć", "у": "u", "ф": "f", "х": "h", "ц": "c", "ч": "č",
+    "џ": "dž", "ђ": "đ", "ш": "š", "щ": "šč", "ы": "y", "ь": "", "ъ": "", "ю": "ju", "я": "ja", "і": "j",
+    "ѧ": "ę", "ѫ": "ų",
+}
+
+const CYRILLIC_LETTER = /[\u0400-\u04FF]/
+
+export function isCyrillicText(text: string): boolean {
+    let cyr = 0
+    let lat = 0
+    for (const ch of text) {
+        if (CYRILLIC_LETTER.test(ch)) cyr++
+        else if (/\p{L}/u.test(ch)) lat++
+    }
+    return cyr > lat
+}
+
+function matchCase(source: string, target: string): string {
+    if (!target) return target
+    if (source === source.toUpperCase() && source !== source.toLowerCase() && source.length > 1) return target.toUpperCase()
+    if (source[0] !== source[0].toLowerCase()) return target[0].toUpperCase() + target.slice(1)
+    return target
+}
+
+/** Кириллица (стандартная или этимологическая) -> стандартная латиница; не-буквы как есть. */
+export function cyrillicToLatin(text: string): string {
+    return text.replace(/\p{L}+/gu, (word) => {
+        let out = ""
+        const lower = word.toLowerCase()
+        for (let i = 0; i < lower.length; i++) {
+            if (lower[i] === "д" && lower[i + 1] === "ж") { out += "dž"; i++; continue }
+            out += CYRILLIC_TO_LATIN[lower[i]] ?? lower[i]
+        }
+        return matchCase(word, out)
+    })
+}
+
+/** Латиница (стандартная или этимологическая) -> стандартная кириллица с є; не-буквы как есть. */
+export function latinToCyrillic(text: string): string {
+    return text.replace(/\p{L}+/gu, (word) => {
+        const standard = toStandardLatin(word)
+        const cyr = latinToCyrillicWord(standard.toLowerCase(), { dz: "дж", lj: "љ", nj: "њ" })
+        return cyr === null ? word : matchCase(word, cyr)
+    })
 }

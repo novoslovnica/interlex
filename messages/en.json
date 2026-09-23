@@ -361,7 +361,7 @@
       "firefox": "Firefox and Thunderbird install dictionaries only as signed add-ons, and there is none yet. The files from the archive can be added by hand to Chromium-based browsers and to the system spell checker.",
       "editorsHeading": "Other editors",
       "editors": "isv-hunspell.zip contains isv_Latn.dic/.aff and isv_Cyrl.dic/.aff. They work with VS Code (Hunspell-based extensions), Obsidian, Vim/Neovim (via hunspell), Emacs and the Linux system spell checker.",
-      "spelling": "The Latin dictionary accepts the standard spelling (člověk, jezyk, sut) and the common simplified one (človek); suggestions lead to the standard."
+      "spelling": "Both dictionaries accept the same spellings: the standard one (člověk / чловєк), the etymological Cyrillic ѣ (чловѣк) and the common simplified one (človek / чловек); suggestions lead to the standard."
     }
   },
   "flashcards": {

@@ -6,7 +6,7 @@ import {
 import { Case, NumberType } from '../endingsRegistry';
 import { FourSlavicTones } from '../fourTonesGenerator';
 import { stripAccents } from '../accentUtils';
-import { getEnding } from '@/lib/grammar/endingLoader';
+import { findEnding } from '@/lib/grammar/endingLoader';
 import { resolveStressOverride } from '@/lib/grammar/stress';
 
 // =========================================================================
@@ -22,8 +22,8 @@ export type AdjStemType = 'adj_hard' | 'adj_soft';
  */
 export function adjectiveEnding(soft: boolean, targetNumber: NumberType, targetCase: Case, targetGender: GrammaticalGender): string {
     const stemType: AdjStemType = soft ? 'adj_soft' : 'adj_hard';
-    return getEnding(stemType, targetNumber, targetCase, 'CORE', targetGender)
-        || ADJECTIVE_ENDINGS_REGISTRY[stemType][targetNumber][targetGender][targetCase];
+    return findEnding(stemType, targetNumber, targetCase, 'CORE', targetGender)
+        ?? ADJECTIVE_ENDINGS_REGISTRY[stemType][targetNumber][targetGender][targetCase];
 }
 
 export interface EnhancedAdjDbItem {
@@ -229,7 +229,7 @@ export function generateAdjectiveForm(request: AdjFormRequest): string {
     }
 
     const stemType = identifyAdjStemType(dbItem);
-    const dbEnding = getEnding(stemType, targetNumber, targetCase, 'CORE', targetGender);
+    const dbEnding = findEnding(stemType, targetNumber, targetCase, 'CORE', targetGender);
     const ending = dbEnding ?? ADJECTIVE_ENDINGS_REGISTRY[stemType][targetNumber][targetGender][targetCase];
 
     // Отрезаем изначальное словарное окончание полных форм межславянского (y/i) для получения корня

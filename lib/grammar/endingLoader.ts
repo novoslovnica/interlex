@@ -53,6 +53,23 @@ export function getEnding(
   gender?: string,
   animacy?: string,
 ): string {
+  return findEnding(stemType, number, c, flavor, gender, animacy) ?? '';
+}
+
+/**
+ * Как getEnding, но undefined, если окончания нет ни в БД, ни в реестре
+ * существительных. Нужен тем, у кого свой запасной реестр (прилагательные):
+ * getEnding отдаёт '' и `?? свой_реестр` не срабатывал - в браузере, где БД
+ * нет, все формы прилагательного были голой основой ("dobr").
+ */
+export function findEnding(
+  stemType: string,
+  number: NumberType,
+  c: Case,
+  flavor: string = 'CORE',
+  gender?: string,
+  animacy?: string,
+): string | undefined {
   const fullGrammeme = buildGrammeme(c, number, gender, animacy);
   const dbValue = getEndingByGrammeme(stemType, fullGrammeme, flavor);
 
@@ -74,7 +91,7 @@ export function getEnding(
     return registry[number][c];
   }
 
-  return '';
+  return undefined;
 }
 
 export function resetEndingCache(): void {

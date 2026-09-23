@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { cyrillicSpellings, latinSpellings, toStandardLatin } from "./orthography"
+import { cyrillicSpellings, cyrillicToLatin, isCyrillicText, latinSpellings, latinToCyrillic, toStandardLatin } from "./standard"
 
 describe("toStandardLatin", () => {
     it.each([
@@ -31,10 +31,26 @@ describe("cyrillicSpellings", () => {
         expect(cyrillicSpellings("sųt")[0]).toBe("сут")
         expect(cyrillicSpellings("međuslovjansky")[0]).toBe("меджусловјанскы")
         expect(cyrillicSpellings("prijateľ")[0]).toBe("пријатељ")
-        expect(cyrillicSpellings("člověk")).toEqual(expect.arrayContaining(["чловєк", "чловек"]))
+        expect(cyrillicSpellings("člověk")[0]).toBe("чловєк")
+        expect(cyrillicSpellings("člověk")).toEqual(expect.arrayContaining(["чловєк", "чловѣк", "чловек"]))
         expect(cyrillicSpellings("konj")).toEqual(expect.arrayContaining(["коњ", "конј"]))
     })
     it("keeps a leading capital", () => {
         expect(cyrillicSpellings("Moskva")[0]).toBe("Москва")
+    })
+})
+
+describe("text transliteration", () => {
+    it("Latin -> Cyrillic keeps punctuation and case", () => {
+        expect(latinToCyrillic("Ja govorju medžuslovjansky, člověk!")).toBe("Ја говорју меджусловјанскы, чловєк!")
+        expect(latinToCyrillic("język sųt")).toBe("језык сут")
+    })
+    it("Cyrillic -> Latin, standard and etymological", () => {
+        expect(cyrillicToLatin("Меджусловјанскы језык")).toBe("Medžuslovjansky jezyk")
+        expect(cyrillicToLatin("чловѣк пријатељ")).toBe("člověk prijatelj")
+    })
+    it("detects the script by majority", () => {
+        expect(isCyrillicText("језык")).toBe(true)
+        expect(isCyrillicText("jezyk")).toBe(false)
     })
 })

@@ -5,15 +5,14 @@ import Link from "next/link";
 import {useTranslations} from "next-intl";
 import type {TranslationRow} from "@/lib/translations";
 import {TRANSLATION_LANGUAGES} from "@/config/features";
-import {buildVerbModel, conjugateFullVerb} from "@/lib/grammar/verb";
-import {splitMechanicalVerbTail, appendTailToConjugation} from "@/lib/grammar/verb/mechanicalTail";
+import {buildVerbParadigm, toParadigmSource} from "@/lib/paradigm";
 import {VerbConjugationTables} from "@/app/words/[id]/VerbConjugationTables";
 import {NounDeclensionTables} from "@/app/words/[id]/NounDeclensionTables";
 import {AdjectiveDeclensionTables} from "@/app/words/[id]/AdjectiveDeclensionTables";
 import {NumeralDeclensionTables} from "@/app/words/[id]/NumeralDeclensionTables";
 import {PronounDeclensionTables} from "@/app/words/[id]/PronounDeclensionTables";
 import {AdverbComparisonTables} from "@/app/words/[id]/AdverbComparisonTables";
-import {PosType, AccentParadigm, VerbalAspect} from "@/lib/grammar/common";
+import {PosType} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
 import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
@@ -76,20 +75,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
     let verbData = null;
     if (isVerb && !isCollocation) {
         try {
-            // "Механический хвост" (глагол + sę/se и/или известный предлог) —
-            // спрягается только head, tailSuffix приклеивается ко всем формам.
-            // См. lib/grammar/verb/mechanicalTail.ts.
-            const { head, tailSuffix } = splitMechanicalVerbTail(item.value, knownPrepositions ?? []);
-            // Та же модель, что у корпусного движка (processVerb): канонический
-            // инфинитив по стему, основы настоящего времени и l-причастия, класс.
-            verbData = appendTailToConjugation(conjugateFullVerb(buildVerbModel({
-                head,
-                stem: item.stem,
-                secondaryStem: item.secondaryStem,
-                tertiaryStem: item.tertiaryStem,
-                aspect: (meta.aspect as VerbalAspect) || VerbalAspect.IPF,
-                paradigm: (item.paradigm as AccentParadigm) || AccentParadigm.A,
-            })), tailSuffix);
+            verbData = buildVerbParadigm({ ...toParadigmSource(item), pos: meta.partOfSpeech, aspect: meta.aspect }, knownPrepositions ?? []);
         } catch (e) {
             console.error("Error generating verb paradigm:", e);
         }

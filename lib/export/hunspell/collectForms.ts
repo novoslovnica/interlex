@@ -1,6 +1,6 @@
 import { prismaData } from "@/lib/prisma"
 import { buildKnownPrepositions, forEachLexemeForms } from "@/lib/corpus/tokenizer/analyzer-factory"
-import { cyrillicSpellings, latinSpellings } from "./orthography"
+import { cyrillicSpellings, latinSpellings } from "@/lib/orthography/standard"
 
 export interface CollectedForms {
     /** Для каждой лексемы - все её написания латиницей (стандарт + принятые варианты). */

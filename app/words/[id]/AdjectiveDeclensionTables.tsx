@@ -1,11 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { generateAdjectiveForm, EnhancedAdjDbItem } from '@/lib/grammar/adjective/index';
+import { buildAdjectiveColumns } from '@/lib/paradigm';
 import { Case, NumberType } from '@/lib/grammar/endingsRegistry';
 import { GrammaticalGender } from '@/lib/grammar/common/gender';
-import { AccentParadigm } from '@/lib/grammar/common/paradigm';
-import { ProtoStemClass } from '@/lib/grammar/common/stem';
 
 import {capitalize} from "@/lib/script-mode";
 
@@ -57,20 +55,9 @@ export const AdjectiveDeclensionTables: React.FC<AdjectiveDeclensionTablesProps>
         { key: 'sup', lookup: 'adjective.superlative' },
     ];
 
-    const dbItem: EnhancedAdjDbItem = {
-        interslavic: isv,
-        protoSlavic: isv,
-        paradigm: paradigm as AccentParadigm,
-        protoStemClass: protoStemClass as ProtoStemClass,
-    };
-
-    const columns = NUMBERS.map(n => ({
-        title: n.title,
-        forms: CASES.reduce((acc, c) => ({
-            ...acc,
-            [c.key]: generateAdjectiveForm({ dbItem, targetCase: c.key, targetNumber: n.key, targetGender: activeGender, degree: activeDegree }),
-        }), {} as Record<string, string>),
-    }));
+    // Формы - из lib/paradigm (то же, что отдают боты).
+    const byNumber = buildAdjectiveColumns({ value: isv, paradigm, protoStemClass }, activeGender, activeDegree);
+    const columns = NUMBERS.map(n => ({ title: n.title, forms: byNumber[n.key] }));
 
     return (
         <div className="p-4 bg-slate-50 rounded-xl space-y-4">

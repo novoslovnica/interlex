@@ -6,8 +6,7 @@ import './word-page.css';
 import {getUserScript} from "@/lib/get-user-script";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import {declineWordAutomatically, asNStemIfMisfiled} from "@/lib/grammar/declineNoun";
-import {resolveGender} from "@/lib/grammar/stemClassifier";
+import {buildNounParadigm, toParadigmSource} from "@/lib/paradigm";
 import {PosType} from "@/lib/grammar/common";
 import {fetchWordExamples} from "@/lib/corpus/fetchWordExamples";
 import {fetchHistoricalAttestations} from "@/lib/historical/fetchHistoricalAttestations";
@@ -68,40 +67,8 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
 
-    let nounParadigm: { singular: Record<string, string>; dual: Record<string, string>; plural: Record<string, string> } | null = null;
-    if (item?.pos === PosType.NOUN && !item?.isCollocation) {
-      const CASES_LIST = ['nom', 'gen', 'dat', 'acc', 'ins', 'loc', 'voc'] as const;
-      const NUMBERS_LIST = ['singular', 'dual', 'plural'] as const;
-
-      nounParadigm = { singular: {}, dual: {}, plural: {} };
-
-      for (const num of NUMBERS_LIST) {
-        for (const c of CASES_LIST) {
-          try {
-            nounParadigm[num][c] = declineWordAutomatically({
-              dbItem: asNStemIfMisfiled({
-                interslavic: item.stem || item.word?.value || item.value,
-                protoSlavic: item.proto || "",
-                gender: resolveGender(item.gender, item.protoStemClass),
-                animacy: item.animacy || undefined,
-                protoStemClass: item.protoStemClass || "u",
-                stemExtension: item.stemExtension || undefined,
-                paradigm: item.paradigm || "A",
-                stressPosition: item.stressPosition,
-                morphemes: item.roots?.map((r: any) => ({
-                  value: r.value,
-                  stressPosition: r.stressPosition,
-                })),
-              }),
-              targetCase: c,
-              targetNumber: num,
-            });
-          } catch {
-            nounParadigm[num][c] = '—';
-          }
-        }
-      }
-    }
+    // Та же функция, что у ботов (lib/bots) - одна парадигма на сайт и ботов.
+    const nounParadigm = buildNounParadigm(toParadigmSource(item));
 
     const jsonLd = wordValue ? {
       "@context": "https://schema.org",

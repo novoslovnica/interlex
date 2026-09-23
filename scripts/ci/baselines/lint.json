@@ -48,7 +48,6 @@
   "app/words/[id]/api.ts @typescript-eslint/no-explicit-any": 9,
   "app/words/[id]/CognateRadarChart.tsx @typescript-eslint/no-explicit-any": 1,
   "app/words/[id]/NumeralDeclensionTables.tsx @typescript-eslint/no-explicit-any": 1,
-  "app/words/[id]/page.tsx @typescript-eslint/no-explicit-any": 1,
   "app/words/[id]/SynonymGraph.tsx @typescript-eslint/no-explicit-any": 3,
   "app/words/[id]/SynonymGraph.tsx react-hooks/set-state-in-effect": 1,
   "app/words/[id]/Word.tsx @typescript-eslint/no-explicit-any": 10,

@@ -361,7 +361,7 @@
       "firefox": "Firefox i Thunderbird instalujut slovniky jedino kako podpisane rozširenja — takogo ješče ne jest. Fajly iz arhiva možno dodati ručno v brauzery na osnově Chromium i v sistemnu prověrku pravopisa.",
       "editorsHeading": "Drugi redaktory",
       "editors": "V arhivu isv-hunspell.zip sut fajly isv_Latn.dic/.aff i isv_Cyrl.dic/.aff. Razuměju je VS Code (rozširenja na Hunspell), Obsidian, Vim/Neovim (črez hunspell), Emacs i sistemna prověrka pravopisa v Linux.",
-      "spelling": "Latinsky slovnik prijima standardno pisanje (člověk, jezyk, sut) i rasprostranjeno uprosčeno (človek); podskazky vedut k standardnomu."
+      "spelling": "Oba slovnika prijimajut jednake pisanja: standardno (člověk / чловєк), etimologično kiriličsko ѣ (чловѣк) i rasprostranjeno uprosčeno (človek / чловек); podskazky vedut k standardnomu."
     }
   },
   "flashcards": {
