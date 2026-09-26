@@ -4,11 +4,20 @@
 //   npx tsx scripts/ops/telegram-set-webhook.ts            # только setWebhook
 //   npx tsx scripts/ops/telegram-set-webhook.ts --drop     # и drop_pending_updates
 //
-// Env (подхватываются из окружения, без dotenv):
+// Env: сначала подхватываются .env.production и .env из корня проекта (tsx
+// сам .env НЕ грузит — известный готча, см. docs/history/2026-07-29-corpus-candidate-proposals.md),
+// реальные переменные окружения имеют приоритет над файлами.
 //   TELEGRAM_BOT_TOKEN       — обязателен
 //   NEXTAUTH_URL | SITE_URL  — обязателен, origin webhook URL
 //   TELEGRAM_WEBHOOK_SECRET  — обязателен, ставится в setWebhook как secret_token
 //                              и проверяется роутом app/api/bots/telegram/route.ts
+
+import path from "path"
+import dotenv from "dotenv"
+
+const ROOT = process.cwd()
+dotenv.config({ path: path.join(ROOT, ".env.production"), quiet: true })
+dotenv.config({ path: path.join(ROOT, ".env"), quiet: true })
 
 const API = (method: string) => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/${method}`
 
