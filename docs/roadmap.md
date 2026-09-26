@@ -171,6 +171,7 @@
 
 ## Лог выполнения
 
+- 2026-09-27: п.53 — long-polling фолбэк (`scripts/ops/telegram-poll.ts`, `--once`/`--takeover`, offset в logs/) — Telegram не достукивается до webhook'а (Connection timed out), вероятно провайдер режет IP-диапазоны Telegram; логика обработки вынесена в общий `lib/bots/telegram/handle.ts`. Скрипт set-webhook научен грузить `.env.production`/`.env` через dotenv (tsx сам не грузит).
 - 2026-09-26: п.114 ✅ (решения мейнтейнера того же дня) — этимологическое написание каноническое и принимается словарями (латиница 802 051 → 1 025 077 форм), стандартное — альтернативное; лицензия CC BY-SA 4.0 (LICENSE.txt в архивах, LICENSE в корне, package.json); `/downloads` в sitemap и футере. Осталось: ручная проверка .oxt в LibreOffice, Firefox-расширение (отложено). Подробности и замеры — addendum в docs/history/2026-09-24-hunspell.md.
 - 2026-09-26: п.108 ✅ — OG-картинки через `next/og`: карточка слова (`/words/[id]/opengraph-image`, латиница + кириллица-аллофон NSL + IPA + POS/CEFR) и дефолтная карточка сайта; шрифты Noto Sans (latin+cyrillic, 400/700/italic) фетчатся с fonts.gstatic.com и кэшируются в module scope, резерв — fontsource/jsdelivr woff; без сети карточка деградирует (кириллица опускается). Отправка sitemap в GSC/Яндекс.Вебмастер — по-прежнему ручной шаг.
 - 2026-09-26: п.53 ✅ — Telegram-бот поверх ядра `lib/bots/core`: webhook-роут с верификацией secret-token'а, разбор Update → BotCommand (`lib/bots/telegram/update.ts`, тесты), исключение `/api/bots/*` из IP-лимита, скрипт `scripts/ops/telegram-set-webhook.ts`.

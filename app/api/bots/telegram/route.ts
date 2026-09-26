@@ -2,12 +2,13 @@
 // {method: "sendMessage", ...} Telegram исполняет как вызов Bot API, так что
 // отвечать пользователю можно прямым HTTP-ответом без второго запроса.
 // Регистрация webhook'а: scripts/ops/telegram-set-webhook.ts.
+// Если webhook недоступен (провайдер режет IP-диапазоны Telegram) — поллер:
+// scripts/ops/telegram-poll.ts, логика обработки у них общая (lib/bots/telegram/handle.ts).
 
 import crypto from "crypto"
 import { NextResponse } from "next/server"
-import { runCommand } from "@/lib/bots/core/commands"
-import { toTelegramHtml } from "@/lib/bots/core/message"
-import { telegramUpdateToCommand, type TelegramUpdate } from "@/lib/bots/telegram/update"
+import { handleTelegramUpdate } from "@/lib/bots/telegram/handle"
+import type { TelegramUpdate } from "@/lib/bots/telegram/update"
 
 let warnedMissingSecret = false
 
@@ -49,17 +50,7 @@ export async function POST(req: Request) {
         return OK_EMPTY()
     }
 
-    const parsed = telegramUpdateToCommand(update)
-    if (!parsed) return OK_EMPTY()
-
-    try {
-        const msg = await runCommand(parsed.cmd, {
-            languageCode: parsed.languageCode,
-            botName: process.env.TELEGRAM_BOT_NAME,
-        })
-        return sendMessage(parsed.chatId, toTelegramHtml(msg))
-    } catch (err) {
-        console.error("[bots/telegram] runCommand failed:", err)
-        return sendMessage(parsed.chatId, "⚠️ Something went wrong, please try again later.")
-    }
+    const reply = await handleTelegramUpdate(update)
+    if (!reply) return OK_EMPTY()
+    return sendMessage(reply.chatId, reply.html)
 }
