@@ -4,8 +4,8 @@
 // сопоставления парадигмы).
 //
 // Читает БД напрямую через better-sqlite3, без Prisma — поэтому не требует
-// -r dotenv/config (см. AGENTS.md, «Corpus Candidate Proposals», п.2 про
-// tsx и hoisting импортов).
+// -r dotenv/config (см. docs/history/2026-07-29-corpus-candidate-proposals.md,
+// п.2 про tsx и hoisting импортов).
 //
 // Usage:
 //   npx tsx scripts/db/measure-corpus-recognition.ts                 # отчёт

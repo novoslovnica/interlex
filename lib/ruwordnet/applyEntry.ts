@@ -52,7 +52,7 @@ interface RelationRule {
   direction?: "entryIsSource" | "entryIsTarget"
 }
 
-// See AGENTS.md "Semantic Network" for the exact per-type source/target
+// See docs/history/2026-07-22-semantic-network.md for the exact per-type source/target
 // convention this mirrors (source=specific/dependent, target=general/governing).
 const RELATION_RULES: Record<DirectionKey, RelationRule> = {
   hypernyms: { relationType: "hypernymy", symmetric: false, direction: "entryIsSource" },

@@ -6,7 +6,8 @@
 //
 // ВАЖНО: запускать с преднагрузкой dotenv, иначе Prisma откроет
 // prisma/interlex.db (пустой артефакт), а не настоящую БД в корне репозитория
-// — см. AGENTS.md, «Corpus Candidate Proposals», п.2 про tsx и hoisting:
+// — см. docs/history/2026-07-29-corpus-candidate-proposals.md, п.2 про tsx и
+// hoisting:
 //   npx tsx -r dotenv/config scripts/db/measure-reanalysis-sample.ts [docs] [offset]
 
 import { prismaCorpus } from "@/lib/prisma"

@@ -4,7 +4,7 @@ import Database from "better-sqlite3"
 // Drops the 11 legacy relation tables (synonyms, antonyms, hypernyms,
 // hyponyms, meronyms, holonyms, related_words, causes, effects, premises,
 // conclusions), fully superseded by `semantic_relations` (2026-07-23, see
-// AGENTS.md "Semantic Network"). Guarded — verified before writing this
+// docs/history/2026-07-22-semantic-network.md). Guarded — verified before writing this
 // script that nothing in the app reads/writes these tables anymore:
 //   - admin relations UI, synonyms/antonyms admin pages, word-edit page's
 //     relations tab, /api/word-relations/save, word-detail page's

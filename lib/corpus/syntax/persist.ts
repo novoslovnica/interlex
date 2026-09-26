@@ -5,7 +5,7 @@ import { DependencyEdge } from './types';
  * Перезаписывает автоматически сгенерированные рёбра для предложения.
  * Затрагивает только source='auto' — ручные правки (Фаза 5, /admin/corpus/syntax)
  * не удаляются, тот же приём, что и у реимпорта semantic_relations (см.
- * AGENTS.md "Semantic Network"): реимпорт не должен тихо затирать то, что
+ * docs/history/2026-07-22-semantic-network.md): реимпорт не должен тихо затирать то, что
  * уже поправил модератор.
  *
  * Через prismaCorpus, а не сырой SQL — в отличие от DDL/миграций (см.

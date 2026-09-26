@@ -4,7 +4,7 @@ import Database from "better-sqlite3"
 // Additive/idempotent — creates the tables for the consolidated semantic
 // network (`SemanticRelation`) and NSM semantic primes (`SemanticPrime`/
 // `PrimeExponent`) added to `prisma/data.schema.prisma` on 2026-07-23.
-// See AGENTS.md "Semantic Network" section for the full design rationale.
+// See docs/history/2026-07-22-semantic-network.md for the full design rationale.
 //
 // What it does:
 //   1. Creates `semantic_relations` (if not already present) with the same
@@ -14,7 +14,7 @@ import Database from "better-sqlite3"
 // Deliberately NOT done here: the 11 old relation tables (synonyms,
 // antonyms, hypernyms, ...) are left untouched — dropping them is a
 // separate, later migration gated on the admin UI moving over first (see
-// AGENTS.md's deferred TODO).
+// docs/history/2026-07-22-semantic-network.md's deferred TODO).
 //
 // Usage:
 //   SQLITE_DB=/path/to/interlex.db npx tsx scripts/db/2026-07-23-add-semantic-relation-and-primes.ts

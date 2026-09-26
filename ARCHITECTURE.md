@@ -172,9 +172,10 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
         │   (/corpus)       │ │   (DbAnalyzer +   │ │  (UD dep. graph,  │ │   Disambiguation   │
         │                   │ │   Tokenizer, see  │ │  lib/corpus/      │ │   (CorpusToken-    │
         │ • CQL-style query │ │   lib/corpus/)    │ │  syntax/, admin   │ │   Candidate, see   │
-        └───────────────────┘ └───────────────────┘ │  /documents/      │ │   AGENTS.md)       │
-                                                       │  [slug]/syntax)   │ └───────────────────┘
-                                                       └───────────────────┘
+        └───────────────────┘ └───────────────────┘ │  /documents/      │ │   Candidate, see  │
+                                                       │  [slug]/syntax)   │ │   docs/history:   │
+                                                       └───────────────────┘ │  homonym-disambig) │
+                                                                             └───────────────────┘
                               │                               │                   │
                               └───────────────────────────────┼───────────────────┘
                                                                 ▼
@@ -310,9 +311,9 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │   (2026-07-27 —    │  │ • morphemeId     │
 │   multi-word idiom,│  └──────────────────┘
 │   invariant; see   │
-│   AGENTS.md "Corpus │
-│   Crawlers &        │
-│   Collocations")    │
+│   docs/history:     │
+│   corpus-crawlers-  │
+│   & collocations)   │
 └──────────────────┘
          │
          │ 1:N
@@ -329,7 +330,7 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │  ('manual'|'ruwordnet_auto' — scopes reimport deletes so hand edits   │
 │  survive re-running the RuWordNet upload). Symmetric types normalize  │
 │  sourceId=min/targetId=max on write so the unique index dedupes.      │
-│  See "Semantic Network" in AGENTS.md for full history/rationale.      │
+│  See docs/history/2026-07-22-semantic-network.md for full history/rationale.      │
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────┐  ┌──────────────────┐
@@ -358,8 +359,8 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 └──────────────────┘  │ • value, type    │  │ • flavorId       │
                        │ • verified Int?  │  │ (seeded FROM the │
                        │   (2026-07-28 —  │  │  same hardcoded  │
-                       │   per-flavor      │  │  registries — see│
-                       │   analog of        │  │  AGENTS.md)       │
+                       │   per-flavor      │  │  registries; see │
+                       │   analog of        │  │  grammar-endings) │
                        │   Translation.     │  └──────────────────┘
                        │   verified;        │
                        │   moderated via     │
@@ -414,8 +415,7 @@ Each database has its own Prisma client (`prismaAuth`, `prismaData`, `prismaLibr
 │                  │1:N│                  │1:N│                  │
 └──────────────────┘   └──────────────────┘   └────────┬─────────┘
 CorpusDocument also has sourceUrl/externalId (@unique)/sourceRevisionId
-(2026-07-27, crawler idempotency — see AGENTS.md "Corpus Crawlers &
-Collocations"). CorpusSentence fans out to both CorpusToken (1:N) and
+(2026-07-27, crawler idempotency — see docs/history/2026-07-27-corpus-crawlers-collocations.md). CorpusSentence fans out to both CorpusToken (1:N) and
 CorpusDependency (1:N, one edge per non-root token):
                                                           │
                                                           ▼
@@ -432,17 +432,16 @@ CorpusDependency (1:N, one edge per non-root token):
                                     │CorpusTokenCandidate│  (2026-07-28 — full
                                     │ • wordSlug/lemma/  │   homonym set per
                                     │   pos/feats/flavor │   token, not just the
-                                    │ • score/source/rank│   winner; see AGENTS.md
-                                    └──────────────────┘   "Corpus Homonym
-                                                            Disambiguation")
+                                    │ • score/source/rank│   winner; see
+                                    └──────────────────┘   docs/history/2026-07-28-homonym-disambiguation.md)
 
 ┌──────────────────┐         ┌──────────────────┐
 │CorpusDependency  │         │ VerbGovernment   │
 │ (UD dep. graph,  │         │ (2026-07-27,     │
 │  2026-07-27/28)  │         │  seeded EMPTY —  │
-│ • headTokenId/    │         │  see AGENTS.md   │
-│   depTokenId       │         │  "Corpus Syntax  │
-│   (unique)          │         │  Parser")        │
+│ • headTokenId/    │         │  see docs/hist.: │
+│   depTokenId       │         │  corpus-syntax-  │
+│   (unique)          │         │  parser)         │
 │ • relation (UD)      │        │ • verbLemma,     │
 │ • confidence          │        │   reflexive,     │
 │   (rule/heuristic/     │        │   requiredCase,  │
@@ -563,7 +562,7 @@ USER ATTEMPTS LOGIN
     (briefly required a session after the 2026-07-22 audit, but this is
     read-only data the public word page already shows unauthenticated at
     the first level — the session check just made SynonymGraph.tsx crash
-    for anonymous visitors instead of protecting anything; see AGENTS.md)
+    for anonymous visitors instead of protecting anything; see docs/history/2026-08-12-synonym-graph.md)
 
 /api/corpus
 ├── POST /api/corpus/analyze      -- tokenize+tag raw text via
@@ -590,13 +589,13 @@ USER ATTEMPTS LOGIN
 
 /api/admin/corpus/documents/[slug]
 ├── /reanalyze                    -- POST, re-tokenize+POS-tag (skips
-│   resolutionSource='manual' tokens, see AGENTS.md "Corpus Homonym
-│   Disambiguation")
+│   resolutionSource='manual' tokens, see
+│   docs/history/2026-07-28-homonym-disambiguation.md)
 ├── /segments/[position]          -- GET, token view for one paragraph
 ├── /tei                          -- TEI export
 ├── /parse-syntax                 -- POST, builds the UD dependency
 │   graph over already-tagged tokens, Feature.CorpusSyntaxEdit
-│   (2026-07-27, see AGENTS.md "Corpus Syntax Parser")
+│   (2026-07-27, see docs/history/2026-07-27-corpus-syntax-parser.md)
 ├── /resolve-homonyms-syntax      -- POST, re-scores still-ambiguous
 │   tokens using real CorpusDependency edges + VerbGovernment,
 │   Feature.CorpusTokenDisambiguate (2026-07-28)
@@ -760,7 +759,7 @@ UI Update (Table refresh)
 
 2. **Role-Based Access Control (RBAC)**: Granular permission system with USER/MODERATOR/ADMIN roles and ~60 feature-specific permission keys, checked per-route (no central middleware — see Authentication section)
 
-3. **Semantic relations consolidated into one table, symmetric ones stored as one undirected edge per pair.** Originally fixed 2026-07-22 as a bidirectionality bug across 11 separate near-identical tables (Synonym/Antonym/.../Conclusion); those 11 tables were then **dropped entirely on 2026-07-23** and replaced by a single `SemanticRelation` table with a `relationType` column (see the Database Schema Architecture diagram above and AGENTS.md's "Semantic Network" for the full history). `lib/relations.ts` now exposes `fetchSymmetricSemanticRelations`/`saveSymmetricSemanticRelation` (symmetric types: synonym/antonym/related/pos_synonym — order-independent, `sourceId=min`/`targetId=max` normalized on write) and `fetchOutgoingSemanticRelations`/`fetchIncomingSemanticRelations`/`saveDirectionalSemanticRelation` (directional types: hypernymy/meronymy/causation/entailment/instance_of/derivation — source=specific/dependent side, target=general/governing side by convention). The original bidirectionality fix's reasoning (reads match either column, writes diff-and-update the edge set) still applies, just against one table instead of eleven; the old `fetchSymmetricRelations`/`saveSymmetricRelation` functions were deleted once every caller migrated.
+3. **Semantic relations consolidated into one table, symmetric ones stored as one undirected edge per pair.** Originally fixed 2026-07-22 as a bidirectionality bug across 11 separate near-identical tables (Synonym/Antonym/.../Conclusion); those 11 tables were then **dropped entirely on 2026-07-23** and replaced by a single `SemanticRelation` table with a `relationType` column (see the Database Schema Architecture diagram above and docs/history/2026-07-22-semantic-network.md for the full history). `lib/relations.ts` now exposes `fetchSymmetricSemanticRelations`/`saveSymmetricSemanticRelation` (symmetric types: synonym/antonym/related/pos_synonym — order-independent, `sourceId=min`/`targetId=max` normalized on write) and `fetchOutgoingSemanticRelations`/`fetchIncomingSemanticRelations`/`saveDirectionalSemanticRelation` (directional types: hypernymy/meronymy/causation/entailment/instance_of/derivation — source=specific/dependent side, target=general/governing side by convention). The original bidirectionality fix's reasoning (reads match either column, writes diff-and-update the edge set) still applies, just against one table instead of eleven; the old `fetchSymmetricRelations`/`saveSymmetricRelation` functions were deleted once every caller migrated.
 
 4. **Language-Agnostic Schema**: 18 per-language Prisma models (En, Ru, Mk, Sr, Uk, Bg, Pl, Be, Cs, Sk, Sl, Hr, Hsb, Dsb, Cu, De, Nl, Eo) with identical structure for easy extension; none currently have `@@index` on their `wordId`/`meaningId` foreign keys
 
@@ -774,7 +773,7 @@ UI Update (Table refresh)
 
 9. **Virtual Scrolling**: TanStack Virtual for efficient handling of large datasets in admin tables
 
-10. **Grammar Engine (lib/grammar/)**: Generates full paradigms (noun/adjective/pronoun/numeral declension, verb conjugation) from ending registries that currently encode etymological Proto-Slavic forms rather than modern Interslavic ones — see "Known Issues" below and the detailed writeup in AGENTS.md
+10. **Grammar Engine (lib/grammar/)**: Generates full paradigms (noun/adjective/pronoun/numeral declension, verb conjugation) from ending registries that currently encode etymological Proto-Slavic forms rather than modern Interslavic ones — see "Known Issues" below and the detailed writeup in docs/history/2026-07-24-grammar-endings.md
 
 11. **Type Safety**: Strict TypeScript with explicit interfaces, avoiding 'any' types (aspirational — see "Widespread `any` usage" in Known Issues below)
 
@@ -789,7 +788,7 @@ A security/architecture audit on 2026-07-22 found the following; items marked �
 - ✅ **Unauthenticated endpoints** `POST /api/synonyms/second-level` and `POST /api/corpus/analyze` — now require a session (and `Feature.CorpusBuilder` for the latter). ⚠️ **Revised 2026-08-12**: the session check on `/api/synonyms/second-level` specifically was removed again — it turned out to be read-only data the public `/words/[id]` page already displays unauthenticated at the first level (no new sensitivity was being protected), and requiring a session there just made the synonym-graph feature (`SynonymGraph.tsx`, wired up but until now silently broken for anonymous visitors) throw and crash instead. `/api/corpus/analyze` still correctly requires `Feature.CorpusBuilder` — that one gates a real write-adjacent, resource-intensive operation, not public read access.
 - ✅ **Non-constant-time HMAC comparison** in Telegram auth (`auth.config.ts`) — replaced `===` with `crypto.timingSafeEqual`.
 - ✅ **Relations were not bidirectional** (fixed 2026-07-22, see Key Design Pattern #3 above) — all read/write paths for the 11 relation tables (`app/api/word-relations/save/route.ts`, `app/admin/relations/[type]/page.tsx`, `app/admin/synonyms/page.tsx`, `app/admin/antonyms/page.tsx`, `app/admin/words/[id]/edit/page.tsx`, `app/words/[id]/api.ts`, `app/api/synonyms/second-level/route.ts`) now go through the shared `lib/relations.ts` helpers instead of one-off `sourceId`-only queries.
-- ✅ **Grammar engine produced Proto-Slavic, not modern Interslavic, endings** (fixed 2026-07-24 for nouns/adjectives/numerals-three-four; see AGENTS.md's "RESOLVED: Grammar Engine Was Producing Wrong Endings" for the full writeup). Turned out the live `ending_allophones` DB table had already been manually corrected via `/admin/endings` over time — `getEnding()` in `lib/grammar/endingLoader.ts` really does consult it before falling back to the hardcoded registry, so the *site* was mostly fine; it was the **hardcoded registries** (`endingsRegistry.ts`, `adjective/index.ts`) and `scripts/db/seed-endings.ts` that were stale, meaning a fresh DB or a DB-unavailable fallback would still hit the bug. Extracted the corrected values from the DB into the registries and fixed the seed script to match, so it's now safe to re-run. Also fixed a separate, related issue: the nasal vowel has two spellings in this codebase (`ǫ` Proto-Slavic-style vs `ų` modern) — migrated every modern-ISV-generation code path to `ų` (confirmed correct with the maintainer), leaving `lib/proto.ts`'s genuine Proto-Slavic input side untouched. Along the way, found and deleted two fully-dead duplicate registries (`noun/index.ts`'s unused `SLAVIC_ENDINGS_REGISTRY` export, and the entire orphaned `adjective/adjective.ts` file). `lib/grammar/verb/index.ts` and `lib/grammar/verb/conjugator2.ts` turned out to be two independently-live verb conjugators (engine path vs. `Word.tsx`'s word-detail-page path) that had drifted — `conjugator2.ts` silently ignored `tertiaryStem`, giving wrong l-participles for verbs like "byti"/"dojdti" — so on 2026-07-25 they were consolidated onto `verb/index.ts` alone; `conjugator2.ts`, the already-dead `conjugator.ts`, and their now-orphaned helpers (`auxiliary.ts`, `types/conjugator.ts`, `addToneSyllable.ts`) were deleted. See AGENTS.md for the full writeup. Verb present/aorist/imperfect/imperative and `numeral_two`/`collective_*` endings were checked and found to already look correct (no jers) — not linguist-verified, just nothing obviously wrong. `morphology.test.ts`/`declineNoun.test.ts` still aren't wired to a real runner (see below) — the one assertion directly tied to this fix was corrected; the other 9 failures in `morphology.test.ts` are a separate, pre-existing bug in the four-tones accent engine, confirmed unrelated (same failures reproduce against the pre-fix DB backup).
+- ✅ **Grammar engine produced Proto-Slavic, not modern Interslavic, endings** (fixed 2026-07-24 for nouns/adjectives/numerals-three-four; see docs/history/2026-07-24-grammar-endings.md for the full writeup). Turned out the live `ending_allophones` DB table had already been manually corrected via `/admin/endings` over time — `getEnding()` in `lib/grammar/endingLoader.ts` really does consult it before falling back to the hardcoded registry, so the *site* was mostly fine; it was the **hardcoded registries** (`endingsRegistry.ts`, `adjective/index.ts`) and `scripts/db/seed-endings.ts` that were stale, meaning a fresh DB or a DB-unavailable fallback would still hit the bug. Extracted the corrected values from the DB into the registries and fixed the seed script to match, so it's now safe to re-run. Also fixed a separate, related issue: the nasal vowel has two spellings in this codebase (`ǫ` Proto-Slavic-style vs `ų` modern) — migrated every modern-ISV-generation code path to `ų` (confirmed correct with the maintainer), leaving `lib/proto.ts`'s genuine Proto-Slavic input side untouched. Along the way, found and deleted two fully-dead duplicate registries (`noun/index.ts`'s unused `SLAVIC_ENDINGS_REGISTRY` export, and the entire orphaned `adjective/adjective.ts` file). `lib/grammar/verb/index.ts` and `lib/grammar/verb/conjugator2.ts` turned out to be two independently-live verb conjugators (engine path vs. `Word.tsx`'s word-detail-page path) that had drifted — `conjugator2.ts` silently ignored `tertiaryStem`, giving wrong l-participles for verbs like "byti"/"dojdti" — so on 2026-07-25 they were consolidated onto `verb/index.ts` alone; `conjugator2.ts`, the already-dead `conjugator.ts`, and their now-orphaned helpers (`auxiliary.ts`, `types/conjugator.ts`, `addToneSyllable.ts`) were deleted. See docs/history/2026-07-24-grammar-endings.md for the full writeup. Verb present/aorist/imperfect/imperative and `numeral_two`/`collective_*` endings were checked and found to already look correct (no jers) — not linguist-verified, just nothing obviously wrong. `morphology.test.ts`/`declineNoun.test.ts` still aren't wired to a real runner (see below) — the one assertion directly tied to this fix was corrected; the other 9 failures in `morphology.test.ts` are a separate, pre-existing bug in the four-tones accent engine, confirmed unrelated (same failures reproduce against the pre-fix DB backup).
 - ✅ **No working automated tests** (fixed 2026-08-12, `docs/roadmap.md` #1-2) — vitest (`npm run test:run`) runs in GitHub Actions CI as a blocking gate. `declineNoun.test.ts` became snapshot tests rather than asserting its old Proto-Slavic fixtures as correct.
 - ✅ **FTS5 table unused as FTS** (fixed 2026-07-22) — `lexemes_text`/`lexeme_allophones_text` were queried with `LIKE '%term%'`, which can't use an FTS5 index. Both virtual tables were rebuilt with `tokenize='trigram'` (verified byte-for-byte identical result sets vs. the old `LIKE` scan across Latin/Cyrillic/short-query samples) and `getDictItems` now uses `MATCH` for search terms of 3+ characters, falling back to parameterized `LIKE` below that (trigram tokenization can't index patterns shorter than 3 chars). **Deployment note:** apply this with `npx tsx scripts/db/2026-07-22-add-indexes-and-fts5-trigram.ts`, not the sibling `.sql` file run through the system `sqlite3` CLI — on the production host, that CLI's SQLite build lacked the trigram tokenizer even though the app's own `better-sqlite3` dependency has it, and running the raw SQL dropped `lexemes_text`/`lexeme_allophones_text` before failing to recreate them, breaking lexicon search until `scripts/db/2026-07-22-emergency-restore-fts5.sql` was run. The `.ts` script probes for trigram support before touching anything, so it can't fail this way.
 - ✅ **Missing indexes** (fixed 2026-07-22) — added `@@index` on `Lexeme.value`, `Meaning.lexemeId`, `sourceId`/`targetId` on all 11 relation tables, and `wordId`/`meaningId` on all 18 language tables (60 indexes total, applied directly via SQL — see the Prisma migration-drift note above for why `prisma migrate` wasn't used).
@@ -799,10 +798,10 @@ A security/architecture audit on 2026-07-22 found the following; items marked �
 - ✅ **Two parallel case-naming conventions coexist** (unified 2026-08-12 on short UD codes, roadmap #8; original finding 2026-07-29 while building homonym-disambiguation scoring): the grammar engine emits grammatical case as long-form English words at runtime (`'nominative'`, from `lib/grammar/endingsRegistry.ts`'s `Case` const), while `lib/grammar/common/case.ts`'s `GrammaticalCase` enum (and everything keyed off it — `CASE_WEIGHTS`, `PREPOSITION_GOVERNMENT`, `VerbGovernment.requiredCase`) uses short codes (`'nom'`). Worked around locally in the corpus disambiguation code (`lib/corpus/tokenizer/caseNormalize.ts`) but not unified project-wide — also causes a latent display bug in `TokenSidebar`/`CorpusTokenDisplay`'s `FEAT_LABELS` maps, which only recognize the short codes, so case is likely displayed as a raw English word instead of a translated label wherever it comes straight from the grammar engine.
 - ✅ **`lib/dedup/mergeLexemes.ts`'s `base_homonyms` cleanup only understands the old `wordIds` format** (fixed 2026-08-12 via `parseWordIds`, roadmap #9; found 2026-07-29): assumes a flat `number[]`, but 4 of 33,746 real rows already use the newer `{id, flavor}[]` format (added for the flavor system, see "Flavor System" under "Corpus Tokenizer" in AGENTS.md) — merging away a lexeme referenced only in one of those 4 rows silently leaves a stale id behind. `scripts/db/2026-07-29-merge-preposition-duplicate-lexemes.ts` handles both formats; the admin-UI merge path (`app/admin/deduplication/actions.ts`) does not yet.
 - ⬜ **`CollocationMatcher` (`lib/corpus/tokenizer/collocationMatcher.ts`, 2026-07-28) only matches a collocation's exact normalized surface form** — it does not account for inflection of the phrase's internal components, so a set phrase whose non-final word should decline mid-idiom won't be recognized in its inflected form. The `isCollocation` backfill (`scripts/db/2026-07-28-backfill-collocation-flag.ts`) also explicitly wasn't manually reviewed for false positives after running.
-- ⬜ **`VerbGovernment` (corpus.db) and per-word `preposition`/`prepositionLexemeId` links (interlex.db) are both intentionally seeded near-empty** — by design (see AGENTS.md "Corpus Syntax Parser"/"Valency Preposition Links": neither script fabricates a verb's governed case), but it means the corresponding disambiguation/parsing paths that depend on them (Pass C in `resolveHomonymsViaSyntax.ts`, clause-role labeling in `lib/corpus/syntax/clause.ts`) are currently no-ops on production data. Populating these (via a moderator UI or a linguist-verified import) is the natural next step, not a bug to fix in code.
-- ✅ **Red/yellow corpus tokens had no path forward** (fixed 2026-07-29, see AGENTS.md "Corpus Candidate Proposals") — added `CorpusCandidateProposal` (corpus.db) + `/admin/corpus-candidates` to reconstruct and stage lexeme candidates from unrecognized tokens; validated against production data (74,867 distinct surface forms, 795,158 hypothesis rows). Also fixed along the way: `CorpusToken` never persisted `isPartialMatch`, so "yellow" (stem matched, ending didn't) was indistinguishable on disk from genuine "green" single-match tokens.
+- ⬜ **`VerbGovernment` (corpus.db) and per-word `preposition`/`prepositionLexemeId` links (interlex.db) are both intentionally seeded near-empty** — by design (see docs/history/2026-07-27-corpus-syntax-parser.md and 2026-07-29-valency-preposition-links.md: neither script fabricates a verb's governed case), but it means the corresponding disambiguation/parsing paths that depend on them (Pass C in `resolveHomonymsViaSyntax.ts`, clause-role labeling in `lib/corpus/syntax/clause.ts`) are currently no-ops on production data. Populating these (via a moderator UI or a linguist-verified import) is the natural next step, not a bug to fix in code.
+- ✅ **Red/yellow corpus tokens had no path forward** (fixed 2026-07-29, see docs/history/2026-07-29-corpus-candidate-proposals.md) — added `CorpusCandidateProposal` (corpus.db) + `/admin/corpus-candidates` to reconstruct and stage lexeme candidates from unrecognized tokens; validated against production data (74,867 distinct surface forms, 795,158 hypothesis rows). Also fixed along the way: `CorpusToken` never persisted `isPartialMatch`, so "yellow" (stem matched, ending didn't) was indistinguishable on disk from genuine "green" single-match tokens.
 - ✅ **Punctuation tokens default to `matchCount=0`** (fixed 2026-08-12 in `tokenizer.ts` and `reanalyzeDocument.ts`, roadmap #11; found 2026-07-29) — `tokenizer.ts`'s punctuation analysis branch never sets `matchCount` at all, so it serializes identically to a genuine unrecognized word. Worked around in `generateCorpusCandidateProposals` (filters `wordIndex: -1`), but the root cause is still in the tokenizer — any future code that queries `CorpusToken` by `matchCount=0` needs the same filter or will be flooded with commas/periods.
 - ⬜ **Prisma 7's client-engine-runtime appears to leak memory across many sequential `$transaction([...])` calls** (found 2026-07-29 while backfilling `CorpusCandidateProposal`) — reproduced independent of application code (bounding the JS-side batch buffer first ruled out an app-level leak); OOM'd at both 4GB and 8GB heap in the same process, just later. Not root-caused or reported upstream. Current workaround is chunking large bulk-write scripts across separate process invocations rather than one long-running process — see `scripts/db/generate-corpus-candidate-proposals.ts`'s `[limit] [offset]` args.
 - ⬜ **`npx tsx` doesn't auto-load `.env`, and esbuild/tsx hoists static `import`s above inline code** (found 2026-07-29) — a `dotenv.config()` call placed after an `import` in source still runs *after* that import's module has already read `process.env` (e.g. `lib/prisma.ts`'s adapter URLs at import time). Silent failure mode: Prisma's better-sqlite3 adapter falls back to `lib/prisma.ts`'s default `"file:./prisma/interlex.db"`/`"file:./prisma/corpus.db"` — pre-existing 0-byte stray files in this repo, not the real root-level databases — rather than erroring loudly. Any new `scripts/db/*.ts` importing `@/lib/prisma` needs `-r dotenv/config` on the CLI invocation, or a dynamic `import()` positioned after `dotenv.config()` — a static import will not reliably work regardless of source-line order.
-- ✅ **`InflectionAnomaly` was write-only — nothing ever read it back** (fixed 2026-07-29, see AGENTS.md "RESOLVED: `InflectionAnomaly` was write-only") — 145 lexemes (mostly high-frequency function words: pronouns, `byti`, common nouns) had correct suppletive/irregular forms recorded (e.g. `jest`/`sųt` for `byti`) via `/admin/words`, but `DbAnalyzer` never consulted the table, so these forms were unrecognizable in the corpus no matter how the regular stem+ending matching was extended (they don't decompose into stem+ending at all). Wired into `DbAnalyzer.analyzeWord()` as a fourth, independent match source merged into the same homonym pool as exact/stem-prefix matches. Re-running the bulk reanalyze recognized 5,570 previously-unrecognized tokens. Found and fixed along the way: 16 of 237 `inflection_anomalies` rows are exact duplicates (deduped defensively when building the lookup index, not fixed at the data level); naively short-circuiting on an anomaly hit would have dropped a real stem-prefix homonym candidate for the same word (`sųt` has both a `byti-VERB` anomaly row and a separate hand-entered `sut-AUX` lexeme) — fixed by merging all three match sources into one ranked pool instead of a priority short-circuit.
+- ✅ **`InflectionAnomaly` was write-only — nothing ever read it back** (fixed 2026-07-29, see docs/history/2026-07-29-corpus-candidate-proposals.md, addendum "`InflectionAnomaly` was write-only") — 145 lexemes (mostly high-frequency function words: pronouns, `byti`, common nouns) had correct suppletive/irregular forms recorded (e.g. `jest`/`sųt` for `byti`) via `/admin/words`, but `DbAnalyzer` never consulted the table, so these forms were unrecognizable in the corpus no matter how the regular stem+ending matching was extended (they don't decompose into stem+ending at all). Wired into `DbAnalyzer.analyzeWord()` as a fourth, independent match source merged into the same homonym pool as exact/stem-prefix matches. Re-running the bulk reanalyze recognized 5,570 previously-unrecognized tokens. Found and fixed along the way: 16 of 237 `inflection_anomalies` rows are exact duplicates (deduped defensively when building the lookup index, not fixed at the data level); naively short-circuiting on an anomaly hit would have dropped a real stem-prefix homonym candidate for the same word (`sųt` has both a `byti-VERB` anomaly row and a separate hand-entered `sut-AUX` lexeme) — fixed by merging all three match sources into one ranked pool instead of a priority short-circuit.
 - ✅ **`ų`/`u` diacritic variation isn't normalized in `DbAnalyzer`** (fixed 2026-08-24 by `foldDiacritics` in commit 9cac823, after the maintainer's u→ų ruling in roadmap #6; the live corpus still needs a bulk reanalysis to pick it up, roadmap #30; found 2026-07-29) — the far more common undiacriticized spelling `sut` (2,325+ occurrences) still fails to match the correctly-spelled `sųt` (12 occurrences, itself now recognized via the fix above), since the analyzer requires an exact character match. Same class of gap as the already-documented `sę`/`se` issue. Needs a linguist call (is `u`↔`ų` always safely equivalent, or only in specific known words?) before it can be normalized in code.

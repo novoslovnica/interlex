@@ -12,7 +12,7 @@ const VALID_RELATIONS = new Set<string>(Object.values(UD_DEPREL))
  * не 'auto', чтобы повторный автоматический разбор (POST .../parse-syntax)
  * не затирал правку модератора: saveDependencies (lib/corpus/syntax/persist.ts)
  * удаляет и пересоздаёт только source='auto' строки. Тот же приём, что и
- * у semantic_relations (см. AGENTS.md "Semantic Network").
+ * у semantic_relations (см. docs/history/2026-07-22-semantic-network.md).
  */
 export async function PUT(request: NextRequest) {
   const session = await auth()

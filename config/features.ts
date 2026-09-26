@@ -92,7 +92,7 @@ export enum SystemFeature {
     // Базовая лексика (список Сводеша-100 / Лейпциг-Джакарта)
     CoreVocabularyManage = "core_vocabulary_manage",
 
-    // Живое сопоставление одного слова с RuWordNet (см. AGENTS.md "Semantic Network")
+    // Живое сопоставление одного слова с RuWordNet (см. docs/history/2026-07-22-semantic-network.md)
     RuwordnetMatch = "ruwordnet_match",
 
     // Обратная связь от читателей (roadmap пп.49, 97): публичная форма

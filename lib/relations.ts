@@ -2,9 +2,9 @@ import type Database from "better-sqlite3"
 
 /**
  * Operates on the consolidated `semantic_relations` table (2026-07-23, see
- * AGENTS.md "Semantic Network"), which replaced the old 11 relation tables
+ * docs/history/2026-07-22-semantic-network.md), which replaced the old 11 relation tables
  * (synonyms, antonyms, hypernyms, hyponyms, meronyms, holonyms, related_words,
- * causes, effects, premises, conclusions — since dropped, see AGENTS.md).
+ * causes, effects, premises, conclusions — since dropped, see that history file).
  *
  * Symmetric types (order doesn't matter — synonym/antonym/related/
  * pos_synonym): sourceId/targetId are normalized to (min, max) on write so
@@ -13,7 +13,7 @@ import type Database from "better-sqlite3"
  *
  * Directional types (hypernymy/meronymy/causation/entailment/instance_of/
  * derivation): sourceId is always the specific/dependent side, targetId the
- * general/governing side (see AGENTS.md for the exact per-type convention).
+ * general/governing side (see docs/history/2026-07-22-semantic-network.md for the exact per-type convention).
  * Use fetchOutgoingSemanticRelations/fetchIncomingSemanticRelations and
  * saveDirectionalSemanticRelation for these instead.
  */

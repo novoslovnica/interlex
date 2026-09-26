@@ -28,9 +28,9 @@ const HAS_MEANING = { meanings: { some: {} } } as const
 // раскладываются на стем+окончание вообще, это не "неправильное окончание",
 // а другой корень). До этой функции таблица была write-only: заполнялась
 // через /admin/words редактирование, но ни один код распознавания/генерации
-// форм её не читал — DbAnalyzer никогда не находил такие токены (см. AGENTS.md
-// "Corpus Candidate Proposals", находка при разборе почему "jest"/"sut"
-// красные). Ключ — та же нормализация (lowercase + этимологический
+// форм её не читал — DbAnalyzer никогда не находил такие токены (см.
+// docs/history/2026-07-29-corpus-candidate-proposals.md, находка при разборе
+// почему "jest"/"sut" красные). Ключ — та же нормализация (lowercase + этимологический
 // кир.→лат.), что и у самого surface form в DbAnalyzer.analyzeWord, чтобы
 // совпадать с уже приведённым к этому виду токеном.
 export async function buildInflectionAnomalyIndex(): Promise<InflectionAnomalyIndex> {
@@ -314,7 +314,8 @@ export async function forEachLexemeForms(
 // Единая точка сборки анализатора. До неё все 11 мест конструирования
 // повторяли одну и ту же связку из четырёх билдеров вручную — из-за чего
 // добавление нового индекса требовало не забыть 11 файлов (ровно так
-// InflectionAnomaly и оставался годами write-only, см. AGENTS.md).
+// InflectionAnomaly и оставался годами write-only, см.
+// docs/history/2026-07-29-corpus-candidate-proposals.md).
 export async function createDbAnalyzer(): Promise<DbAnalyzer> {
   // Предлоги нужны индексу форм: без них глагол с хвостом ("zaviseti od")
   // не отделяет голову от предлога и порождает мусор вместо "zavisi".

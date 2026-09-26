@@ -30,7 +30,7 @@ function getRuWordNetDb(): Database.Database | null {
 /**
  * Suggests near-miss RuWordNet lemmas for a translation that failed exact
  * lookup (process_words.py's get_synonyms_and_antonyms only tries the word
- * itself and its ё/е variant - see AGENTS.md on the grammatical-form-mismatch
+ * itself and its ё/е variant - see docs/history/2026-07-22-semantic-network.md on the grammatical-form-mismatch
  * root cause of the ~48% unmatched gap, e.g. "вычитка текста" vs the stored
  * lemma "вычитка текст"). Reads directly from a read-only copy of
  * RuWordNet's own SQLite database bundled with the `ruwordnet` pip package

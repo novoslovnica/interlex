@@ -18,7 +18,8 @@ process.env.DATA_DATABASE_URL = `file:${path.resolve(process.cwd(), "interlex.db
 // Единый скрипт загрузки данных RuWordNet (2026-07-23). Заменяет
 // upload-synsets.ts + upload-synonyms-antonyms.ts + upload-synset-relations.ts.
 // Читает words_enriched.json (формат из переписанного process_words.py —
-// synset_data_list вместо synset_data, см. AGENTS.md "Semantic Network").
+// synset_data_list вместо synset_data, см.
+// docs/history/2026-07-22-semantic-network.md).
 //
 // 2026-07-28: entry-уровневая логика (computeEntryData/applySynsetsAndLinks)
 // вынесена в lib/ruwordnet/applyEntry.ts — её же использует

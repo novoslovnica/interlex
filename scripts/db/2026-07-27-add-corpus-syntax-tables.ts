@@ -1,7 +1,8 @@
 // corpus.db lacks a _prisma_migrations tracking table, so `prisma migrate dev`
 // risks treating it as unmanaged and prompting a reset — same class of issue
 // as the interlex.db drift documented in CLAUDE.md. Applying these new
-// tables (Syntax Parser Phase 1, see AGENTS.md) as raw SQL instead, following
+// tables (Syntax Parser Phase 1, see
+// docs/history/2026-07-27-corpus-syntax-parser.md) as raw SQL instead, following
 // the pattern in scripts/db/2026-07-23-add-semantic-relation-and-primes.ts.
 //
 // "id" columns are declared as literal "INTEGER PRIMARY KEY AUTOINCREMENT"

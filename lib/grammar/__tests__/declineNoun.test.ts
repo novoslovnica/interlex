@@ -4,8 +4,8 @@ import { StemType } from '../endingsRegistry';
 
 // The previous version of this file hardcoded per-form "expected" values
 // that turned out to be stale Proto-Slavic reconstructions (jers ъ/ь, nasal
-// ǫ) predating the 2026-07-24 modern-ISV endings fix (see AGENTS.md's
-// "RESOLVED: Grammar Engine Was Producing Wrong Endings"). Asserting them as
+// ǫ) predating the 2026-07-24 modern-ISV endings fix (see
+// docs/history/2026-07-24-grammar-endings.md). Asserting them as
 // correct would certify that old bug as intended behavior, and this
 // codebase deliberately never fabricates a "correct" linguistic form without
 // DB/linguist confirmation (see the recurring "don't fabricate a linguistic
