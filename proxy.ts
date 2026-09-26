@@ -39,6 +39,14 @@ export async function proxy(req: NextRequest) {
         return NextResponse.next();
     }
 
+    // Telegram webhook (/api/bots/telegram): all updates come from Telegram's
+    // server IP ranges, so one shared 120/min bucket would drop updates as
+    // soon as several chats use the bot. Abuse resistance comes from the
+    // x-telegram-bot-api-secret-token check inside the route instead.
+    if (pathname.startsWith("/api/bots")) {
+        return NextResponse.next();
+    }
+
     const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
 
     if (isAdminRoute) {
