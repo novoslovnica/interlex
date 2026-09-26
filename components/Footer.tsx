@@ -13,6 +13,7 @@ export default async function Footer() {
                     <Link href="/lexicon?reverse=1" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("reverseSearch")}</Link>
                     <Link href="/library" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("library")}</Link>
                     <Link href="/media" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("mediaLibrary")}</Link>
+                    <Link href="/downloads" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("downloads")}</Link>
                     <Link href="/textbook/ru" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("textbook")}</Link>
                     <Link href="/about" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("about")}</Link>
                     <Link href="/api-docs" className="text-sm text-[#cbd5e1] hover:text-white transition-colors">{t("api")}</Link>

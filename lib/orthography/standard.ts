@@ -101,6 +101,33 @@ export function latinSpellings(etym: string): string[] {
     return [...new Set(all)].filter(isPlainLatin)
 }
 
+/**
+ * Все латинские написания одной лексемы для словарей проверки орфографии:
+ * этимологическое (каноническое) как есть + стандартное и принятые варианты.
+ * Вход - уже прошедшие etymologicalSpelling сырые формы движка.
+ */
+export function latinLexemeSpellings(etymForms: Iterable<string>): string[] {
+    return [...etymForms].flatMap((w) => [w, ...latinSpellings(w)])
+}
+
+// Сырое этимологическое написание: только буквы этимологического алфавита и
+// дефис. Jers ъ/ь и ǫ сюда не входят - в этимологической орфографии вместо них
+// ų (остатки старой орфографии отсекаются санити-чеком выгрузки).
+const ETYM_LATIN_RE = /^[a-zčćđěęųėȯåŕľĺńťďśźšž]+(?:-[a-zčćđěęųėȯåŕľĺńťďśźšž]+)*$/u
+const ETYM_FORBIDDEN_RE = /[ъьǫǪ]/
+
+/**
+ * Сырое этимологическое написание формы (как выдал движок): регистр и знаки
+ * ударения сняты, слово одно. null - форма содержит знаки вне этимологической
+ * орфографии (jers, ǫ, латиницу вне этимологического алфавита) и в словарь не
+ * берётся.
+ */
+export function etymologicalSpelling(form: string): string | null {
+    const cleaned = stripStress(form).toLowerCase()
+    if (ETYM_FORBIDDEN_RE.test(cleaned) || !ETYM_LATIN_RE.test(cleaned)) return null
+    return cleaned
+}
+
 const LATIN_TO_CYRILLIC: Record<string, string> = {
     a: "а", b: "б", c: "ц", "č": "ч", "ć": "ћ", d: "д", "đ": "ђ", e: "е", "ě": "є", f: "ф", g: "г", h: "х",
     i: "и", j: "ј", k: "к", l: "л", m: "м", n: "н", o: "о", p: "п", r: "р", s: "с", "š": "ш", t: "т",

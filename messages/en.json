@@ -27,7 +27,8 @@
       "textbook": "Textbook",
       "about": "About",
       "api": "API",
-      "versionHistory": "Version history"
+      "versionHistory": "Version history",
+      "downloads": "Downloads"
     }
   },
   "main": {
@@ -353,7 +354,8 @@
       "heading": "Spell checking (Hunspell)",
       "about": "Two dictionaries — Latin and Cyrillic — built from the lexicon: every public word in every form the grammar engine produces.",
       "version": "Version {version} of {date}: {latin} Latin forms, {cyrillic} Cyrillic ones.",
-      "notBuilt": "The dictionaries have not been built yet."
+      "notBuilt": "The dictionaries have not been built yet.",
+      "license": "Distributed under the <link>CC BY-SA 4.0</link> license; the full text is in LICENSE.txt inside each archive."
     },
     "install": {
       "heading": "How to install",
@@ -361,7 +363,7 @@
       "firefox": "Firefox and Thunderbird install dictionaries only as signed add-ons, and there is none yet. The files from the archive can be added by hand to Chromium-based browsers and to the system spell checker.",
       "editorsHeading": "Other editors",
       "editors": "isv-hunspell.zip contains isv_Latn.dic/.aff and isv_Cyrl.dic/.aff. They work with VS Code (Hunspell-based extensions), Obsidian, Vim/Neovim (via hunspell), Emacs and the Linux system spell checker.",
-      "spelling": "Both dictionaries accept the same spellings: the standard one (člověk / чловєк), the etymological Cyrillic ѣ (чловѣк) and the common simplified one (človek / чловек); suggestions lead to the standard."
+      "spelling": "Both dictionaries accept the same spellings: the standard one (člověk / чловєк), the canonical etymological one (język, sųt, sę / чловѣк) and the common simplified one (človek / чловек); suggestions lead to the standard."
     }
   },
   "flashcards": {

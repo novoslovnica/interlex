@@ -95,5 +95,6 @@
     "@next/swc-linux-x64-gnu": "^16.2.9",
     "@tailwindcss/oxide-linux-x64-gnu": "^4.3.2",
     "lightningcss-linux-x64-gnu": "^1.32.0"
-  }
+  },
+  "license": "CC-BY-SA-4.0"
 }

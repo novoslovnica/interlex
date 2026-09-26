@@ -49,6 +49,15 @@ export default async function DownloadsPage() {
                                 </a>
                             ))}
                         </div>
+                        <p className="text-sm text-muted-foreground">
+                            {t.rich("spellcheck.license", {
+                                link: (chunks) => (
+                                    <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+                                        {chunks}
+                                    </a>
+                                ),
+                            })}
+                        </p>
                     </>
                 ) : (
                     <p className="text-sm text-muted-foreground">{t("spellcheck.notBuilt")}</p>

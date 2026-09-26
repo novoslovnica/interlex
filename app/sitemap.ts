@@ -25,6 +25,7 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: "daily" |
     { path: "/transliteration", priority: 0.6, changeFrequency: "monthly" },
     { path: "/rhyme", priority: 0.5, changeFrequency: "monthly" },
     { path: "/media", priority: 0.5, changeFrequency: "weekly" },
+    { path: "/downloads", priority: 0.5, changeFrequency: "monthly" },
     { path: "/contribute", priority: 0.5, changeFrequency: "daily" },
     { path: "/contribute/leaderboard", priority: 0.3, changeFrequency: "daily" },
     { path: "/about", priority: 0.4, changeFrequency: "monthly" },

@@ -11,6 +11,7 @@ export const HUNSPELL_FILES: Record<string, string> = {
     "isv_Cyrl.dic": "text/plain; charset=utf-8",
     "isv_Cyrl.aff": "text/plain; charset=utf-8",
     "README.txt": "text/plain; charset=utf-8",
+    "LICENSE.txt": "text/plain; charset=utf-8",
 }
 
 export function hunspellDir(): string {
@@ -21,6 +22,8 @@ export interface HunspellMetadata {
     version: string
     builtAt: string
     commit: string | null
+    /** Появилось в выгрузках от 2026-09-26 (CC BY-SA 4.0); в старых нет. */
+    license?: string
     lexemes: number
     stats: Record<string, { words: number; entries: number; classes: number }>
 }

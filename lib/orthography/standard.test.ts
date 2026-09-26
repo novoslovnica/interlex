@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { cyrillicSpellings, cyrillicToLatin, isCyrillicText, latinSpellings, latinToCyrillic, toStandardLatin } from "./standard"
+import { buildHunspell, expandHunspell } from "@/lib/export/hunspell/compress"
+import { cyrillicSpellings, cyrillicToLatin, etymologicalSpelling, isCyrillicText, latinLexemeSpellings, latinSpellings, latinToCyrillic, toStandardLatin } from "./standard"
 
 describe("toStandardLatin", () => {
     it.each([
@@ -37,6 +38,42 @@ describe("cyrillicSpellings", () => {
     })
     it("keeps a leading capital", () => {
         expect(cyrillicSpellings("Moskva")[0]).toBe("Москва")
+    })
+})
+
+describe("etymologicalSpelling", () => {
+    it("keeps raw engine forms, stripping stress and case", () => {
+        expect(etymologicalSpelling("sę")).toBe("sę")
+        expect(etymologicalSpelling("JĘZYK")).toBe("język")
+        expect(etymologicalSpelling("tògda")).toBe("togda")
+        expect(etymologicalSpelling("medžuslovjańsky")).toBe("medžuslovjańsky")
+    })
+    it("rejects leftover jers and ǫ", () => {
+        expect(etymologicalSpelling("pьs")).toBeNull()
+        expect(etymologicalSpelling("sǫt")).toBeNull()
+        expect(etymologicalSpelling("tъma")).toBeNull()
+    })
+    it("rejects words with spaces and foreign characters", () => {
+        expect(etymologicalSpelling("sę li")).toBeNull()
+        expect(etymologicalSpelling("par excellence")).toBeNull()
+    })
+})
+
+describe("latinLexemeSpellings", () => {
+    const options = { map: ["eě"], rep: [] as [string, string][], wordChars: "-", header: ["test"] }
+
+    it("keeps the etymological form as canonical and adds the standard one", () => {
+        const s = latinLexemeSpellings(["sę"])
+        expect(s).toContain("sę")
+        expect(s).toContain("se")
+        const j = latinLexemeSpellings(["język"])
+        expect(j).toContain("język")
+        expect(j).toContain("jezyk")
+    })
+    it("passes the mixed set through buildHunspell loss-free", () => {
+        const forms = latinLexemeSpellings(["sųt", "jesm", "jesi"])
+        const dict = buildHunspell([forms], options)
+        expect(expandHunspell(dict.aff, dict.dic)).toEqual(new Set(forms))
     })
 })
 
