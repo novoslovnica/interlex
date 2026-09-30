@@ -1,16 +1,21 @@
 // Регистрация webhook'а Telegram-бота: getMe → setWebhook → getWebhookInfo.
 // Idempotent — повторный setWebhook с тем же url/secret просто перезаписывает.
 //
-//   npx tsx scripts/ops/telegram-set-webhook.ts            # только setWebhook
-//   npx tsx scripts/ops/telegram-set-webhook.ts --drop     # и drop_pending_updates
+//   npx tsx scripts/ops/telegram-set-webhook.ts                          # setWebhook
+//   npx tsx scripts/ops/telegram-set-webhook.ts --origin https://bot.example.com
+//   npx tsx scripts/ops/telegram-set-webhook.ts --drop                   # и drop_pending_updates
+//
+// Origin webhook'а — сервер, где крутится standalone-сервис бота
+// (services/telegram-bot), т.е. машина, ВИДИМАЯ для Telegram. Это НЕ обязательно
+// сервер основного сайта (он может блокировать входящие с IP Telegram).
 //
 // Env: сначала подхватываются .env.production и .env из корня проекта (tsx
 // сам .env НЕ грузит — известный готча, см. docs/history/2026-07-29-corpus-candidate-proposals.md),
 // реальные переменные окружения имеют приоритет над файлами.
 //   TELEGRAM_BOT_TOKEN       — обязателен
-//   NEXTAUTH_URL | SITE_URL  — обязателен, origin webhook URL
+//   BOT_ORIGIN | NEXTAUTH_URL | SITE_URL — origin webhook URL
 //   TELEGRAM_WEBHOOK_SECRET  — обязателен, ставится в setWebhook как secret_token
-//                              и проверяется роутом app/api/bots/telegram/route.ts
+//                              и проверяется сервисом (services/telegram-bot/server.ts)
 
 import path from "path"
 import dotenv from "dotenv"
@@ -35,15 +40,18 @@ async function call(method: string, params?: Record<string, unknown>) {
 async function main() {
     const token = process.env.TELEGRAM_BOT_TOKEN
     if (!token) throw new Error("TELEGRAM_BOT_TOKEN is not set")
-    const origin = process.env.NEXTAUTH_URL ?? process.env.SITE_URL
-    if (!origin) throw new Error("NEXTAUTH_URL or SITE_URL is not set")
+    const originFlag = process.argv.indexOf("--origin")
+    const origin = originFlag >= 0
+        ? process.argv[originFlag + 1]
+        : process.env.BOT_ORIGIN ?? process.env.NEXTAUTH_URL ?? process.env.SITE_URL
+    if (!origin) throw new Error("webhook origin is not set: pass --origin <url>, or set BOT_ORIGIN / NEXTAUTH_URL / SITE_URL")
     const secret = process.env.TELEGRAM_WEBHOOK_SECRET
-    if (!secret) throw new Error("TELEGRAM_WEBHOOK_SECRET is not set (the route refuses nothing without it, and forgery protection is gone)")
+    if (!secret) throw new Error("TELEGRAM_WEBHOOK_SECRET is not set (the service refuses to start without it, and forgery protection is gone)")
 
     const me = (await call("getMe")) as { username?: string; first_name?: string }
     console.log(`Bot: @${me.username ?? "?"} (${me.first_name ?? ""})`)
 
-    const url = `${origin.replace(/\/$/, "")}/api/bots/telegram`
+    const url = `${origin.replace(/\/$/, "")}/`
     await call("setWebhook", {
         url,
         secret_token: secret,

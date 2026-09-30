@@ -70,3 +70,6 @@ corpus-manual-export.json
 
 # scripts/export-hunspell.ts output
 exports/
+
+# standalone telegram bot service build artifact
+services/telegram-bot/dist/
