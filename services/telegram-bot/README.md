@@ -89,6 +89,14 @@ npx tsx scripts/ops/telegram-set-webhook.ts --origin https://bot.example.com
 
 Скрипт idempotent. Если раньше webhook был направлен на основной сайт — просто перезапустите его с новым origin, старый URL перезапишется.
 
+## Inline-режим (@bot слово в любом чате)
+
+Работает через `answerInlineQuery` той же конвенцией прямого ответа. **Требует
+включения в @BotFather**: /mybots → бот → Bot Settings → Inline Mode → On —
+иначе клиенты Telegram вообще не генерируют inline-запросы (на webhook ничего
+не приходит, ошибок нет, просто тишина). После включения подождать ~минуту
+(клиент кэширует возможности бота).
+
 ## Локальная разработка
 
 ```bash
