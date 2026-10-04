@@ -102,8 +102,8 @@ describe("compose and render", () => {
     })
     it("builds a noun table and a Discord embed", () => {
         const msg = paradigmMessage({ id: 1, pos: "NOUN", value: "voda", stem: "vod", paradigm: "A", gender: "Fem", protoStemClass: "ā" }, [], "en", "lat")
-        expect(msg.table?.[0]).toEqual(["", "sg", "pl"])
-        expect(msg.table?.[2]).toEqual(["Gen", "vody", "vod"])
+        expect(msg.table?.[0]).toEqual(["", "sg", "du", "pl"])
+        expect(msg.table?.[2]).toEqual(["Gen", "vody", "vodu", "vod"])
         const embed = toDiscordEmbed(msg)
         expect(embed.description).toContain("```")
         expect(embed.url).toMatch(/\/words\/1$/)

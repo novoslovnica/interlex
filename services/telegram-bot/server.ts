@@ -77,7 +77,19 @@ const server = http.createServer(async (req, res) => {
     const reply = await handleTelegramUpdate(update)
     res.writeHead(200, { "Content-Type": "application/json" })
     // Конвенция прямого ответа: Telegram исполняет {method, ...} как вызов Bot API.
-    res.end(reply ? JSON.stringify({ method: "sendMessage", chat_id: reply.chatId, text: reply.html, parse_mode: "HTML" }) : "{}")
+    res.end(
+        !reply
+            ? "{}"
+            : reply.kind === "inline"
+              ? JSON.stringify({
+                    method: "answerInlineQuery",
+                    inline_query_id: reply.queryId,
+                    results: reply.results,
+                    cache_time: 300,
+                    is_personal: true,
+                })
+              : JSON.stringify({ method: "sendMessage", chat_id: reply.chatId, text: reply.html, parse_mode: "HTML" }),
+    )
 })
 
 // Прогрев форм-анализатора сразу при старте (~20 с), чтобы первый запрос

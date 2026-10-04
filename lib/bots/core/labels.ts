@@ -29,7 +29,7 @@ const TEXT = {
         usage: (cmd: string) => `Напишите слово после команды: /${cmd} voda`,
         tooMany: "Слишком много запросов, подождите минуту.",
         cases: { nom: "Им.", gen: "Род.", dat: "Дат.", acc: "Вин.", ins: "Твор.", loc: "Мест.", voc: "Зват." } as Record<string, string>,
-        sg: "ед.", pl: "мн.", masc: "м.", fem: "ж.", neut: "ср.",
+        sg: "ед.", dual: "дв.", pl: "мн.", masc: "м.", fem: "ж.", neut: "ср.",
         present: "Настоящее", past: "Прошедшее (l-причастие)", imperative: "Повелительное", infinitive: "Инфинитив",
     },
     en: {
@@ -44,7 +44,7 @@ const TEXT = {
         usage: (cmd: string) => `Add a word after the command: /${cmd} voda`,
         tooMany: "Too many requests, please wait a minute.",
         cases: { nom: "Nom", gen: "Gen", dat: "Dat", acc: "Acc", ins: "Ins", loc: "Loc", voc: "Voc" } as Record<string, string>,
-        sg: "sg", pl: "pl", masc: "m", fem: "f", neut: "n",
+        sg: "sg", dual: "du", pl: "pl", masc: "m", fem: "f", neut: "n",
         present: "Present", past: "Past (l-participle)", imperative: "Imperative", infinitive: "Infinitive",
     },
     isv: {
@@ -59,7 +59,7 @@ const TEXT = {
         usage: (cmd: string) => `Napišite slovo po komandě: /${cmd} voda`,
         tooMany: "Prěmnogo zaprosov, počakajte minutu.",
         cases: { nom: "Nom.", gen: "Gen.", dat: "Dat.", acc: "Akuz.", ins: "Instr.", loc: "Lok.", voc: "Vok." } as Record<string, string>,
-        sg: "jed.", pl: "mn.", masc: "m.", fem: "ž.", neut: "sr.",
+        sg: "jed.", dual: "dv.", pl: "mn.", masc: "m.", fem: "ž.", neut: "sr.",
         present: "Sęčasno", past: "Minulo (l-participij)", imperative: "Imperativ", infinitive: "Infinitiv",
     },
 }

@@ -29,7 +29,8 @@ const ETYM_TO_STANDARD: Record<string, string> = {
 const STRESS_MARKS = /[̀́̂̑̏]/g
 const PROTECTED = new Set([..."čćđěšžČĆĐĚŠŽľĽńŃťŤďĎŕŔ", ...Object.keys(ETYM_TO_STANDARD)])
 
-function stripStress(text: string): string {
+/** Снять знаки ударения, сохранив буквы (в т.ч. этимологические). */
+export function stripStress(text: string): string {
     let out = ""
     for (const ch of text.normalize("NFC")) {
         out += PROTECTED.has(ch) ? ch : ch.normalize("NFD").replace(STRESS_MARKS, "").normalize("NFC")

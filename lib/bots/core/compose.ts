@@ -3,7 +3,7 @@ import { siteUrl } from "@/lib/seo/site"
 import { buildAdjectiveColumns, buildNounParadigm, buildVerbParadigm, NOUN_CASES, type ParadigmSource } from "@/lib/paradigm"
 import { GrammaticalGender } from "@/lib/grammar/common/gender"
 import { NumberType } from "@/lib/grammar/endingsRegistry"
-import { latinToCyrillic, toStandardLatin } from "@/lib/orthography/standard"
+import { latinToCyrillic, stripStress } from "@/lib/orthography/standard"
 import { foldDiacritics } from "@/lib/corpus/tokenizer/foldDiacritics"
 import type { LookupEntry, LookupResult } from "./lookup"
 import type { BotMessage } from "./message"
@@ -13,10 +13,13 @@ export type Script = "lat" | "cyr"
 
 const FLAGS = new Map<string, string>(TRANSLATION_LANGUAGES.map((l) => [l.code, l.flag]))
 
-/** Форма для показа: без знаков ударения (в моноширинной таблице они сбивают колонки), в письменности пользователя. */
+/** Форма для показа: без знаков ударения (в моноширинной таблице они сбивают колонки), в письменности пользователя.
+ *  Канон — этимологическая орфография (решение мейнтейнера 2026-09-26, см.
+ *  docs/history/2026-09-24-hunspell.md): упрощение в стандартное написание
+ *  здесь НЕ применяется. Кириллица — стандартная (є), как на сайте. */
 export function display(form: string, script: Script): string {
-    const standard = toStandardLatin(form)
-    return script === "cyr" ? latinToCyrillic(standard) : standard
+    const cleaned = stripStress(form)
+    return script === "cyr" ? latinToCyrillic(cleaned) : cleaned
 }
 
 function wordUrl(id: number): string {
@@ -62,7 +65,7 @@ export function lookupMessage(result: LookupResult, locale: BotLocale, script: S
     return msg
 }
 
-/** Таблица форм: существительное (ед./мн.), глагол (настоящее, l-причастие, повелительное), прилагательное (м./ж./ср.). */
+/** Таблица форм: существительное (ед./дв./мн.), глагол (настоящее, l-причастие, повелительное), прилагательное (м./ж./ср.). */
 export function paradigmMessage(src: ParadigmSource & { id: number }, knownPrepositions: string[], locale: BotLocale, script: Script): BotMessage {
     const L = t(locale)
     const base: BotMessage = { title: display(src.value, script), subtitle: src.pos?.toLowerCase() ?? undefined, lines: [], link: { label: L.openOnSite, url: wordUrl(src.id) } }
@@ -70,7 +73,7 @@ export function paradigmMessage(src: ParadigmSource & { id: number }, knownPrepo
 
     const noun = buildNounParadigm(src)
     if (noun) {
-        return { ...base, table: [["", L.sg, L.pl], ...NOUN_CASES.map((c) => [L.cases[c], d(noun.singular[c]), d(noun.plural[c])])] }
+        return { ...base, table: [["", L.sg, L.dual, L.pl], ...NOUN_CASES.map((c) => [L.cases[c], d(noun.singular[c]), d(noun.dual[c]), d(noun.plural[c])])] }
     }
     const verb = buildVerbParadigm(src, knownPrepositions)
     if (verb) {

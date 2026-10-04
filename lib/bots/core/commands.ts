@@ -69,7 +69,10 @@ export async function runCommand(cmd: BotCommand, ctx: BotContext): Promise<BotM
             if (!first || result.via === "fuzzy") return lookupMessage(result, locale, scriptOf(cmd.query))
             const row = await loadLexemeRow(first.id)
             if (!row) return lookupMessage(result, locale, scriptOf(cmd.query))
-            const src = { ...toParadigmSource(row), pos: (row.pos as string | null)?.toUpperCase() ?? null, id: first.id }
+            // Заголовок таблицы — каноническое (этимологическое) написание из
+            // поискового индекса: сырое row.value часто без диакритики ("jezyk"),
+            // и заголовок иначе расходился бы с самой таблицей.
+            const src = { ...toParadigmSource(row), value: first.value, pos: (row.pos as string | null)?.toUpperCase() ?? null, id: first.id }
             return paradigmMessage(src, src.pos === "VERB" ? await knownPrepositions() : [], locale, scriptOf(cmd.query))
         }
     }

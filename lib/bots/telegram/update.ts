@@ -14,6 +14,14 @@ export interface TelegramUpdate {
             language_code?: string
         }
     }
+    inline_query?: {
+        id: number | string
+        query?: string
+        from?: {
+            is_bot?: boolean
+            language_code?: string
+        }
+    }
 }
 
 export interface ParsedUpdate {
@@ -55,5 +63,23 @@ export function telegramUpdateToCommand(update: TelegramUpdate): ParsedUpdate | 
         chatId: message.chat.id,
         cmd: textToCommand(message.text),
         ...(message.from?.language_code ? { languageCode: message.from.language_code } : {}),
+    }
+}
+
+export interface ParsedInlineQuery {
+    queryId: string
+    query: string
+    languageCode?: string
+}
+
+/** Инлайн-запрос (@bot слово в любом чате). Ответ идёт через answerInlineQuery. */
+export function telegramUpdateToInlineQuery(update: TelegramUpdate): ParsedInlineQuery | null {
+    const q = update.inline_query
+    if (!q) return null
+    if (q.from?.is_bot) return null
+    return {
+        queryId: String(q.id),
+        query: q.query ?? "",
+        ...(q.from?.language_code ? { languageCode: q.from.language_code } : {}),
     }
 }

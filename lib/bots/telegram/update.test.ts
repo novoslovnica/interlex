@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { telegramUpdateToCommand, textToCommand, type TelegramUpdate } from "./update"
+import { telegramUpdateToCommand, telegramUpdateToInlineQuery, textToCommand, type TelegramUpdate } from "./update"
 
 function update(text: string, extra?: Partial<NonNullable<TelegramUpdate["message"]>>): TelegramUpdate {
     return {
@@ -51,5 +51,20 @@ describe("telegramUpdateToCommand", () => {
     it("omits languageCode when absent", () => {
         const u = telegramUpdateToCommand(update("/today", { from: { id: 7 } }))
         expect(u).toEqual({ chatId: 42, cmd: { kind: "today" } })
+    })
+})
+
+describe("telegramUpdateToInlineQuery", () => {
+    it("parses inline_query id, query and language code", () => {
+        expect(
+            telegramUpdateToInlineQuery({ inline_query: { id: 123, query: "voda", from: { language_code: "ru" } } }),
+        ).toEqual({ queryId: "123", query: "voda", languageCode: "ru" })
+    })
+    it("keeps empty query (word-of-day fallback) and string ids", () => {
+        expect(telegramUpdateToInlineQuery({ inline_query: { id: "abc", query: "" } })).toEqual({ queryId: "abc", query: "" })
+    })
+    it("ignores bots and non-inline updates", () => {
+        expect(telegramUpdateToInlineQuery({ inline_query: { id: 1, query: "x", from: { is_bot: true } } })).toBeNull()
+        expect(telegramUpdateToInlineQuery(update("voda"))).toBeNull()
     })
 })

@@ -55,7 +55,7 @@ async function main() {
     await call("setWebhook", {
         url,
         secret_token: secret,
-        allowed_updates: ["message"],
+        allowed_updates: ["message", "inline_query"],
         ...(process.argv.includes("--drop") ? { drop_pending_updates: true } : {}),
     })
     console.log(`Webhook set: ${url}`)
