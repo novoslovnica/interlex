@@ -92,6 +92,15 @@ describe("handleTelegramUpdate / inline query", () => {
         expect(reply.results[0].title).toContain("dobro")
     })
 
+    it("routes a /command inline through runCommand (one card)", async () => {
+        runCommandMock.mockResolvedValueOnce({ title: "Слово дня: dobro", lines: ["word of the day"] })
+        const reply = await handleTelegramUpdate(inlineUpdate("/today"))
+        if (reply?.kind !== "inline") throw new Error("expected inline reply")
+        expect(runCommandMock).toHaveBeenCalledWith({ kind: "today" }, expect.objectContaining({ languageCode: "ru" }))
+        expect(reply.results).toHaveLength(1)
+        expect(reply.results[0].title).toContain("Слово дня")
+    })
+
     it("returns empty results when lookupWord throws (inline must not crash)", async () => {
         lookupWordMock.mockRejectedValueOnce(new Error("db down"))
         const reply = await handleTelegramUpdate(inlineUpdate("zzzzz"))

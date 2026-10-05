@@ -1,8 +1,8 @@
 // Standalone Telegram-бот-сервис (без Next) — живёт на отдельном сервере,
 // где Telegram виден (доступен inbound с его IP-диапазонов), а основной сайт
-// остаётся на своём сервере. Та же логика, что была у webhook-роута:
-// Telegram Update -> handleTelegramUpdate -> ответ конвенцией прямого ответа
-// ({method: "sendMessage", ...}), дополнительный вызов Bot API не нужен.
+// остаётся на своём сервере. Telegram Update -> handleTelegramUpdate ->
+// sendMessage отдаём конвенцией прямого ответа ({method: "sendMessage", ...}),
+// а инлайн — отдельным вызовом Bot API (см. deliverInline и комментарий к токену).
 //
 // Запуск:
 //   разработка:        npm run bot:start
@@ -10,12 +10,14 @@
 //
 // Env (бандл грузит .env/.env.production из своего cwd через dotenv):
 //   TELEGRAM_WEBHOOK_SECRET — обязателен, верификация входящих апдейтов
+//   TELEGRAM_BOT_TOKEN      — обязателен для инлайн-режима (answerInlineQuery
+//                             прямым вызовом; конвенция прямого ответа для него
+//                             не работает); в @BotFather тот же токен, что даёт setWebhook
 //   DATA_DATABASE_URL       — file:<путь>/interlex.db (снапшот для prismaData)
 //   SQLITE_DB               — тот же снапшот для сырых запросов (lib/sqlite)
 //   BOT_PORT                — порт (default 8787), слушаем 0.0.0.0; снаружи
 //                             закрывайте фаерволом, наружу выставлять через nginx с TLS
 //   TELEGRAM_BOT_NAME       — опционально, для подсказки в help
-// Токен боту НЕ нужен: отвечаем прямым HTTP-ответом, Bot API не дёргаем.
 
 import http from "node:http"
 import crypto from "node:crypto"
@@ -23,6 +25,7 @@ import dotenv from "dotenv"
 import { handleTelegramUpdate } from "@/lib/bots/telegram/handle"
 import { getAnalyzerIfReady } from "@/lib/bots/core/analyzer"
 import { waitForAnalyzer } from "@/lib/bots/core/analyzer"
+import type { InlineArticleResult } from "@/lib/bots/telegram/inline"
 import type { TelegramUpdate } from "@/lib/bots/telegram/update"
 
 dotenv.config({ path: ".env.production", quiet: true })
@@ -36,6 +39,32 @@ if (!secretEnv) {
     process.exit(1)
 }
 const SECRET: string = secretEnv
+
+// Токен нужен ТОЛЬКО для инлайн-режима: Telegram выполняет sendMessage из
+// ответа на webhook, но answerInlineQuery так (конвенцией прямого ответа) не
+// обрабатывает — молча игнорирует, инлайн-карточки не появляются. Поэтому
+// inline отвечаем отдельным вызовом Bot API.
+const tokenEnv = process.env.TELEGRAM_BOT_TOKEN
+if (!tokenEnv) {
+    console.error("TELEGRAM_BOT_TOKEN is not set — inline mode requires it; refusing to start.")
+    process.exit(1)
+}
+const BOT_TOKEN: string = tokenEnv
+
+/** Прямой answerInlineQuery (webhook-ответ для инлайна Telegram не выполняет). */
+async function deliverInline(queryId: string, results: InlineArticleResult[]): Promise<void> {
+    try {
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerInlineQuery`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ inline_query_id: queryId, results, cache_time: 300, is_personal: true }),
+        })
+        const data = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null
+        if (!data?.ok) console.error("[bot] answerInlineQuery failed:", data?.description ?? res.status)
+    } catch (err) {
+        console.error("[bot] answerInlineQuery request failed:", err)
+    }
+}
 
 function verifySecret(header: string | null): boolean {
     if (!header) return false
@@ -75,20 +104,19 @@ const server = http.createServer(async (req, res) => {
     }
 
     const reply = await handleTelegramUpdate(update)
+    // Инлайн — прямым вызовом Bot API (ответ на webhook пустой); sendMessage
+    // отдаём конвенцией прямого ответа, отдельный запрос не нужен.
+    if (reply && reply.kind === "inline") {
+        await deliverInline(reply.queryId, reply.results)
+        res.writeHead(200, { "Content-Type": "application/json" })
+        res.end("{}")
+        return
+    }
     res.writeHead(200, { "Content-Type": "application/json" })
-    // Конвенция прямого ответа: Telegram исполняет {method, ...} как вызов Bot API.
     res.end(
         !reply
             ? "{}"
-            : reply.kind === "inline"
-              ? JSON.stringify({
-                    method: "answerInlineQuery",
-                    inline_query_id: reply.queryId,
-                    results: reply.results,
-                    cache_time: 300,
-                    is_personal: true,
-                })
-              : JSON.stringify({ method: "sendMessage", chat_id: reply.chatId, text: reply.html, parse_mode: "HTML" }),
+            : JSON.stringify({ method: "sendMessage", chat_id: reply.chatId, text: reply.html, parse_mode: "HTML" }),
     )
 })
 
