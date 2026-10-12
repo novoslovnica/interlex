@@ -36,7 +36,8 @@ log() { echo "[offsite-backup $(date '+%F %T')] $*"; }
 
 # ── 1. Снапшоты на сервере 1 (VACUUM INTO в staging) ────────────────────────
 DBS=("${DAILY_DBS[@]}")
-if [ "$DOW" = "1" ]; then DBS+=("${WEEKLY_EXTRA[@]}"); fi
+# FORCE_WEEKLY=1 — ручной прогон с недельным набором (в т.ч. corpus.db) вне понедельника.
+if [ "$DOW" = "1" ] || [ "${FORCE_WEEKLY:-0}" = "1" ]; then DBS+=("${WEEKLY_EXTRA[@]}"); fi
 
 log "creating snapshots on server1: ${DBS[*]}"
 for db in "${DBS[@]}"; do
