@@ -73,3 +73,8 @@ exports/
 
 # standalone telegram bot service build artifact
 services/telegram-bot/dist/
+
+# generated prisma clients (CI regenerates via db:gen-*)
+prisma/generated/
+# ESSJa source dump — хранится сжатым (seed-proto.ts читает .gz)
+data/essja_dump.json

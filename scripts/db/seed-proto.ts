@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
+import zlib from "zlib";
 import {init} from "@/lib/sqlite";
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.development') });
@@ -21,8 +22,13 @@ const seedProto = async () => {
         source_url TEXT NOT NULL DEFAULT ''
     )`);
 
+    // Источник лежит в репозитории сжатым (46 МБ -> 12 МБ): читаем .gz,
+    // для обратной совместимости — распакованный .json, если он есть.
     const jsonPath = path.resolve(process.cwd(), 'data/essja_dump.json');
-    const raw = fs.readFileSync(jsonPath, 'utf-8');
+    const gzPath = `${jsonPath}.gz`;
+    const raw = fs.existsSync(gzPath)
+        ? zlib.gunzipSync(fs.readFileSync(gzPath)).toString('utf-8')
+        : fs.readFileSync(jsonPath, 'utf-8');
     const entries: EssjaEntry[] = JSON.parse(raw);
 
     const insert = db.prepare(

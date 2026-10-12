@@ -103,6 +103,12 @@ const server = http.createServer(async (req, res) => {
         return
     }
 
+    if (update.message?.chat?.id) {
+        console.log(`[bot] message from chat ${update.message.chat.id}: ${(update.message.text ?? "").slice(0, 40)}`)
+    } else if (update.inline_query) {
+        console.log(`[bot] inline query from user: ${(update.inline_query.query ?? "").slice(0, 40)}`)
+    }
+
     const reply = await handleTelegramUpdate(update)
     // Инлайн — прямым вызовом Bot API (ответ на webhook пустой); sendMessage
     // отдаём конвенцией прямого ответа, отдельный запрос не нужен.
