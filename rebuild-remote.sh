@@ -46,6 +46,14 @@ git checkout main
 git pull --ff-only
 npm ci
 
+# prisma/generated/ в .gitignore (CI/сборка генерирует сама), поэтому на чистом
+# сервере его нет и `next build` падает на "@/prisma/generated/*/client".
+# Пять схем - пять клиентов; пересобираем перед каждой сборкой.
+echo "==> prisma generate (auth data library corpus historical)"
+for _t in auth data library corpus historical; do
+    DB_TYPE=$_t npx prisma generate
+done
+
 echo "==> stopping $SERVICE"
 sudo systemctl stop "$SERVICE"
 
