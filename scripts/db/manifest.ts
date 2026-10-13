@@ -47,10 +47,25 @@ export const DB_FILES: Record<DbName, string> = {
 }
 
 export const MANIFEST: ManifestEntry[] = [
+    // Схемные миграции (идемпотентный DDL) - применяются сами при релизе
+    // (run.ts migrate, служба остановлена). Порядок - по имени файла.
+    //
+    // Критично: до перехода на реестр (98b0387) релиз прогонял фиксированный
+    // список этих DDL-скриптов прямо в rebuild-remote.sh. В манифест его не
+    // перенесли, и они перестали применяться на проде: community-таблицы
+    // (word_comments, translation_votes, contributor_stats) и auth-таблицы
+    // (user_profiles и др.) на проде отсутствовали, из-за чего /words/[id]
+    // падал с "no such table" (2026-10-13). Каждая миграция идемпотентна.
+    { path: "scripts/db/2026-08-12-add-telegram-auth-nonce.ts", db: "auth", kind: "schema", dryRun: false, needsRestart: true, note: "telegram_auth_nonces (replay-защита входа через Telegram)" },
+    { path: "scripts/db/2026-09-19-add-community-auth-tables.ts", db: "auth", kind: "schema", dryRun: false, needsRestart: true, note: "user_languages / user_profiles / role_audit" },
+    { path: "scripts/db/2026-09-19-add-community-translation-votes.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes + translations.community*" },
+    { path: "scripts/db/2026-09-19-add-community-reputation.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes.agreed/controlExpected + contributor_stats" },
+    { path: "scripts/db/2026-09-23-add-word-comments.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "word_comments (обсуждение на странице слова)" },
+
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },
-    { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "не во время реанализа корпуса" },
+    { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "создаёт proper_noun_signals; не во время реанализа корпуса" },
     { path: "scripts/export-hunspell.ts", db: "interlex", kind: "repeatable", dryRun: false, noBackup: true, note: "только читает; пишет exports/hunspell/ (страница /downloads)" },
 ]
 
