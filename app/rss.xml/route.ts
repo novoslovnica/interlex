@@ -28,6 +28,12 @@ async function fetchRecentWords(base: string): Promise<FeedItem[]> {
         // ранних импортов он может быть NULL — тогда фолбэк на updatedAt.
         // Описание: первый en-перевод (translations.language='en' через
         // meaningId), фолбэк — текст первого значения (meanings.meaning).
+        //
+        // Сначала LIMIT (внешний запрос по 25 строкам), и только потом
+        // описания: при ORDER BY COALESCE(...) SQLite сортирует все ~21k
+        // публичных лексем, и описательные подзапросы вычислялись бы для каждой
+        // строки, а не для 25 (на проде это упиралось в 60-секундный лимит
+        // статической генерации и валило сборку).
         const rows = db.prepare(`
             SELECT l.id, l.value, l.pos, l.createdAt, l.updatedAt,
                 COALESCE(
@@ -40,10 +46,13 @@ async function fetchRecentWords(base: string): Promise<FeedItem[]> {
                         WHERE m.lexemeId = l.id AND m.meaning IS NOT NULL AND m.meaning != ''
                         ORDER BY m.id LIMIT 1)
                 ) AS description
-            FROM lexemes l
-            WHERE l.isPublic = 1
-            ORDER BY COALESCE(l.createdAt, l.updatedAt) DESC, l.id DESC
-            LIMIT ?
+            FROM (
+                SELECT id, value, pos, createdAt, updatedAt
+                FROM lexemes
+                WHERE isPublic = 1
+                ORDER BY COALESCE(createdAt, updatedAt) DESC, id DESC
+                LIMIT ?
+            ) l
         `).all(ITEMS_PER_SOURCE) as LexemeRow[]
         return rows.flatMap((r) => {
             const dateStr = r.createdAt ?? r.updatedAt
