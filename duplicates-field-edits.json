@@ -2,10 +2,10 @@
  "generatedFrom": "duplicates-merge-plan.json",
  "rule": "слаг = <value>-<POS>; занятый ключ -> -2, -3 (lib/slug.ts::generateUniqueSlug)",
  "totals": {
-  "rename-slug": 20,
-  "merge": 20,
-  "needs-decision": 5,
-  "keep": 8
+  "rename-slug": 22,
+  "merge": 22,
+  "keep": 8,
+  "needs-decision": 1
  },
  "ops": [
   {
@@ -28,14 +28,10 @@
    "renameTargetToValuePos": true
   },
   {
-   "op": "needs-decision",
-   "slugs": [
-    "deset-NUM",
-    "desět-num"
-   ],
-   "tokens": 230,
-   "decision": "unset",
-   "notes": ""
+   "op": "merge",
+   "source": "desět-num",
+   "target": "deset-NUM",
+   "stem": "desęť"
   },
   {
    "op": "merge",
@@ -175,24 +171,14 @@
    "reason": "keep: слаг старого формата"
   },
   {
-   "op": "needs-decision",
-   "slugs": [
-    "lezati-VERB",
-    "lězati-v"
-   ],
-   "tokens": 36,
-   "decision": "unset",
-   "notes": "проверить ять во втором, гнезда оба сохраняем (диакритика и граммема во втором)"
+   "op": "rename-slug",
+   "slug": "lězati-v",
+   "reason": "отдельное гнездо lězati"
   },
   {
-   "op": "needs-decision",
-   "slugs": [
-    "breza-NOUN",
-    "breža-n"
-   ],
-   "tokens": 33,
-   "decision": "ignore",
-   "notes": "игнор, ниже разбираются оба пункта по своим гнездам"
+   "op": "rename-slug",
+   "slug": "breža-n",
+   "reason": "отдельное гнездо breža"
   },
   {
    "op": "rename-slug",
@@ -234,14 +220,9 @@
    "stem": "dostatȯčn"
   },
   {
-   "op": "needs-decision",
-   "slugs": [
-    "vozhod-n",
-    "vȯzhod-NOUN"
-   ],
-   "tokens": 135,
-   "decision": "unset",
-   "notes": ""
+   "op": "merge",
+   "source": "vozhod-n",
+   "target": "vȯzhod-NOUN"
   },
   {
    "op": "merge",
