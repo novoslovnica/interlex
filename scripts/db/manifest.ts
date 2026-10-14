@@ -93,6 +93,14 @@ export const MANIFEST: ManifestEntry[] = [
         heavy: true,
         note: "7 SAFE-пар дублей (разметка мейнтейнера 2026-10-14): слияние лексем + перенос частотности; заодно перенаправляет ссылки в corpus.db (два прохода по 12,9 млн кандидатов)",
     },
+    {
+        path: "scripts/db/2026-10-15-normalize-value-diacritics.ts",
+        db: "interlex",
+        kind: "data",
+        dryRun: true,
+        heavy: true,
+        note: "value -> поисковая форма без диакритики + слаг по <value>-<POS> (коллизия -> -2); ~2,5 тыс. лексем, перевязка corpus.db; редиректы не делаются",
+    },
 ]
 
 export function findEntry(scriptPath: string): ManifestEntry | undefined {
