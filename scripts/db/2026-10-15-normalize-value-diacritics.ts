@@ -95,14 +95,26 @@ const run = db.transaction(() => {
     }
 })
 run()
-db.close()
 console.log(`\ninterlex: ${changes.length} лексем нормализовано`)
+
+// Карта перенаправлений для corpus.db. При первом прогоне — из changes, при
+// ПОВТОРНОМ (после сбоя в фазе corpus, как было на первом боевом прогоне) —
+// из аудита: interlex уже нормализован, changes пуст, но перевязку всё ещё надо
+// доделать. Идемпотентно: повторная перевязка не находит старых слагов.
+const redirectPairs: Array<[string, string]> = changes.length > 0
+    ? changes.map((c) => [c.lex.slug, c.newSlug] as [string, string])
+    : (db.prepare(`SELECT oldValue, newValue FROM audit_logs
+        WHERE userEmail = ? AND entityType = 'Lexeme' AND field = 'slug'
+          AND oldValue IS NOT NULL AND newValue IS NOT NULL`).all(AUTHOR) as { oldValue: string; newValue: string }[])
+        .map((r) => [r.oldValue, r.newValue] as [string, string])
+if (changes.length === 0) console.log(`Повторный прогон: карта перенаправлений из аудита, пар ${redirectPairs.length}`)
+db.close()
 
 // corpus.db: ссылки на переименованные слаги + устаревшие ключи групп.
 const corpus = new Database(CORPUS_PATH)
 corpus.pragma("foreign_keys = ON")
-const froms = changes.map((c) => c.lex.slug)
-const tos = changes.map((c) => c.newSlug)
+const froms = redirectPairs.map(([f]) => f)
+const tos = redirectPairs.map(([, t]) => t)
 const CHUNK = 400
 
 const repoint = corpus.transaction(() => {
@@ -111,7 +123,7 @@ const repoint = corpus.transaction(() => {
         const f = froms.slice(i, i + CHUNK)
         const t = tos.slice(i, i + CHUNK)
         const marks = f.map(() => "?").join(",")
-        corpus.prepare(`CREATE TEMP TABLE IF NOT EXISTS affected_tokens (tokenId INTEGER PRIMARY KEY)`)
+        corpus.exec(`CREATE TEMP TABLE IF NOT EXISTS affected_tokens (tokenId INTEGER PRIMARY KEY)`)
         corpus.prepare(`DELETE FROM affected_tokens`).run()
         corpus.prepare(`INSERT OR IGNORE INTO affected_tokens SELECT DISTINCT tokenId FROM CorpusTokenCandidate WHERE wordSlug IN (${marks})`).run(...f)
         keysCleared += corpus.prepare(`UPDATE CorpusToken SET homonymGroupKey = NULL
