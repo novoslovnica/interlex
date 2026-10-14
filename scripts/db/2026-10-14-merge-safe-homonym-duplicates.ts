@@ -56,6 +56,14 @@ interface Lex {
 const db = new Database(DB_PATH)
 db.pragma("foreign_keys = ON")
 
+// Какие таблицы реально есть в этой базе: часть таблиц (proper_noun_signals,
+// valency_arguments, word_comments) появилась разными скриптами и на конкретной
+// базе может отсутствовать — тогда и ссылок в ней нет, и валить прогон нельзя.
+const tables = new Set(
+    (db.prepare(`SELECT name FROM sqlite_master WHERE type = 'table'`).all() as { name: string }[]).map((r) => r.name),
+)
+const absentTables = new Set<string>()
+
 const allSlugs = [...new Set(PAIRS.flat())]
 const lexOf = new Map<string, Lex>()
 for (const slug of allSlugs) {
@@ -166,17 +174,27 @@ const run = db.transaction(() => {
             db.prepare(`UPDATE OR IGNORE lexeme_allophones SET lexemeId = ? WHERE lexemeId = ?`).run(target.id, source.id)
             db.prepare(`DELETE FROM lexeme_allophones WHERE lexemeId = ?`).run(source.id)
 
-            // proper_noun_signals: одна запись на лексему; если у цели уже есть — свою удаляем.
-            const targetHasSignal = db.prepare(`SELECT 1 FROM proper_noun_signals WHERE lexemeId = ? LIMIT 1`).get(target.id)
-            if (targetHasSignal) db.prepare(`DELETE FROM proper_noun_signals WHERE lexemeId = ?`).run(source.id)
-            else db.prepare(`UPDATE proper_noun_signals SET lexemeId = ? WHERE lexemeId = ?`).run(target.id, source.id)
+            // Необязательные таблицы: proper_noun_signals создаёт отдельный
+            // repeatable-скрипт (compute-proper-noun-signals.ts) и на проде её
+            // может не быть вовсе, а valency_arguments появилась позже части
+            // баз. Отсутствие таблицы не должно валить слияние — тогда просто
+            // нет и ссылок, которые надо переносить.
+            if (tables.has("proper_noun_signals")) {
+                const targetHasSignal = db.prepare(`SELECT 1 FROM proper_noun_signals WHERE lexemeId = ? LIMIT 1`).get(target.id)
+                if (targetHasSignal) db.prepare(`DELETE FROM proper_noun_signals WHERE lexemeId = ?`).run(source.id)
+                else db.prepare(`UPDATE proper_noun_signals SET lexemeId = ? WHERE lexemeId = ?`).run(target.id, source.id)
+            } else absentTables.add("proper_noun_signals")
 
-            db.prepare(`UPDATE valency_arguments SET prepositionLexemeId = ? WHERE prepositionLexemeId = ?`).run(target.id, source.id)
+            if (tables.has("valency_arguments")) {
+                db.prepare(`UPDATE valency_arguments SET prepositionLexemeId = ? WHERE prepositionLexemeId = ?`).run(target.id, source.id)
+            } else absentTables.add("valency_arguments")
+
             db.prepare(`UPDATE content_reports SET lexemeId = ? WHERE lexemeId = ?`).run(target.id, source.id)
             db.prepare(`UPDATE content_reports SET entityId = ? WHERE entityType = 'Lexeme' AND entityId = ?`).run(target.id, source.id)
 
             moveBaseHomonyms(source.id, target.id)
-            rewireCommentsLexeme(db, { fromLexemeId: source.id, toLexemeId: target.id })
+            if (tables.has("word_comments")) rewireCommentsLexeme(db, { fromLexemeId: source.id, toLexemeId: target.id })
+            else absentTables.add("word_comments")
 
             audit(target.id, "mergedFrom", null, `${source.id} ${source.slug}`)
             db.prepare(`DELETE FROM lexemes WHERE id = ?`).run(source.id)
@@ -201,6 +219,9 @@ if (APPLY) {
 }
 
 run()
+if (absentTables.size > 0) {
+    console.log(`\nПропущены отсутствующие в этой базе таблицы (ссылок в них и нет): ${[...absentTables].join(", ")}`)
+}
 db.close()
 
 if (!APPLY) {
