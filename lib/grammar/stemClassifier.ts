@@ -47,6 +47,15 @@ export function identifyStemTypeByDb(item: EnhancedDbItem): StemType {
         if (se === 'er') return 'consonant_er';
     }
 
+    // 1b. Класс может прийти уже движковым именем ('consonant_ent' и т.п.) —
+    // именно так он лежит в ending_allophones и так его передают админка,
+    // корпус и страница слова. Без этой ветки такое значение не распознавалось
+    // вовсе: форма собиралась по запасной твёрдой парадигме, а окончания
+    // класса из БД не читались, потому что их ключ никто не запрашивал.
+    if (psc === 'consonant_n' || psc === 'consonant_s' || psc === 'consonant_ent' || psc === 'consonant_er') {
+        return psc;
+    }
+
     // 2. Проверяем u-основы мужского рода напрямую из метаданных (syn, dom)
     if (psc === 'u' && gender === 'masculine') {
         return 'u_basis';

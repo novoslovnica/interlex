@@ -85,7 +85,12 @@ function getCircumflexToneType(word: string, syllableIndex: number): 'long_circu
 const STEM_EXTENSIONS: Partial<Record<StemType, string>> = {
     consonant_n: 'en',
     consonant_s: 'es',
-    consonant_ent: 'ent',
+    // Детёныши: žrěbę → žrěb + ęt + e = "žrěbęte" (подтверждено мейнтейнером
+    // 2026-10-15). Было 'ent', что давало "žrěbente" — в интерславянском
+    // наращение этой группы идёт через носовое ę, а не через e. Окончания
+    // класса в ending_allophones при этом ГОЛЫЕ (nom '', gen 'e', dat 'i'):
+    // наращение целиком принадлежит этому реестру, как и у consonant_n.
+    consonant_ent: 'ęt',
     consonant_er: 'er',
 };
 
