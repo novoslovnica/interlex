@@ -4,8 +4,8 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import { useFormStatus } from "react-dom"
 import { FLAVOR_CODES, FLAVOR_METADATA } from "@/config/flavor"
 import ReactMarkdown from "react-markdown"
-import { splitIntoChapters, joinChapters } from "@/lib/body"
-import type { Chapter } from "@/lib/body"
+import { splitIntoChapters, joinChapters } from "@/lib/library/chapters"
+import type { Chapter } from "@/lib/library/chapters"
 
 interface EntryBrief {
   id: number
