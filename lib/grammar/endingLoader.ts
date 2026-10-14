@@ -30,8 +30,16 @@ function tryLoadFromDb(): void {
       .all() as { stemType: string; grammeme: string; value: string; flavorCode: string }[];
     db.close();
     loadEndingOverridesSync(rows);
-  } catch {
-    // DB unavailable — fallback to hardcoded registries
+  } catch (e) {
+    // DB unavailable — fallback to hardcoded registries. Молчать нельзя: при
+    // неудачном резолве better-sqlite3 (tsx, vitest, сборка без нативного
+    // модуля) правки окончаний из БД тихо игнорировались, и «поправил в
+    // админке, а формы не изменились» выглядело как баг движка. Один раз на
+    // процесс, только на сервере (в браузере выше ранний return).
+    console.warn(
+      "[endingLoader] окончания из БД не загружены, работаем на зашитом реестре:",
+      e instanceof Error ? e.message : e,
+    )
   }
 }
 

@@ -1,4 +1,5 @@
 import {init} from "@/lib/sqlite";
+import {foldDiacritics} from "@/lib/corpus/tokenizer/foldDiacritics";
 import {fetchTranslationsForMeaningIds, type TranslationRow} from "@/lib/translations";
 
 type LangRecord = TranslationRow;
@@ -159,23 +160,34 @@ export const getDictItems = async (
         // queries fall back to a plain (parameterized) LIKE scan.
         const useFts = search.length >= 3;
         const searchOp = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
-        const searchParam = useFts
-            ? `"${search.replace(/"/g, '""')}"`
-            : `%${search.replace(/[%_]/g, '\\$&')}%`;
+        const buildParam = (s: string) => useFts
+            ? `"${s.replace(/"/g, '""')}"`
+            : `%${s.replace(/[%_]/g, '\\$&')}%`;
+        // Этимологический ввод (język, dostatȯcno, sę) должен находить лексему,
+        // у которой value хранится упрощённо: сворачиваем запрос тем же
+        // foldDiacritics, что и движок распознавания, и ищем ОБА варианта —
+        // свёрнутый и исходный. Исходный нужен, пока не все value нормализованы
+        // (2 472 лексемы держат диакритику в value), иначе такие перестали бы
+        // находиться. FTS идёт по value без remove_diacritics, поэтому без этой
+        // свёртки «dostatȯcno» не находил ничего.
+        const folded = foldDiacritics(search);
+        const variants = folded !== search ? [search, folded] : [search];
+        const params = variants.map(buildParam);
+        const orGroup = (column: string) => `(${params.map(() => `${column} ${searchOp}`).join(' OR ')})`;
         const lexemeIds = db.prepare(`
             SELECT DISTINCT l.id FROM lexemes l
             WHERE (
-                l.id IN (SELECT ROWID FROM lexemes_text WHERE value ${searchOp})
+                l.id IN (SELECT ROWID FROM lexemes_text WHERE ${orGroup('value')})
                 OR EXISTS (
                     SELECT 1 FROM lexeme_allophones la
                     WHERE la.lexemeId = l.id
                     AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
                     AND la.type = 'standard'
-                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE value ${searchOp})
+                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE ${orGroup('value')})
                 )
             )
             ${includeHidden ? '' : 'AND l.isPublic = 1'}
-        `).all(searchParam, searchParam) as { id: number }[];
+        `).all(...params, ...params) as { id: number }[];
 
         const ids = lexemeIds.map(r => r.id);
         if (ids.length === 0) return [];
