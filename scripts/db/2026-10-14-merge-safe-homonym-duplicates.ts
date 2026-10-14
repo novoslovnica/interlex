@@ -37,16 +37,48 @@ const CORPUS_PATH = process.env.CORPUS_SQLITE_DB || process.env.CORPUS_DB || pat
 const APPLY = process.argv.includes("--apply")
 const AUTHOR = "script:merge-safe-homonym-duplicates"
 
-// source (старый формат, POS строчными) -> target (новый формат)
-const PAIRS: Array<[string, string]> = [
-    ["či-conj", "ci-CCONJ"],
-    ["drugy-adj", "drugy-ADJ"],
-    ["blizko-adv", "blizko-ADV"],
-    ["ljuty-adj", "ljuty-ADJ"],
-    ["děvica-n", "devica-NOUN"],
-    ["opustiti-v", "opustiti-VERB"],
-    ["vlåkno-n", "vlakno-NOUN"],
-]
+// Пары берутся из плана, собранного из размеченного мейнтейнером файла
+// (duplicates-review.md -> duplicates-merge-plan.json). Прогоняются только
+// пары с решением merge, БЕЗ текстовых пояснений и без расхождения по POS/роду:
+// пояснения («stem верный в B», «перевод забираем», «проверить ять») требуют
+// отдельного разбора в конкретные правки полей, а род/часть речи — отдельного
+// решения. Остальные пары печатаются как «требует решения».
+const PLAN_PATH = process.env.MERGE_PLAN || path.resolve(process.cwd(), "duplicates-merge-plan.json")
+
+interface PlanPair {
+    key: string
+    maxTokens: number
+    a: { slug: string; value: string; stem: string; legacy: boolean }
+    b: { slug: string; value: string; stem: string; legacy: boolean }
+    decision: string
+    source: string | null
+    target: string | null
+    notes: string
+}
+
+function loadPlan(): { runnable: Array<[string, string]>; skipped: string[] } {
+    if (!fs.existsSync(PLAN_PATH)) {
+        console.error(`План не найден: ${PLAN_PATH} (соберите его из duplicates-review.md)`)
+        process.exit(2)
+    }
+    const plan = JSON.parse(fs.readFileSync(PLAN_PATH, "utf8")) as { pairs: PlanPair[] }
+    const runnable: Array<[string, string]> = []
+    const skipped: string[] = []
+    for (const p of plan.pairs) {
+        if (p.decision !== "merge" || !p.source || !p.target) {
+            skipped.push(`${p.source ?? p.a.slug} -> ${p.target ?? p.b.slug}: решение «${p.decision}» — не слияние`)
+            continue
+        }
+        if (p.notes !== "") {
+            skipped.push(`${p.source} -> ${p.target}: есть пояснение (${p.notes.slice(0, 80)}) — разобрать в правки полей`)
+            continue
+        }
+        runnable.push([p.source, p.target])
+    }
+    return { runnable, skipped }
+}
+
+const { runnable: PAIRS, skipped: planSkipped } = loadPlan()
 
 interface Lex {
     id: number; slug: string; value: string | null; stem: string | null; pos: string | null
@@ -76,11 +108,14 @@ console.log(`interlex: ${DB_PATH}`)
 console.log(`corpus:   ${CORPUS_PATH}`)
 console.log(`Mode: ${APPLY ? "APPLY" : "DRY RUN"}\n`)
 
-// Защита: сливаем ТОЛЬКО если пара по-прежнему SAFE. Если данные разъехались с
-// анализом, пару пропускаем с громким сообщением, а не сливаем наугад.
+// Защита. Отличие от первых семи пар: там value/stem совпадали буквально, здесь
+// мейнтейнер сливает две РАЗНЫЕ записи одного слова, и победитель — цель (её
+// value/stem сохраняются). Поэтому value и stem сверять нельзя, а вот часть речи
+// и род обязаны совпасть: расхождение означает, что сливать нечего до решения
+// человека, и такая пара уходит в «требует решения».
 interface Plan { source: Lex; target: Lex; reason?: string }
 const plans: Plan[] = []
-const skipped: string[] = []
+const skipped: string[] = [...planSkipped]
 for (const [sourceSlug, targetSlug] of PAIRS) {
     const source = lexOf.get(sourceSlug)
     const target = lexOf.get(targetSlug)
@@ -89,12 +124,10 @@ for (const [sourceSlug, targetSlug] of PAIRS) {
         continue
     }
     const problems: string[] = []
-    if ((source.value ?? "") !== (target.value ?? "")) problems.push(`value "${source.value}" vs "${target.value}"`)
-    if ((source.stem ?? "") !== (target.stem ?? "")) problems.push(`stem "${source.stem}" vs "${target.stem}"`)
     if ((source.pos ?? "") !== (target.pos ?? "")) problems.push(`pos "${source.pos}" vs "${target.pos}"`)
     if ((source.gender ?? "") !== (target.gender ?? "")) problems.push(`gender "${source.gender}" vs "${target.gender}"`)
     if (problems.length > 0) {
-        skipped.push(`${sourceSlug} -> ${targetSlug}: НЕ SAFE (${problems.join("; ")})`)
+        skipped.push(`${sourceSlug} -> ${targetSlug}: часть речи/род расходятся (${problems.join("; ")})`)
         continue
     }
     plans.push({ source, target })

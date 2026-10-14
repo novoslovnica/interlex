@@ -1,0 +1,3536 @@
+{
+ "generatedFrom": "duplicates-review.md",
+ "totals": {
+  "pairs": 98,
+  "byDecision": {
+   "merge": 74,
+   "unset": 4,
+   "keep": 19,
+   "ignore": 1
+  },
+  "merges": 74,
+  "mergesWithoutNotes": 49,
+  "mergesWithNotes": 25,
+  "renameCandidates": 11
+ },
+ "pairs": [
+  {
+   "key": "pred-NOUN~pred-n",
+   "maxTokens": 2257,
+   "groups": 0,
+   "forms": "prěd, prědže, pred",
+   "class": "",
+   "a": {
+    "slug": "pred-NOUN",
+    "value": "pred",
+    "stem": "prěd",
+    "legacy": false
+   },
+   "b": {
+    "slug": "pred-n",
+    "value": "pred",
+    "stem": "pred",
+    "legacy": true
+   },
+   "ruA": "перед, передняя сторона, лицевая сторона",
+   "ruB": "Перёд",
+   "decision": "merge",
+   "source": "pred-n",
+   "target": "pred-NOUN",
+   "legacySlugs": [
+    "pred-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "čestj-n~čęstj-n",
+   "maxTokens": 685,
+   "groups": 0,
+   "forms": "česti, čestju, čęsti",
+   "class": "",
+   "a": {
+    "slug": "čestj-n",
+    "value": "cestj",
+    "stem": "čest",
+    "legacy": true
+   },
+   "b": {
+    "slug": "čęstj-n",
+    "value": "cestj",
+    "stem": "čęst",
+    "legacy": true
+   },
+   "ruA": "Честь",
+   "ruB": "Часть",
+   "decision": "merge",
+   "source": "čęstj-n",
+   "target": "čestj-n",
+   "legacySlugs": [
+    "čestj-n",
+    "čęstj-n"
+   ],
+   "notes": "- Некорректная граммема n вместо NOUN и диакритика в value (правда будет полное совпадение потом, надо тоже как-то решать). А так и то, и то сохраняем - разные слова",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "večj-n~věčj-n",
+   "maxTokens": 666,
+   "groups": 0,
+   "forms": "věči, věč, več",
+   "class": "",
+   "a": {
+    "slug": "večj-n",
+    "value": "vecj",
+    "stem": "več",
+    "legacy": true
+   },
+   "b": {
+    "slug": "věčj-n",
+    "value": "vecj",
+    "stem": "věč",
+    "legacy": true
+   },
+   "ruA": "Вещь",
+   "ruB": "Вещь",
+   "decision": "merge",
+   "source": "věčj-n",
+   "target": "večj-n",
+   "legacySlugs": [
+    "večj-n",
+    "věčj-n"
+   ],
+   "notes": "- граммема некорректное, а также диакритика в value, но сливаем потом A->B",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "najprvo-ADV~najprvo-adv",
+   "maxTokens": 478,
+   "groups": 0,
+   "forms": "najprvo, najpŕvo",
+   "class": "",
+   "a": {
+    "slug": "najprvo-ADV",
+    "value": "najprvo",
+    "stem": "najpŕv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "najprvo-adv",
+    "value": "najprvo",
+    "stem": "najprv",
+    "legacy": true
+   },
+   "ruA": "прежде всего",
+   "ruB": "вначале",
+   "decision": "merge",
+   "source": "najprvo-adv",
+   "target": "najprvo-ADV",
+   "legacySlugs": [
+    "najprvo-adv"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "pogled-NOUN~poglěd-n",
+   "maxTokens": 321,
+   "groups": 0,
+   "forms": "pogled, pogleda, pogledi",
+   "class": "",
+   "a": {
+    "slug": "pogled-NOUN",
+    "value": "pogled",
+    "stem": "poględ",
+    "legacy": false
+   },
+   "b": {
+    "slug": "poglěd-n",
+    "value": "pogled",
+    "stem": "poglěd",
+    "legacy": true
+   },
+   "ruA": "взгляд, взор; вид, обзор",
+   "ruB": "Точка зрения; Взгляд; Взор",
+   "decision": "merge",
+   "source": "poglěd-n",
+   "target": "pogled-NOUN",
+   "legacySlugs": [
+    "poglěd-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "predmet-NOUN~predmět-n",
+   "maxTokens": 252,
+   "groups": 0,
+   "forms": "prědmet, prědmety, prědmetov",
+   "class": "",
+   "a": {
+    "slug": "predmet-NOUN",
+    "value": "predmet",
+    "stem": "prědmet",
+    "legacy": false
+   },
+   "b": {
+    "slug": "predmět-n",
+    "value": "predmet",
+    "stem": "predmět",
+    "legacy": true
+   },
+   "ruA": "предмет, объект, вещь; дополнение (грам.); предмет, артикул, изделие; предмет, тема, вопрос",
+   "ruB": "Курс; Предмет",
+   "decision": "merge",
+   "source": "predmět-n",
+   "target": "predmet-NOUN",
+   "legacySlugs": [
+    "predmět-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "hlapec-NOUN~hlåpec-n",
+   "maxTokens": 233,
+   "groups": 0,
+   "forms": "hlapec, hlåpèc, hlåpec",
+   "class": "",
+   "a": {
+    "slug": "hlapec-NOUN",
+    "value": "hlapec",
+    "stem": "hlåpėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "hlåpec-n",
+    "value": "hlapec",
+    "stem": "hlåpec",
+    "legacy": true
+   },
+   "ruA": "парень, ребята (мн.); мужик, чувак, парень, пацан, тип",
+   "ruB": "Мальчик; Парень",
+   "decision": "merge",
+   "source": "hlåpec-n",
+   "target": "hlapec-NOUN",
+   "legacySlugs": [
+    "hlåpec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "deset-NUM~desět-num",
+   "maxTokens": 230,
+   "groups": 0,
+   "forms": "deset, deseti, desęť",
+   "class": "",
+   "a": {
+    "slug": "deset-NUM",
+    "value": "deset",
+    "stem": "desęť",
+    "legacy": false
+   },
+   "b": {
+    "slug": "desět-num",
+    "value": "deset",
+    "stem": "desět",
+    "legacy": true
+   },
+   "ruA": "десять",
+   "ruB": "Десять",
+   "decision": "unset",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "desět-num"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "sredina-NOUN~sredina-n",
+   "maxTokens": 229,
+   "groups": 0,
+   "forms": "srědině, srědiny, srědina",
+   "class": "",
+   "a": {
+    "slug": "sredina-NOUN",
+    "value": "sredina",
+    "stem": "srědin",
+    "legacy": false
+   },
+   "b": {
+    "slug": "sredina-n",
+    "value": "sredina",
+    "stem": "sredin",
+    "legacy": true
+   },
+   "ruA": "середина",
+   "ruB": "Центр; Средина",
+   "decision": "merge",
+   "source": "sredina-n",
+   "target": "sredina-NOUN",
+   "legacySlugs": [
+    "sredina-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "ves-NOUN~ves-n",
+   "maxTokens": 219,
+   "groups": 0,
+   "forms": "věš, ves, veś",
+   "class": "",
+   "a": {
+    "slug": "ves-NOUN",
+    "value": "ves",
+    "stem": "vėś",
+    "legacy": false
+   },
+   "b": {
+    "slug": "ves-n",
+    "value": "ves",
+    "stem": "ves",
+    "legacy": true
+   },
+   "ruA": "деревня",
+   "ruB": "Счастье",
+   "decision": "merge",
+   "source": "ves-n",
+   "target": "ves-NOUN",
+   "legacySlugs": [
+    "ves-n"
+   ],
+   "notes": "- не очень понятно, какие примеры в В, как будто ошибочное слово",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": true,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "cestny-ADJ~čęstny-adj",
+   "maxTokens": 203,
+   "groups": 0,
+   "forms": "čestno, čestny, čestnym",
+   "class": "",
+   "a": {
+    "slug": "cestny-ADJ",
+    "value": "cestny",
+    "stem": "čėstn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "čęstny-adj",
+    "value": "cestny",
+    "stem": "čęstn",
+    "legacy": true
+   },
+   "ruA": "честный, справедливый, благородный",
+   "ruB": "частный",
+   "decision": "merge",
+   "source": "čęstny-adj",
+   "target": "cestny-ADJ",
+   "legacySlugs": [
+    "čęstny-adj"
+   ],
+   "notes": "- диакритика во втором и граммема неверная, но должно быть два слова",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mec-NOUN~měč-n",
+   "maxTokens": 176,
+   "groups": 0,
+   "forms": "meč, męč, mečem",
+   "class": "",
+   "a": {
+    "slug": "mec-NOUN",
+    "value": "mec",
+    "stem": "meč",
+    "legacy": false
+   },
+   "b": {
+    "slug": "měč-n",
+    "value": "mec",
+    "stem": "měč",
+    "legacy": true
+   },
+   "ruA": "меч; мяч",
+   "ruB": "Мечтать",
+   "decision": "merge",
+   "source": "měč-n",
+   "target": "mec-NOUN",
+   "legacySlugs": [
+    "měč-n"
+   ],
+   "notes": "- диакритика во втором и граммема неверная, но два разных слова (měčt во втором основа, почему т пропало?)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "pracovati-VERB~pråcovati-v",
+   "maxTokens": 129,
+   "groups": 0,
+   "forms": "pracuje, pracovati, pracoval",
+   "class": "",
+   "a": {
+    "slug": "pracovati-VERB",
+    "value": "pracovati",
+    "stem": "pracova",
+    "legacy": false
+   },
+   "b": {
+    "slug": "pråcovati-v",
+    "value": "pracovati",
+    "stem": "pråcova",
+    "legacy": true
+   },
+   "ruA": "работать, трудиться",
+   "ruB": "делать",
+   "decision": "merge",
+   "source": "pråcovati-v",
+   "target": "pracovati-VERB",
+   "legacySlugs": [
+    "pråcovati-v"
+   ],
+   "notes": "(но stem pråcova верный, в А потерялась диакритика в stem)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vlastny-ADJ~vlåstny-adj",
+   "maxTokens": 124,
+   "groups": 0,
+   "forms": "vlastny, vlastne, vlastnogo",
+   "class": "",
+   "a": {
+    "slug": "vlastny-ADJ",
+    "value": "vlastny",
+    "stem": "vlastn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vlåstny-adj",
+    "value": "vlastny",
+    "stem": "vlåstn",
+    "legacy": true
+   },
+   "ruA": "собственный; подходящий, надлежащий, соответствующий",
+   "ruB": "властелин",
+   "decision": "merge",
+   "source": "vlåstny-adj",
+   "target": "vlastny-ADJ",
+   "legacySlugs": [
+    "vlåstny-adj"
+   ],
+   "notes": "(но stem vlåstn верный, в А потерялась диакритика в stem)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "utro-NOUN~ųtro-n",
+   "maxTokens": 74,
+   "groups": 0,
+   "forms": "utrom, utro, utra",
+   "class": "",
+   "a": {
+    "slug": "utro-NOUN",
+    "value": "utro",
+    "stem": "utr",
+    "legacy": false
+   },
+   "b": {
+    "slug": "ųtro-n",
+    "value": "utro",
+    "stem": "ųtr",
+    "legacy": true
+   },
+   "ruA": "утро; утро",
+   "ruB": "Нутро",
+   "decision": "merge",
+   "source": "ųtro-n",
+   "target": "utro-NOUN",
+   "legacySlugs": [
+    "ųtro-n"
+   ],
+   "notes": "- диакритика (будут совпадать) и граммема во втором неверные, но слова разные, нужно сохранить оба",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "madjarsky-ADJ~madjarsky-adj",
+   "maxTokens": 60,
+   "groups": 0,
+   "forms": "madjarsky, madjarskom, madjarskogo",
+   "class": "",
+   "a": {
+    "slug": "madjarsky-ADJ",
+    "value": "madjarsky",
+    "stem": "madjaŕsk",
+    "legacy": false
+   },
+   "b": {
+    "slug": "madjarsky-adj",
+    "value": "madjarsky",
+    "stem": "madjarsk",
+    "legacy": true
+   },
+   "ruA": "венгерский",
+   "ruB": "мадьярский",
+   "decision": "merge",
+   "source": "madjarsky-adj",
+   "target": "madjarsky-ADJ",
+   "legacySlugs": [
+    "madjarsky-adj"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "sudba-NOUN~sųdba-n",
+   "maxTokens": 58,
+   "groups": 0,
+   "forms": "sudba, sudbu, sudby",
+   "class": "",
+   "a": {
+    "slug": "sudba-NOUN",
+    "value": "sudba",
+    "stem": "sųďb",
+    "legacy": false
+   },
+   "b": {
+    "slug": "sųdba-n",
+    "value": "sudba",
+    "stem": "sųdb",
+    "legacy": true
+   },
+   "ruA": "судьба",
+   "ruB": "Судьба",
+   "decision": "merge",
+   "source": "sųdba-n",
+   "target": "sudba-NOUN",
+   "legacySlugs": [
+    "sųdba-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "gospod-NOUN~gospod-n",
+   "maxTokens": 56,
+   "groups": 0,
+   "forms": "gospod, gospodi, gospodži",
+   "class": "",
+   "a": {
+    "slug": "gospod-NOUN",
+    "value": "gospod",
+    "stem": "gospoď",
+    "legacy": false
+   },
+   "b": {
+    "slug": "gospod-n",
+    "value": "gospod",
+    "stem": "gospod",
+    "legacy": true
+   },
+   "ruA": "господин, владыка, повелитель",
+   "ruB": "Господь",
+   "decision": "merge",
+   "source": "gospod-n",
+   "target": "gospod-NOUN",
+   "legacySlugs": [
+    "gospod-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "petdeset-NUM~pętdesęt-num",
+   "maxTokens": 54,
+   "groups": 0,
+   "forms": "petdeset, pęťdesęť, petdeseti",
+   "class": "",
+   "a": {
+    "slug": "petdeset-NUM",
+    "value": "petdeset",
+    "stem": "pęťdesęt",
+    "legacy": false
+   },
+   "b": {
+    "slug": "pętdesęt-num",
+    "value": "petdeset",
+    "stem": "pętdesęt",
+    "legacy": true
+   },
+   "ruA": "пятьдесят",
+   "ruB": "пятдесят",
+   "decision": "merge",
+   "source": "pętdesęt-num",
+   "target": "petdeset-NUM",
+   "legacySlugs": [
+    "pętdesęt-num"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "tvorec-NOUN~tvorec-n",
+   "maxTokens": 54,
+   "groups": 0,
+   "forms": "tvorec, tvorecь",
+   "class": "",
+   "a": {
+    "slug": "tvorec-NOUN",
+    "value": "tvorec",
+    "stem": "tvorėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "tvorec-n",
+    "value": "tvorec",
+    "stem": "tvorec",
+    "legacy": true
+   },
+   "ruA": "создатель, творец",
+   "ruB": "Автор",
+   "decision": "merge",
+   "source": "tvorec-n",
+   "target": "tvorec-NOUN",
+   "legacySlugs": [
+    "tvorec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "predsednik-NOUN~predsědnik-n",
+   "maxTokens": 50,
+   "groups": 0,
+   "forms": "prědsědnik, prědsědnikom, predsednika",
+   "class": "",
+   "a": {
+    "slug": "predsednik-NOUN",
+    "value": "predsednik",
+    "stem": "prědsědnik",
+    "legacy": false
+   },
+   "b": {
+    "slug": "predsědnik-n",
+    "value": "predsednik",
+    "stem": "predsědnik",
+    "legacy": true
+   },
+   "ruA": "председатель",
+   "ruB": "Президент",
+   "decision": "merge",
+   "source": "predsědnik-n",
+   "target": "predsednik-NOUN",
+   "legacySlugs": [
+    "predsědnik-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "gospodar-NOUN~gospodar-n",
+   "maxTokens": 42,
+   "groups": 0,
+   "forms": "gospodar, gospodara, gospodari",
+   "class": "",
+   "a": {
+    "slug": "gospodar-NOUN",
+    "value": "gospodar",
+    "stem": "gospodaŕ",
+    "legacy": false
+   },
+   "b": {
+    "slug": "gospodar-n",
+    "value": "gospodar",
+    "stem": "gospodar",
+    "legacy": true
+   },
+   "ruA": "хозяин, домохозяин; землевладелец",
+   "ruB": "Господин; Эконом",
+   "decision": "merge",
+   "source": "gospodar-n",
+   "target": "gospodar-NOUN",
+   "legacySlugs": [
+    "gospodar-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vedati-v~vědati-v",
+   "maxTokens": 38,
+   "groups": 0,
+   "forms": "věda, vědaju, vědati",
+   "class": "",
+   "a": {
+    "slug": "vedati-v",
+    "value": "vedati",
+    "stem": "veda",
+    "legacy": true
+   },
+   "b": {
+    "slug": "vědati-v",
+    "value": "vedati",
+    "stem": "věda",
+    "legacy": true
+   },
+   "ruA": "Вести",
+   "ruB": "Ведать; Знать",
+   "decision": "merge",
+   "source": "vědati-v",
+   "target": "vedati-v",
+   "legacySlugs": [
+    "vedati-v",
+    "vědati-v"
+   ],
+   "notes": "- граммема и диакритика неверные в обоих, но слова оба существуют",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "trn-NOUN~trn-n",
+   "maxTokens": 32,
+   "groups": 0,
+   "forms": "trny, trnami, trna",
+   "class": "",
+   "a": {
+    "slug": "trn-NOUN",
+    "value": "trn",
+    "stem": "tŕn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "trn-n",
+    "value": "trn",
+    "stem": "trn",
+    "legacy": true
+   },
+   "ruA": "шип, колючка",
+   "ruB": "Тёрн",
+   "decision": "merge",
+   "source": "trn-n",
+   "target": "trn-NOUN",
+   "legacySlugs": [
+    "trn-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "zlocinec-NOUN~zločinec-n",
+   "maxTokens": 30,
+   "groups": 0,
+   "forms": "zločinèc, zločinec",
+   "class": "",
+   "a": {
+    "slug": "zlocinec-NOUN",
+    "value": "zlocinec",
+    "stem": "zločinėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "zločinec-n",
+    "value": "zlocinec",
+    "stem": "zločinec",
+    "legacy": true
+   },
+   "ruA": "преступник",
+   "ruB": "Преступник; Злодей",
+   "decision": "merge",
+   "source": "zločinec-n",
+   "target": "zlocinec-NOUN",
+   "legacySlugs": [
+    "zločinec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "recnik-NOUN~rečnik-n",
+   "maxTokens": 26,
+   "groups": 0,
+   "forms": "rěčnik, rečnik, rěčniku",
+   "class": "",
+   "a": {
+    "slug": "recnik-NOUN",
+    "value": "recnik",
+    "stem": "rěčnik",
+    "legacy": false
+   },
+   "b": {
+    "slug": "rečnik-n",
+    "value": "recnik",
+    "stem": "rečnik",
+    "legacy": true
+   },
+   "ruA": "словарь",
+   "ruB": "Лексика; Разговорник",
+   "decision": "merge",
+   "source": "rečnik-n",
+   "target": "recnik-NOUN",
+   "legacySlugs": [
+    "rečnik-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "cesarstvo-NOUN~cěsarstvo-n",
+   "maxTokens": 23,
+   "groups": 0,
+   "forms": "cěsarstva, cěsarstvo, cěsarstvu",
+   "class": "",
+   "a": {
+    "slug": "cesarstvo-NOUN",
+    "value": "cesarstvo",
+    "stem": "cěsaŕstv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "cěsarstvo-n",
+    "value": "cesarstvo",
+    "stem": "cěsarstv",
+    "legacy": true
+   },
+   "ruA": "империя, цесарство, царство",
+   "ruB": "Царство",
+   "decision": "merge",
+   "source": "cěsarstvo-n",
+   "target": "cesarstvo-NOUN",
+   "legacySlugs": [
+    "cěsarstvo-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "tegnuti-VERB~tęgnuti-v",
+   "maxTokens": 21,
+   "groups": 0,
+   "forms": "tegnuti, tegnul, tegne",
+   "class": "",
+   "a": {
+    "slug": "tegnuti-VERB",
+    "value": "tegnuti",
+    "stem": "tęgnų",
+    "legacy": false
+   },
+   "b": {
+    "slug": "tęgnuti-v",
+    "value": "tegnuti",
+    "stem": "tęgnu",
+    "legacy": true
+   },
+   "ruA": "тянуть, тащить, влечь",
+   "ruB": "Тащить",
+   "decision": "merge",
+   "source": "tęgnuti-v",
+   "target": "tegnuti-VERB",
+   "legacySlugs": [
+    "tęgnuti-v"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "rybar-NOUN~rybar-n",
+   "maxTokens": 17,
+   "groups": 0,
+   "forms": "rybar, rybara, rybaru",
+   "class": "",
+   "a": {
+    "slug": "rybar-NOUN",
+    "value": "rybar",
+    "stem": "rybaŕ",
+    "legacy": false
+   },
+   "b": {
+    "slug": "rybar-n",
+    "value": "rybar",
+    "stem": "rybar",
+    "legacy": true
+   },
+   "ruA": "рыболов, рыбак",
+   "ruB": "Рыбарь",
+   "decision": "merge",
+   "source": "rybar-n",
+   "target": "rybar-NOUN",
+   "legacySlugs": [
+    "rybar-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "drugar-NOUN~drugar-n",
+   "maxTokens": 15,
+   "groups": 0,
+   "forms": "drugar, drugari, drugaru",
+   "class": "",
+   "a": {
+    "slug": "drugar-NOUN",
+    "value": "drugar",
+    "stem": "drugaŕ",
+    "legacy": false
+   },
+   "b": {
+    "slug": "drugar-n",
+    "value": "drugar",
+    "stem": "drugar",
+    "legacy": true
+   },
+   "ruA": "товарищ",
+   "ruB": "Знакомый",
+   "decision": "merge",
+   "source": "drugar-n",
+   "target": "drugar-NOUN",
+   "legacySlugs": [
+    "drugar-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "prevoz-NOUN~prevoz-n",
+   "maxTokens": 13,
+   "groups": 0,
+   "forms": "prěvoza, prěvoz, prevožu",
+   "class": "",
+   "a": {
+    "slug": "prevoz-NOUN",
+    "value": "prevoz",
+    "stem": "prěvoz",
+    "legacy": false
+   },
+   "b": {
+    "slug": "prevoz-n",
+    "value": "prevoz",
+    "stem": "prevoz",
+    "legacy": true
+   },
+   "ruA": "перевозка, транспортировка; паром, челнок, трансфер",
+   "ruB": "Перевоз",
+   "decision": "merge",
+   "source": "prevoz-n",
+   "target": "prevoz-NOUN",
+   "legacySlugs": [
+    "prevoz-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "dobrost-NOUN~dobrostj-n",
+   "maxTokens": 12,
+   "groups": 0,
+   "forms": "dobrosti, dobrost, dobrosť",
+   "class": "",
+   "a": {
+    "slug": "dobrost-NOUN",
+    "value": "dobrost",
+    "stem": "dobrosť",
+    "legacy": false
+   },
+   "b": {
+    "slug": "dobrostj-n",
+    "value": "dobrost",
+    "stem": "dobrost",
+    "legacy": true
+   },
+   "ruA": "добро, благость",
+   "ruB": "Добро",
+   "decision": "merge",
+   "source": "dobrostj-n",
+   "target": "dobrost-NOUN",
+   "legacySlugs": [
+    "dobrostj-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "semejstvo-NOUN~sěmejstvo-n",
+   "maxTokens": 12,
+   "groups": 0,
+   "forms": "sěmejstvo, sěmejstva, semejstvo",
+   "class": "",
+   "a": {
+    "slug": "semejstvo-NOUN",
+    "value": "semejstvo",
+    "stem": "sěmėjstv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "sěmejstvo-n",
+    "value": "semejstvo",
+    "stem": "sěmejstv",
+    "legacy": true
+   },
+   "ruA": "семейство, домочадцы",
+   "ruB": "Семья",
+   "decision": "merge",
+   "source": "sěmejstvo-n",
+   "target": "semejstvo-NOUN",
+   "legacySlugs": [
+    "sěmejstvo-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "zlocinstvo-NOUN~zločinstvo-n",
+   "maxTokens": 12,
+   "groups": 0,
+   "forms": "zločinstva, zločinstvo, zločinstv",
+   "class": "",
+   "a": {
+    "slug": "zlocinstvo-NOUN",
+    "value": "zlocinstvo",
+    "stem": "zločiństv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "zločinstvo-n",
+    "value": "zlocinstvo",
+    "stem": "zločinstv",
+    "legacy": true
+   },
+   "ruA": "преступление",
+   "ruB": "Преступность; Злодейство",
+   "decision": "merge",
+   "source": "zločinstvo-n",
+   "target": "zlocinstvo-NOUN",
+   "legacySlugs": [
+    "zločinstvo-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "lovec-NOUN~lovec-n",
+   "maxTokens": 11,
+   "groups": 0,
+   "forms": "lovec, loveč",
+   "class": "",
+   "a": {
+    "slug": "lovec-NOUN",
+    "value": "lovec",
+    "stem": "lovėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "lovec-n",
+    "value": "lovec",
+    "stem": "lovec",
+    "legacy": true
+   },
+   "ruA": "слон (шахматы); охотник",
+   "ruB": "Ловец",
+   "decision": "merge",
+   "source": "lovec-n",
+   "target": "lovec-NOUN",
+   "legacySlugs": [
+    "lovec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vsemir-NOUN~vsěmir-n",
+   "maxTokens": 11,
+   "groups": 0,
+   "forms": "vsemira, vsemir, vsemiru",
+   "class": "",
+   "a": {
+    "slug": "vsemir-NOUN",
+    "value": "vsemir",
+    "stem": "vsemir",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vsěmir-n",
+    "value": "vsemir",
+    "stem": "vsěmir",
+    "legacy": true
+   },
+   "ruA": "вселенная, мир",
+   "ruB": "Космос",
+   "decision": "merge",
+   "source": "vsěmir-n",
+   "target": "vsemir-NOUN",
+   "legacySlugs": [
+    "vsěmir-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "skaredny-ADJ~skarędny-adj",
+   "maxTokens": 10,
+   "groups": 0,
+   "forms": "skaredno, skaredny, skaredni",
+   "class": "",
+   "a": {
+    "slug": "skaredny-ADJ",
+    "value": "skaredny",
+    "stem": "skaredn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "skarędny-adj",
+    "value": "skaredny",
+    "stem": "skarędn",
+    "legacy": true
+   },
+   "ruA": "безобразный, уродливый, гадкий, отвратительный",
+   "ruB": "скаредный; мерзкий",
+   "decision": "merge",
+   "source": "skarędny-adj",
+   "target": "skaredny-ADJ",
+   "legacySlugs": [
+    "skarędny-adj"
+   ],
+   "notes": "(но stem верный в A - skarędn, там юс)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "gradonacelnik-NOUN~grådonačelnik-n",
+   "maxTokens": 9,
+   "groups": 0,
+   "forms": "gradonačelnik, gradonačelnika, gradonačelnikov",
+   "class": "",
+   "a": {
+    "slug": "gradonacelnik-NOUN",
+    "value": "gradonacelnik",
+    "stem": "grådonačęľnik",
+    "legacy": false
+   },
+   "b": {
+    "slug": "grådonačelnik-n",
+    "value": "gradonacelnik",
+    "stem": "grådonačelnik",
+    "legacy": true
+   },
+   "ruA": "мэр, градоначальник",
+   "ruB": "Мэр",
+   "decision": "merge",
+   "source": "grådonačelnik-n",
+   "target": "gradonacelnik-NOUN",
+   "legacySlugs": [
+    "grådonačelnik-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "oglasati-VERB~oglåšati-v",
+   "maxTokens": 8,
+   "groups": 0,
+   "forms": "oglašam, oglasi, oglašati",
+   "class": "",
+   "a": {
+    "slug": "oglasati-VERB",
+    "value": "oglasati",
+    "stem": "oglaša",
+    "legacy": false
+   },
+   "b": {
+    "slug": "oglåšati-v",
+    "value": "oglasati",
+    "stem": "oglåša",
+    "legacy": true
+   },
+   "ruA": "оглашать, объявлять",
+   "ruB": "Объявлять",
+   "decision": "merge",
+   "source": "oglåšati-v",
+   "target": "oglasati-VERB",
+   "legacySlugs": [
+    "oglåšati-v"
+   ],
+   "notes": "(но stem верный в A - oglåša)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "borec-NOUN~borec-n",
+   "maxTokens": 7,
+   "groups": 0,
+   "forms": "borec",
+   "class": "",
+   "a": {
+    "slug": "borec-NOUN",
+    "value": "borec",
+    "stem": "borėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "borec-n",
+    "value": "borec",
+    "stem": "borec",
+    "legacy": true
+   },
+   "ruA": "борец, боец",
+   "ruB": "Поборник",
+   "decision": "merge",
+   "source": "borec-n",
+   "target": "borec-NOUN",
+   "legacySlugs": [
+    "borec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mahnuti-VERB~mahnuti-v",
+   "maxTokens": 7,
+   "groups": 0,
+   "forms": "mahnul, mahnula, mahnuvši",
+   "class": "",
+   "a": {
+    "slug": "mahnuti-VERB",
+    "value": "mahnuti",
+    "stem": "mahnų",
+    "legacy": false
+   },
+   "b": {
+    "slug": "mahnuti-v",
+    "value": "mahnuti",
+    "stem": "mahnu",
+    "legacy": true
+   },
+   "ruA": "махнуть",
+   "ruB": "изъять",
+   "decision": "merge",
+   "source": "mahnuti-v",
+   "target": "mahnuti-VERB",
+   "legacySlugs": [
+    "mahnuti-v"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "plen-NOUN~plen-n",
+   "maxTokens": 7,
+   "groups": 0,
+   "forms": "plen, plěn, plena",
+   "class": "",
+   "a": {
+    "slug": "plen-NOUN",
+    "value": "plen",
+    "stem": "plěn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "plen-n",
+    "value": "plen",
+    "stem": "plen",
+    "legacy": true
+   },
+   "ruA": "добыча, трофей",
+   "ruB": "Плен",
+   "decision": "merge",
+   "source": "plen-n",
+   "target": "plen-NOUN",
+   "legacySlugs": [
+    "plen-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "secenj-NOUN~sěčenj-n",
+   "maxTokens": 6,
+   "groups": 0,
+   "forms": "sěčenj",
+   "class": "",
+   "a": {
+    "slug": "secenj-NOUN",
+    "value": "secenj",
+    "stem": "sěčėn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "sěčenj-n",
+    "value": "secenj",
+    "stem": "sěčen",
+    "legacy": true
+   },
+   "ruA": "январь",
+   "ruB": "Февраль",
+   "decision": "merge",
+   "source": "sěčenj-n",
+   "target": "secenj-NOUN",
+   "legacySlugs": [
+    "sěčenj-n"
+   ],
+   "notes": "(но перевод из второго забираем)",
+   "flags": {
+    "translationsFromOther": true,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "krab-NOUN~kråb-n",
+   "maxTokens": 5,
+   "groups": 0,
+   "forms": "kraba, krabi, krab",
+   "class": "",
+   "a": {
+    "slug": "krab-NOUN",
+    "value": "krab",
+    "stem": "krab",
+    "legacy": false
+   },
+   "b": {
+    "slug": "kråb-n",
+    "value": "krab",
+    "stem": "kråb",
+    "legacy": true
+   },
+   "ruA": "краб; краб",
+   "ruB": "Короб",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "kråb-n"
+   ],
+   "notes": "(диакритика во втором)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "gusljar-NOUN~gusljar-n",
+   "maxTokens": 4,
+   "groups": 0,
+   "forms": "gusljar",
+   "class": "",
+   "a": {
+    "slug": "gusljar-NOUN",
+    "value": "gusljar",
+    "stem": "gųsljaŕ",
+    "legacy": false
+   },
+   "b": {
+    "slug": "gusljar-n",
+    "value": "gusljar",
+    "stem": "gusljar",
+    "legacy": true
+   },
+   "ruA": "скрипач",
+   "ruB": "Гусляр",
+   "decision": "merge",
+   "source": "gusljar-n",
+   "target": "gusljar-NOUN",
+   "legacySlugs": [
+    "gusljar-n"
+   ],
+   "notes": "(перевод из второго забираем)",
+   "flags": {
+    "translationsFromOther": true,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "neznacny-ADJ~něznačny-adj",
+   "maxTokens": 4,
+   "groups": 0,
+   "forms": "neznačna, neznačno, neznačne",
+   "class": "",
+   "a": {
+    "slug": "neznacny-ADJ",
+    "value": "neznacny",
+    "stem": "neznačn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "něznačny-adj",
+    "value": "neznacny",
+    "stem": "něznačn",
+    "legacy": true
+   },
+   "ruA": "незначительный, несущественный, ничтожный",
+   "ruB": "неопределённый",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "něznačny-adj"
+   ],
+   "notes": "(диакритика и граммема во втором)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "crevo-NOUN~črevo-n",
+   "maxTokens": 4,
+   "groups": 0,
+   "forms": "črěvu, črěva, črevo",
+   "class": "",
+   "a": {
+    "slug": "crevo-NOUN",
+    "value": "crevo",
+    "stem": "črěv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "črevo-n",
+    "value": "crevo",
+    "stem": "črev",
+    "legacy": true
+   },
+   "ruA": "кишка, брюхо",
+   "ruB": "Живот",
+   "decision": "merge",
+   "source": "črevo-n",
+   "target": "crevo-NOUN",
+   "legacySlugs": [
+    "črevo-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mladenec-NOUN~mlådenec-n",
+   "maxTokens": 3,
+   "groups": 0,
+   "forms": "mladenec",
+   "class": "",
+   "a": {
+    "slug": "mladenec-NOUN",
+    "value": "mladenec",
+    "stem": "mlådenėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "mlådenec-n",
+    "value": "mladenec",
+    "stem": "mlådenec",
+    "legacy": true
+   },
+   "ruA": "подросток",
+   "ruB": "Младенец",
+   "decision": "merge",
+   "source": "mlådenec-n",
+   "target": "mladenec-NOUN",
+   "legacySlugs": [
+    "mlådenec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "palec-NOUN~palec-n",
+   "maxTokens": 3,
+   "groups": 0,
+   "forms": "palec",
+   "class": "",
+   "a": {
+    "slug": "palec-NOUN",
+    "value": "palec",
+    "stem": "palėc",
+    "legacy": false
+   },
+   "b": {
+    "slug": "palec-n",
+    "value": "palec",
+    "stem": "palec",
+    "legacy": true
+   },
+   "ruA": "дюйм",
+   "ruB": "Палец",
+   "decision": "merge",
+   "source": "palec-n",
+   "target": "palec-NOUN",
+   "legacySlugs": [
+    "palec-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "creda-NOUN~čreda-n",
+   "maxTokens": 2,
+   "groups": 0,
+   "forms": "črěda, čreda",
+   "class": "",
+   "a": {
+    "slug": "creda-NOUN",
+    "value": "creda",
+    "stem": "črěd",
+    "legacy": false
+   },
+   "b": {
+    "slug": "čreda-n",
+    "value": "creda",
+    "stem": "čred",
+    "legacy": true
+   },
+   "ruA": "стадо, гурт, вереница (животных)",
+   "ruB": "Чреда",
+   "decision": "merge",
+   "source": "čreda-n",
+   "target": "creda-NOUN",
+   "legacySlugs": [
+    "čreda-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "nede-adv~něde-adv",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "nedě",
+   "class": "",
+   "a": {
+    "slug": "nede-adv",
+    "value": "nede",
+    "stem": "ned",
+    "legacy": true
+   },
+   "b": {
+    "slug": "něde-adv",
+    "value": "nede",
+    "stem": "něd",
+    "legacy": true
+   },
+   "ruA": "негде",
+   "ruB": "Где-то; Где-либо; Где-нибудь",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "nede-adv",
+    "něde-adv"
+   ],
+   "notes": "(диакритика и граммемы)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "zrebe-NOUN~žrebę-n",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "žrěbe, žrěbę",
+   "class": "",
+   "a": {
+    "slug": "zrebe-NOUN",
+    "value": "zrebe",
+    "stem": "žrěben",
+    "legacy": false
+   },
+   "b": {
+    "slug": "žrebę-n",
+    "value": "zrebe",
+    "stem": "žreben",
+    "legacy": true
+   },
+   "ruA": "жеребёнок",
+   "ruB": "Жеребенок",
+   "decision": "merge",
+   "source": "žrebę-n",
+   "target": "zrebe-NOUN",
+   "legacySlugs": [
+    "žrebę-n"
+   ],
+   "notes": "(stem проверь, чтоб корректно склонялось. Вообще žrěbent праславянская основа, но возможно stem должен быть žrěb)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "celo-NOUN~cělo-n",
+   "maxTokens": 793,
+   "groups": 0,
+   "forms": "cěly, cělo, cělom",
+   "class": "",
+   "a": {
+    "slug": "celo-NOUN",
+    "value": "celo",
+    "stem": "čel",
+    "legacy": false
+   },
+   "b": {
+    "slug": "cělo-n",
+    "value": "celo",
+    "stem": "cěl",
+    "legacy": true
+   },
+   "ruA": "лоб; лоб; передняя часть, фасад",
+   "ruB": "Целое",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "cělo-n"
+   ],
+   "notes": ", диакритика и граммема во втором",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "buducnost-NOUN~bųdučnostj-n",
+   "maxTokens": 417,
+   "groups": 0,
+   "forms": "budučnosti, budučnost, bųdųćnosti",
+   "class": "",
+   "a": {
+    "slug": "buducnost-NOUN",
+    "value": "buducnost",
+    "stem": "bųdųćnosť",
+    "legacy": false
+   },
+   "b": {
+    "slug": "bųdučnostj-n",
+    "value": "buducnost",
+    "stem": "bųdučnost",
+    "legacy": true
+   },
+   "ruA": "будущее",
+   "ruB": "Будущее; Будущность",
+   "decision": "merge",
+   "source": "bųdučnostj-n",
+   "target": "buducnost-NOUN",
+   "legacySlugs": [
+    "bųdučnostj-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mraz-NOUN~mråž-n",
+   "maxTokens": 74,
+   "groups": 0,
+   "forms": "mråza, mråz, mraz",
+   "class": "",
+   "a": {
+    "slug": "mraz-NOUN",
+    "value": "mraz",
+    "stem": "mråz",
+    "legacy": false
+   },
+   "b": {
+    "slug": "mråž-n",
+    "value": "mraz",
+    "stem": "mråž",
+    "legacy": true
+   },
+   "ruA": "мороз",
+   "ruB": "Морж",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "mråž-n"
+   ],
+   "notes": "(диакритика и граммема во втором)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "plaz-NOUN~plåz-n",
+   "maxTokens": 39,
+   "groups": 0,
+   "forms": "plaži, plaž",
+   "class": "",
+   "a": {
+    "slug": "plaz-NOUN",
+    "value": "plaz",
+    "stem": "plaž",
+    "legacy": false
+   },
+   "b": {
+    "slug": "plåz-n",
+    "value": "plaz",
+    "stem": "plåz",
+    "legacy": true
+   },
+   "ruA": "пляж",
+   "ruB": "Полоз",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "plåz-n"
+   ],
+   "notes": "(диакритика и граммема во втором)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "lezati-VERB~lězati-v",
+   "maxTokens": 36,
+   "groups": 0,
+   "forms": "ležati, ležal, ležala",
+   "class": "",
+   "a": {
+    "slug": "lezati-VERB",
+    "value": "lezati",
+    "stem": "leža",
+    "legacy": false
+   },
+   "b": {
+    "slug": "lězati-v",
+    "value": "lezati",
+    "stem": "lěza",
+    "legacy": true
+   },
+   "ruA": "лежать; лежать",
+   "ruB": "лезть",
+   "decision": "unset",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "lězati-v"
+   ],
+   "notes": "проверить ять во втором, гнезда оба сохраняем (диакритика и граммема во втором)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": true,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "breza-NOUN~breža-n",
+   "maxTokens": 33,
+   "groups": 0,
+   "forms": "brěza, brězy, brěz",
+   "class": "",
+   "a": {
+    "slug": "breza-NOUN",
+    "value": "breza",
+    "stem": "brěz",
+    "legacy": false
+   },
+   "b": {
+    "slug": "breža-n",
+    "value": "breza",
+    "stem": "brež",
+    "legacy": true
+   },
+   "ruA": "берёза",
+   "ruB": "Забота",
+   "decision": "ignore",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "breža-n"
+   ],
+   "notes": "игнор, ниже разбираются оба пункта по своим гнездам",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "lis-n~liš-n",
+   "maxTokens": 14,
+   "groups": 0,
+   "forms": "lisa, liš, lis",
+   "class": "",
+   "a": {
+    "slug": "lis-n",
+    "value": "lis",
+    "stem": "lis",
+    "legacy": true
+   },
+   "b": {
+    "slug": "liš-n",
+    "value": "lis",
+    "stem": "liš",
+    "legacy": true
+   },
+   "ruA": "Лис",
+   "ruB": "Лишь",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "lis-n",
+    "liš-n"
+   ],
+   "notes": "(во втором диаритика, в обоих граммемы неверные)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "tesati-VERB~těšati-v",
+   "maxTokens": 9,
+   "groups": 0,
+   "forms": "tesano, tesana, tesane",
+   "class": "",
+   "a": {
+    "slug": "tesati-VERB",
+    "value": "tesati",
+    "stem": "tesa",
+    "legacy": false
+   },
+   "b": {
+    "slug": "těšati-v",
+    "value": "tesati",
+    "stem": "těša",
+    "legacy": true
+   },
+   "ruA": "тесать, вытёсывать",
+   "ruB": "тешить",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "těšati-v"
+   ],
+   "notes": "(во втором диакритика и граммема остались неверными)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "zelo-NOUN~zelo-n",
+   "maxTokens": 6,
+   "groups": 0,
+   "forms": "zelo, zele, žela",
+   "class": "",
+   "a": {
+    "slug": "zelo-NOUN",
+    "value": "zelo",
+    "stem": "žęl",
+    "legacy": false
+   },
+   "b": {
+    "slug": "zelo-n",
+    "value": "zelo",
+    "stem": "zel",
+    "legacy": true
+   },
+   "ruA": "жало",
+   "ruB": "Капуста",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "zelo-n"
+   ],
+   "notes": "(граммема во втором, первое скорее stem должен быть с dl - žędl)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "sev-NOUN~sěv-n",
+   "maxTokens": 5,
+   "groups": 0,
+   "forms": "sěv, šev, sev",
+   "class": "",
+   "a": {
+    "slug": "sev-NOUN",
+    "value": "sev",
+    "stem": "šėv",
+    "legacy": false
+   },
+   "b": {
+    "slug": "sěv-n",
+    "value": "sev",
+    "stem": "sěv",
+    "legacy": true
+   },
+   "ruA": "шов",
+   "ruB": "Сев",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "sěv-n"
+   ],
+   "notes": "(но осталась диакритика во втором и граммема неверная)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "zebra-NOUN~žębra-n",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "zebra, zebry, żebro",
+   "class": "",
+   "a": {
+    "slug": "zebra-NOUN",
+    "value": "zebra",
+    "stem": "zebr",
+    "legacy": false
+   },
+   "b": {
+    "slug": "žębra-n",
+    "value": "zebra",
+    "stem": "žębr",
+    "legacy": true
+   },
+   "ruA": "зебра",
+   "ruB": "Жабра",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "žębra-n"
+   ],
+   "notes": "(но во втором диакритика осталась в value)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "capati-v~čapati-v",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "čapajeve",
+   "class": "",
+   "a": {
+    "slug": "capati-v",
+    "value": "capati",
+    "stem": "capa",
+    "legacy": true
+   },
+   "b": {
+    "slug": "čapati-v",
+    "value": "capati",
+    "stem": "čapa",
+    "legacy": true
+   },
+   "ruA": "Хватать",
+   "ruB": "хватать",
+   "decision": "merge",
+   "source": "čapati-v",
+   "target": "capati-v",
+   "legacySlugs": [
+    "capati-v",
+    "čapati-v"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "dostatočno-adv~dostatȯcno-ADV",
+   "maxTokens": 742,
+   "groups": 0,
+   "forms": "dostatočno, dostatòčno, dostatȯčno",
+   "class": "",
+   "a": {
+    "slug": "dostatočno-adv",
+    "value": "dostatocno",
+    "stem": "dostatočn",
+    "legacy": true
+   },
+   "b": {
+    "slug": "dostatȯcno-ADV",
+    "value": "dostatȯcno",
+    "stem": "dostatȯčn",
+    "legacy": false
+   },
+   "ruA": "Достаточно",
+   "ruB": "достаточно, довольно",
+   "decision": "merge",
+   "source": "dostatȯcno-ADV",
+   "target": "dostatočno-adv",
+   "legacySlugs": [
+    "dostatočno-adv"
+   ],
+   "notes": "(но stem верный в B)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": true,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vozhod-n~vȯzhod-NOUN",
+   "maxTokens": 135,
+   "groups": 0,
+   "forms": "vozhodu, vozhoda, vozhod",
+   "class": "",
+   "a": {
+    "slug": "vozhod-n",
+    "value": "vozhod",
+    "stem": "vozhod",
+    "legacy": true
+   },
+   "b": {
+    "slug": "vȯzhod-NOUN",
+    "value": "vȯzhod",
+    "stem": "vȯzhod",
+    "legacy": false
+   },
+   "ruA": "Восход",
+   "ruB": "восток",
+   "decision": "unset",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "vozhod-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "sovět-n~sȯvet-NOUN",
+   "maxTokens": 119,
+   "groups": 0,
+   "forms": "sovět, sověta, sověty",
+   "class": "",
+   "a": {
+    "slug": "sovět-n",
+    "value": "sovet",
+    "stem": "sovět",
+    "legacy": true
+   },
+   "b": {
+    "slug": "sȯvet-NOUN",
+    "value": "sȯvet",
+    "stem": "sȯvět",
+    "legacy": false
+   },
+   "ruA": "Совет",
+   "ruB": "совет, подсказка",
+   "decision": "merge",
+   "source": "sovět-n",
+   "target": "sȯvet-NOUN",
+   "legacySlugs": [
+    "sovět-n"
+   ],
+   "notes": "(диакритика осталась)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "kol-NOUN~kȯl-NOUN",
+   "maxTokens": 31,
+   "groups": 0,
+   "forms": "kol, kół",
+   "class": "",
+   "a": {
+    "slug": "kol-NOUN",
+    "value": "kol",
+    "stem": "kol",
+    "legacy": false
+   },
+   "b": {
+    "slug": "kȯl-NOUN",
+    "value": "kȯl",
+    "stem": "kȯl",
+    "legacy": false
+   },
+   "ruA": "кол; кол",
+   "ruB": "клык",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "dolgotrajny-adj~dȯlgotrajny-ADJ",
+   "maxTokens": 22,
+   "groups": 0,
+   "forms": "dolgotrajny, dolgotrajne, dolgotrajnoj",
+   "class": "",
+   "a": {
+    "slug": "dolgotrajny-adj",
+    "value": "dolgotrajny",
+    "stem": "dolgotrajn",
+    "legacy": true
+   },
+   "b": {
+    "slug": "dȯlgotrajny-ADJ",
+    "value": "dȯlgotrajny",
+    "stem": "dȯlgotrajn",
+    "legacy": false
+   },
+   "ruA": "продолжительный",
+   "ruB": "долгоиграющий, долго длящийся",
+   "decision": "merge",
+   "source": "dolgotrajny-adj",
+   "target": "dȯlgotrajny-ADJ",
+   "legacySlugs": [
+    "dolgotrajny-adj"
+   ],
+   "notes": "(диакритика осталась)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "plot-NOUN~plȯt-NOUN",
+   "maxTokens": 17,
+   "groups": 0,
+   "forms": "plot, płot, plotь",
+   "class": "",
+   "a": {
+    "slug": "plot-NOUN",
+    "value": "plot",
+    "stem": "plot",
+    "legacy": false
+   },
+   "b": {
+    "slug": "plȯt-NOUN",
+    "value": "plȯt",
+    "stem": "plȯť",
+    "legacy": false
+   },
+   "ruA": "забор, ограда, изгородь",
+   "ruB": "цвет лица; плоть, кожа",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "(но осталась во втором диакритика)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "volga-NOUN~vȯlga-NOUN",
+   "maxTokens": 13,
+   "groups": 0,
+   "forms": "volgy, volga, volgi",
+   "class": "",
+   "a": {
+    "slug": "volga-NOUN",
+    "value": "volga",
+    "stem": "volg",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vȯlga-NOUN",
+    "value": "vȯlga",
+    "stem": "vȯlg",
+    "legacy": false
+   },
+   "ruA": "Волга; Волга",
+   "ruB": "иволга",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "(но осталась во втором диакритика)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vozvråtiti-v~vȯzvratiti-VERB",
+   "maxTokens": 13,
+   "groups": 0,
+   "forms": "vozvratil, vozvratiti, vozvratili",
+   "class": "",
+   "a": {
+    "slug": "vozvråtiti-v",
+    "value": "vozvratiti",
+    "stem": "vozvråti",
+    "legacy": true
+   },
+   "b": {
+    "slug": "vȯzvratiti-VERB",
+    "value": "vȯzvratiti",
+    "stem": "vȯzvråti",
+    "legacy": false
+   },
+   "ruA": "Вернуть",
+   "ruB": "возвратить, вернуть",
+   "decision": "merge",
+   "source": "vozvråtiti-v",
+   "target": "vȯzvratiti-VERB",
+   "legacySlugs": [
+    "vozvråtiti-v"
+   ],
+   "notes": "(Но диакритика осталась)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vozvråtny-adj~vȯzvratny-ADJ",
+   "maxTokens": 4,
+   "groups": 0,
+   "forms": "vozvratna, vozvratny, vozvratne",
+   "class": "",
+   "a": {
+    "slug": "vozvråtny-adj",
+    "value": "vozvratny",
+    "stem": "vozvråtn",
+    "legacy": true
+   },
+   "b": {
+    "slug": "vȯzvratny-ADJ",
+    "value": "vȯzvratny",
+    "stem": "vȯzvråtn",
+    "legacy": false
+   },
+   "ruA": "Возвратный",
+   "ruB": "повторный, повторяющийся",
+   "decision": "merge",
+   "source": "vozvråtny-adj",
+   "target": "vȯzvratny-ADJ",
+   "legacySlugs": [
+    "vozvråtny-adj"
+   ],
+   "notes": "(но диакритика осталась)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": true,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "ti-PRON~ty-PRON",
+   "maxTokens": 1603,
+   "groups": 0,
+   "forms": "ti, tí, tì",
+   "class": "",
+   "a": {
+    "slug": "ti-PRON",
+    "value": "ti",
+    "stem": "ti",
+    "legacy": false
+   },
+   "b": {
+    "slug": "ty-PRON",
+    "value": "ty",
+    "stem": "ty",
+    "legacy": false
+   },
+   "ruA": "тебе",
+   "ruB": "ты; ты",
+   "decision": "merge",
+   "source": "ti-PRON",
+   "target": "ty-PRON",
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "biti-VERB~byti-VERB",
+   "maxTokens": 551,
+   "groups": 0,
+   "forms": "bil, bih, bihmo",
+   "class": "",
+   "a": {
+    "slug": "biti-VERB",
+    "value": "biti",
+    "stem": "bi",
+    "legacy": false
+   },
+   "b": {
+    "slug": "byti-VERB",
+    "value": "byti",
+    "stem": "by",
+    "legacy": false
+   },
+   "ruA": "бить",
+   "ruB": "быть; быть, являться, иметься; существовать; есть; есть, существуют",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "viti-VERB~vyti-VERB",
+   "maxTokens": 470,
+   "groups": 0,
+   "forms": "više, vi, vih",
+   "class": "",
+   "a": {
+    "slug": "viti-VERB",
+    "value": "viti",
+    "stem": "vi",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vyti-VERB",
+    "value": "vyti",
+    "stem": "vy",
+    "legacy": false
+   },
+   "ruA": "вить, свивать, скручивать; оплетать, обвивать; вить (гнездо); покрывать, обвивать; вить, плести",
+   "ruB": "выть; выть, вопить",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "dira-NOUN~dyra-n",
+   "maxTokens": 4,
+   "groups": 0,
+   "forms": "dirah, dirami",
+   "class": "",
+   "a": {
+    "slug": "dira-NOUN",
+    "value": "dira",
+    "stem": "dir",
+    "legacy": false
+   },
+   "b": {
+    "slug": "dyra-n",
+    "value": "dyra",
+    "stem": "dyr",
+    "legacy": true
+   },
+   "ruA": "дыра, отверстие",
+   "ruB": "Дыра",
+   "decision": "merge",
+   "source": "dyra-n",
+   "target": "dira-NOUN",
+   "legacySlugs": [
+    "dyra-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mogila-n~mogyla-NOUN",
+   "maxTokens": 2,
+   "groups": 0,
+   "forms": "mogili",
+   "class": "",
+   "a": {
+    "slug": "mogila-n",
+    "value": "mogila",
+    "stem": "mogil",
+    "legacy": true
+   },
+   "b": {
+    "slug": "mogyla-NOUN",
+    "value": "mogyla",
+    "stem": "mogyl",
+    "legacy": false
+   },
+   "ruA": "Могила",
+   "ruB": "могила, захоронение",
+   "decision": "merge",
+   "source": "mogila-n",
+   "target": "mogyla-NOUN",
+   "legacySlugs": [
+    "mogila-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "nabiti-VERB~nabyti-VERB",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "nabi",
+   "class": "",
+   "a": {
+    "slug": "nabiti-VERB",
+    "value": "nabiti",
+    "stem": "nabi",
+    "legacy": false
+   },
+   "b": {
+    "slug": "nabyti-VERB",
+    "value": "nabyti",
+    "stem": "naby",
+    "legacy": false
+   },
+   "ruA": "набить, начинить, зарядить",
+   "ruB": "приобрести, завести",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "pribiti-VERB~pribyti-VERB",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "pribih, pribiše",
+   "class": "",
+   "a": {
+    "slug": "pribiti-VERB",
+    "value": "pribiti",
+    "stem": "pribi",
+    "legacy": false
+   },
+   "b": {
+    "slug": "pribyti-VERB",
+    "value": "pribyti",
+    "stem": "priby",
+    "legacy": false
+   },
+   "ruA": "прибить",
+   "ruB": "прибыть; прибыть",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "sliti-VERB~slyti-VERB",
+   "maxTokens": 1,
+   "groups": 0,
+   "forms": "slista",
+   "class": "",
+   "a": {
+    "slug": "sliti-VERB",
+    "value": "sliti",
+    "stem": "sli",
+    "legacy": false
+   },
+   "b": {
+    "slug": "slyti-VERB",
+    "value": "slyti",
+    "stem": "sly",
+    "legacy": false
+   },
+   "ruA": "слить, соединить, смешать",
+   "ruB": "слыть, быть известным",
+   "decision": "keep",
+   "source": null,
+   "target": null,
+   "legacySlugs": [],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "ci-CCONJ~či-conj",
+   "maxTokens": 4874,
+   "groups": 0,
+   "forms": "či, či, ci",
+   "class": "",
+   "a": {
+    "slug": "ci-CCONJ",
+    "value": "ci",
+    "stem": "či",
+    "legacy": false
+   },
+   "b": {
+    "slug": "či-conj",
+    "value": "ci",
+    "stem": "či",
+    "legacy": true
+   },
+   "ruA": "ли, или",
+   "ruB": "если",
+   "decision": "merge",
+   "source": "či-conj",
+   "target": "ci-CCONJ",
+   "legacySlugs": [
+    "či-conj"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "drugy-ADJ~drugy-adj",
+   "maxTokens": 2046,
+   "groups": 0,
+   "forms": "drugyh, druge, drugy",
+   "class": "",
+   "a": {
+    "slug": "drugy-ADJ",
+    "value": "drugy",
+    "stem": "drug",
+    "legacy": false
+   },
+   "b": {
+    "slug": "drugy-adj",
+    "value": "drugy",
+    "stem": "drug",
+    "legacy": true
+   },
+   "ruA": "другой, иной",
+   "ruB": "другой; второй",
+   "decision": "merge",
+   "source": "drugy-adj",
+   "target": "drugy-ADJ",
+   "legacySlugs": [
+    "drugy-adj"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "blizko-ADV~blizko-adv",
+   "maxTokens": 993,
+   "groups": 0,
+   "forms": "blizko, blízko, bližko",
+   "class": "",
+   "a": {
+    "slug": "blizko-ADV",
+    "value": "blizko",
+    "stem": "blizk",
+    "legacy": false
+   },
+   "b": {
+    "slug": "blizko-adv",
+    "value": "blizko",
+    "stem": "blizk",
+    "legacy": true
+   },
+   "ruA": "близко, рядом",
+   "ruB": "около",
+   "decision": "merge",
+   "source": "blizko-adv",
+   "target": "blizko-ADV",
+   "legacySlugs": [
+    "blizko-adv"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "ljuty-ADJ~ljuty-adj",
+   "maxTokens": 32,
+   "groups": 0,
+   "forms": "ljuty, ljutogo, ljuta",
+   "class": "",
+   "a": {
+    "slug": "ljuty-ADJ",
+    "value": "ljuty",
+    "stem": "ljut",
+    "legacy": false
+   },
+   "b": {
+    "slug": "ljuty-adj",
+    "value": "ljuty",
+    "stem": "ljut",
+    "legacy": true
+   },
+   "ruA": "лютый, жестокий, суровый",
+   "ruB": "крепкий",
+   "decision": "merge",
+   "source": "ljuty-adj",
+   "target": "ljuty-ADJ",
+   "legacySlugs": [
+    "ljuty-adj"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "devica-NOUN~děvica-n",
+   "maxTokens": 22,
+   "groups": 0,
+   "forms": "děvice, device, děvica",
+   "class": "",
+   "a": {
+    "slug": "devica-NOUN",
+    "value": "devica",
+    "stem": "děvic",
+    "legacy": false
+   },
+   "b": {
+    "slug": "děvica-n",
+    "value": "devica",
+    "stem": "děvic",
+    "legacy": true
+   },
+   "ruA": "девственница",
+   "ruB": "Девица",
+   "decision": "merge",
+   "source": "děvica-n",
+   "target": "devica-NOUN",
+   "legacySlugs": [
+    "děvica-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "opustiti-VERB~opustiti-v",
+   "maxTokens": 16,
+   "groups": 0,
+   "forms": "opustil, opustila, opustiti",
+   "class": "",
+   "a": {
+    "slug": "opustiti-VERB",
+    "value": "opustiti",
+    "stem": "opusti",
+    "legacy": false
+   },
+   "b": {
+    "slug": "opustiti-v",
+    "value": "opustiti",
+    "stem": "opusti",
+    "legacy": true
+   },
+   "ruA": "оставить, покинуть, бросить; опустить, наклонить; ослабить, разжать, отпустить",
+   "ruB": "забросить; закинуть",
+   "decision": "merge",
+   "source": "opustiti-v",
+   "target": "opustiti-VERB",
+   "legacySlugs": [
+    "opustiti-v"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vlakno-NOUN~vlåkno-n",
+   "maxTokens": 8,
+   "groups": 0,
+   "forms": "vlakna, vlaknom, vlakno",
+   "class": "",
+   "a": {
+    "slug": "vlakno-NOUN",
+    "value": "vlakno",
+    "stem": "vlåkn",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vlåkno-n",
+    "value": "vlakno",
+    "stem": "vlåkn",
+    "legacy": true
+   },
+   "ruA": "волокно",
+   "ruB": "Шпагат",
+   "decision": "merge",
+   "source": "vlåkno-n",
+   "target": "vlakno-NOUN",
+   "legacySlugs": [
+    "vlåkno-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "lepsi-ADJ~lěpšy-adj",
+   "maxTokens": 539,
+   "groups": 0,
+   "forms": "lěpše, lěpši, lěpša",
+   "class": "",
+   "a": {
+    "slug": "lepsi-ADJ",
+    "value": "lepsi",
+    "stem": "lěpš",
+    "legacy": false
+   },
+   "b": {
+    "slug": "lěpšy-adj",
+    "value": "lepsy",
+    "stem": "lěpš",
+    "legacy": true
+   },
+   "ruA": "лучший, более хороший",
+   "ruB": "лучший",
+   "decision": "merge",
+   "source": "lepsi-ADJ",
+   "target": "lěpšy-adj",
+   "legacySlugs": [
+    "lěpšy-adj"
+   ],
+   "notes": "(Но граммема в А)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "byvsi-ADJ~byvšy-adj",
+   "maxTokens": 87,
+   "groups": 0,
+   "forms": "byvši, byvšej, byvša",
+   "class": "",
+   "a": {
+    "slug": "byvsi-ADJ",
+    "value": "byvsi",
+    "stem": "byvš",
+    "legacy": false
+   },
+   "b": {
+    "slug": "byvšy-adj",
+    "value": "byvsy",
+    "stem": "byvš",
+    "legacy": true
+   },
+   "ruA": "бывший",
+   "ruB": "Бывший",
+   "decision": "merge",
+   "source": "byvsi-ADJ",
+   "target": "byvšy-adj",
+   "legacySlugs": [
+    "byvšy-adj"
+   ],
+   "notes": "(Но граммема в А)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "mladsi-ADJ~mlådšy-adj",
+   "maxTokens": 44,
+   "groups": 0,
+   "forms": "mladši, mladša, mladšego",
+   "class": "",
+   "a": {
+    "slug": "mladsi-ADJ",
+    "value": "mladsi",
+    "stem": "mlådš",
+    "legacy": false
+   },
+   "b": {
+    "slug": "mlådšy-adj",
+    "value": "mladsy",
+    "stem": "mlådš",
+    "legacy": true
+   },
+   "ruA": "младший",
+   "ruB": "младший",
+   "decision": "merge",
+   "source": "mladsi-ADJ",
+   "target": "mlådšy-adj",
+   "legacySlugs": [
+    "mlådšy-adj"
+   ],
+   "notes": "(Но граммема в А)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vyssi-ADJ~vysšy-adj",
+   "maxTokens": 37,
+   "groups": 0,
+   "forms": "vysši, vysše, vysšego",
+   "class": "",
+   "a": {
+    "slug": "vyssi-ADJ",
+    "value": "vyssi",
+    "stem": "vysš",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vysšy-adj",
+    "value": "vyssy",
+    "stem": "vysš",
+    "legacy": true
+   },
+   "ruA": "выше, более высокий",
+   "ruB": "Высшый; Высший",
+   "decision": "merge",
+   "source": "vyssi-ADJ",
+   "target": "vysšy-adj",
+   "legacySlugs": [
+    "vysšy-adj"
+   ],
+   "notes": "(Но граммема в А)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "nizsi-ADJ~nizšy-adj",
+   "maxTokens": 12,
+   "groups": 0,
+   "forms": "nizši, nizše, nizšej",
+   "class": "",
+   "a": {
+    "slug": "nizsi-ADJ",
+    "value": "nizsi",
+    "stem": "nizš",
+    "legacy": false
+   },
+   "b": {
+    "slug": "nizšy-adj",
+    "value": "nizsy",
+    "stem": "nizš",
+    "legacy": true
+   },
+   "ruA": "ниже, более низкий",
+   "ruB": "низший",
+   "decision": "merge",
+   "source": "nizsi-ADJ",
+   "target": "nizšy-adj",
+   "legacySlugs": [
+    "nizšy-adj"
+   ],
+   "notes": "(Но граммема в А)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vkupe-ADV~vkupe-adv",
+   "maxTokens": 46,
+   "groups": 0,
+   "forms": "vkupě, vkupe",
+   "class": "",
+   "a": {
+    "slug": "vkupe-ADV",
+    "value": "vkupe",
+    "stem": "vkupě",
+    "legacy": false
+   },
+   "b": {
+    "slug": "vkupe-adv",
+    "value": "vkupe",
+    "stem": "vkup",
+    "legacy": true
+   },
+   "ruA": "вместе",
+   "ruB": "вкупе",
+   "decision": "merge",
+   "source": "vkupe-adv",
+   "target": "vkupe-ADV",
+   "legacySlugs": [
+    "vkupe-adv"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "breza-NOUN~brjoza-n",
+   "maxTokens": 33,
+   "groups": 0,
+   "forms": "brěza",
+   "class": "",
+   "a": {
+    "slug": "breza-NOUN",
+    "value": "breza",
+    "stem": "brěz",
+    "legacy": false
+   },
+   "b": {
+    "slug": "brjoza-n",
+    "value": "breza",
+    "stem": "brjoz",
+    "legacy": true
+   },
+   "ruA": "берёза",
+   "ruB": "Берёза; Береза",
+   "decision": "merge",
+   "source": "brjoza-n",
+   "target": "breza-NOUN",
+   "legacySlugs": [
+    "brjoza-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "breža-n~brjoza-n",
+   "maxTokens": 33,
+   "groups": 0,
+   "forms": "brěza",
+   "class": "",
+   "a": {
+    "slug": "breža-n",
+    "value": "breza",
+    "stem": "brež",
+    "legacy": true
+   },
+   "b": {
+    "slug": "brjoza-n",
+    "value": "breza",
+    "stem": "brjoz",
+    "legacy": true
+   },
+   "ruA": "Забота",
+   "ruB": "Берёза; Береза",
+   "decision": "unset",
+   "source": null,
+   "target": null,
+   "legacySlugs": [
+    "breža-n",
+    "brjoza-n"
+   ],
+   "notes": "оставить только А (В сливается по предыдущему кейсу)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "vųtre-adv~vųtrě-adv",
+   "maxTokens": 20,
+   "groups": 0,
+   "forms": "vųtrě",
+   "class": "",
+   "a": {
+    "slug": "vųtre-adv",
+    "value": "vutre",
+    "stem": "vųtr",
+    "legacy": true
+   },
+   "b": {
+    "slug": "vųtrě-adv",
+    "value": "vutre",
+    "stem": "vųtrě",
+    "legacy": true
+   },
+   "ruA": "внутри",
+   "ruB": "Внутри",
+   "decision": "merge",
+   "source": "vųtre-adv",
+   "target": "vųtrě-adv",
+   "legacySlugs": [
+    "vųtre-adv",
+    "vųtrě-adv"
+   ],
+   "notes": "(но граммема неверная)",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": true,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  },
+  {
+   "key": "karate-NOUN~karaté-n",
+   "maxTokens": 19,
+   "groups": 0,
+   "forms": "karate",
+   "class": "",
+   "a": {
+    "slug": "karate-NOUN",
+    "value": "karate",
+    "stem": "karat",
+    "legacy": false
+   },
+   "b": {
+    "slug": "karaté-n",
+    "value": "karate",
+    "stem": "karaté",
+    "legacy": true
+   },
+   "ruA": "каратэ",
+   "ruB": "Карате",
+   "decision": "merge",
+   "source": "karaté-n",
+   "target": "karate-NOUN",
+   "legacySlugs": [
+    "karaté-n"
+   ],
+   "notes": "",
+   "flags": {
+    "translationsFromOther": false,
+    "stemAttention": false,
+    "valueDiacriticsNoted": false,
+    "grammemeNoted": false,
+    "jatNoted": false,
+    "differentWords": false
+   }
+  }
+ ]
+}
