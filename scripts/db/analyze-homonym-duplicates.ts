@@ -28,6 +28,7 @@ import { writeFileSync } from "fs"
 import path from "path"
 import { parseHomonymGroupKey } from "@/lib/corpus/homonymGroup"
 import { foldDiacritics } from "@/lib/corpus/tokenizer/foldDiacritics"
+import { expandSpellingVariants } from "@/lib/corpus/tokenizer/spellingVariants"
 
 const CORPUS_DB = process.env.CORPUS_SQLITE_DB || path.resolve(process.cwd(), "corpus.db")
 const DATA_DB = process.env.SQLITE_DB || path.resolve(process.cwd(), "interlex.db")
@@ -57,15 +58,33 @@ interface LexemeRow {
 
 interface FlaggedPair {
     /**
-     * legacy-lowercase-pos — один из слагов старого формата (POS строчными:
-     *   drugy-adj, pred-n, či-conj). Это ровно тот класс, что остался открытым
-     *   в docs/history/2026-09-15-duplicate-service-lexemes.md («529 more legacy
-     *   lowercase-POS lexemes … have not been reviewed»).
-     * spelling-variant — оба слага в новом формате, value совпадает после
-     *   свёртки диакритики, но различается как написано (треба/treba).
-     * identical — оба в новом формате и value совпадает буквально.
+     * Три уровня доверия — градация по тому, на что опирается совпадение:
+     *  identical-value — value совпадает буквально (регистр слага и POS),
+     *    т.е. это один и тот же формат записи дважды. Самый безопасный случай.
+     *  confirmed-variant — value отличаются только на пары, подтверждённые
+     *    мейнтейнером (u→ų, i→y, dž→đ; lib/corpus/tokenizer/spellingVariants.ts).
+     *  folded-only — совпадает лишь после полной свёртки диакритики. ЭТО
+     *    ГИПОТЕЗА: свёртка смешивает ž/z, č/c, š/s, ę/e, ȯ/o, и здесь же лежат
+     *    ложные срабатывания (žębra «жабры» и zebra «зебра»; celo-NOUN со
+     *    стемом «čel» «лоб» и cělo-n со стемом «cěl» «целое» — разные слова с
+     *    одинаковым записанным value). Проверять глазами.
      */
-    kind: "legacy-lowercase-pos" | "spelling-variant" | "identical"
+    kind: "identical-value" | "confirmed-variant" | "folded-only"
+    /** Один из слагов — старого формата (POS строчными: drugy-adj). */
+    legacyPos: boolean
+    /** Основы совпадают после свёртки — аргумент за дубль, но свёртка слепа к č/c. */
+    sameStem: boolean
+    /** Основы совпадают БУКВАЛЬНО. */
+    stemEqRaw: boolean
+    /**
+     * Единственный действительно безопасный к слиянию случай: value совпадает
+     * буквально, POS совпадает, основы совпадают буквально и род не расходится.
+     * Всё остальное — гипотеза на ручную проверку.
+     * Контрпример, который проходит «identical-value» и НЕ проходит это: celo-NOUN
+     * (стем «čel», «лоб») и cělo-n (стем «cěl», «целое») — у обоих записанный
+     * value «celo», но это разные слова.
+     */
+    safe: boolean
     a: string
     b: string
     genderMismatch: boolean
@@ -124,12 +143,24 @@ function main() {
         return p.length > 0 && p === p.toLowerCase() && p !== p.toUpperCase()
     }
 
-    const KINDS = ["legacy-lowercase-pos", "spelling-variant", "identical"] as const
+    // Совпадение только по подтверждённым парам написаний (u→ų, i→y, dž→đ):
+    // именно это мейнтейнер согласовал как «одно и то же слово, упрощённая
+    // запись». Никакой собственной свёртки «похожих» букв здесь нет намеренно
+    // (см. AGENTS.md: не выдумывать факты).
+    const expandsTo = (x: string | null, y: string | null) => {
+        if (!x || !y) return false
+        const lx = x.toLowerCase()
+        const ly = y.toLowerCase()
+        return expandSpellingVariants(lx).includes(ly) || expandSpellingVariants(ly).includes(lx)
+    }
+
+    const KINDS = ["identical-value", "confirmed-variant", "folded-only"] as const
     const flagged: FlaggedGroup[] = []
     let tokensInFlagged = 0
-    const kindPairs: Record<string, number> = { "legacy-lowercase-pos": 0, "spelling-variant": 0, "identical": 0 }
-    const kindGroups: Record<string, number> = { "legacy-lowercase-pos": 0, "spelling-variant": 0, "identical": 0 }
-    const kindTokens: Record<string, number> = { "legacy-lowercase-pos": 0, "spelling-variant": 0, "identical": 0 }
+    let pairsWithLegacy = 0
+    const kindPairs: Record<string, number> = { "identical-value": 0, "confirmed-variant": 0, "folded-only": 0 }
+    const kindGroups: Record<string, number> = { "identical-value": 0, "confirmed-variant": 0, "folded-only": 0 }
+    const kindTokens: Record<string, number> = { "identical-value": 0, "confirmed-variant": 0, "folded-only": 0 }
 
     for (const { g, parsed } of parsedGroups) {
         if (!parsed) continue
@@ -141,16 +172,27 @@ function main() {
                 const b = ls[j]
                 if (!a.value || !b.value) continue
                 if (a.pos !== b.pos) continue
-                if (folded(a.value) !== folded(b.value)) continue
-                const legacy = isLegacyPos(a.slug) !== isLegacyPos(b.slug)
-                const kind: FlaggedPair["kind"] = legacy
-                    ? "legacy-lowercase-pos"
-                    : (a.value !== b.value ? "spelling-variant" : "identical")
+                const rawEq = a.value.toLowerCase() === b.value.toLowerCase()
+                const variantEq = expandsTo(a.value, b.value)
+                const foldedEq = folded(a.value) === folded(b.value)
+                if (!rawEq && !variantEq && !foldedEq) continue
+                const kind: FlaggedPair["kind"] = rawEq
+                    ? "identical-value"
+                    : (variantEq ? "confirmed-variant" : "folded-only")
+                const legacyPos = isLegacyPos(a.slug) !== isLegacyPos(b.slug)
+                if (legacyPos) pairsWithLegacy++
+                const stemEqRaw = (a.stem ?? "") === (b.stem ?? "")
+                const genderMismatch = (a.gender ?? null) !== (b.gender ?? null)
+                const safe = kind === "identical-value" && stemEqRaw && !genderMismatch
                 pairs.push({
                     kind,
+                    legacyPos,
+                    sameStem: folded(a.stem) === folded(b.stem),
+                    stemEqRaw,
+                    safe,
                     a: a.slug,
                     b: b.slug,
-                    genderMismatch: (a.gender ?? null) !== (b.gender ?? null),
+                    genderMismatch,
                 })
             }
         }
@@ -178,7 +220,7 @@ function main() {
         + `род=${l.gender ?? "-"} основа=${l.stem ?? "-"} парадигма=${l.paradigm ?? "-"} `
         + `част/млн=${l.corpusFrequencyPerMln ?? "-"}`
 
-    const totals = { groups: flagged.length, tokens: tokensInFlagged, kindPairs, kindGroups, kindTokens }
+    const totals = { groups: flagged.length, tokens: tokensInFlagged, pairsWithLegacy, kindPairs, kindGroups, kindTokens }
     if (outFile) {
         writeFileSync(outFile, JSON.stringify(flagged, null, 1))
         console.log(`${flagged.length} групп с признаками дублей -> ${outFile}`)
@@ -189,10 +231,23 @@ function main() {
     }
 
     console.log(`Групп омонимии с признаками дублей: ${flagged.length} из ${groups.length}`)
-    console.log(`Токенов в них: ${tokensInFlagged}\n`)
+    console.log(`Токенов в них: ${tokensInFlagged}`)
+    console.log(`Пар, где один слаг старого формата (POS строчными): ${pairsWithLegacy}\n`)
     for (const kind of KINDS) {
         console.log(`  ${kind}: ${kindGroups[kind]} групп, ${kindPairs[kind]} пар, ${kindTokens[kind]} токенов`)
     }
+    const safePairs = flagged.flatMap((f) => f.pairs).filter((p) => p.safe).length
+    const safeGroups = flagged.filter((f) => f.pairs.some((p) => p.safe)).length
+    const safeTokens = flagged.filter((f) => f.pairs.some((p) => p.safe)).reduce((s, f) => s + f.tokenCount, 0)
+    console.log(`\nБезопасных к слиянию (identical-value + основы равны буквально + род):`
+        + ` ${safeGroups} групп, ${safePairs} пар, ${safeTokens} токенов`)
+    console.log("\n  identical-value — value совпадает буквально; БЕЗОПАСНО только вместе со")
+    console.log("    совпадающей буквально основой и родом (строка [SAFE] ниже).")
+    console.log("  confirmed-variant / folded-only — ГИПОТЕЗЫ, проверять глазами: подтверждённые")
+    console.log("    пары написаний (u→ų, i→y) — правило РАСПОЗНАВАНИЯ форм, а не утверждение, что две")
+    console.log("    цитатные формы — одно слово. Контрпримеры из этого же списка: biti-VERB (бить)")
+    console.log("    и byti-VERB (быть), viti-VERB (вить) и vyti-VERB (выть) — разные глаголы;")
+    console.log("    žębra «жабры» и zebra «зебра»; celo-NOUN (стем «čel», лоб) и cělo-n (стем «cěl», целое).")
     // Один и тот же дубль встречается во многих группах форм (drugy-ADJ/drugy-adj
     // — в шести). Реальный список на ревью — уникальные пары лексем, а не группы.
     const distinctPairs = new Map<string, FlaggedPair>()
@@ -212,7 +267,9 @@ function main() {
     for (const grp of listed.slice(0, limit)) {
         console.log(`${grp.form} — ${grp.tokenCount} токенов в ${grp.documentCount} док.`)
         for (const p of grp.pairs) {
-            console.log(`   [${p.kind}${p.genderMismatch ? ", род разный" : ""}] ${p.a} <=> ${p.b}`)
+            const marks = [p.safe ? "SAFE" : "", p.legacyPos ? "legacy" : "", p.sameStem ? "основа совпадает" : "", p.genderMismatch ? "род разный" : ""]
+                .filter(Boolean).join(", ")
+            console.log(`   [${p.kind}${marks ? ", " + marks : ""}] ${p.a} <=> ${p.b}`)
         }
         for (const l of grp.lexemes) console.log(`   · ${fmtLexeme(l)}`)
         console.log("")
