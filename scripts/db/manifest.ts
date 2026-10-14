@@ -69,6 +69,14 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "создаёт proper_noun_signals; не во время реанализа корпуса" },
     { path: "scripts/export-hunspell.ts", db: "interlex", kind: "repeatable", dryRun: false, noBackup: true, note: "только читает; пишет exports/hunspell/ (страница /downloads)" },
     {
+        path: "scripts/db/analyze-homonym-duplicates.ts",
+        db: "corpus",
+        kind: "repeatable",
+        dryRun: true,
+        noBackup: true,
+        note: "только читает corpus.db + interlex.db: группы омонимии с признаками дублей лексем (вход в дедупликацию, п.113)",
+    },
+    {
         path: "scripts/db/2026-10-14-backfill-homonym-group-keys.ts",
         db: "corpus",
         kind: "data",
