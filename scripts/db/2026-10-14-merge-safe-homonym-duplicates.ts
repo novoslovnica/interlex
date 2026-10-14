@@ -58,22 +58,34 @@ interface MergeOp {
     notes?: string
 }
 interface RenameOp { op: "rename-slug"; slug: string; reason?: string }
+// Правка полей лексемы без слияния (например, этимологическое слово уезжает в
+// CORE-аллофон, когда value нормализуется до поисковой формы).
+interface FieldEditOp {
+    op: "field-edit"
+    slug: string
+    allophone?: string
+    stem?: string
+    protoStemClass?: string
+    stemExtension?: string
+    notes?: string
+}
 type OtherOp = { op: "keep" | "needs-decision"; slugs?: string[]; notes?: string }
 
-function loadOps(): { merges: MergeOp[]; renames: RenameOp[]; others: OtherOp[] } {
+function loadOps(): { merges: MergeOp[]; renames: RenameOp[]; fieldEdits: FieldEditOp[]; others: OtherOp[] } {
     if (!fs.existsSync(PLAN_PATH)) {
         console.error(`Файл правок не найден: ${PLAN_PATH}`)
         process.exit(2)
     }
-    const doc = JSON.parse(fs.readFileSync(PLAN_PATH, "utf8")) as { ops: Array<MergeOp | RenameOp | OtherOp> }
+    const doc = JSON.parse(fs.readFileSync(PLAN_PATH, "utf8")) as { ops: Array<MergeOp | RenameOp | FieldEditOp | OtherOp> }
     return {
         merges: doc.ops.filter((o): o is MergeOp => o.op === "merge" && !!o.source && !!o.target),
         renames: doc.ops.filter((o): o is RenameOp => o.op === "rename-slug" && !!o.slug),
+        fieldEdits: doc.ops.filter((o): o is FieldEditOp => o.op === "field-edit" && !!o.slug),
         others: doc.ops.filter((o): o is OtherOp => o.op === "keep" || o.op === "needs-decision"),
     }
 }
 
-const { merges, renames, others } = loadOps()
+const { merges, renames, fieldEdits, others } = loadOps()
 
 const db = new Database(DB_PATH)
 db.pragma("foreign_keys = ON")
@@ -198,6 +210,37 @@ if (warnings.length > 0) {
 }
 console.log()
 
+// Правки полей лексемы (общие для слияний и отдельных field-edit операций).
+function applyFieldEdits(
+    target: Lex,
+    op: { stem?: string; protoStemClass?: string; stemExtension?: string; allophone?: string },
+): void {
+    if (op.stem !== undefined) {
+        db.prepare(`UPDATE lexemes SET stem = ?, updatedAt = ? WHERE id = ?`).run(op.stem, now, target.id)
+        audit(target.id, "stem", target.stem, op.stem)
+    }
+    if (op.protoStemClass !== undefined) {
+        db.prepare(`UPDATE lexemes SET protoStemClass = ?, updatedAt = ? WHERE id = ?`).run(op.protoStemClass, now, target.id)
+        audit(target.id, "protoStemClass", target.protoStemClass, op.protoStemClass)
+    }
+    if (op.stemExtension !== undefined) {
+        db.prepare(`UPDATE lexemes SET stemExtension = ?, updatedAt = ? WHERE id = ?`).run(op.stemExtension, now, target.id)
+        audit(target.id, "stemExtension", target.stemExtension, op.stemExtension)
+    }
+    if (op.allophone !== undefined) {
+        // Замена значения в СУЩЕСТВУЮЩЕМ CORE-аллофоне (решение мейнтейнера).
+        const core = db.prepare(`SELECT la.id, la.value, la.type FROM lexeme_allophones la
+            JOIN allophone_flavors f ON f.id = la.flavorId
+            WHERE la.lexemeId = ? AND f.code = 'CORE' LIMIT 1`).get(target.id) as { id: number; value: string; type: string } | undefined
+        if (!core) {
+            warnings.push(`${target.slug}: CORE-аллофон не найден, правка allophone не применена`)
+        } else if (core.value !== op.allophone) {
+            db.prepare(`UPDATE lexeme_allophones SET value = ? WHERE id = ?`).run(op.allophone, core.id)
+            audit(target.id, `allophone.${core.type}`, core.value, op.allophone)
+        }
+    }
+}
+
 // ---- 2. Запись -------------------------------------------------------------
 const run = db.transaction(() => {
     const freq = new Map<number, { abs: number; mln: number; was: number }>()
@@ -251,33 +294,17 @@ const run = db.transaction(() => {
             db.prepare(`DELETE FROM lexemes WHERE id = ?`).run(source.id)
 
             // Правки полей выжившей лексемы.
-            if (op.stem !== undefined) {
-                const old = target.stem
-                db.prepare(`UPDATE lexemes SET stem = ?, updatedAt = ? WHERE id = ?`).run(op.stem, now, target.id)
-                audit(target.id, "stem", old, op.stem)
-            }
-            if (op.protoStemClass !== undefined) {
-                db.prepare(`UPDATE lexemes SET protoStemClass = ?, updatedAt = ? WHERE id = ?`).run(op.protoStemClass, now, target.id)
-                audit(target.id, "protoStemClass", target.protoStemClass, op.protoStemClass)
-            }
-            if (op.stemExtension !== undefined) {
-                db.prepare(`UPDATE lexemes SET stemExtension = ?, updatedAt = ? WHERE id = ?`).run(op.stemExtension, now, target.id)
-                audit(target.id, "stemExtension", target.stemExtension, op.stemExtension)
-            }
-            if (op.allophone !== undefined) {
-                // Замена значения в СУЩЕСТВУЮЩЕМ CORE-аллофоне (решение мейнтейнера).
-                const core = db.prepare(`SELECT la.id, la.value, la.type FROM lexeme_allophones la
-                    JOIN allophone_flavors f ON f.id = la.flavorId
-                    WHERE la.lexemeId = ? AND f.code = 'CORE' LIMIT 1`).get(target.id) as { id: number; value: string; type: string } | undefined
-                if (!core) {
-                    warnings.push(`${target.slug}: CORE-аллофон не найден, правка allophone не применена`)
-                } else if (core.value !== op.allophone) {
-                    db.prepare(`UPDATE lexeme_allophones SET value = ? WHERE id = ?`).run(op.allophone, core.id)
-                    audit(target.id, `allophone.${core.type}`, core.value, op.allophone)
-                }
-            }
+            applyFieldEdits(target, op)
         }
         applied.push(`${source.slug} -> ${target.slug} (${ids.length} зн. ${op.dropSourceMeanings ? "удалено" : "перенесено"})`)
+    }
+
+    // Правки полей без слияния (этимологическое слово уезжает в CORE-аллофон).
+    for (const fe of fieldEdits) {
+        const lex = lexOf(fe.slug)
+        if (!lex) { warnings.push(`field-edit ${fe.slug}: лексемы нет`); continue }
+        if (APPLY) applyFieldEdits(lex, fe)
+        applied.push(`field-edit ${fe.slug}${fe.allophone ? ` [аллофон→${fe.allophone}]` : ""}`)
     }
 
     // Переименования слагов.

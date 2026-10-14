@@ -2,12 +2,36 @@
  "generatedFrom": "duplicates-merge-plan.json",
  "rule": "слаг = <value>-<POS>; занятый ключ -> -2, -3 (lib/slug.ts::generateUniqueSlug)",
  "totals": {
+  "field-edit": 4,
   "rename-slug": 22,
-  "merge": 22,
-  "keep": 8,
-  "needs-decision": 1
+  "merge": 23,
+  "keep": 8
  },
  "ops": [
+  {
+   "op": "field-edit",
+   "slug": "breza-NOUN",
+   "allophone": "brěza",
+   "notes": "слово brěza"
+  },
+  {
+   "op": "field-edit",
+   "slug": "breža-n",
+   "allophone": "breža",
+   "notes": "своё гнездо breža"
+  },
+  {
+   "op": "field-edit",
+   "slug": "lezati-VERB",
+   "allophone": "ležati",
+   "notes": "слово ležati (лежать)"
+  },
+  {
+   "op": "field-edit",
+   "slug": "lězati-v",
+   "allophone": "lězati",
+   "notes": "слово lězati (лезть, лазать)"
+  },
   {
    "op": "rename-slug",
    "slug": "čestj-n",
@@ -378,14 +402,10 @@
    "renameTargetToValuePos": true
   },
   {
-   "op": "needs-decision",
-   "slugs": [
-    "breža-n",
-    "brjoza-n"
-   ],
-   "tokens": 33,
-   "decision": "unset",
-   "notes": "оставить только А (В сливается по предыдущему кейсу)"
+   "op": "merge",
+   "source": "brjoza-n",
+   "target": "breza-NOUN",
+   "dropSourceMeanings": true
   },
   {
    "op": "merge",
