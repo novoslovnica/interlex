@@ -1,0 +1,419 @@
+{
+ "generatedFrom": "duplicates-merge-plan.json",
+ "rule": "слаг = <value>-<POS>; занятый ключ -> -2, -3 (lib/slug.ts::generateUniqueSlug)",
+ "totals": {
+  "rename-slug": 20,
+  "merge": 20,
+  "needs-decision": 5,
+  "keep": 8
+ },
+ "ops": [
+  {
+   "op": "rename-slug",
+   "slug": "čestj-n",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "čęstj-n",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "merge",
+   "source": "věčj-n",
+   "target": "večj-n",
+   "tokens": 666,
+   "notesClass": "value-or-slug",
+   "notes": "- граммема некорректное, а также диакритика в value, но сливаем потом A->B",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "needs-decision",
+   "slugs": [
+    "deset-NUM",
+    "desět-num"
+   ],
+   "tokens": 230,
+   "decision": "unset",
+   "notes": ""
+  },
+  {
+   "op": "merge",
+   "source": "ves-n",
+   "target": "ves-NOUN",
+   "tokens": 219,
+   "notesClass": "value-or-slug",
+   "notes": "- не очень понятно, какие примеры в В, как будто ошибочное слово",
+   "dropSourceMeanings": true,
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "rename-slug",
+   "slug": "čęstny-adj",
+   "reason": "решение мейнтейнера: отдельное гнездо"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "měč-n",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "merge",
+   "source": "pråcovati-v",
+   "target": "pracovati-VERB",
+   "tokens": 129,
+   "notesClass": "stem-fix",
+   "notes": "(но stem pråcova верный, в А потерялась диакритика в stem)",
+   "needsStemReview": true
+  },
+  {
+   "op": "merge",
+   "source": "vlåstny-adj",
+   "target": "vlastny-ADJ",
+   "tokens": 124,
+   "notesClass": "stem-fix",
+   "notes": "(но stem vlåstn верный, в А потерялась диакритика в stem)",
+   "needsStemReview": true
+  },
+  {
+   "op": "rename-slug",
+   "slug": "ųtro-n",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "vedati-v",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "vědati-v",
+   "reason": "разные слова (слияние отменено)"
+  },
+  {
+   "op": "merge",
+   "source": "skarędny-adj",
+   "target": "skaredny-ADJ",
+   "tokens": 10,
+   "notesClass": "stem-fix",
+   "notes": "(но stem верный в A - skarędn, там юс)",
+   "dropSourceMeanings": true,
+   "allophone": "skarędny",
+   "stem": "skarędn"
+  },
+  {
+   "op": "merge",
+   "source": "oglåšati-v",
+   "target": "oglasati-VERB",
+   "tokens": 8,
+   "notesClass": "stem-fix",
+   "notes": "(но stem верный в A - oglåša)",
+   "dropSourceMeanings": true,
+   "allophone": "oglåšati",
+   "stem": "oglåša"
+  },
+  {
+   "op": "merge",
+   "source": "sěčenj-n",
+   "target": "secenj-NOUN",
+   "tokens": 6,
+   "notesClass": "translations",
+   "notes": "(но перевод из второго забираем)"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "kråb-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "merge",
+   "source": "gusljar-n",
+   "target": "gusljar-NOUN",
+   "tokens": 4,
+   "notesClass": "translations",
+   "notes": "(перевод из второго забираем)"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "něznačny-adj",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "nede-adv",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "něde-adv",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "merge",
+   "source": "žrebę-n",
+   "target": "zrebe-NOUN",
+   "tokens": 1,
+   "notesClass": "stem-fix",
+   "notes": "(stem проверь, чтоб корректно склонялось. Вообще žrěbent праславянская основа, но возможно stem должен быть žrěb)",
+   "stem": "žrěbę",
+   "protoStemClass": "consonant",
+   "stemExtension": "ent"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "cělo-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "mråž-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "plåz-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "needs-decision",
+   "slugs": [
+    "lezati-VERB",
+    "lězati-v"
+   ],
+   "tokens": 36,
+   "decision": "unset",
+   "notes": "проверить ять во втором, гнезда оба сохраняем (диакритика и граммема во втором)"
+  },
+  {
+   "op": "needs-decision",
+   "slugs": [
+    "breza-NOUN",
+    "breža-n"
+   ],
+   "tokens": 33,
+   "decision": "ignore",
+   "notes": "игнор, ниже разбираются оба пункта по своим гнездам"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "lis-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "liš-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "těšati-v",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "zelo-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "sěv-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "rename-slug",
+   "slug": "žębra-n",
+   "reason": "keep: слаг старого формата"
+  },
+  {
+   "op": "merge",
+   "source": "dostatȯcno-ADV",
+   "target": "dostatočno-adv",
+   "tokens": 742,
+   "notesClass": "stem-fix",
+   "notes": "(но stem верный в B)",
+   "stem": "dostatȯčn"
+  },
+  {
+   "op": "needs-decision",
+   "slugs": [
+    "vozhod-n",
+    "vȯzhod-NOUN"
+   ],
+   "tokens": 135,
+   "decision": "unset",
+   "notes": ""
+  },
+  {
+   "op": "merge",
+   "source": "sovět-n",
+   "target": "sȯvet-NOUN",
+   "tokens": 119,
+   "notesClass": "value-or-slug",
+   "notes": "(диакритика осталась)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "kol-NOUN",
+    "kȯl-NOUN"
+   ],
+   "tokens": 31,
+   "notes": ""
+  },
+  {
+   "op": "merge",
+   "source": "dolgotrajny-adj",
+   "target": "dȯlgotrajny-ADJ",
+   "tokens": 22,
+   "notesClass": "value-or-slug",
+   "notes": "(диакритика осталась)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "plot-NOUN",
+    "plȯt-NOUN"
+   ],
+   "tokens": 17,
+   "notes": "(но осталась во втором диакритика)"
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "volga-NOUN",
+    "vȯlga-NOUN"
+   ],
+   "tokens": 13,
+   "notes": "(но осталась во втором диакритика)"
+  },
+  {
+   "op": "merge",
+   "source": "vozvråtiti-v",
+   "target": "vȯzvratiti-VERB",
+   "tokens": 13,
+   "notesClass": "value-or-slug",
+   "notes": "(Но диакритика осталась)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "merge",
+   "source": "vozvråtny-adj",
+   "target": "vȯzvratny-ADJ",
+   "tokens": 4,
+   "notesClass": "value-or-slug",
+   "notes": "(но диакритика осталась)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "biti-VERB",
+    "byti-VERB"
+   ],
+   "tokens": 551,
+   "notes": ""
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "viti-VERB",
+    "vyti-VERB"
+   ],
+   "tokens": 470,
+   "notes": ""
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "nabiti-VERB",
+    "nabyti-VERB"
+   ],
+   "tokens": 1,
+   "notes": ""
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "pribiti-VERB",
+    "pribyti-VERB"
+   ],
+   "tokens": 1,
+   "notes": ""
+  },
+  {
+   "op": "keep",
+   "slugs": [
+    "sliti-VERB",
+    "slyti-VERB"
+   ],
+   "tokens": 1,
+   "notes": ""
+  },
+  {
+   "op": "merge",
+   "source": "lepsi-ADJ",
+   "target": "lěpšy-adj",
+   "tokens": 539,
+   "notesClass": "value-or-slug",
+   "notes": "(Но граммема в А)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "merge",
+   "source": "byvsi-ADJ",
+   "target": "byvšy-adj",
+   "tokens": 87,
+   "notesClass": "value-or-slug",
+   "notes": "(Но граммема в А)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "merge",
+   "source": "mladsi-ADJ",
+   "target": "mlådšy-adj",
+   "tokens": 44,
+   "notesClass": "value-or-slug",
+   "notes": "(Но граммема в А)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "merge",
+   "source": "vyssi-ADJ",
+   "target": "vysšy-adj",
+   "tokens": 37,
+   "notesClass": "value-or-slug",
+   "notes": "(Но граммема в А)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "merge",
+   "source": "nizsi-ADJ",
+   "target": "nizšy-adj",
+   "tokens": 12,
+   "notesClass": "value-or-slug",
+   "notes": "(Но граммема в А)",
+   "renameTargetToValuePos": true
+  },
+  {
+   "op": "needs-decision",
+   "slugs": [
+    "breža-n",
+    "brjoza-n"
+   ],
+   "tokens": 33,
+   "decision": "unset",
+   "notes": "оставить только А (В сливается по предыдущему кейсу)"
+  },
+  {
+   "op": "merge",
+   "source": "vųtre-adv",
+   "target": "vųtrě-adv",
+   "tokens": 20,
+   "notesClass": "value-or-slug",
+   "notes": "(но граммема неверная)",
+   "renameTargetToValuePos": true
+  }
+ ]
+}
