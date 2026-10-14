@@ -4,6 +4,7 @@ import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
+import { homonymGroupKeyForCandidates } from "@/lib/corpus/homonymGroup"
 
 export interface UpsertDocumentPayload {
     title: string
@@ -131,6 +132,7 @@ export async function upsertCorpusDocument(
                     wordSlug: t.wordSlug,
                     matchCount: t.matchCount,
                     isPartialMatch: t.isPartialMatch,
+                    homonymGroupKey: homonymGroupKeyForCandidates(t.surfaceForm, t.candidates),
                     feats: t.feats as Record<string, string>,
                 })),
             })

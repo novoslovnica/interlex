@@ -4,6 +4,7 @@ import Link from "next/link"
 import { prismaAuth as dbAuth, prismaData, prismaCorpus } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requireRole } from "@/lib/permissions"
+import { countHomonymGroups } from "@/lib/corpus/fetchHomonymGroups"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -46,19 +47,20 @@ export default async function ModerationDashboardPage() {
           .$queryRaw<{ n: bigint }[]>`SELECT COUNT(DISTINCT clusterKey) AS n FROM "CorpusCandidateProposal" WHERE status = 'pending'`
           .then((rows) => Number(rows[0]?.n ?? 0))
       : Promise.resolve(0),
-    // Нет отдельной страницы "все омонимы сразу" - matchCount/resolutionSource
-    // проверяются только по одному токену за раз в TokenSidebar.tsx. Считаем
-    // честно, ссылка ведёт на список документов, а не на несуществующий
-    // единый список.
+    // Очередь массовой разметки омонимов (roadmap п.111): группы токенов с
+    // одним набором конкурирующих лексем. Считаются именно ГРУППЫ, а не токены:
+    // по замеру scripts/db/measure-corpus-ambiguity.ts токенов с двумя и более
+    // РАЗНЫМИ лексемами среди кандидатов ~1,09 млн, но они схлопываются в
+    // считанные тысячи групп (форма ne — 79,8 тыс. токенов, na — 52 тыс.).
+    // Ссылка ведёт на страницу, где одно решение закрывает всю группу.
     //
-    // Это НЕ очередь задач: из 786 419 токенов, где два лучших кандидата почти
-    // равны, 779 616 (99,1%) спорят о граммеме ОДНОЙ И ТОЙ ЖЕ лексемы — лемма
-    // и часть речи уже верны, и разрешается это синтаксическим разбором, а не
-    // кликами. Реально требуют человека лишь ~6 800 токенов, где спорят разные
-    // лексемы, и большинство из них — дубликаты в словаре. Показываем как
-    // показатель качества разметки, а не как список дел.
+    // Раньше здесь стоял счётчик matchCount > 1 со сноской «99% спорят о
+    // граммеме одной лексемы, человеку нужно ~6 800 токенов». Сноска
+    // опровергнута прямым замером: спор о граммеме одной лексемы — 69%
+    // (2,44 млн из 3,53 млн), конкуренция разных лексем — 31% (1,09 млн),
+    // то есть очередь реальна и её имеет смысл проходить группами.
     canSee(Feature.CorpusTokenDisambiguate)
-      ? prismaCorpus.corpusToken.count({ where: { matchCount: { gt: 1 }, resolutionSource: "auto" } })
+      ? countHomonymGroups()
       : Promise.resolve(0),
     canSee(Feature.SuggestionsReview) ? prismaData.wordSuggestion.count({ where: { status: "pending" } }) : Promise.resolve(0),
     canSee(Feature.ReportsReview) ? prismaData.contentReport.count({ where: { status: "pending" } }) : Promise.resolve(0),
@@ -77,11 +79,11 @@ export default async function ModerationDashboardPage() {
     { key: "corpus-candidates", label: "Кандидаты из корпуса", href: "/admin/corpus-candidates", feature: Feature.CorpusCandidatesReview, count: corpusClusters },
     {
       key: "corpus-homonyms",
-      label: "Омонимия корпуса",
-      href: "/admin/corpus/documents",
+      label: "Омонимия корпуса (массово)",
+      href: "/admin/corpus/homonyms",
       feature: Feature.CorpusTokenDisambiguate,
       count: corpusHomonyms,
-      note: "Показатель качества разметки, не очередь: 99% спорных случаев — граммема одной лексемы, это работа парсера",
+      note: "Группы токенов с конкурирующими РАЗНЫМИ лексемами: одно решение закрывает всю группу",
     },
     { key: "suggestions", label: "Предложенные слова", href: "/admin/suggestions", feature: Feature.SuggestionsReview, count: suggestionsPending },
     { key: "reports", label: "Жалобы на ошибки", href: "/admin/reports", feature: Feature.ReportsReview, count: reportsPending },

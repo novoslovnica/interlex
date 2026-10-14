@@ -61,12 +61,22 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-09-19-add-community-translation-votes.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes + translations.community*" },
     { path: "scripts/db/2026-09-19-add-community-reputation.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes.agreed/controlExpected + contributor_stats" },
     { path: "scripts/db/2026-09-23-add-word-comments.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "word_comments (обсуждение на странице слова)" },
+    { path: "scripts/db/2026-10-14-add-corpus-homonym-group-key.ts", db: "corpus", kind: "schema", dryRun: false, needsRestart: true, note: "CorpusToken.homonymGroupKey + индекс (очередь массовой разметки омонимов, п.111)" },
 
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },
     { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "создаёт proper_noun_signals; не во время реанализа корпуса" },
     { path: "scripts/export-hunspell.ts", db: "interlex", kind: "repeatable", dryRun: false, noBackup: true, note: "только читает; пишет exports/hunspell/ (страница /downloads)" },
+    {
+        path: "scripts/db/2026-10-14-backfill-homonym-group-keys.ts",
+        db: "corpus",
+        kind: "data",
+        dryRun: true,
+        heavy: true,
+        noBackup: true,
+        note: "разовое заполнение CorpusToken.homonymGroupKey; ~2,5 мин, запускать с --detach после DDL-миграции",
+    },
 ]
 
 export function findEntry(scriptPath: string): ManifestEntry | undefined {

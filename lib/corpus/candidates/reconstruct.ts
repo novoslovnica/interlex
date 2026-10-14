@@ -2,7 +2,7 @@ import { prismaData } from "@/lib/prisma"
 import { PosType, GrammaticalGender } from "@/lib/grammar/common"
 import { getEnding } from "@/lib/grammar/endingLoader"
 import { buildGrammeme } from "@/lib/grammar/grammemes"
-import { etymCyrToEtymLat, isCyrillic } from "@/lib/transliteration"
+import { normalizeSurfaceForm } from "@/lib/corpus/surfaceForm"
 import { identifyStemTypeByDb, resolveGender, EnhancedDbItem } from "@/lib/grammar/stemClassifier"
 
 // Тот же перебор длин окончания, что и DbAnalyzer.generateHypotheticalBases —
@@ -162,13 +162,11 @@ export async function buildStemTypeSupport(): Promise<StemTypeSupport> {
 // класс: следующий снизу — jā/i с 9%, то есть запас почти на порядок.
 export const MIN_STEM_TYPE_SUPPORT = 0.01
 
-export function normalizeSurfaceForm(rawSurfaceForm: string): string {
-  let clean = rawSurfaceForm.toLowerCase().trim()
-  if (isCyrillic(clean)) {
-    clean = etymCyrToEtymLat(clean)
-  }
-  return clean
-}
+// Сама функция живёт в lib/corpus/surfaceForm.ts — модуле без импорта
+// @/lib/prisma, чтобы её мог тянуть и чистый better-sqlite3-скрипт
+// (бэкфилл ключей групп омонимов). Реэкспорт сохраняет существующие импорты
+// `normalizeSurfaceForm from "@/lib/corpus/candidates/reconstruct"`.
+export { normalizeSurfaceForm } from "@/lib/corpus/surfaceForm"
 
 /**
  * Может ли кластер вообще быть словом. Одиночные символы и токены без единой

@@ -3,9 +3,14 @@ import { DbAnalyzer } from "@/lib/corpus/tokenizer/dbAnalyzer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { MorphoCandidate } from "@/lib/corpus/tokenizer/types"
 import { applyDocumentFlavorBias } from "@/lib/corpus/tokenizer/flavorBias"
+import { homonymGroupKeyForCandidates } from "@/lib/corpus/homonymGroup"
 
 interface TokenUpdate {
   id: bigint
+  // Словоформа как в тексте — нужна, чтобы посчитать homonymGroupKey при
+  // записи (см. persistUpdates). В data она не входит: та уходит в updateMany
+  // как есть.
+  surfaceForm: string
   data: { lemma: string; pos: string; wordSlug: string | null; matchCount: number; isPartialMatch: boolean; feats: Record<string, string> }
   candidates: MorphoCandidate[]
 }
@@ -62,7 +67,7 @@ function analyzeSentence(
       // matchCount: 1, not 0 - see the matching comment in
       // lib/corpus/tokenizer/tokenizer.ts's punctuation branch. 0 is
       // reserved for "genuinely unrecognized word".
-      updates.push({ id: token.id, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 1, isPartialMatch: false, feats: {} }, candidates: [] })
+      updates.push({ id: token.id, surfaceForm: token.surfaceForm, data: { pos: "PUNCT", lemma: token.surfaceForm, wordSlug: null, matchCount: 1, isPartialMatch: false, feats: {} }, candidates: [] })
       i++
       continue
     }
@@ -83,6 +88,7 @@ function analyzeSentence(
       for (let k = 0; k < collocationMatch.length; k++) {
         updates.push({
           id: sentenceTokens[i + k].id,
+          surfaceForm: sentenceTokens[i + k].surfaceForm,
           data: {
             lemma: collocationMatch.record.lemma,
             pos: collocationMatch.record.pos,
@@ -110,11 +116,12 @@ function analyzeSentence(
 
     if (!analysis) {
       failed++
-      updates.push({ id: token.id, data: { pos: "X", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, isPartialMatch: false, feats: {} }, candidates: [] })
+      updates.push({ id: token.id, surfaceForm: token.surfaceForm, data: { pos: "X", lemma: token.surfaceForm, wordSlug: null, matchCount: 0, isPartialMatch: false, feats: {} }, candidates: [] })
     } else {
       analyzed++
       updates.push({
         id: token.id,
+        surfaceForm: token.surfaceForm,
         data: {
           lemma: analysis.lemma,
           pos: analysis.pos,
@@ -210,7 +217,15 @@ async function persistUpdates(updates: TokenUpdate[], documentSlug?: string): Pr
       for (const u of batch) {
         await tx.corpusToken.updateMany({
           where: documentSlug ? { id: u.id, documentSlug } : { id: u.id },
-          data: u.data,
+          data: {
+            ...u.data,
+            // Ключ группы массовой разметки омонимов (roadmap п.111). Считается
+            // здесь, а не в analyzeSentence, ровно затем, чтобы документный и
+            // пооткрытый пути не разъехались: roster кандидатов финальный уже
+            // после applyDocumentFlavorBias. Меньше двух разных лексем (спор
+            // только о граммеме) или пусто — null.
+            homonymGroupKey: homonymGroupKeyForCandidates(u.surfaceForm, u.candidates),
+          },
         })
         await tx.corpusTokenCandidate.deleteMany({ where: { tokenId: u.id } })
         if (u.candidates.length > 0) {

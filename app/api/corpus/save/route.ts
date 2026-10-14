@@ -7,6 +7,7 @@ import { randomUUID } from "crypto"
 import { Tokenizer } from "@/lib/corpus/tokenizer/tokenizer"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { CorpusTokenInput } from "@/lib/corpus/tokenizer/types"
+import { homonymGroupKeyForCandidates } from "@/lib/corpus/homonymGroup"
 import { computeLexiconFrequencies } from "@/lib/corpus/frequencies/compute-frequencies"
 import { computeCefrLevels } from "@/lib/corpus/frequencies/compute-cefr-levels"
 import { buildCollocationRecords, createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
                         wordSlug: t.wordSlug,
                         matchCount: t.matchCount,
                         isPartialMatch: t.isPartialMatch,
+                        homonymGroupKey: homonymGroupKeyForCandidates(t.surfaceForm, t.candidates),
                         feats: t.feats as Record<string, string>,
                     })),
                 })

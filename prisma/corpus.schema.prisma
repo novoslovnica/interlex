@@ -98,6 +98,17 @@ model CorpusToken {
   // затираться повторным "Пересчитать POS-tagging" (см. reanalyze route).
   resolutionSource String         @default("auto")
 
+  // Ключ группы массовой разметки омонимов (roadmap п.111, см.
+  // lib/corpus/homonymGroup.ts): "<нормализованная форма>␟<слаги лексем через |>".
+  // NULL, когда среди кандидатов меньше двух РАЗНЫХ лексем (спор только о
+  // граммеме одной лексемы — это работа ранжирования/парсера, а не модератора)
+  // и когда токен уже разрешён вручную. Поддерживается в актуальном виде всеми
+  // путями записи токенов (reanalyzeDocument.persistUpdates, upsertDocument,
+  // app/api/corpus/save) — заполняет бэкфилл
+  // scripts/db/2026-10-14-backfill-homonym-group-keys.ts. Индекс — под
+  // GROUP BY очереди /admin/corpus/homonyms.
+  homonymGroupKey String?
+
   // Индексы для мгновенного поиска (B-Tree)
   @@index([lemma])
   @@index([pos])
@@ -113,6 +124,13 @@ model CorpusToken {
   // Для каскадного удаления предложения — без него каждое удаление просматривало
   // всю таблицу; scripts/db/2026-09-15-add-corpus-fk-indexes.ts.
   @@index([sentenceId])
+  // Очередь массовой разметки омонимов (roadmap п.111): GROUP BY по ключу
+  // группы и COUNT(DISTINCT documentSlug) по ней же. Составной индекс покрывает
+  // оба запроса (префикс — сам ключ), поэтому обращения к таблице не нужны:
+  // на 1,09 млн токенов одиночный индекс по ключу давал ~5 c на рендер списка
+  // из-за чтения documentSlug случайными rowid. Добавлено вручную сырым SQL —
+  // scripts/db/2026-10-14-add-corpus-homonym-group-key.ts.
+  @@index([homonymGroupKey, documentSlug])
 
   dependencyAsHead CorpusDependency[] @relation("DependencyHead")
   dependencyAsDep  CorpusDependency?  @relation("DependencyDependent")

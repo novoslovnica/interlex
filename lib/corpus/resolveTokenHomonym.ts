@@ -95,6 +95,9 @@ export async function resolveTokenHomonym(
         feats: winner.feats,
         matchCount: 1,
         resolutionSource: "manual",
+        // Токен разрешён вручную — он больше не в очереди массовой разметки
+        // (см. lib/corpus/homonymGroup.ts).
+        homonymGroupKey: null,
       },
     })
 
@@ -130,4 +133,109 @@ export async function resolveTokenHomonym(
   })
 
   return { status: "ok", ...winner }
+}
+
+export type ResolveHomonymGroupResult =
+  | { status: "not_found" }
+  | { status: "invalid_input"; message: string }
+  | { status: "ok"; resolvedTokens: number; wordSlug: string; lemma: string; pos: string }
+
+/**
+ * Массовое разрешение омонимов (roadmap п.111): одно решение модератора
+ * закрывает ВСЕ токены группы — токены с той же нормализованной словоформой и
+ * тем же набором конкурирующих лексем (ключ см. lib/corpus/homonymGroup.ts).
+ *
+ * Отличие от resolveTokenHomonym принципиальное: там выбирается конкретный
+ * CorpusTokenCandidate (а с ним и граммема), здесь выбирается ЛЕКСЕМА, а
+ * граммема у каждого токена своя — она берётся из его собственного лучшего
+ * кандидата на эту лексему. Поэтому массовое решение честно закрывает только
+ * конкуренцию РАЗНЫХ лексем; спор о граммеме одной лексемы сюда не попадает
+ * (у таких токенов ключа группы нет).
+ *
+ * Реализовано тремя SQL-апдейтами в одной транзакции, а не циклом по токенам:
+ * в верхних группах по 50–80 тыс. токенов, построчный Prisma-цикл на них
+ * занял бы минуты. Параметров-идентификаторов нет вовсе — все подвыборки идут
+ * по индексированному homonymGroupKey, а не по списку id (иначе на 80 тыс.
+ * значений повторилась бы ошибка RangeError из reanalyzeDocument.ts).
+ *
+ * После разрешения токены получают resolutionSource='manual' (реанализ их не
+ * трогает) и homonymGroupKey=NULL (выпадают из очереди).
+ */
+export async function resolveTokenHomonymGroup(
+  groupKey: string,
+  wordSlug: string,
+): Promise<ResolveHomonymGroupResult> {
+  if (!groupKey || !wordSlug) {
+    return { status: "invalid_input", message: "groupKey and wordSlug are required" }
+  }
+
+  const autoTokens = await prismaCorpus.$queryRaw<{ n: bigint }[]>`
+    SELECT COUNT(*) AS n FROM "CorpusToken"
+    WHERE "homonymGroupKey" = ${groupKey} AND "resolutionSource" = 'auto'
+  `
+  if (Number(autoTokens[0]?.n ?? 0) === 0) return { status: "not_found" }
+
+  // Лексема обязана быть среди кандидатов группы — произвольный слаг из
+  // запроса не принимается, иначе опечатка модератора разошлась бы по всем
+  // токенам группы.
+  const lexeme = await prismaCorpus.$queryRaw<{ lemma: string; pos: string }[]>`
+    SELECT c."lemma" AS lemma, c."pos" AS pos
+    FROM "CorpusTokenCandidate" c
+    JOIN "CorpusToken" t ON t."id" = c."tokenId"
+    WHERE t."homonymGroupKey" = ${groupKey} AND c."wordSlug" = ${wordSlug}
+    LIMIT 1
+  `
+  if (lexeme.length === 0) {
+    return { status: "invalid_input", message: "wordSlug is not a candidate of this group" }
+  }
+  const { lemma, pos } = lexeme[0]
+
+  const [bumped, promoted, resolved] = await prismaCorpus.$transaction([
+    // 1. Все кандидаты, кроме выбранной лексемы, сдвигаются на шаг вниз, чтобы
+    //    освободить rank 0 и не оставить двух «текущих».
+    prismaCorpus.$executeRaw`
+      UPDATE "CorpusTokenCandidate" SET "rank" = "rank" + 1
+      WHERE "wordSlug" <> ${wordSlug}
+        AND "tokenId" IN (
+          SELECT "id" FROM "CorpusToken"
+          WHERE "homonymGroupKey" = ${groupKey} AND "resolutionSource" = 'auto'
+        )
+    `,
+    // 2. Лучший кандидат выбранной лексемы у каждого токена становится rank 0
+    //    и помечается ручным. Скалярная подвыборка даёт по одному id на токен;
+    //    если у токена такого кандидата нет, NULL просто ни с чем не совпадёт.
+    prismaCorpus.$executeRaw`
+      UPDATE "CorpusTokenCandidate" SET "rank" = 0, "source" = 'manual'
+      WHERE "id" IN (
+        SELECT (
+          SELECT c2."id" FROM "CorpusTokenCandidate" c2
+          WHERE c2."tokenId" = t."id" AND c2."wordSlug" = ${wordSlug}
+          ORDER BY c2."rank" ASC, c2."id" ASC LIMIT 1
+        )
+        FROM "CorpusToken" t
+        WHERE t."homonymGroupKey" = ${groupKey} AND t."resolutionSource" = 'auto'
+      )
+    `,
+    // 3. Сам токен: лексема фиксирована, граммема — из его лучшего кандидата
+    //    (COALESCE — страховка на случай, если кандидата не оказалось).
+    prismaCorpus.$executeRaw`
+      UPDATE "CorpusToken" SET
+        "wordSlug" = ${wordSlug},
+        "lemma" = ${lemma},
+        "pos" = ${pos},
+        "matchCount" = 1,
+        "resolutionSource" = 'manual',
+        "homonymGroupKey" = NULL,
+        "feats" = COALESCE((
+          SELECT c3."feats" FROM "CorpusTokenCandidate" c3
+          WHERE c3."tokenId" = "CorpusToken"."id" AND c3."wordSlug" = ${wordSlug}
+          ORDER BY c3."rank" ASC, c3."id" ASC LIMIT 1
+        ), "feats")
+      WHERE "homonymGroupKey" = ${groupKey} AND "resolutionSource" = 'auto'
+    `,
+  ])
+
+  void bumped
+  void promoted
+  return { status: "ok", resolvedTokens: resolved, wordSlug, lemma, pos }
 }
