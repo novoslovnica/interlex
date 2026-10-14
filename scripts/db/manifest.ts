@@ -85,6 +85,14 @@ export const MANIFEST: ManifestEntry[] = [
         noBackup: true,
         note: "разовое заполнение CorpusToken.homonymGroupKey; ~2,5 мин, запускать с --detach после DDL-миграции",
     },
+    {
+        path: "scripts/db/2026-10-14-merge-safe-homonym-duplicates.ts",
+        db: "interlex",
+        kind: "data",
+        dryRun: true,
+        heavy: true,
+        note: "7 SAFE-пар дублей (разметка мейнтейнера 2026-10-14): слияние лексем + перенос частотности; заодно перенаправляет ссылки в corpus.db (два прохода по 12,9 млн кандидатов)",
+    },
 ]
 
 export function findEntry(scriptPath: string): ManifestEntry | undefined {
