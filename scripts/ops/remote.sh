@@ -13,8 +13,15 @@ SSH_PASS=$(grep '^PASSWORD=' .env.release | cut -d= -f2-)
 SSH_HOST=$(grep '^HOST=' .env.release | cut -d= -f2-)
 [ -n "$SSH_USER" ] && [ -n "$SSH_PASS" ] && [ -n "$SSH_HOST" ] || { echo ".env.release must set USERNAME, PASSWORD, HOST" >&2; exit 2; }
 
-ssh_run() { sshpass -f <(printf '%s\n' "$SSH_PASS") ssh -o StrictHostKeyChecking=accept-new "$SSH_USER@$SSH_HOST" "$@"; }
-scp_to()  { sshpass -f <(printf '%s\n' "$SSH_PASS") scp "$@" ; }
+# Единый набор сетевых опций для всех обращений к проду. Хост отвечает
+# нестабильно на этапе установления соединения (SYN иногда просто теряется:
+# "Operation timed out" при живом порту), а релиз роняет сайт на время сборки,
+# если ssh-сессия отвалится посередине, — поэтому короткий ConnectTimeout с
+# повторами и keepalive вместо дефолтного двухминутного зависания.
+SSH_NET_OPTS=(-o ConnectTimeout=20 -o ConnectionAttempts=3 -o ServerAliveInterval=15 -o ServerAliveCountMax=8)
+
+ssh_run() { sshpass -f <(printf '%s\n' "$SSH_PASS") ssh "${SSH_NET_OPTS[@]}" -o StrictHostKeyChecking=accept-new "$SSH_USER@$SSH_HOST" "$@"; }
+scp_to()  { sshpass -f <(printf '%s\n' "$SSH_PASS") scp "${SSH_NET_OPTS[@]}" "$@" ; }
 remote()  { echo "$SSH_USER@$SSH_HOST:$1"; }
 
 # Команда в каталоге приложения на сервере, с node из nvm (как в rebuild-remote.sh).
