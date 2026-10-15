@@ -101,6 +101,14 @@ export const MANIFEST: ManifestEntry[] = [
         heavy: true,
         note: "value -> поисковая форма без диакритики + слаг по <value>-<POS> (коллизия -> -2); ~2,5 тыс. лексем, перевязка corpus.db; редиректы не делаются",
     },
+    {
+        path: "scripts/db/2026-10-15-rename-legacy-slugs.ts",
+        db: "interlex",
+        kind: "data",
+        dryRun: true,
+        heavy: true,
+        note: "слаги старого образца (диакритика в слаге при ASCII value) -> <value>-<POS>; ~1,4 тыс. лексем, перевязка corpus.db",
+    },
 ]
 
 export function findEntry(scriptPath: string): ManifestEntry | undefined {
