@@ -88,5 +88,8 @@ npm run db:run -- scripts/db/<script>.ts --apply
 
 Для зарегистрированных data-скриптов первый запуск — dry run. Production:
 commit/push → `bash release.sh`; схемные миграции применяются во время релиза.
+Сборка выполняется в отдельном каталоге; готовый релиз переключается атомарно с
+проверкой HTTP и автоматическим откатом. Ручной откат: `bash release.sh --rollback`.
+Пути, блокировки и правила миграций — [docs/deployment.md](docs/deployment.md).
 Данные меняются отдельно через `bash prod.sh run <script>` и затем `--apply`.
 Авторизация сервера хранится в `.env.release` и не входит в Git.

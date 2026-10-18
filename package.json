@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "bash scripts/ops/start-release.sh",
     "bot:start": "tsx services/telegram-bot/server.ts",
     "bot:bundle": "tsx scripts/ops/bundle-telegram-bot.ts",
     "lint": "eslint",

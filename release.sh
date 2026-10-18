@@ -3,15 +3,14 @@
 # USERNAME - специальная переменная, и присвоение из .env.release молча
 # игнорируется).
 #
-#   bash release.sh                         код: git pull, npm ci, миграции, сборка
+#   bash release.sh                         изолированная сборка, миграции, переключение
+#   bash release.sh --rollback               вернуть предыдущий релиз (данные сохраняются)
 #   bash release.sh --db=corpus             плюс замена corpus.db на сервере снимком локальной
 #                                           (ручные правки модераторов переносятся с прода в снимок)
 #   bash release.sh --db=historical         замена historical.db (статический импорт)
 #   bash release.sh --db=interlex --replace-source-of-truth
 #                                           аварийная замена словаря/библиотеки целиком - см. ниже
 #   bash release.sh --covers                плюс public/covers -> /var/www/interslavic-lexicon.com/covers/
-#   bash release.sh --db=corpus --skip-backup   не делать бэкап заменяемой базы на сервере
-#                                               (corpus - 5 ГБ, бэкап долгий и место)
 #   bash release.sh --db=corpus --keep-snapshot  не пересоздавать corpus-release.db, взять существующий
 #
 # Базы: interlex, corpus, library, historical. auth - НИКОГДА (там реальные
@@ -30,12 +29,12 @@
 # базе не годится, WAL), заливается под временным именем, а подмена
 # происходит на сервере при остановленной службе (rebuild-remote.sh).
 #
-# Требует .env.release с USERNAME / PASSWORD / HOST. Сервер делает git pull,
+# Требует .env.release с USERNAME / PASSWORD / HOST. Сервер собирает заданный SHA,
 # поэтому сначала проверяется, что всё запушено.
 set -euo pipefail
 cd "$(dirname "$0")"
 
-REMOTE_DIR=/var/www/interslavic-lexicon.com/interlex
+REMOTE_DIR=${REMOTE_DIR:-/var/www/interslavic-lexicon.com/interlex}
 COVERS_REMOTE=/var/www/interslavic-lexicon.com/covers/
 ALLOWED_DBS="interlex corpus library historical"
 
@@ -44,13 +43,15 @@ REPLACE_SOT=0
 COVERS=0
 REMOTE_FLAGS=()
 KEEP_SNAPSHOT=0
+ROLLBACK=0
 for arg in "$@"; do
     case "$arg" in
+        --rollback) ROLLBACK=1 ;;
         --db=*)          IFS=',' read -ra part <<< "${arg#--db=}"; DBS+=("${part[@]}") ;;
         --with-data)     DBS+=(interlex) ;;
         --replace-source-of-truth) REPLACE_SOT=1 ;;
         --covers)        COVERS=1 ;;
-        --skip-backup)   REMOTE_FLAGS+=(--skip-backup) ;;
+        --skip-backup) echo "--skip-backup is incompatible with automatic rollback" >&2; exit 2 ;;
         --keep-snapshot) KEEP_SNAPSHOT=1 ;;
         *) echo "unknown argument: $arg" >&2; exit 2 ;;
     esac
@@ -70,11 +71,28 @@ for db in "${DBS[@]}"; do
 done
 
 . scripts/ops/remote.sh
-require_pushed_main
+if [ "$ROLLBACK" = 1 ]; then
+    [ ${#DBS[@]} = 0 ] && [ "$COVERS" = 0 ] && [ "$KEEP_SNAPSHOT" = 0 ] || { echo '--rollback accepts no data/media options' >&2; exit 2; }
+    REMOTE_FLAGS+=(--rollback)
+else
+    require_pushed_main
+fi
 
-echo "==> env files"
-scp_to .env "$(remote "$REMOTE_DIR/.env")"
-scp_to .env.production "$(remote "$REMOTE_DIR/.env.production")"
+# Local VACUUM/import/export files also need protection from a second invocation.
+mkdir -p .deploy
+LOCAL_RELEASE_LOCK=.deploy/local-release.lock
+mkdir "$LOCAL_RELEASE_LOCK" 2>/dev/null || { echo "local release lock exists: $LOCAL_RELEASE_LOCK (inspect its PID before removing)" >&2; exit 2; }
+printf '%s\n' "$$" > "$LOCAL_RELEASE_LOCK/pid"
+trap 'rm -f "$LOCAL_RELEASE_LOCK/pid"; rmdir "$LOCAL_RELEASE_LOCK"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+# Every upload belongs to one deployment; concurrent preparations cannot overwrite
+# each other's snapshots/export. Environment files remain on the server.
+COMMIT=$(git rev-parse HEAD)
+RELEASE_ID="$(date -u +%Y%m%dT%H%M%S)-${COMMIT:0:12}-$$"
+STAGE="$REMOTE_DIR/.deploy/$RELEASE_ID"
+ssh_run "umask 077; mkdir -p '$STAGE' '$REMOTE_DIR/logs/releases'"
 
 for db in "${DBS[@]}"; do
     snapshot="$db-release.db"
@@ -87,12 +105,13 @@ for db in "${DBS[@]}"; do
     fi
     if [ "$db" = corpus ]; then
         # Ручные правки с прода -> в снимок. Скрипт экспорта копируется на сервер
-        # сам: серверная копия кода ещё не обновлена (git pull - в rebuild-remote.sh).
+        # сам: серверная копия кода ещё не обновлена.
         echo "==> corpus: exporting manual edits from production"
-        scp_to scripts/db/corpus-export-manual.ts "$(remote "$REMOTE_DIR/.release-corpus-export-manual.ts")"
-        remote_app npx tsx .release-corpus-export-manual.ts --out=corpus-manual-export.json
-        ssh_run "rm -f $REMOTE_DIR/.release-corpus-export-manual.ts"
-        scp_to "$(remote "$REMOTE_DIR/corpus-manual-export.json")" corpus-manual-export.json
+        scp_to scripts/db/corpus-export-manual.ts "$(remote "$STAGE/corpus-export-manual.ts")"
+        ssh_run "active='$REMOTE_DIR'; [ ! -L '$REMOTE_DIR/current' ] || active=\$(readlink -f '$REMOTE_DIR/current'); ln -s \"\$active/node_modules\" '$STAGE/node_modules'"
+        remote_app npx tsx "$STAGE/corpus-export-manual.ts" "--out=$STAGE/corpus-manual-export.json"
+        ssh_run "rm -f $STAGE/corpus-export-manual.ts"
+        scp_to "$(remote "$STAGE/corpus-manual-export.json")" corpus-manual-export.json
         echo "==> corpus: applying them to $snapshot"
         # --keep-snapshot тоже проходит здесь: импорт идемпотентен, а правки с прода могли добавиться.
         npx tsx scripts/db/corpus-import-manual.ts corpus-manual-export.json --db="$snapshot" --apply ${CORPUS_ALLOW_MISSING:+--allow-missing} || {
@@ -101,7 +120,7 @@ for db in "${DBS[@]}"; do
         }
     fi
     echo "==> uploading $snapshot ($(du -h "$snapshot" | cut -f1)) - the swap happens on the server with the service stopped"
-    scp_to "$snapshot" "$(remote "$REMOTE_DIR/$snapshot")"
+    scp_to "$snapshot" "$(remote "$STAGE/$snapshot")"
     REMOTE_FLAGS+=("--db=$db")
 done
 
@@ -110,8 +129,27 @@ if [ "$COVERS" = 1 ]; then
     scp_to -r public/covers/. "$(remote "$COVERS_REMOTE")"
 fi
 
-echo "==> rebuild on the server"
-ssh_run "bash -s -- ${REMOTE_FLAGS[*]:-}" < rebuild-remote.sh
+echo "==> detached deployment $RELEASE_ID"
+scp_to rebuild-remote.sh scripts/ops/run-release.sh "$(remote "$STAGE/")"
+REMOTE_FLAGS+=("--commit=$COMMIT" "--stage=$STAGE")
+remote_args=$(printf '%q ' "${REMOTE_FLAGS[@]}")
+# A dropped SSH connection must not kill a build or leave the service stopped.
+ssh_run "nohup env INTERLEX_ROOT='$REMOTE_DIR' bash '$STAGE/run-release.sh' '$STAGE' $remote_args > '$REMOTE_DIR/logs/releases/$RELEASE_ID.log' 2>&1 < /dev/null &"
+echo "Log: $REMOTE_DIR/logs/releases/$RELEASE_ID.log"
+echo "If SSH disconnects, inspect that log and $STAGE/result (0 = success)."
+while true; do
+    state=$(ssh_run "if [ -f '$STAGE/result' ]; then cat '$STAGE/result'; else echo running; fi") || {
+        echo 'SSH disconnected; deployment continues on the server. Check the log/result before retrying.' >&2
+        exit 1
+    }
+    if [ "$state" != running ]; then
+        ssh_run "tail -n 40 '$REMOTE_DIR/logs/releases/$RELEASE_ID.log'"
+        [ "$state" = 0 ] || { echo "deployment failed (exit $state); see recovery in log" >&2; exit 1; }
+        break
+    fi
+    echo 'Deployment is running; previous release serves requests during the build.'
+    sleep 10
+done
 
 for db in "${DBS[@]}"; do
     if [ "$db" = corpus ]; then

@@ -182,7 +182,7 @@ After the 2026-09-23 snapshot upload, **production is the source of truth** for 
 
 **Registry**: `_applied_scripts` inside the database the script changes (`scripts/db/lib/registry.ts`) — one row per attempt (dry-run / apply / baseline), with checksum, commit, exit code, backup and log path (`logs/db-runs/`, gitignored). `npm run db:status` / `bash prod.sh status` list what is applied and flag a script whose file changed after it was applied; status is read-only. `mark-applied` records a script that was applied by other means.
 
-**Manifest kinds**: `schema` — idempotent DDL, applied by `run.ts migrate` inside `rebuild-remote.sh` while the service is stopped (replaces the old hardcoded list; if it fails, the previous build is started again); `data` — one-off, run by hand only, must support dry run; `repeatable` — recomputations (frequency, contributor stats, proper-noun signals). Dated scripts before `LEGACY_CUTOFF` (2026-09-25) are history already applied on production and are not in the manifest; the runner refuses them.
+**Manifest kinds**: `schema` — idempotent DDL, applied by `run.ts migrate` inside `rebuild-remote.sh` while the service is stopped (replaces the old hardcoded list; if it fails before candidate startup, touched databases are restored and the previous build is started again); `data` — one-off, run by hand only, must support dry run; `repeatable` — recomputations (frequency, contributor stats, proper-noun signals). Dated scripts before `LEGACY_CUTOFF` (2026-09-25) are history already applied on production and are not in the manifest; the runner refuses them.
 
 **Data-script contract** (what the runner relies on): dry run by default — without `--apply` open the DB read-only or roll the transaction back; idempotent; read paths from `SQLITE_DB` / `AUTH_SQLITE_DB` / `CORPUS_SQLITE_DB` / `*_DATABASE_URL` (the runner sets all of them to absolute paths); write `audit_logs` rows as `userEmail='script:<name>'` for lexical changes; set `Lexeme.updatedAt` explicitly in raw SQL; no long write transactions on `corpus.db`; carry frequencies onto merge targets (traps in `docs/history/2026-09-15-duplicate-service-lexemes.md`).
 
@@ -194,3 +194,14 @@ After the 2026-09-23 snapshot upload, **production is the source of truth** for 
 - `scripts/db/run.ts`, `scripts/db/manifest.ts`, `scripts/db/lib/registry.ts` (+ `registry.test.ts`)
 - `prod.sh`, `scripts/ops/remote.sh` (ssh helpers shared with `release.sh`; sudoers drop-in noted above), `scripts/local/pull-prod.sh` (replaced `sync-data.sh`)
 - `scripts/db/corpus-export-manual.ts`, `scripts/db/corpus-import-manual.ts` (+ `corpus-manual.test.ts`)
+
+### Isolated deployment (2026-10-18)
+
+See `docs/deployment.md` before changing deployment scripts. Build only in
+`.releases/` worktrees; never run npm ci/build in the live control checkout.
+`current`/`previous` select application releases; root databases/env/media/logs
+remain shared. `prod.sh` must execute the active release, not the control checkout.
+New schema entries must declare `rollbackSafe: true` only after verifying old code
+can still read/write the new schema. Before candidate startup failures may restore
+DB snapshots; after startup rollback is code-only to preserve accepted writes.
+`release.sh` never uploads dotenv files and no longer accepts `--skip-backup`.

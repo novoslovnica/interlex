@@ -29,17 +29,17 @@ remote()  { echo "$SSH_USER@$SSH_HOST:$1"; }
 remote_app() {
     local cmd
     cmd=$(printf '%q ' "$@")
-    ssh_run "export NVM_DIR=\"\$HOME/.nvm\"; [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"; cd $REMOTE_DIR && $cmd"
+    ssh_run "export NVM_DIR=\"\$HOME/.nvm\"; [ ! -s \"\$NVM_DIR/nvm.sh\" ] || . \"\$NVM_DIR/nvm.sh\"; export INTERLEX_ROOT='$REMOTE_DIR'; active='$REMOTE_DIR'; if [ -L '$REMOTE_DIR/current' ]; then active=\$(readlink -f '$REMOTE_DIR/current'); . \"\$active/scripts/ops/release-env.sh\"; fi; cd \"\$active\" && $cmd"
 }
 
-# Сервер делает git pull с origin/main: незапушенное на прод не попадёт.
+# Релиз закреплён за HEAD, который должен совпадать с origin/main.
 require_pushed_main() {
     git fetch -q origin main
     local ahead branch
     ahead=$(git rev-list --count origin/main..HEAD)
     branch=$(git rev-parse --abbrev-ref HEAD)
-    if [ "$branch" != "main" ] || [ "$ahead" != "0" ]; then
-        echo "branch=$branch, commits ahead of origin/main: $ahead - push first (git push origin main)" >&2
+    if [ "$branch" != "main" ] || [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+        echo "branch=$branch, commits ahead of origin/main: $ahead - sync main with origin/main first" >&2
         exit 2
     fi
     if [ -n "$(git status --porcelain --untracked-files=no)" ]; then

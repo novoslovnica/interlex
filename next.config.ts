@@ -40,6 +40,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+    // Release worktrees live beneath the control checkout. Without an explicit
+    // root, Next chooses the outer package-lock and can resolve live dependencies.
+    turbopack: { root: process.cwd() },
+    outputFileTracingRoot: process.cwd(),
     experimental: {
         serverActions: {
             // Лимит глобальный для всех server actions, включая публичные

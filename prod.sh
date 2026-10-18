@@ -24,7 +24,7 @@ server_commit_matches() {
     git fetch -q origin main
     local local_head server_head
     local_head=$(git rev-parse origin/main)
-    server_head=$(ssh_run "cd $REMOTE_DIR && git rev-parse HEAD")
+    server_head=$(remote_app git rev-parse HEAD)
     if [ "$local_head" != "$server_head" ]; then
         echo "the server is at ${server_head:0:8}, origin/main is ${local_head:0:8} - run bash release.sh first," >&2
         echo "otherwise the dry run checks a different version of the script than the one you reviewed" >&2

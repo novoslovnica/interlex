@@ -78,3 +78,9 @@ services/telegram-bot/dist/
 prisma/generated/
 # ESSJa source dump — хранится сжатым (seed-proto.ts читает .gz)
 data/essja_dump.json
+
+# Isolated production releases and atomic pointers
+/.releases/
+/.deploy/
+/current
+/previous

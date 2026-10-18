@@ -22,11 +22,13 @@ import { execSync, spawn } from "child_process"
 import fs from "fs"
 import path from "path"
 import dotenv from "dotenv"
-import { DB_FILES, MANIFEST, findEntry, isLegacyScript, schemaMigrations, type DbName, type ManifestEntry } from "./manifest"
+import { DB_FILES, MANIFEST, findEntry, isLegacyScript, type DbName, type ManifestEntry } from "./manifest"
 import {
     backupFileName, checkApply, checksumDrift, ensureRegistry, fileChecksum, lastApplied,
     recordFinish, recordStart, rotateBackups, type RunMode,
 } from "./lib/registry"
+
+import { pendingSchema } from "./lib/migration-plan"
 
 const ROOT = process.cwd()
 if (!fs.existsSync(path.join(ROOT, "scripts/db/manifest.ts"))) {
@@ -62,6 +64,12 @@ function openRegistry(db: DbName): Database.Database {
 // --- lock: два запуска одновременно на одной машине не идут (реанализ корпуса
 // рядом с другим писателем уже однажды убил трёхчасовой прогон - AGENTS.md).
 function acquireLock(): () => void {
+    // The deploy holds this lock across backup, migration, cutover and health checks.
+    const owner = process.env.DB_RUN_LOCK_OWNER
+    if (owner && fs.readFileSync(LOCK_PATH, "utf8").trim() === owner) {
+        process.kill(Number(owner), 0)
+        return () => {}
+    }
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
             const fd = fs.openSync(LOCK_PATH, "wx")
@@ -204,10 +212,7 @@ function status(): void {
 }
 
 async function migrate(): Promise<number> {
-    const pending = schemaMigrations().filter((e) => {
-        if (!fs.existsSync(dbPath(e.db))) { console.log(`skip ${e.path}: ${DB_FILES[e.db]} missing`); return false }
-        const r = openRegistry(e.db); const a = lastApplied(r, e.path); r.close(); return !a
-    })
+    const pending = pendingSchema(ROOT, DB_DIR)
     if (pending.length === 0) { console.log("no pending schema migrations"); return 0 }
     for (const e of pending) {
         const exit = await execute(e, "apply", { again: false, args: [] })
@@ -251,6 +256,9 @@ async function main(): Promise<number> {
         case "status":
             status()
             return 0
+        case "pending-schema":
+            console.log([...new Set(pendingSchema(ROOT, DB_DIR).map((entry) => entry.db))].join("\n"))
+            return 0
         case "migrate": {
             const release = acquireLock()
             try { return await migrate() } finally { release() }
@@ -265,10 +273,11 @@ async function main(): Promise<number> {
         }
         case "mark-applied": {
             if (!target) throw new Error("usage: mark-applied <script-path>")
-            return markApplied(requireEntry(target))
+            const release = acquireLock()
+            try { return markApplied(requireEntry(target)) } finally { release() }
         }
         default:
-            console.error("commands: status | migrate | run <path> [--apply] [--again] [--detach] [-- args] | mark-applied <path>")
+            console.error("commands: status | pending-schema | migrate | run <path> [--apply] [--again] [--detach] [-- args] | mark-applied <path>")
             return 2
     }
 }

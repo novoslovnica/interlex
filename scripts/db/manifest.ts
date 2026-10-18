@@ -29,6 +29,8 @@ export interface ManifestEntry {
     dryRun: boolean
     /** Долгий (десятки минут и больше): на проде запускать с --detach. */
     heavy?: boolean
+    /** Schema remains readable/writable by the previous release (expand/contract). */
+    rollbackSafe?: boolean
     /** Не делать бэкап базы перед --apply (corpus.db - 5 ГБ, скрипт сам безопасен). */
     noBackup?: boolean
     /** Меняет схему, которую читает Prisma-клиент: после него нужен рестарт службы. */
@@ -56,14 +58,14 @@ export const MANIFEST: ManifestEntry[] = [
     // (word_comments, translation_votes, contributor_stats) и auth-таблицы
     // (user_profiles и др.) на проде отсутствовали, из-за чего /words/[id]
     // падал с "no such table" (2026-10-13). Каждая миграция идемпотентна.
-    { path: "scripts/db/2026-08-12-add-telegram-auth-nonce.ts", db: "auth", kind: "schema", dryRun: false, needsRestart: true, note: "telegram_auth_nonces (replay-защита входа через Telegram)" },
-    { path: "scripts/db/2026-09-19-add-community-auth-tables.ts", db: "auth", kind: "schema", dryRun: false, needsRestart: true, note: "user_languages / user_profiles / role_audit" },
-    { path: "scripts/db/2026-09-19-add-community-translation-votes.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes + translations.community*" },
-    { path: "scripts/db/2026-09-19-add-community-reputation.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "translation_votes.agreed/controlExpected + contributor_stats" },
-    { path: "scripts/db/2026-09-23-add-word-comments.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "word_comments (обсуждение на странице слова)" },
-    { path: "scripts/db/2026-10-14-add-corpus-homonym-group-key.ts", db: "corpus", kind: "schema", dryRun: false, needsRestart: true, note: "CorpusToken.homonymGroupKey + индекс (очередь массовой разметки омонимов, п.111)" },
+    { path: "scripts/db/2026-08-12-add-telegram-auth-nonce.ts", db: "auth", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "telegram_auth_nonces (replay-защита входа через Telegram)" },
+    { path: "scripts/db/2026-09-19-add-community-auth-tables.ts", db: "auth", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "user_languages / user_profiles / role_audit" },
+    { path: "scripts/db/2026-09-19-add-community-translation-votes.ts", db: "interlex", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "translation_votes + translations.community*" },
+    { path: "scripts/db/2026-09-19-add-community-reputation.ts", db: "interlex", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "translation_votes.agreed/controlExpected + contributor_stats" },
+    { path: "scripts/db/2026-09-23-add-word-comments.ts", db: "interlex", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "word_comments (обсуждение на странице слова)" },
+    { path: "scripts/db/2026-10-14-add-corpus-homonym-group-key.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "CorpusToken.homonymGroupKey + индекс (очередь массовой разметки омонимов, п.111)" },
 
-    { path: "scripts/db/2026-10-18-add-homonym-review-history.ts", db: "corpus", kind: "schema", dryRun: false, note: "контекстная разметка омонимов: журнал пакетов и защита отката от последующих правок" },
+    { path: "scripts/db/2026-10-18-add-homonym-review-history.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, note: "контекстная разметка омонимов: журнал пакетов и защита отката от последующих правок" },
 
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
