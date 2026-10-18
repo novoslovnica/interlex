@@ -1,6 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Link from "next/link";
 import React from "react";
@@ -14,20 +14,26 @@ import {NextIntlClientProvider} from "next-intl";
 import {getLocale, getMessages} from "next-intl/server";
 import Title from "@/components/Title";
 
-const geistSans = Geist({
+// Vendored fonts keep fresh release builds independent of Google Fonts responses.
+const geistSans = localFont({
+  src: "./fonts/Geist.woff2",
+  weight: "100 900",
+  display: "swap",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMono.woff2",
+  weight: "100 900",
+  display: "swap",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
 });
 
-const notoSans = Noto_Sans({
+const notoSans = localFont({
+  src: "./fonts/NotoSans.woff2",
+  weight: "100 900",
+  display: "swap",
   variable: "--font-ipa",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {

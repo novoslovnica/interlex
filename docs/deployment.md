@@ -108,3 +108,10 @@ bash release.sh --rollback
 резервные копии из `.deploy/*/rollback` удаляйте отдельно по принятому сроку хранения.
 Сборка отказывается стартовать при свободном месте меньше 2 GiB; перед остановкой
 проверяется дополнительный запас на копии затронутых баз.
+
+Основные шрифты Geist, Geist Mono и Noto Sans хранятся в `app/fonts/` и подключены
+через `next/font/local`. Чистая сборка не обращается за ними к Google Fonts:
+его extensionless font URLs ломали Next 16/Turbopack на первом изолированном
+релизе (https://github.com/vercel/next.js/issues/99114). Лицензии и исходники —
+`app/fonts/README.md`. Декоративные Monomakh/Glagolitic загружаются браузером
+отдельно и не участвуют в сборке.
