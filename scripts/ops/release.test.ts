@@ -38,6 +38,8 @@ function fixture(scenario: string) {
     write("node_modules/keep", "live-dependencies")
     write("prisma/generated/keep", "live-generated-client")
     write(".env", "SECRET=server-only\n")
+    write("scripts/python/.venv/keep", "shared-python-runtime")
+    write("drafts/brill_glyph_map.json", '{"glyph":"value"}')
     for (const db of ["auth", "interlex", "library", "corpus", "historical"]) write(`${db}.db`, "original-data")
     const stage = path.join(root, ".deploy/test")
     fs.mkdirSync(stage, { recursive: true })
@@ -58,6 +60,9 @@ function fixture(scenario: string) {
         echo "npm $*" >> "$INTERLEX_ROOT/events"
         if [ "$1" = ci ]; then mkdir node_modules; echo isolated > node_modules/keep; fi
         if [ "$1" = run ]; then
+            for shared in logs exports public/covers public/audio scripts/python/.venv drafts/brill_glyph_map.json; do
+                [ ! -L "$shared" ] || { echo "external shared symlink present during build: $shared" >&2; exit 1; }
+            done
             [ "$SCENARIO" != build-fail ] || exit 1
             if [ "$SCENARIO" = build-signal ]; then kill -TERM "$PPID"; exit 1; fi
             mkdir .next; echo candidate-build > .next/BUILD_ID
@@ -106,6 +111,10 @@ describe("isolated release orchestration", () => {
         expect(f.read(".next/BUILD_ID")).toBe("legacy-build")
         expect(f.read("node_modules/keep")).toBe("live-dependencies")
         expect(f.read("auth.db")).toBe("original-data")
+        for (const shared of ["logs", "exports", "public/covers", "public/audio", "scripts/python/.venv", "drafts/brill_glyph_map.json"]) {
+            expect(fs.realpathSync(path.join(f.root, "current", shared))).toBe(fs.realpathSync(path.join(f.root, shared)))
+            expect(fs.realpathSync(path.join(f.root, "previous", shared))).toBe(fs.realpathSync(path.join(f.root, shared)))
+        }
         expect(f.read("current/.env")).toBe("SECRET=server-only\n")
         expect(f.read("previous/.next/BUILD_ID")).toBe("legacy-build")
         const nextDir = path.join(f.root, "current/node_modules/next/dist/bin")

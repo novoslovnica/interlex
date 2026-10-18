@@ -31,6 +31,16 @@ atomic_link() {
     ln -s "$target" "$link.next-$$" &&
     mv -Tf "$link.next-$$" "$link"
 }
+link_shared_runtime() {
+    local release_dir=$1 relative
+    for relative in logs exports public/covers public/audio scripts/python/.venv brill_glyph_map.json drafts/brill_glyph_map.json; do
+        if [ -e "$INTERLEX_ROOT/$relative" ] && [ ! -e "$release_dir/$relative" ] && [ ! -L "$release_dir/$relative" ]; then
+            mkdir -p "$(dirname "$release_dir/$relative")"
+            ln -s "$INTERLEX_ROOT/$relative" "$release_dir/$relative"
+        fi
+    done
+    return 0
+}
 ready() {
     local expected=$1 body attempt
     for ((attempt=1; attempt<=HEALTH_ATTEMPTS; attempt++)); do
@@ -116,9 +126,6 @@ else
         [ ! -f "$INTERLEX_ROOT/$envfile" ] || ln -s "$INTERLEX_ROOT/$envfile" "$TARGET/$envfile"
     done
     mkdir -p "$INTERLEX_ROOT/exports" "$INTERLEX_ROOT/public/covers" "$INTERLEX_ROOT/public/audio"
-    ln -s "$INTERLEX_ROOT/logs" "$TARGET/logs"
-    ln -s "$INTERLEX_ROOT/exports" "$TARGET/exports"
-    for media in covers audio; do ln -s "$INTERLEX_ROOT/public/$media" "$TARGET/public/$media"; done
     . "$TARGET/scripts/ops/release-env.sh"
     cd "$TARGET"
     export RELEASE_COMMIT=$COMMIT
@@ -129,6 +136,10 @@ else
     for kind in auth data library corpus historical; do DB_TYPE=$kind npx prisma generate; done
     npm run build
     [ -s .next/BUILD_ID ]
+    # Turbopack traces filesystem reads (e.g. Hunspell metadata). External data
+    # symlinks must appear only after build, or its project-root sandbox rejects
+    # them. Runtime still sees shared files, never copies baked into a release.
+    link_shared_runtime "$TARGET"
     # Validate all uploaded SQLite snapshots before stopping the app.
     for db in "${DBS[@]}"; do
         [ -f "$STAGE/$db-release.db" ]
@@ -145,10 +156,10 @@ else
         ln -s "$INTERLEX_ROOT/.next" "$PREVIOUS/.next"
         ln -s "$INTERLEX_ROOT/prisma/generated" "$PREVIOUS/prisma/generated"
         cp "$TARGET/scripts/ops/release-env.sh" "$PREVIOUS/scripts/ops/release-env.sh"
-        for shared in .env .env.local .env.production .env.production.local logs exports; do
+        for shared in .env .env.local .env.production .env.production.local; do
             [ ! -e "$INTERLEX_ROOT/$shared" ] || ln -s "$INTERLEX_ROOT/$shared" "$PREVIOUS/$shared"
         done
-        for media in covers audio; do ln -s "$INTERLEX_ROOT/public/$media" "$PREVIOUS/public/$media"; done
+        link_shared_runtime "$PREVIOUS"
         touch "$PREVIOUS/.legacy-release"
         atomic_link "$PREVIOUS" "$INTERLEX_ROOT/current"
     fi

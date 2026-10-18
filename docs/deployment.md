@@ -115,3 +115,14 @@ bash release.sh --rollback
 релизе (https://github.com/vercel/next.js/issues/99114). Лицензии и исходники —
 `app/fonts/README.md`. Декоративные Monomakh/Glagolitic загружаются браузером
 отдельно и не участвуют в сборке.
+
+Симлинки на общие `logs`, `exports`, `public/covers` и `public/audio` создаются
+**после** `next build`, перед миграциями и запуском. Иначе Turbopack при трассировке
+`fs.readFileSync` (например, `exports/hunspell/metadata.json`) выходит за границу
+`root` и прерывает сборку. Runtime получает общие файлы по тем же путям; копий
+выгрузок внутри сборки нет.
+
+Опциональные локальные runtime-ресурсы (`scripts/python/.venv` для RuWordNet и
+`brill_glyph_map.json` в корне/`drafts` для ESSJa) также подключаются после сборки
+при наличии на сервере, в том числе в legacy-релиз для отката. Рабочие Python
+скрипты берутся из нового коммита, окружение и справочная БД остаются общими.
