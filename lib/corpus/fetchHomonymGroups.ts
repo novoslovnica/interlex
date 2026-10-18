@@ -1,3 +1,4 @@
+import type { ReviewContext } from "@/lib/corpus/homonymReview"
 import { prismaCorpus, prismaData } from "@/lib/prisma"
 import { Prisma } from "@/prisma/generated/corpus/client"
 import { parseHomonymGroupKey } from "@/lib/corpus/homonymGroup"
@@ -23,7 +24,7 @@ export interface HomonymGroupListRow {
   groupKey: string
   /** Нормализованная словоформа (первая часть ключа). */
   form: string
-  /** Сколько неразрешённых токенов закроет одно решение. */
+  /** Сколько неразрешённых вхождений ожидает контекстной проверки. */
   tokenCount: number
   documentCount: number
   /** Конкурирующие лексемы из самого ключа — краткая подпись в списке. */
@@ -43,17 +44,10 @@ export interface HomonymGroupCandidate {
   corpusFrequencyPerMln: number | null
 }
 
-export interface HomonymGroupExample {
-  tokenId: string
-  surfaceForm: string
-  sentence: string
-  documentSlug: string
-  documentTitle: string
-}
-
 export interface HomonymGroupDetail {
   candidates: HomonymGroupCandidate[]
-  example: HomonymGroupExample | null
+  contexts: ReviewContext[]
+  nextCursor: string | null
 }
 
 // Форма-префикс для поиска по очереди; null означает «без фильтра».
@@ -117,12 +111,12 @@ export async function fetchHomonymGroups(options: {
 }
 
 /**
- * Конкурирующие лексемы группы + пример предложения. Лексемы берутся из
+ * Конкурирующие лексемы группы (контексты читаются отдельно). Лексемы берутся из
  * кандидатов (в них есть lemma/pos), а словарная форма и частотность —
  * отдельным запросом в interlex.db: границу баз в одном запросе не пересекаем
  * (см. AGENTS.md).
  */
-export async function fetchHomonymGroupDetail(groupKey: string): Promise<HomonymGroupDetail> {
+export async function fetchHomonymGroupDetail(groupKey: string): Promise<{ candidates: HomonymGroupCandidate[] }> {
   const candidateRows = await prismaCorpus.$queryRaw<
     { wordSlug: string; lemma: string; pos: string; candidateTokens: bigint; currentWins: bigint }[]
   >`
@@ -159,30 +153,5 @@ export async function fetchHomonymGroupDetail(groupKey: string): Promise<Homonym
     // Сверху — то, что уже выигрывает сейчас: самый вероятный разбор.
     .sort((a, b) => b.currentWins - a.currentWins || b.candidateTokens - a.candidateTokens)
 
-  const exampleRows = await prismaCorpus.$queryRaw<
-    { tokenId: bigint; surfaceForm: string; sentence: string; documentSlug: string; documentTitle: string }[]
-  >`
-    SELECT t."id" AS tokenId,
-           t."surfaceForm" AS surfaceForm,
-           s."rawText" AS sentence,
-           t."documentSlug" AS documentSlug,
-           d."title" AS documentTitle
-    FROM "CorpusToken" t
-    JOIN "CorpusSentence" s ON s."id" = t."sentenceId"
-    JOIN "CorpusDocument" d ON d."slug" = t."documentSlug"
-    WHERE t."homonymGroupKey" = ${groupKey}
-    LIMIT 1
-  `
-  const first = exampleRows[0]
-  const example: HomonymGroupExample | null = first
-    ? {
-        tokenId: String(first.tokenId),
-        surfaceForm: first.surfaceForm,
-        sentence: first.sentence,
-        documentSlug: first.documentSlug,
-        documentTitle: first.documentTitle,
-      }
-    : null
-
-  return { candidates, example }
+  return { candidates }
 }

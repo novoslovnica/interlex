@@ -52,7 +52,7 @@ export default async function ModerationDashboardPage() {
     // по замеру scripts/db/measure-corpus-ambiguity.ts токенов с двумя и более
     // РАЗНЫМИ лексемами среди кандидатов ~1,09 млн, но они схлопываются в
     // считанные тысячи групп (форма ne — 79,8 тыс. токенов, na — 52 тыс.).
-    // Ссылка ведёт на страницу, где одно решение закрывает всю группу.
+    // Ссылка ведёт на контекстную проверку явно выбранных вхождений.
     //
     // Раньше здесь стоял счётчик matchCount > 1 со сноской «99% спорят о
     // граммеме одной лексемы, человеку нужно ~6 800 токенов». Сноска
@@ -79,11 +79,11 @@ export default async function ModerationDashboardPage() {
     { key: "corpus-candidates", label: "Кандидаты из корпуса", href: "/admin/corpus-candidates", feature: Feature.CorpusCandidatesReview, count: corpusClusters },
     {
       key: "corpus-homonyms",
-      label: "Омонимия корпуса (массово)",
+      label: "Омонимия корпуса (контексты)",
       href: "/admin/corpus/homonyms",
       feature: Feature.CorpusTokenDisambiguate,
       count: corpusHomonyms,
-      note: "Группы токенов с конкурирующими РАЗНЫМИ лексемами: одно решение закрывает всю группу",
+      note: "Группы неоднозначных форм: решение только для выбранных контекстов",
     },
     { key: "suggestions", label: "Предложенные слова", href: "/admin/suggestions", feature: Feature.SuggestionsReview, count: suggestionsPending },
     { key: "reports", label: "Жалобы на ошибки", href: "/admin/reports", feature: Feature.ReportsReview, count: reportsPending },

@@ -63,6 +63,8 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-09-23-add-word-comments.ts", db: "interlex", kind: "schema", dryRun: false, needsRestart: true, note: "word_comments (обсуждение на странице слова)" },
     { path: "scripts/db/2026-10-14-add-corpus-homonym-group-key.ts", db: "corpus", kind: "schema", dryRun: false, needsRestart: true, note: "CorpusToken.homonymGroupKey + индекс (очередь массовой разметки омонимов, п.111)" },
 
+    { path: "scripts/db/2026-10-18-add-homonym-review-history.ts", db: "corpus", kind: "schema", dryRun: false, note: "контекстная разметка омонимов: журнал пакетов и защита отката от последующих правок" },
+
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },

@@ -10,6 +10,7 @@
 // Usage:
 //   npx tsx scripts/db/corpus-import-manual.ts <export.json> [--db=corpus-release.db] [--apply] [--allow-missing]
 
+import { createHomonymReviewSchema } from "../../lib/corpus/homonymReviewSchema"
 import Database from "better-sqlite3"
 import fs from "fs"
 import path from "path"
@@ -115,6 +116,18 @@ export function importManual(db: Database.Database, data: ManualExport): ImportR
             p.siblingWordSlug, p.possibleEndingGap, p.rank, p.occurrenceCount, p.firstSeenAt, p.lastSeenAt,
             p.status, p.resolutionNote, p.candidateId, p.reviewedByEmail, p.reviewedAt)
         report.proposals.inserted++
+    }
+    if (data.homonymHistory) {
+        createHomonymReviewSchema(db)
+        // Keep evidence across a snapshot replacement. Before/after snapshots
+        // refer to the ORIGINAL token/candidate ids: never restore them into a
+        // retokenized corpus. Human decisions themselves are remapped above.
+        const insertBatch = db.prepare(`INSERT OR REPLACE INTO corpus_homonym_batches
+            (id, groupKey, wordSlug, userId, userEmail, createdAt, undoneAt, undoneBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+        const insertEntry = db.prepare(`INSERT OR REPLACE INTO corpus_homonym_batch_entries
+            (batchId, tokenId, beforeState, afterState, state) VALUES (?, ?, ?, ?, ?)`)
+        for (const b of data.homonymHistory.batches) insertBatch.run(b.id, b.groupKey, b.wordSlug, b.userId, b.userEmail, b.createdAt, b.undoneAt, b.undoneBy)
+        for (const e of data.homonymHistory.entries) insertEntry.run(e.batchId, e.tokenId, e.beforeState, e.afterState, e.state === "active" ? "conflict" : e.state)
     }
     return report
 }

@@ -91,3 +91,31 @@ describe("corpus manual edits export/import", () => {
             .toEqual({ status: "rejected", reviewedByEmail: "mod@example.org", exampleTokenIds: "[2]" })
     })
 })
+
+describe("homonym batch evidence on corpus replacement", () => {
+    it("preserves journal and refuses rollback against rebuilt token ids", async () => {
+        const { createHomonymReviewSchema } = await import("../../lib/corpus/homonymReviewSchema")
+        const { fetchReviewContexts, applyHomonymReview, undoHomonymReview, fetchReviewBatches } = await import("../../lib/corpus/homonymReview")
+        const db = prodCorpus()
+        db.exec("ALTER TABLE CorpusToken ADD COLUMN homonymGroupKey TEXT")
+        createHomonymReviewSchema(db)
+        db.exec("UPDATE CorpusToken SET homonymGroupKey = 'dom-group' WHERE id = 3")
+        const tokens = fetchReviewContexts(db, "dom-group").contexts
+        const { batchId } = applyHomonymReview(db, { groupKey: "dom-group", wordSlug: "dom-VERB", tokens, user: { id: "mod" } })
+        const data = exportManual(db, "prod")
+        const exportedChecksum = data.counts.homonymHistory
+        expect(data.homonymHistory?.entries).toHaveLength(1)
+        expect(exportedChecksum).toBeDefined()
+        db.exec("UPDATE CorpusToken SET resolutionSource = 'manual' WHERE id = 3")
+        expect(countManual(db).homonymHistory).not.toBe(exportedChecksum)
+
+        const rebuilt = prodCorpus()
+        importManual(rebuilt, data)
+        expect(fetchReviewBatches(rebuilt)[0]).toMatchObject({ id: batchId, active: 0, conflicts: 1 })
+        expect(undoHomonymReview(rebuilt, batchId, "admin")).toEqual({ restored: 0, conflicts: 1 })
+        importManual(rebuilt, data)
+        expect(fetchReviewBatches(rebuilt)).toHaveLength(1)
+        db.close()
+        rebuilt.close()
+    })
+})

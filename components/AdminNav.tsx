@@ -91,7 +91,7 @@ const navItems: NavEntry[] = [
         children: [
             { href: "/admin/corpus/builder", label: "Конструктор", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
             { href: "/admin/corpus/documents", label: "Документы", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
-            { href: "/admin/corpus/homonyms", label: "Омонимия (массово)", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusTokenDisambiguate },
+            { href: "/admin/corpus/homonyms", label: "Омонимия (контексты)", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusTokenDisambiguate },
             { href: "/admin/corpus/homonym-duplicates", label: "Дубли по омонимам", roles: ["ADMIN", "MODERATOR"], feature: Feature.DeduplicationManage },
             { href: "/admin/corpus/import", label: "Импорт", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },
             { href: "/admin/corpus/semantic-field", label: "Семантическое поле", roles: ["ADMIN", "MODERATOR"], feature: Feature.CorpusBuilder },

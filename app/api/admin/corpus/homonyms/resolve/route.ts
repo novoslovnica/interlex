@@ -2,41 +2,29 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { checkPermission } from "@/lib/permissions"
 import { Feature } from "@/config/features"
-import { resolveTokenHomonymGroup } from "@/lib/corpus/resolveTokenHomonym"
+import { applyHomonymReview, HomonymReviewConflict, isReviewedTokens, withHomonymReviewDb } from "@/lib/corpus/homonymReview"
 
-/**
- * Массовое разрешение омонимов группы (roadmap п.111): одно решение модератора
- * закрывает все неразрешённые токены группы. Логика — в
- * lib/corpus/resolveTokenHomonym.ts (resolveTokenHomonymGroup), здесь только
- * сессия, гейт и разбор тела — тот же приём, что и у точечного resolve-роута.
- */
 export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session || !(await checkPermission(session, Feature.CorpusTokenDisambiguate))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
-
-  const body = (await request.json().catch(() => null)) as
-    | { groupKey?: string; wordSlug?: string }
-    | null
-  if (!body || typeof body.groupKey !== "string" || typeof body.wordSlug !== "string") {
-    return NextResponse.json({ error: "groupKey and wordSlug are required" }, { status: 400 })
+  const body: unknown = await request.json().catch(() => null)
+  if (!body || typeof body !== "object" || !("groupKey" in body) || !("wordSlug" in body) || !("tokens" in body)
+    || typeof body.groupKey !== "string" || !body.groupKey || typeof body.wordSlug !== "string" || !body.wordSlug
+    || !isReviewedTokens(body.tokens)) {
+    return NextResponse.json({ error: "Выберите от 1 до 50 проверенных вхождений. Решение для всей группы запрещено." }, { status: 400 })
   }
-
-  const result = await resolveTokenHomonymGroup(body.groupKey, body.wordSlug)
-
-  if (result.status === "not_found") {
-    return NextResponse.json({ error: "Group has no unresolved tokens" }, { status: 404 })
+  const { groupKey, wordSlug, tokens } = body
+  try {
+    const result = withHomonymReviewDb((db) => applyHomonymReview(db, {
+      groupKey, wordSlug, tokens, user: session.user ?? {},
+    }))
+    return NextResponse.json({ ok: true, ...result })
+  } catch (error) {
+    if (error instanceof HomonymReviewConflict) {
+      return NextResponse.json({ error: error.message }, { status: 409 })
+    }
+    throw error
   }
-  if (result.status === "invalid_input") {
-    return NextResponse.json({ error: result.message }, { status: 400 })
-  }
-
-  return NextResponse.json({
-    ok: true,
-    resolvedTokens: result.resolvedTokens,
-    wordSlug: result.wordSlug,
-    lemma: result.lemma,
-    pos: result.pos,
-  })
 }

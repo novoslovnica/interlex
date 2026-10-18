@@ -345,3 +345,28 @@ model CorpusConfig {
 
   @@map("corpus_config")
 }
+
+// Corpus-local moderation history; deliberately no FK to tokens: evidence
+// must survive token/document deletion. Conflict guards are SQL triggers.
+model CorpusHomonymBatch {
+  id String @id
+  groupKey String
+  wordSlug String
+  userId String?
+  userEmail String?
+  createdAt String
+  undoneAt String?
+  undoneBy String?
+  @@map("corpus_homonym_batches")
+}
+
+model CorpusHomonymBatchEntry {
+  batchId String
+  tokenId String
+  beforeState String
+  afterState String
+  state String @default("active")
+  @@id([batchId, tokenId])
+  @@index([tokenId, state], map: "corpus_homonym_entries_token_state")
+  @@map("corpus_homonym_batch_entries")
+}

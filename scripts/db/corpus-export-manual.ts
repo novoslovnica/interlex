@@ -16,6 +16,7 @@
 //   npx tsx scripts/db/corpus-export-manual.ts --count     только счётчики, JSON в stdout
 // База: CORPUS_SQLITE_DB или ./corpus.db.
 
+import { createHash } from "node:crypto"
 import Database from "better-sqlite3"
 import fs from "fs"
 import path from "path"
@@ -65,12 +66,25 @@ export interface ManualProposal {
     reviewedAt: string | null
 }
 
-export interface ManualCounts { tokens: number; dependencies: number; proposals: number }
+export interface HomonymHistory {
+    batches: { id: string; groupKey: string; wordSlug: string; userId: string | null; userEmail: string | null; createdAt: string; undoneAt: string | null; undoneBy: string | null }[]
+    entries: { batchId: string; tokenId: string; beforeState: string; afterState: string; state: string }[]
+}
+export interface ManualCounts { tokens: number; dependencies: number; proposals: number; homonymHistory?: string }
+
+function readHomonymHistory(db: Database.Database): HomonymHistory | undefined {
+    if (!db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'corpus_homonym_batches'").get()) return undefined
+    return {
+        batches: db.prepare("SELECT * FROM corpus_homonym_batches ORDER BY id").all() as HomonymHistory["batches"],
+        entries: db.prepare("SELECT * FROM corpus_homonym_batch_entries ORDER BY batchId, tokenId").all() as HomonymHistory["entries"],
+    }
+}
 
 export interface ManualExport {
     exportedAt: string
     source: string
     counts: ManualCounts
+    homonymHistory?: HomonymHistory
     tokens: ManualToken[]
     dependencies: ManualDependency[]
     proposals: ManualProposal[]
@@ -78,7 +92,9 @@ export interface ManualExport {
 
 export function countManual(db: Database.Database): ManualCounts {
     const n = (sql: string) => (db.prepare(sql).get() as { c: number }).c
+    const history = readHomonymHistory(db)
     return {
+        ...(history ? { homonymHistory: createHash("sha256").update(JSON.stringify(history)).digest("hex") } : {}),
         tokens: n(`SELECT COUNT(*) c FROM CorpusToken WHERE resolutionSource = 'manual'`),
         dependencies: n(`SELECT COUNT(*) c FROM CorpusDependency WHERE source = 'manual'`),
         proposals: n(`SELECT COUNT(*) c FROM CorpusCandidateProposal WHERE reviewedByEmail IS NOT NULL`),
@@ -144,7 +160,8 @@ export function exportManual(db: Database.Database, source: string): ManualExpor
     return {
         exportedAt: new Date().toISOString(),
         source,
-        counts: { tokens: tokens.length, dependencies: dependencies.length, proposals: proposals.length },
+        counts: countManual(db),
+        homonymHistory: readHomonymHistory(db),
         tokens,
         dependencies,
         proposals,
@@ -159,7 +176,7 @@ function main() {
         return
     }
     const out = process.argv.find((a) => a.startsWith("--out="))?.slice("--out=".length) ?? "corpus-manual-export.json"
-    const data = exportManual(db, dbPath)
+    const data = db.transaction(() => exportManual(db, dbPath)).deferred()
     fs.writeFileSync(out, JSON.stringify(data))
     console.log(`${dbPath} -> ${out}: ${data.counts.tokens} tokens, ${data.counts.dependencies} dependencies, ${data.counts.proposals} proposal decisions`)
 }
