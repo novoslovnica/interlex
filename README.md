@@ -1,79 +1,92 @@
-# Interlex 🌐
+# Interlex
 
-Платформа для изучения языков и управления лексиконом. Разработана на стекe Next.js (App Router), Prisma ORM (SQLite) и NextAuth.js.
+Словарь, корпус и платформа изучения межславянского языка:
+[interslavic-lexicon.com](https://www.interslavic-lexicon.com).
 
-Проект спроектирован с учетом поддержки ИИ-ассистентов (Cursor, GitHub Copilot) — основные архитектурные правила описаны в файле `agents.md`.
+Next.js 16 (App Router), React, TypeScript, Tailwind CSS, Prisma 7 и NextAuth v5.
+Пять отдельных SQLite-баз: `auth.db`, `interlex.db`, `library.db`, `corpus.db`,
+`historical.db`. Файлы лежат в корне проекта и не входят в Git.
 
----
+Перед изменениями прочитайте [AGENTS.md](AGENTS.md). Архитектурные решения и
+инциденты описаны в [docs/history](docs/history), задачи — в [roadmap](docs/roadmap.md).
 
-## 🛠 Технологический стек
+## Локальный запуск
 
-* **Frontend:** Next.js (React), Tailwind CSS, TypeScript
-* **State & Data:** Prisma Client, `next-safe-action` (для безопасных серверных действий)
-* **Auth:** NextAuth.js
-* **Database:** SQLite (с поддержкой виртуальных таблиц FTS5 для быстрого полнотекстового поиска)
+Используйте Node.js 22 (как в CI) и зависимости из lock-файла:
 
----
-
-## 🚀 Быстрый старт
-
-### 1. Установка зависимостей
 ```bash
-npm install
+npm ci
 ```
 
-### 2. Настройка окружения
-Создайте файл `.env` в корневом каталоге и добавьте необходимые переменные (базовый шаблон):
-```env
-DATABASE_URL="file:./dev.db"
-NEXTAUTH_SECRET="your-secret-key"
-# Дополнительные ключи для OAuth-провайдеров
+Создайте `.env` с отдельным секретом для разработки и путями к локальным базам:
+
+```dotenv
+AUTH_SECRET="replace-with-a-local-random-secret"
+AUTH_DATABASE_URL="file:./auth.db"
+DATA_DATABASE_URL="file:./interlex.db"
+LIBRARY_DATABASE_URL="file:./library.db"
+CORPUS_DATABASE_URL="file:./corpus.db"
+HISTORICAL_DATABASE_URL="file:./historical.db"
+SQLITE_DB="./interlex.db"
+CORPUS_SQLITE_DB="./corpus.db"
 ```
 
-### 3. Подготовка базы данных (Prisma)
-Проект использует локальную базу данных SQLite. Запустите генерацию клиента и примените миграции:
+Для входа добавьте настройки нужных OAuth/Telegram-провайдеров из
+[auth.config.ts](auth.config.ts). Секреты и рабочие `.env` не коммитятся.
+
+Сгенерируйте все пять клиентов (базы для генерации не требуются):
+
 ```bash
-# Генерация Prisma Client
-npm run prisma:generate
-
-# Применение миграций / пуш схемы в БД
-npx prisma db push
+npm run db:gen-auth
+npm run db:gen-data
+npm run db:gen-library
+npm run db:gen-corpus
+npm run db:gen-historical
 ```
 
-### 4. Запуск в режиме разработки
+До запуска приложения нужны подготовленные локальные базы с исходными данными.
+Генерация клиента не создаёт словарь, FTS-таблицы или корпус. Для разработчика с
+доступом к production безопасное получение копий описано в
+[AGENTS.md](AGENTS.md#production-data-changes-2026-09-24):
+`bash scripts/local/pull-prod.sh --db=interlex`; для библиотеки/корпуса выберите
+соответствующую базу. `auth.db` с production не скачивается — используйте отдельную
+базу и аккаунты разработки. `historical.db` подготавливается из исторических
+импортов. Не выполняйте `prisma db push`/`migrate dev` на рабочих копиях с данными:
+история Prisma-миграций не является реестром всех действующих изменений схемы.
+
 ```bash
 npm run dev
 ```
-Приложение будет доступно по адресу `http://localhost:3000`.
 
----
+Сайт откроется на [localhost:3000](http://localhost:3000).
 
-## 📦 Доступные скрипты (`package.json`)
+## Проверки
 
-* `npm run dev` — Запуск локального сервера разработки.
-* `npm run build` — Сборка оптимизированного Production-билда.
-* `npm run start` — Запуск собранного Production-сервера.
-* `npm run lint` — Проверка кода линтером Next.js.
-* `npm run prisma:generate` — Пересборка типов Prisma Client после изменения `schema.prisma`.
+```bash
+npm run test:run
+npm run typecheck:gate
+npm run lint:gate
+npm run build
+```
 
----
+Гейты TypeScript и ESLint запрещают новые ошибки относительно сохранённого
+baseline. Их успешное завершение не означает отсутствия старого долга.
+`npm run test` запускает Vitest в режиме наблюдения.
 
-## 📂 Структура и важные архитектурные правила
+## Базы и выкладка
 
-Перед началом разработки обязательно ознакомьтесь с полным текстом `agents.md`. Ключевые моменты:
+Production — источник истины для словаря, пользователей и библиотеки. Изменения
+схемы/данных проходят через [реестр скриптов](scripts/db/manifest.ts); базы нельзя
+заменять локальными файлами при обычном релизе. Подробный порядок и правила
+сохранения ручной разметки корпуса — в [AGENTS.md](AGENTS.md).
 
-1. **Компоненты (Архитектура Next.js):**
-    * Все страницы и базовые компоненты по умолчанию являются **Server Components**.
-    * Директива `"use client"` используется строго в интерактивных элементах (кнопки, формы, хуки).
-2. **База данных (Prisma + SQLite FTS5):**
-    * Для поиска по тексту используются виртуальные таблицы SQLite FTS5. Они создаются через сырые SQL-миграции и помечаются в схеме директивой `@@ignore`.
-    * Изменение данных в них происходит через триггеры БД, а выборка — через `$queryRaw` с оператором `MATCH`.
-3. **Безопасность Mutation (Server Actions):**
-    * Любые изменения данных (POST/PUT/DELETE) должны проходить через библиотеки валидации (например, `next-safe-action`) с обязательной проверкой сессии пользователя.
+```bash
+npm run db:status
+npm run db:run -- scripts/db/<script>.ts
+npm run db:run -- scripts/db/<script>.ts --apply
+```
 
----
-
-## 🤝 Вклад в разработку (Contribution)
-
-1. Убедитесь, что ваш код проходит проверку линтером: `npm run lint`.
-2. Если вы меняете структуру БД, обязательно обновляйте файлы миграций и не забывайте прописывать `@@ignore` для теневых и виртуальных таблиц FTS5.
+Для зарегистрированных data-скриптов первый запуск — dry run. Production:
+commit/push → `bash release.sh`; схемные миграции применяются во время релиза.
+Данные меняются отдельно через `bash prod.sh run <script>` и затем `--apply`.
+Авторизация сервера хранится в `.env.release` и не входит в Git.

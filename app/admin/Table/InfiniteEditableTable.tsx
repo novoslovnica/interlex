@@ -151,11 +151,13 @@ const [langFilterExpanded, setLangFilterExpanded] = useState(true);
                 if (unverifiedNsl) params.append('unverifiedNsl', '1');
 
                 const res = await fetch(`/api/lexicon?${params.toString()}`);
+                if (!res.ok) throw new Error("Не удалось загрузить страницу лексикона");
                 const data = await res.json();
+                if (!Array.isArray(data)) throw new Error("Некорректный ответ лексикона");
 
                 return {
                     data,
-                    nextOffset: data.length > 0 && !debouncedSearch ? pageParam + 30 : null,
+                    nextOffset: data.length === 30 ? pageParam + data.length : null,
                 };
             },
             initialPageParam: 0,

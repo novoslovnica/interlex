@@ -26,6 +26,7 @@ jobs:
       - run: npm run db:gen-data
       - run: npm run db:gen-library
       - run: npm run db:gen-corpus
+      - run: npm run db:gen-historical
 
       # Both gates are ratchets over pre-existing debt (see
       # scripts/ci/check-baseline.mjs): they fail on any error that isn't

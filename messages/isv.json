@@ -86,6 +86,7 @@
     "searchPlaceholder": "Vvedite tekst dlja iskanja...",
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
     "noResults": "Ničego ne najdeno",
+    "searchError": "Ne udalo se načitati rezultaty iskanja. Poprobujte ješče raz.",
     "loading": "Načitanje...",
     "loadMore": "Pokazati veči",
     "suggestWordCta": "Ne našli slovo? Predložite jego nam",

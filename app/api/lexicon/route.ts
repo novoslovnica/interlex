@@ -1,3 +1,4 @@
+import {parseLexiconPagination, LexiconPaginationError} from "@/lib/lexiconPagination";
 import {NextRequest, NextResponse} from "next/server";
 import {getDictItems} from "@/app/api/lexicon/services";
 import {auth} from "@/auth";
@@ -6,8 +7,15 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const params = new URLSearchParams(url.searchParams);
     const query = params.get('search') || "";
-    const offset = params.get('offset') || 0;
-    const limit = params.get('limit') || 0;
+    let pagination;
+    try {
+        pagination = parseLexiconPagination(params);
+    } catch (error) {
+        if (error instanceof LexiconPaginationError) {
+            return NextResponse.json({error: error.message}, {status: 400});
+        }
+        throw error;
+    }
     const mainCategory = params.get('mainCategory') || '';
     const usageType = params.get('usageType') || '';
     const filterLang = params.get('filterLang') || '';
@@ -21,8 +29,8 @@ export async function GET(request: NextRequest) {
 
     const dicts = await getDictItems(
         query,
-        Number(offset),
-        Number(limit),
+        pagination.offset,
+        pagination.limit,
         mainCategory,
         usageType,
         filterLang,

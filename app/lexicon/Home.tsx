@@ -8,6 +8,7 @@ import {saveScriptPreference} from "@/app/settings/actions";
 import BookmarkButton from "@/components/BookmarkButton";
 import DiacriticsHelper from "@/components/DiacriticsHelper";
 import {ScriptMode} from "@/lib/script-mode";
+import type {LexiconItem} from "@/app/api/lexicon/services";
 import {TRANSLATION_LANGUAGES} from "@/config/features";
 
 import "./main-page.css";
@@ -43,8 +44,8 @@ const USAGE_TYPE_LABELS: Record<string, string> = {
 
 const PAGE_SIZE = 20
 
-const WordCard = ({ onClickCard, item, currentScript }: { onClickCard: any; item: any; currentScript: ScriptMode }) => {
-    const wordValue = item.word?.value || item.value;
+const WordCard = ({ onClickCard, item, currentScript }: { onClickCard: (item: LexiconItem) => () => void; item: LexiconItem; currentScript: ScriptMode }) => {
+    const wordValue = item.word?.value || item.value || "";
     const cyrillicVariant = isvToCyr(wordValue);
     const latinVariant = wordValue.toLowerCase();
     const title = useMemo(() => {
@@ -78,10 +79,14 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     // искать лексемы по значению на этом языке (roadmap п.45).
     const [reverseLang, setReverseLang] = useState("");
     const [formScript, setFormScript] = useState<ScriptMode>(currentScript);
-    const [items, setItems] = useState<Array<any>>([]);
+    const [items, setItems] = useState<LexiconItem[]>([]);
     const [hasFetched, setHasFetched] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+    const [hasMore, setHasMore] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [searchError, setSearchError] = useState(false);
+    const activeSearch = useRef<{query: string; mc: string; ut: string; lang: string} | null>(null);
+    const searchRequest = useRef(0);
     const [filtersVisible, setFiltersVisible] = useState(true);
 
     const router = useRouter();
@@ -90,25 +95,49 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     const searchInputRef = useRef<HTMLInputElement>(null);
     const reverseSelectRef = useRef<HTMLSelectElement>(null);
 
-    const performSearch = useCallback((query: string, mc: string, ut: string, lang: string) => {
-        setIsLoading(true);
-        setVisibleCount(PAGE_SIZE);
-        const url = lang
-            ? `/api/lexicon/reverse?${new URLSearchParams({ search: query, lang, limit: '50', offset: '0' })}`
-            : (() => {
-                const params = new URLSearchParams({ search: query, limit: '50', offset: '0' });
-                if (mc) params.set('mainCategory', mc);
-                if (ut) params.set('usageType', ut);
-                return `/api/lexicon?${params}`;
-            })();
-        fetch(url)
-            .then(res => res.json())
-            .then((data) => {
-                setItems(data);
-                setHasFetched(true);
-            })
-            .finally(() => setIsLoading(false));
+    const performSearch = useCallback(async (query: string, mc: string, ut: string, lang: string, offset = 0) => {
+        const requestId = ++searchRequest.current;
+        setSearchError(false);
+        if (offset === 0) {
+            activeSearch.current = {query, mc, ut, lang};
+            setIsLoading(true);
+            setIsLoadingMore(false);
+            setItems([]);
+            setHasMore(false);
+        } else {
+            setIsLoadingMore(true);
+        }
+        const params = new URLSearchParams({search: query, limit: String(PAGE_SIZE), offset: String(offset)});
+        if (lang) params.set('lang', lang);
+        else {
+            if (mc) params.set('mainCategory', mc);
+            if (ut) params.set('usageType', ut);
+        }
+        try {
+            const response = await fetch(`${lang ? '/api/lexicon/reverse' : '/api/lexicon'}?${params}`);
+            if (!response.ok) throw new Error('Lexicon search failed');
+            const data: unknown = await response.json();
+            if (!Array.isArray(data)) throw new Error('Invalid lexicon response');
+            if (requestId !== searchRequest.current) return;
+            const page = data as LexiconItem[];
+            setItems(prev => offset === 0 ? page : [...prev, ...page]);
+            setHasMore(page.length === PAGE_SIZE);
+            setHasFetched(true);
+        } catch {
+            if (requestId === searchRequest.current) setSearchError(true);
+        } finally {
+            if (requestId === searchRequest.current) {
+                setIsLoading(false);
+                setIsLoadingMore(false);
+            }
+        }
     }, []);
+
+    const loadMore = () => {
+        const criteria = activeSearch.current;
+        if (!criteria || isLoading || isLoadingMore) return;
+        void performSearch(criteria.query, criteria.mc, criteria.ut, criteria.lang, items.length);
+    };
 
     const executeSearch = useCallback(() => {
         // Реверс-поиск идёт по натуральному языку (ru/en/...), а не по ISV —
@@ -167,11 +196,11 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
         }
     }, [executeSearch, searchValue]);
 
-    const onClickCard = useCallback((item) => () => {
+    const onClickCard = useCallback((item: LexiconItem) => () => {
         router.push(`/words/${item.id}`);
     }, [router]);
 
-    const onChangeSearch = useCallback((e) => {
+    const onChangeSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     }, []);
 
@@ -303,29 +332,32 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                 {!isLoading && items.length > 0 && (
                     <>
                         <ul id="cardGrid" className="card-grid">
-                            {items.slice(0, visibleCount).map((item) => (
+                            {items.map((item) => (
                                 <WordCard
-                                    key={item.id}
+                                    key={`${item.id}:${item.meaningId ?? "none"}`}
                                     onClickCard={onClickCard}
                                     item={item}
                                     currentScript={formScript}
                                 />
                             ))}
                         </ul>
-                        {visibleCount < items.length && (
+                        {hasMore && (
                             <div className="flex justify-center py-6">
                                 <button
-                                    onClick={() => setVisibleCount(prev => prev + PAGE_SIZE)}
+                                    onClick={loadMore}
+                                    disabled={isLoadingMore}
                                     className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-all shadow-sm text-sm"
                                 >
-                                    {t("loadMore")} ({items.length - visibleCount})
+                                    {t(isLoadingMore ? "loading" : "loadMore")}
                                 </button>
                             </div>
                         )}
                     </>
                 )}
 
-                {!isLoading && hasFetched && !items.length && (
+                {searchError && <p role="alert" className="text-center py-4 text-red-600">{t("searchError")}</p>}
+
+                {!isLoading && !searchError && hasFetched && !items.length && (
                     <div id="noResults" className="no-results space-y-3">
                         <p>{t("noResults")}</p>
                         <p>

@@ -2,16 +2,7 @@ import Link from 'next/link';
 import {useTranslations} from "next-intl";
 import {WordOfDayWidget} from "@/app/main/ⷰ҇WordsOfTheDay";
 
-interface RandomWordResult {
-    id: number;
-    value: string | null;
-    isv: string | null;
-    pos: string | null;
-    meanings: {
-        id: number;
-        translations: { id: number; language: string; value: string | null }[];
-    }[];
-}
+import type {RandomWordResult} from "./aggregate";
 
 interface SubStat {
     id: number;
@@ -26,7 +17,7 @@ interface StatsProps {
         roots: number;
         meanings: number;
     };
-    randomWord: RandomWordResult;
+    randomWord: RandomWordResult | null;
     subStats: SubStat[];
 }
 
@@ -147,9 +138,7 @@ export default function MainClient({ stats, subStats, randomWord }: StatsProps) 
                 ))}
             </div>
 
-            <WordOfDayWidget
-                data={randomWord}
-            />
+            {randomWord && <WordOfDayWidget data={randomWord} />}
 
             {/* СЕКЦИЯ 4: ПРИЗЫВ К ДЕЙСТВИЮ / ССЫЛКИ С АКЦЕНТОМ НА КНОПКАХ */}
             <section className="border border-dashed border-muted-foreground/30 rounded-3xl p-6 md:p-10 bg-muted/10 flex flex-col lg:flex-row items-center justify-between gap-8 max-w-6xl mx-auto">

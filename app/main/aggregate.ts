@@ -1,6 +1,6 @@
 import {prismaData as db } from "@/lib/prisma";
 
-interface RandomWordResult {
+export interface RandomWordResult {
     id: number;
     value: string | null;
     isv: string | null;
@@ -13,7 +13,8 @@ interface RandomWordResult {
 
 async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWordResult | null> {
     const word = await db.lexeme.findFirst({
-        where: { id: { gte: randomId } },
+        where: { isPublic: true, id: { gte: randomId } },
+        orderBy: { id: "asc" },
         select: {
             id: true,
             value: true,
@@ -48,6 +49,7 @@ async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWo
 
 export async function getRandomWordWithTranslations(): Promise<RandomWordResult | null> {
     const aggregations = await db.lexeme.aggregate({
+        where: { isPublic: true },
         _max: { id: true },
     });
 
@@ -58,37 +60,7 @@ export async function getRandomWordWithTranslations(): Promise<RandomWordResult 
 
     const randomWord = await fetchRandomWordWithAllophones(randomId);
 
-    if (!randomWord) {
-        const fallback = await db.lexeme.findFirst({
-            select: {
-                id: true,
-                value: true,
-                pos: true,
-                lexemeAllophones: {
-                    where: { flavor: { code: 'CORE' }, type: 'standard' },
-                    select: { value: true },
-                    take: 1,
-                },
-                meanings: {
-                    select: {
-                        id: true,
-                        translations: {
-                            where: { language: { in: ['ru', 'en'] } },
-                            select: { id: true, language: true, value: true },
-                        },
-                    },
-                },
-            },
-        });
-        if (!fallback) return null;
-        return {
-            id: fallback.id,
-            value: fallback.value,
-            isv: fallback.lexemeAllophones[0]?.value ?? fallback.value,
-            pos: fallback.pos,
-            meanings: fallback.meanings,
-        };
-    }
-
-    return randomWord;
+    // A deletion between the aggregate and selection can leave the upper
+    // range empty. Fallback must obey the same visibility constraint.
+    return randomWord ?? fetchRandomWordWithAllophones(0);
 }

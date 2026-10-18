@@ -86,6 +86,7 @@
     "searchPlaceholder": "Enter text to search...",
     "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
     "noResults": "No results found",
+    "searchError": "Couldn't load the search results. Please try again.",
     "loading": "Loading...",
     "loadMore": "Show more",
     "suggestWordCta": "Didn't find the word? Suggest it to us",

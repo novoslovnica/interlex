@@ -1,4 +1,5 @@
 // lib/prisma.ts
+import {resolveDatabaseUrls} from "./databaseUrls"
 import { PrismaClient as AuthClient } from "../prisma/generated/auth/client";
 import { PrismaClient as DataClient } from "../prisma/generated/data/client";
 import { PrismaClient as LibraryClient } from "../prisma/generated/library/client";
@@ -15,33 +16,35 @@ const globalForPrisma = globalThis as unknown as {
     prismaHistorical: HistoricalClient | undefined;
 };
 
+const databaseUrls = resolveDatabaseUrls();
+
 // 1. Инициализируем базу данных авторизации (auth.db)
 const authAdapter = new PrismaBetterSqlite3({
-    url: process.env.AUTH_DATABASE_URL ?? "file:./prisma/auth.db",
+    url: databaseUrls.auth,
 });
 export const prismaAuth = globalForPrisma.prismaAuth || new AuthClient({ adapter: authAdapter });
 
-// 2. Инициализируем основную базу данных приложения (app.db)
+// 2. Инициализируем основную базу данных приложения (interlex.db)
 const dataAdapter = new PrismaBetterSqlite3({
-    url: process.env.DATA_DATABASE_URL ?? "file:./prisma/interlex.db",
+    url: databaseUrls.data,
 });
 export const prismaData = globalForPrisma.prismaData || new DataClient({ adapter: dataAdapter });
 
 // 3. Инициализируем базу данных библиотеки (library.db)
 const libraryAdapter = new PrismaBetterSqlite3({
-    url: process.env.LIBRARY_DATABASE_URL ?? "file:./prisma/library.db",
+    url: databaseUrls.library,
 });
 export const prismaLibrary = globalForPrisma.prismaLibrary || new LibraryClient({ adapter: libraryAdapter });
 
 // 4. Инициализируем базу данных корпуса (corpus.db)
 const corpusAdapter = new PrismaBetterSqlite3({
-    url: process.env.CORPUS_DATABASE_URL ?? "file:./prisma/corpus.db",
+    url: databaseUrls.corpus,
 });
 export const prismaCorpus = globalForPrisma.prismaCorpus || new CorpusClient({ adapter: corpusAdapter });
 
 // 5. Инициализируем базу данных исторических корпусов (historical.db)
 const historicalAdapter = new PrismaBetterSqlite3({
-    url: process.env.HISTORICAL_DATABASE_URL ?? "file:./prisma/historical.db",
+    url: databaseUrls.historical,
 });
 export const prismaHistorical = globalForPrisma.prismaHistorical || new HistoricalClient({ adapter: historicalAdapter });
 

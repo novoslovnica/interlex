@@ -1,8 +1,28 @@
+import type Database from "better-sqlite3";
 import {init} from "@/lib/sqlite";
 import {foldDiacritics} from "@/lib/corpus/tokenizer/foldDiacritics";
-import {fetchTranslationsForMeaningIds, type TranslationRow} from "@/lib/translations";
+import {fetchTranslationsForMeaningIds, TRANSLATION_LANGUAGE_CODES, type TranslationRow} from "@/lib/translations";
+import {validateLexiconPagination} from "@/lib/lexiconPagination";
 
-type LangRecord = TranslationRow;
+interface LexemeRow {
+    id: number;
+    value: string | null;
+    slug: string;
+    pos: string | null;
+    meaningId: number | null;
+    meaningText: string | null;
+    examples: string | null;
+    meaningVerified: number | null;
+    [field: string]: unknown;
+}
+interface Allophone { value: string; flavorCode: string; type: string }
+export interface LexiconItem extends LexemeRow {
+    word: Allophone | null;
+    allophones: Allophone[];
+    verified: boolean;
+    duplicateCount: number;
+    duplicateIds: number[];
+}
 
 const LEXEME_COLUMNS = `
     l.id, la_core.value AS isv, la_nsl.value AS nsl, la_core.verified AS isvVerified, la_nsl.verified AS nslVerified, l.value, l.slug, l.stem, l.pos, l.gender,
@@ -21,121 +41,79 @@ const LEXEME_JOINS = `
     LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
 `;
 
-// Общий второй проход для forward- и reverse-поиска: набор lexeme-строк ->
-// полноценные элементы результата (значения, переводы на 18 языков,
-// allophones, флаг дублей). Раньше жил только внутри getDictItems — вынесен,
-// чтобы getReverseDictItems (поиск по значению на другом языке, см. roadmap
-// п.45) не дублировал этот блок один в один.
-const enrichLexemeRows = (db: any, data: any[], filterLang?: string, unverified?: boolean, unverifiedMeanings?: boolean, unverifiedCore?: boolean, unverifiedNsl?: boolean) => {
-    const langCodes = ["en", "ru", "mk", "sr", "bg", "pl", "cs", "sl", "de", "uk", "be", "sk", "hr", "hsb", "dsb", "cu", "nl", "eo"];
-
-    let res: any[];
-
-    const lexemeIds = data.map(item => item.id).filter(Boolean);
-    const allMeaningIds: number[] = [];
-    const lexemeToMeanings: Record<number, number[]> = {};
-    const meaningMap: Record<number, { id: number; meaning: string | null; examples: string | null; meaningVerified: number | null }> = {};
-    if (lexemeIds.length > 0) {
-        const idPlaceholders = lexemeIds.map(() => '?').join(',');
-        const meaningRows = db.prepare(`
-            SELECT id, lexemeId, meaning, examples, meaningVerified FROM meanings WHERE lexemeId IN (${idPlaceholders})
-        `).all(...lexemeIds) as { id: number; lexemeId: number; meaning: string | null; examples: string | null; meaningVerified: number | null }[];
-
-        for (const row of meaningRows) {
-            allMeaningIds.push(row.id);
-            if (!lexemeToMeanings[row.lexemeId]) lexemeToMeanings[row.lexemeId] = [];
-            lexemeToMeanings[row.lexemeId].push(row.id);
-            meaningMap[row.id] = { id: row.id, meaning: row.meaning, examples: row.examples, meaningVerified: row.meaningVerified };
-        }
+// Enrich only the bounded SQL page. Meanings and review filters are already
+// selected before LIMIT; never expand a lexeme into more response rows here.
+const enrichLexemeRows = (db: Database.Database, data: LexemeRow[]): LexiconItem[] => {
+    if (data.length === 0) return [];
+    const ids = [...new Set(data.map(item => item.id))];
+    const meaningIds = data.map(item => item.meaningId).filter((id): id is number => id !== null);
+    const translations = fetchTranslationsForMeaningIds(db, meaningIds, [...TRANSLATION_LANGUAGE_CODES]);
+    const allophones = db.prepare(`
+        SELECT la.lexemeId, la.value, af.code AS flavorCode, la.type
+        FROM lexeme_allophones la JOIN allophone_flavors af ON af.id = la.flavorId
+        WHERE la.lexemeId IN (${ids.map(() => '?').join(',')})
+        ORDER BY la.id
+    `).all(...ids) as (Allophone & { lexemeId: number })[];
+    const byLexeme = new Map<number, Allophone[]>();
+    for (const {lexemeId, ...allophone} of allophones) {
+        const list = byLexeme.get(lexemeId) ?? [];
+        list.push(allophone);
+        byLexeme.set(lexemeId, list);
     }
-
-    const allLangData = fetchTranslationsForMeaningIds(db, allMeaningIds, langCodes);
-
-    res = data.flatMap(item => {
-        const meaningIds = lexemeToMeanings[item.id] || [];
-        if (meaningIds.length === 0) {
-            const result: any = { ...item, meaningId: null, meaningText: null, examples: null, meaningVerified: null };
-            for (const lang of langCodes) {
-                result[lang] = [];
-            }
-            return [result];
+    const values = [...new Set(data.map(item => item.value).filter((value): value is string => !!value))];
+    const duplicates = values.length > 0 ? db.prepare(`
+        SELECT id, value FROM lexemes WHERE value IN (${values.map(() => '?').join(',')}) ORDER BY id
+    `).all(...values) as { id: number; value: string }[] : [];
+    const byValue = new Map<string, number[]>();
+    for (const row of duplicates) {
+        const list = byValue.get(row.value) ?? [];
+        list.push(row.id);
+        byValue.set(row.value, list);
+    }
+    return data.map(item => {
+        const languages: Record<string, TranslationRow[]> = {};
+        for (const lang of TRANSLATION_LANGUAGE_CODES) {
+            languages[lang] = item.meaningId === null ? [] : translations[lang]?.[item.meaningId] ?? [];
         }
-        return meaningIds.map(mid => {
-            const m = meaningMap[mid];
-            const result: any = { ...item, meaningId: m.id, meaningText: m.meaning, examples: m.examples, meaningVerified: m.meaningVerified };
-            for (const lang of langCodes) {
-                result[lang] = allLangData[lang]?.[mid] || [];
-            }
-            return result;
-        });
+        const forms = byLexeme.get(item.id) ?? [];
+        const duplicateIds = item.value ? byValue.get(item.value) ?? [] : [];
+        return {
+            ...item, ...languages,
+            word: forms.find(a => a.flavorCode === 'CORE' && a.type === 'standard') ?? null,
+            allophones: forms,
+            verified: Object.values(languages).some(entries => entries.some(entry => entry.verified === 1)),
+            duplicateCount: duplicateIds.length || 1,
+            duplicateIds: duplicateIds.filter(id => id !== item.id),
+        };
     });
-
-    if (filterLang && unverified && langCodes.includes(filterLang)) {
-        res = res.filter(item => {
-            const langEntries = item[filterLang] as LangRecord[];
-            return langEntries.length > 0 && langEntries.some(entry => entry.verified !== 1);
-        });
-    }
-
-    if (unverifiedMeanings) {
-        res = res.filter(item => item.meaningVerified !== 1);
-    }
-    if (unverifiedCore) {
-        res = res.filter(item => item.isvVerified !== 1);
-    }
-    if (unverifiedNsl) {
-        res = res.filter(item => item.nslVerified !== 1);
-    }
-
-    const resLexemeIds = [...new Set(res.map(item => item.id).filter(Boolean))];
-    if (resLexemeIds.length > 0) {
-        const idPlaceholders = resLexemeIds.map(() => '?').join(',');
-        const allophoneRows = db.prepare(`
-            SELECT la.lexemeId, la.value, af.code AS flavorCode, la.type
-            FROM lexeme_allophones la
-            JOIN allophone_flavors af ON af.id = la.flavorId
-            WHERE la.lexemeId IN (${idPlaceholders})
-        `).all(...resLexemeIds) as { lexemeId: number; value: string; flavorCode: string; type: string }[];
-
-        const allophonesByLexeme: Record<number, { value: string; flavorCode: string; type: string }[]> = {};
-        for (const row of allophoneRows) {
-            if (!allophonesByLexeme[row.lexemeId]) allophonesByLexeme[row.lexemeId] = [];
-            allophonesByLexeme[row.lexemeId].push({ value: row.value, flavorCode: row.flavorCode, type: row.type });
-        }
-
-        for (const item of res) {
-            const lexemeAllophones = allophonesByLexeme[item.id] || [];
-            const word = lexemeAllophones.find(a => a.flavorCode === 'CORE' && a.type === 'standard') || null;
-            item.word = word;
-            item.allophones = lexemeAllophones;
-        }
-    }
-
-    const allValues = res.map(item => item.value).filter(Boolean) as string[];
-    const duplicateMap: Record<string, { count: number; ids: number[] }> = {};
-    if (allValues.length > 0) {
-        const valuePlaceholders = allValues.map(() => '?').join(',');
-        const dupRows = db.prepare(`
-            SELECT id, value FROM lexemes WHERE value IN (${valuePlaceholders})
-        `).all(...allValues) as { id: number; value: string }[];
-        for (const row of dupRows) {
-            if (!duplicateMap[row.value]) duplicateMap[row.value] = { count: 0, ids: [] };
-            duplicateMap[row.value].count++;
-            duplicateMap[row.value].ids.push(row.id);
-        }
-    }
-
-    for (const item of res) {
-        const langEntries = langCodes.flatMap(lang => item[lang] as LangRecord[]);
-        item.verified = langEntries.some(entry => entry.verified === 1);
-
-        const dup = item.value ? duplicateMap[item.value] : undefined;
-        item.duplicateCount = dup ? dup.count : 1;
-        item.duplicateIds = dup ? dup.ids.filter((id: number) => id !== item.id) : [];
-    }
-
-    return res;
 };
+
+interface PageFilter { where: string[]; params: (string | number)[] }
+
+// Used by listing, forward and reverse search alike. The SQL page consists of
+// lexeme/meaning pairs, in a total order even when a lexeme has many meanings.
+async function fetchPage(offset: number, limit: number, filter: PageFilter): Promise<LexiconItem[]> {
+    const db = await init();
+    try {
+        return db.transaction(() => {
+            const data = db.prepare(`
+                SELECT ${LEXEME_COLUMNS}, m.id AS meaningId, m.meaning AS meaningText,
+                    m.examples, m.meaningVerified
+                ${LEXEME_JOINS}
+                LEFT JOIN meanings m ON m.lexemeId = l.id
+                WHERE ${filter.where.length ? filter.where.join(' AND ') : '1 = 1'}
+                GROUP BY l.id, m.id
+                ORDER BY l.id ASC, m.id ASC
+                LIMIT ? OFFSET ?
+            `).all(...filter.params, limit, offset) as LexemeRow[];
+            return enrichLexemeRows(db, data);
+        }).deferred();
+    } finally {
+        db.close();
+    }
+}
+
+const likeParam = (value: string) => `%${value.replace(/[\\%_]/g, '\\$&')}%`;
 
 export const getDictItems = async (
     search: string,
@@ -149,124 +127,57 @@ export const getDictItems = async (
     unverifiedMeanings?: boolean,
     unverifiedCore?: boolean,
     unverifiedNsl?: boolean,
-) => {
-    const db = await init();
-
-    let data: any[] = [];
-
+): Promise<LexiconItem[]> => {
+    validateLexiconPagination(offset, limit);
+    const filter: PageFilter = { where: [], params: [] };
+    if (!includeHidden) filter.where.push('l.isPublic = 1');
+    if (mainCategory) { filter.where.push('l.mainCategory = ?'); filter.params.push(mainCategory); }
+    if (usageType) { filter.where.push('l.usageType = ?'); filter.params.push(usageType); }
+    if (unverifiedMeanings) filter.where.push('m.meaningVerified IS NOT 1');
+    if (unverifiedCore) filter.where.push('la_core.verified IS NOT 1');
+    if (unverifiedNsl) filter.where.push('la_nsl.verified IS NOT 1');
+    if (filterLang && unverified && TRANSLATION_LANGUAGE_CODES.some(lang => lang === filterLang)) {
+        filter.where.push(`EXISTS (SELECT 1 FROM translations review_t
+            WHERE review_t.meaningId = m.id AND review_t.language = ? AND review_t.verified IS NOT 1)`);
+        filter.params.push(filterLang);
+    }
     if (search) {
-        // lexemes_text/lexeme_allophones_text are FTS5 tables with a trigram tokenizer,
-        // which supports substring MATCH only for patterns of 3+ characters. Shorter
-        // queries fall back to a plain (parameterized) LIKE scan.
+        // Trigram FTS supports 3+ characters; shorter strings use literal LIKE.
+        // Search canonical and simplified forms together, deduplicating BEFORE
+        // pagination rather than materializing every matched id in JS.
         const useFts = search.length >= 3;
-        const searchOp = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
-        const buildParam = (s: string) => useFts
-            ? `"${s.replace(/"/g, '""')}"`
-            : `%${s.replace(/[%_]/g, '\\$&')}%`;
-        // Этимологический ввод (język, dostatȯcno, sę) должен находить лексему,
-        // у которой value хранится упрощённо: сворачиваем запрос тем же
-        // foldDiacritics, что и движок распознавания, и ищем ОБА варианта —
-        // свёрнутый и исходный. Исходный нужен, пока не все value нормализованы
-        // (2 472 лексемы держат диакритику в value), иначе такие перестали бы
-        // находиться. FTS идёт по value без remove_diacritics, поэтому без этой
-        // свёртки «dostatȯcno» не находил ничего.
         const folded = foldDiacritics(search);
         const variants = folded !== search ? [search, folded] : [search];
-        const params = variants.map(buildParam);
-        const orGroup = (column: string) => `(${params.map(() => `${column} ${searchOp}`).join(' OR ')})`;
-        const lexemeIds = db.prepare(`
-            SELECT DISTINCT l.id FROM lexemes l
-            WHERE (
-                l.id IN (SELECT ROWID FROM lexemes_text WHERE ${orGroup('value')})
-                OR EXISTS (
-                    SELECT 1 FROM lexeme_allophones la
-                    WHERE la.lexemeId = l.id
-                    AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
-                    AND la.type = 'standard'
-                    AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE ${orGroup('value')})
-                )
-            )
-            ${includeHidden ? '' : 'AND l.isPublic = 1'}
-        `).all(...params, ...params) as { id: number }[];
-
-        const ids = lexemeIds.map(r => r.id);
-        if (ids.length === 0) return [];
-
-        const placeholders = ids.map(() => '?').join(',');
-
-        data = db.prepare(`
-            SELECT ${LEXEME_COLUMNS}
-            ${LEXEME_JOINS}
-            WHERE l.id IN (${placeholders})
-            GROUP BY l.id
-        `).all(...ids) as any[];
-    } else {
-        let filterClause = '';
-        const filterParams: any[] = [];
-        if (mainCategory) {
-            filterClause += ' WHERE l.mainCategory = ?';
-            filterParams.push(mainCategory);
-        }
-        if (usageType) {
-            filterClause += filterClause ? ' AND l.usageType = ?' : ' WHERE l.usageType = ?';
-            filterParams.push(usageType);
-        }
-        if (!includeHidden) {
-            filterClause += filterClause ? ' AND l.isPublic = 1' : ' WHERE l.isPublic = 1';
-        }
-
-        data = db.prepare(`
-            SELECT ${LEXEME_COLUMNS}
-            ${LEXEME_JOINS}
-            ${filterClause}
-            GROUP BY l.id
-            ORDER BY l.id ASC
-            LIMIT ${limit} OFFSET ${offset}
-        `).all(...filterParams);
+        const params = variants.map(value => useFts ? `"${value.replace(/"/g, '""')}"` : likeParam(value));
+        const op = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
+        const orGroup = (column: string) => `(${params.map(() => `${column} ${op}`).join(' OR ')})`;
+        filter.where.push(`(l.id IN (SELECT ROWID FROM lexemes_text WHERE ${orGroup('value')})
+            OR EXISTS (SELECT 1 FROM lexeme_allophones la
+                WHERE la.lexemeId = l.id
+                  AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
+                  AND la.type = 'standard'
+                  AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE ${orGroup('value')})))`);
+        filter.params.push(...params, ...params);
     }
-
-    return enrichLexemeRows(db, data, filterLang, unverified, unverifiedMeanings, unverifiedCore, unverifiedNsl);
+    return fetchPage(offset, limit, filter);
 };
 
-// Реверс-словарь (roadmap п.45): поиск лексем ISV по значению на другом
-// языке — идёт от translations.value, а не от lexemes_text/lexeme_allophones_text,
-// поэтому переиспользовать FTS5-таблицы forward-поиска нельзя (те индексируют
-// только сами ISV-словоформы). translations на момент внедрения — 365к строк,
-// самый крупный отдельный язык (en) — ~42к; LIKE-скан, отфильтрованный по
-// уже проиндексированному translations(language, ...), укладывается в
-// единицы миллисекунд без отдельного FTS5-индекса — не строим его здесь.
 export const getReverseDictItems = async (
     search: string,
     language: string,
     offset: number,
     limit: number,
     includeHidden?: boolean,
-) => {
+): Promise<LexiconItem[]> => {
+    validateLexiconPagination(offset, limit);
     if (!search || !language) return [];
-
-    const db = await init();
-
-    const searchParam = `%${search.replace(/[%_]/g, '\\$&')}%`;
-    const lexemeIds = db.prepare(`
-        SELECT DISTINCT l.id FROM lexemes l
-        JOIN meanings m ON m.lexemeId = l.id
-        JOIN translations t ON t.meaningId = m.id
-        WHERE t.language = ? AND t.value LIKE ? ESCAPE '\\'
-        ${includeHidden ? '' : 'AND l.isPublic = 1'}
-        ORDER BY l.id ASC
-        LIMIT ? OFFSET ?
-    `).all(language, searchParam, limit, offset) as { id: number }[];
-
-    const ids = lexemeIds.map(r => r.id);
-    if (ids.length === 0) return [];
-
-    const placeholders = ids.map(() => '?').join(',');
-    const data = db.prepare(`
-        SELECT ${LEXEME_COLUMNS}
-        ${LEXEME_JOINS}
-        WHERE l.id IN (${placeholders})
-        GROUP BY l.id
-    `).all(...ids) as any[];
-
-    return enrichLexemeRows(db, data);
+    // Preserve reverse search's lexeme-level match: all meanings of a matched
+    // lexeme remain visible, but each displayed row counts toward the limit.
+    const filter: PageFilter = {
+        where: [`EXISTS (SELECT 1 FROM meanings reverse_m JOIN translations reverse_t ON reverse_t.meaningId = reverse_m.id
+            WHERE reverse_m.lexemeId = l.id AND reverse_t.language = ? AND reverse_t.value LIKE ? ESCAPE '\\')`],
+        params: [language, likeParam(search)],
+    };
+    if (!includeHidden) filter.where.push('l.isPublic = 1');
+    return fetchPage(offset, limit, filter);
 };

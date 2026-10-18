@@ -1,7 +1,8 @@
 // prisma.config.ts
 import "dotenv/config";
 import path from "path";
-import { defineConfig, env } from "@prisma/config";
+import { defineConfig } from "@prisma/config";
+import {resolveDatabaseUrls} from "./lib/databaseUrls";
 
 function resolveFileUrl(rawUrl: string): string {
     const match = rawUrl.match(/^file:(.+)$/);
@@ -11,6 +12,7 @@ function resolveFileUrl(rawUrl: string): string {
     return rawUrl;
 }
 
+const databaseUrls = resolveDatabaseUrls();
 const dbType = process.env.DB_TYPE;
 
 // 1. Создаем переменную для конфигурации
@@ -20,31 +22,31 @@ if (dbType === "auth") {
     config = defineConfig({
         schema: "prisma/auth.schema.prisma",
         migrations: { path: "prisma/migrations/auth" },
-        datasource: { url: resolveFileUrl(env("AUTH_DATABASE_URL") ?? "file:./auth.db") },
+        datasource: { url: resolveFileUrl(databaseUrls.auth) },
     });
 } else if (dbType === "library") {
     config = defineConfig({
         schema: "prisma/library.schema.prisma",
         migrations: { path: "prisma/migrations/library" },
-        datasource: { url: resolveFileUrl(env("LIBRARY_DATABASE_URL") ?? "file:./library.db") },
+        datasource: { url: resolveFileUrl(databaseUrls.library) },
     });
 } else if (dbType === "corpus") {
     config = defineConfig({
         schema: "prisma/corpus.schema.prisma",
         migrations: { path: "prisma/migrations/corpus" },
-        datasource: { url: resolveFileUrl(env("CORPUS_DATABASE_URL") ?? "file:./corpus.db") },
+        datasource: { url: resolveFileUrl(databaseUrls.corpus) },
     });
 } else if (dbType === "historical") {
     config = defineConfig({
         schema: "prisma/historical.schema.prisma",
         migrations: { path: "prisma/migrations/historical" },
-        datasource: { url: resolveFileUrl(env("HISTORICAL_DATABASE_URL") ?? "file:./historical.db") },
+        datasource: { url: resolveFileUrl(databaseUrls.historical) },
     });
 } else {
     config = defineConfig({
         schema: "prisma/data.schema.prisma",
         migrations: { path: "prisma/migrations/data" },
-        datasource: { url: resolveFileUrl(env("DATA_DATABASE_URL") ?? "file:./app.db") },
+        datasource: { url: resolveFileUrl(databaseUrls.data) },
     });
 }
 
