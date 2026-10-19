@@ -14,7 +14,7 @@ export default async function WorkbenchIndex({ searchParams }: { searchParams: P
   const page = Math.min(100000, Math.max(1, Number(params.page) || 1)) | 0
   const documents = withHomonymReviewDb((db) => db.prepare(`SELECT slug, title, author FROM CorpusDocument WHERE instr(lower(title), lower(?)) > 0 ORDER BY title, slug LIMIT 31 OFFSET ?`).all(q, (page - 1) * 30) as { slug: string; title: string; author: string | null }[])
   const href = (p: number) => `?${new URLSearchParams({ q, page: String(p) })}`
-  return <main className="mx-auto max-w-5xl space-y-5 p-4">
+  return <main className="mx-auto min-h-0 w-full max-w-5xl flex-1 space-y-5 overflow-y-auto p-4">
     <h1 className="text-2xl font-bold">Рабочее место редактора корпуса</h1>
     <p>Выберите документ. Позиция и отложенные вхождения сохраняются в этом браузере отдельно для вашего аккаунта.</p>
     <form className="flex gap-2"><input name="q" defaultValue={q} placeholder="Название документа" aria-label="Название документа" className="min-w-0 flex-1 rounded border bg-transparent p-2" /><button className="rounded border px-4">Найти</button></form>

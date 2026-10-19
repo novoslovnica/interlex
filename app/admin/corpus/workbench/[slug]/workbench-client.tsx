@@ -281,14 +281,17 @@ export default function WorkbenchClient({ slug, title, userKey }: { slug: string
     finally { setLoading(false) }
   }
   const choose = (c: WorkbenchCandidate) => setDraft({ kind: "candidate", candidateId: c.id })
-  return <main className="mx-auto max-w-[1800px] space-y-3 p-3 md:p-5">
-    <header className="flex flex-wrap items-center justify-between gap-3">
+  // The app shell already consumes space for the global/admin headers and
+  // disables body scrolling. Size columns from the remaining flex space,
+  // rather than subtracting guessed header heights from the viewport.
+  return <main className="mx-auto flex min-h-0 w-full max-w-[1800px] flex-1 flex-col gap-3 overflow-y-auto p-3 md:p-5 lg:overflow-hidden">
+    <header className="flex shrink-0 flex-wrap items-center justify-between gap-3">
       <div><Link href="/admin/corpus/workbench" className="text-sm underline">← Документы</Link><h1 className="text-xl font-bold">{title}</h1><p className="text-sm opacity-70">Рабочее место редактора · {dirty ? "Есть несохранённый выбор" : "Выберите вхождение и проверьте разбор"}</p></div>
       <label className="text-sm">Письмо <select aria-label="Письмо" value={script} onChange={(e) => setScript(e.target.value as SavedWorkspace["script"])} className={control}><option value="original">Как в тексте</option><option value="latin">Латиница</option><option value="cyrillic">Кириллица</option></select></label>
     </header>
-    <div aria-live="polite" className="min-h-6">{error && <p role="alert" className="rounded border border-red-500 p-2 text-red-600 dark:text-red-400">{error} {detail && <button disabled={busy || loading} className="underline" onClick={() => { if (confirmDiscard()) void load(detail.token.id, filter, query) }}>Загрузить свежую версию</button>}</p>}{notice && <p className="text-sm">{notice}</p>}{loading && <p className="text-sm opacity-70">Загрузка…</p>}</div>
-    <div className="grid items-start gap-3 lg:grid-cols-[240px_minmax(0,1fr)_360px] xl:grid-cols-[260px_minmax(0,1fr)_400px]">
-      <aside aria-label="Очередь вхождений" className="max-h-96 overflow-auto space-y-3 rounded border border-current/20 p-3 lg:max-h-[calc(100vh-200px)] lg:overflow-auto lg:sticky lg:top-3">
+    <div aria-live="polite" className="max-h-[25dvh] min-h-6 shrink-0 overflow-y-auto">{error && <p role="alert" className="rounded border border-red-500 p-2 text-red-600 dark:text-red-400">{error} {detail && <button disabled={busy || loading} className="underline" onClick={() => { if (confirmDiscard()) void load(detail.token.id, filter, query) }}>Загрузить свежую версию</button>}</p>}{notice && <p className="text-sm">{notice}</p>}{loading && <p className="text-sm opacity-70">Загрузка…</p>}</div>
+    <div className="grid shrink-0 items-start gap-3 lg:min-h-0 lg:flex-1 lg:shrink lg:items-stretch lg:overflow-hidden lg:grid-cols-[240px_minmax(0,1fr)_360px] xl:grid-cols-[260px_minmax(0,1fr)_400px]">
+      <aside aria-label="Очередь вхождений" className="min-h-0 max-h-96 space-y-3 overflow-y-auto rounded border border-current/20 p-3 lg:h-full lg:max-h-none lg:overscroll-contain">
         <h2 className="font-semibold">Очередь вхождений</h2>
         <select aria-label="Фильтр очереди" value={filter} disabled={busy || loading} className={`${control} w-full`} onChange={(e) => void changeFilter(e.target.value as QueueFilter, query)}><option value="problems">Требуют разбора</option><option value="all">Все слова</option><option value="manual">Размечены вручную</option></select>
         <form onSubmit={(e) => { e.preventDefault(); void changeFilter(filter, queryInput.trim()) }} className="flex gap-1"><input aria-label="Поиск словоформы" placeholder="Словоформа" value={queryInput} maxLength={120} onChange={(e) => setQueryInput(e.target.value)} className={`${control} min-w-0 w-full`} /><button className={control} disabled={busy || loading}>↵</button></form>
@@ -299,7 +302,7 @@ export default function WorkbenchClient({ slug, title, userKey }: { slug: string
           <div className="flex justify-between gap-1"><button disabled={busy || loading || !queue.tokens.length} className={control} onClick={() => void pageQueue("before")}>← 50</button><button disabled={busy || loading || !queue.tokens.length} className={control} onClick={() => void pageQueue("after")}>50 →</button></div>
         </>}
       </aside>
-      <section aria-label="Контекст" className="min-w-0 space-y-4 rounded border border-current/20 p-4">
+      <section aria-label="Контекст" className="min-w-0 space-y-4 rounded border border-current/20 p-4 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
         <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-semibold">Контекст</h2><div className="flex gap-2"><button className={control} disabled={busy || loading || !detail} onClick={() => void next("before")}>← Назад</button><button className={control} disabled={busy || loading || !detail} onClick={() => void next("after")}>Дальше →</button></div></div>
         {detail ? <>
           <p className="text-xs opacity-60">Токен #{detail.token.tokenIndex} · {detail.token.resolutionSource === "manual" ? "Разобран вручную" : "Автоматический разбор; требует проверки"}</p>
@@ -316,7 +319,7 @@ export default function WorkbenchClient({ slug, title, userKey }: { slug: string
           {historyMore && <button className={`${control} mt-2`} disabled={busy || loading} onClick={() => void history(edits.at(-1)?.id).catch((e: unknown) => setError(message(e)))}>Ещё записи</button>}
         </details>
       </section>
-      <aside aria-label="Панель токена" className="min-w-0 space-y-3 rounded border border-current/20 p-4 lg:sticky lg:top-3 lg:max-h-[calc(100vh-100px)] lg:overflow-auto">
+      <aside aria-label="Панель токена" className="min-w-0 space-y-3 rounded border border-current/20 p-4 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain">
         <h2 className="text-xl font-semibold">{detail ? display(detail.token.surfaceForm) : "Панель токена"}</h2>
         {detail ? <fieldset disabled={busy || loading} className="space-y-3">
           <legend className="mb-2 text-sm">Текущий разбор: {display(detail.token.lemma)} · {detail.token.pos}</legend><p className="text-xs opacity-70">{featText(detail.token.feats)}</p>
