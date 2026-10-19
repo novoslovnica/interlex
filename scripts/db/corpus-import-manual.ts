@@ -10,6 +10,7 @@
 // Usage:
 //   npx tsx scripts/db/corpus-import-manual.ts <export.json> [--db=corpus-release.db] [--apply] [--allow-missing]
 
+import { createWorkbenchSchema } from "../../lib/corpus/workbenchSchema"
 import { createHomonymReviewSchema } from "../../lib/corpus/homonymReviewSchema"
 import Database from "better-sqlite3"
 import fs from "fs"
@@ -128,6 +129,16 @@ export function importManual(db: Database.Database, data: ManualExport): ImportR
             (batchId, tokenId, beforeState, afterState, state) VALUES (?, ?, ?, ?, ?)`)
         for (const b of data.homonymHistory.batches) insertBatch.run(b.id, b.groupKey, b.wordSlug, b.userId, b.userEmail, b.createdAt, b.undoneAt, b.undoneBy)
         for (const e of data.homonymHistory.entries) insertEntry.run(e.batchId, e.tokenId, e.beforeState, e.afterState, e.state === "active" ? "conflict" : e.state)
+    }
+    if (data.pointEditHistory) {
+        createWorkbenchSchema(db)
+        // Preserve evidence, but original token/candidate ids are no longer safe
+        // undo targets after a snapshot import, even if some ids happen to match.
+        const insert = db.prepare(`INSERT OR REPLACE INTO corpus_token_edits
+            (id, documentSlug, tokenId, userId, userEmail, createdAt, beforeState, afterState, state, undoneAt, undoneBy)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        for (const e of data.pointEditHistory) insert.run(e.id, e.documentSlug, e.tokenId, e.userId, e.userEmail, e.createdAt,
+            e.beforeState, e.afterState, e.state === "active" ? "conflict" : e.state, e.undoneAt, e.undoneBy)
     }
     return report
 }

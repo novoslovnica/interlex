@@ -67,6 +67,8 @@ export const MANIFEST: ManifestEntry[] = [
 
     { path: "scripts/db/2026-10-18-add-homonym-review-history.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, note: "контекстная разметка омонимов: журнал пакетов и защита отката от последующих правок" },
 
+    { path: "scripts/db/2026-10-19-add-corpus-workbench.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "отдельное рабочее место: версии токенов и журнал точечных правок" },
+
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },

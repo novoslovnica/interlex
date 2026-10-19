@@ -1,5 +1,6 @@
 // Выгружает с corpus.db ручные правки модераторов, которые затёрла бы замена
 // файла снимком локальной пересборки (release.sh --db=corpus):
+//   - журналы пакетных и точечных правок (исходные снимки для аудита);
 //   - токены с resolutionSource='manual' (выбранный омоним + граммемы);
 //   - рёбра синтаксиса с source='manual';
 //   - решения по кандидатам в словарь (CorpusCandidateProposal с reviewedByEmail -
@@ -70,7 +71,15 @@ export interface HomonymHistory {
     batches: { id: string; groupKey: string; wordSlug: string; userId: string | null; userEmail: string | null; createdAt: string; undoneAt: string | null; undoneBy: string | null }[]
     entries: { batchId: string; tokenId: string; beforeState: string; afterState: string; state: string }[]
 }
-export interface ManualCounts { tokens: number; dependencies: number; proposals: number; homonymHistory?: string }
+export interface PointEditHistory {
+    id: string; documentSlug: string; tokenId: string; userId: string | null; userEmail: string | null
+    createdAt: string; beforeState: string; afterState: string; state: string; undoneAt: string | null; undoneBy: string | null
+}
+function readPointEditHistory(db: Database.Database): PointEditHistory[] | undefined {
+    if (!db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'corpus_token_edits'").get()) return undefined
+    return db.prepare("SELECT * FROM corpus_token_edits ORDER BY id").all() as PointEditHistory[]
+}
+export interface ManualCounts { tokens: number; dependencies: number; proposals: number; homonymHistory?: string; pointEditHistory?: string }
 
 function readHomonymHistory(db: Database.Database): HomonymHistory | undefined {
     if (!db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'corpus_homonym_batches'").get()) return undefined
@@ -85,6 +94,7 @@ export interface ManualExport {
     source: string
     counts: ManualCounts
     homonymHistory?: HomonymHistory
+    pointEditHistory?: PointEditHistory[]
     tokens: ManualToken[]
     dependencies: ManualDependency[]
     proposals: ManualProposal[]
@@ -93,8 +103,10 @@ export interface ManualExport {
 export function countManual(db: Database.Database): ManualCounts {
     const n = (sql: string) => (db.prepare(sql).get() as { c: number }).c
     const history = readHomonymHistory(db)
+    const pointHistory = readPointEditHistory(db)
     return {
         ...(history ? { homonymHistory: createHash("sha256").update(JSON.stringify(history)).digest("hex") } : {}),
+        ...(pointHistory ? { pointEditHistory: createHash("sha256").update(JSON.stringify(pointHistory)).digest("hex") } : {}),
         tokens: n(`SELECT COUNT(*) c FROM CorpusToken WHERE resolutionSource = 'manual'`),
         dependencies: n(`SELECT COUNT(*) c FROM CorpusDependency WHERE source = 'manual'`),
         proposals: n(`SELECT COUNT(*) c FROM CorpusCandidateProposal WHERE reviewedByEmail IS NOT NULL`),
@@ -162,6 +174,7 @@ export function exportManual(db: Database.Database, source: string): ManualExpor
         source,
         counts: countManual(db),
         homonymHistory: readHomonymHistory(db),
+        pointEditHistory: readPointEditHistory(db),
         tokens,
         dependencies,
         proposals,

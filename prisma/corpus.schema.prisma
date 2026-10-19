@@ -109,6 +109,9 @@ model CorpusToken {
   // GROUP BY очереди /admin/corpus/homonyms.
   homonymGroupKey String?
 
+  // Opaque ABA guard maintained by SQL triggers, including legacy writers.
+  workbenchRevision String @default("")
+
   // Индексы для мгновенного поиска (B-Tree)
   @@index([lemma])
   @@index([pos])
@@ -369,4 +372,21 @@ model CorpusHomonymBatchEntry {
   @@id([batchId, tokenId])
   @@index([tokenId, state], map: "corpus_homonym_entries_token_state")
   @@map("corpus_homonym_batch_entries")
+}
+
+model CorpusTokenEdit {
+  id String @id
+  documentSlug String
+  tokenId String
+  userId String?
+  userEmail String?
+  createdAt String
+  beforeState String
+  afterState String
+  state String @default("active")
+  undoneAt String?
+  undoneBy String?
+  @@index([documentSlug, createdAt], map: "corpus_token_edits_document")
+  @@index([tokenId, state], map: "corpus_token_edits_token")
+  @@map("corpus_token_edits")
 }
