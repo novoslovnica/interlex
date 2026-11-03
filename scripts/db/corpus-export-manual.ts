@@ -17,6 +17,7 @@
 //   npx tsx scripts/db/corpus-export-manual.ts --count     только счётчики, JSON в stdout
 // База: CORPUS_SQLITE_DB или ./corpus.db.
 
+import type { ReviewTaskRecord } from "../../lib/corpus/workbenchTaskTypes"
 import { createHash } from "node:crypto"
 import Database from "better-sqlite3"
 import fs from "fs"
@@ -79,7 +80,18 @@ function readPointEditHistory(db: Database.Database): PointEditHistory[] | undef
     if (!db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'corpus_token_edits'").get()) return undefined
     return db.prepare("SELECT * FROM corpus_token_edits ORDER BY id").all() as PointEditHistory[]
 }
-export interface ManualCounts { tokens: number; dependencies: number; proposals: number; homonymHistory?: string; pointEditHistory?: string }
+export interface WorkbenchWorkflowExport {
+    tasks: ReviewTaskRecord[]
+    proposals: (Omit<ManualProposal, "reviewedByEmail"> & { reviewedByEmail: string | null; exampleTokenIds: string })[]
+}
+function readWorkbenchWorkflow(db: Database.Database): WorkbenchWorkflowExport | undefined {
+    if (!db.prepare("SELECT name FROM sqlite_master WHERE name = 'corpus_review_tasks'").get()) return undefined
+    return {
+        tasks: db.prepare("SELECT * FROM corpus_review_tasks ORDER BY id").all() as WorkbenchWorkflowExport["tasks"],
+        proposals: db.prepare("SELECT * FROM CorpusCandidateProposal WHERE ruleSource = 'editor_workbench' ORDER BY clusterKey, guessedGrammeme").all() as WorkbenchWorkflowExport["proposals"],
+    }
+}
+export interface ManualCounts { tokens: number; dependencies: number; proposals: number; homonymHistory?: string; pointEditHistory?: string; workbenchWorkflow?: string }
 
 function readHomonymHistory(db: Database.Database): HomonymHistory | undefined {
     if (!db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'corpus_homonym_batches'").get()) return undefined
@@ -94,6 +106,7 @@ export interface ManualExport {
     source: string
     counts: ManualCounts
     homonymHistory?: HomonymHistory
+    workbenchWorkflow?: WorkbenchWorkflowExport
     pointEditHistory?: PointEditHistory[]
     tokens: ManualToken[]
     dependencies: ManualDependency[]
@@ -104,9 +117,11 @@ export function countManual(db: Database.Database): ManualCounts {
     const n = (sql: string) => (db.prepare(sql).get() as { c: number }).c
     const history = readHomonymHistory(db)
     const pointHistory = readPointEditHistory(db)
+    const workflow = readWorkbenchWorkflow(db)
     return {
         ...(history ? { homonymHistory: createHash("sha256").update(JSON.stringify(history)).digest("hex") } : {}),
         ...(pointHistory ? { pointEditHistory: createHash("sha256").update(JSON.stringify(pointHistory)).digest("hex") } : {}),
+        ...(workflow ? { workbenchWorkflow: createHash("sha256").update(JSON.stringify(workflow)).digest("hex") } : {}),
         tokens: n(`SELECT COUNT(*) c FROM CorpusToken WHERE resolutionSource = 'manual'`),
         dependencies: n(`SELECT COUNT(*) c FROM CorpusDependency WHERE source = 'manual'`),
         proposals: n(`SELECT COUNT(*) c FROM CorpusCandidateProposal WHERE reviewedByEmail IS NOT NULL`),
@@ -175,6 +190,7 @@ export function exportManual(db: Database.Database, source: string): ManualExpor
         counts: countManual(db),
         homonymHistory: readHomonymHistory(db),
         pointEditHistory: readPointEditHistory(db),
+        workbenchWorkflow: readWorkbenchWorkflow(db),
         tokens,
         dependencies,
         proposals,

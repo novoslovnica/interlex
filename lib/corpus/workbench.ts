@@ -132,6 +132,10 @@ export function saveTokenEdit(db: Database.Database, input: {
     const after = snapshot(db, input.slug, input.tokenId)!
     const editId = randomUUID()
     db.prepare(`INSERT INTO corpus_token_edits (id, documentSlug, tokenId, userId, userEmail, createdAt, beforeState, afterState) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(editId, input.slug, input.tokenId, input.user.id ?? null, input.user.email ?? null, new Date().toISOString(), JSON.stringify(before), JSON.stringify(after))
+    if (input.user.id && db.prepare("SELECT name FROM sqlite_master WHERE name = 'corpus_review_tasks'").get()) {
+      db.prepare(`UPDATE corpus_review_tasks SET state = 'closed', completedByEditId = ?, version = ?, updatedAt = ?
+        WHERE userId = ? AND documentSlug = ? AND tokenId = ? AND state != 'closed'`).run(editId, randomUUID(), new Date().toISOString(), input.user.id, input.slug, input.tokenId)
+    }
     return { editId, token: after.token }
   }).immediate()
 }
@@ -152,6 +156,11 @@ export function undoTokenEdit(db: Database.Database, slug: string, editId: strin
     for (const c of before.candidates) db.prepare("UPDATE CorpusTokenCandidate SET rank = ?, source = ? WHERE id = ? AND tokenId = ?").run(c.rank, c.source, c.id, edit.tokenId)
     const t = before.token
     db.prepare(`UPDATE CorpusToken SET wordSlug = ?, lemma = ?, pos = ?, feats = ?, matchCount = ?, isPartialMatch = ?, resolutionSource = ?, homonymGroupKey = ? WHERE id = ?`).run(t.wordSlug, t.lemma, t.pos, t.feats, t.matchCount, t.isPartialMatch, t.resolutionSource, t.homonymGroupKey, edit.tokenId)
+    if (db.prepare("SELECT name FROM sqlite_master WHERE name = 'corpus_review_tasks'").get()) {
+      const restored = snapshot(db, slug, edit.tokenId)!
+      db.prepare(`UPDATE corpus_review_tasks SET state = 'deferred', completedByEditId = NULL, tokenRevision = ?, tokenStamp = ?, version = ?, updatedAt = ?
+        WHERE completedByEditId = ? AND state = 'closed'`).run(revision(restored), restored.token.workbenchRevision, randomUUID(), new Date().toISOString(), editId)
+    }
     return { restored: true, conflict: false }
   }).immediate()
 }

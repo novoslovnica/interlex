@@ -1,3 +1,5 @@
+import { withHomonymReviewDb } from "@/lib/corpus/homonymReview"
+import { validTokenId } from "@/lib/corpus/workbench"
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { Prisma } from "@/prisma/generated/corpus/client"
@@ -50,22 +52,23 @@ interface ClusterRow {
   gap: number
 }
 
-function clusterFilter(status: string, gap: 0 | 1 | null): Prisma.Sql {
+function clusterFilter(status: string, gap: 0 | 1 | null, cluster = ""): Prisma.Sql {
   return gap === null
-    ? Prisma.sql`WHERE status = ${status} GROUP BY clusterKey`
-    : Prisma.sql`WHERE status = ${status} GROUP BY clusterKey HAVING MAX(possibleEndingGap) = ${gap}`
+    ? Prisma.sql`WHERE status = ${status} ${cluster ? Prisma.sql`AND clusterKey = ${cluster}` : Prisma.empty} GROUP BY clusterKey`
+    : Prisma.sql`WHERE status = ${status} ${cluster ? Prisma.sql`AND clusterKey = ${cluster}` : Prisma.empty} GROUP BY clusterKey HAVING MAX(possibleEndingGap) = ${gap}`
 }
 
 export default async function CorpusCandidatesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; queue?: string }>
+  searchParams: Promise<{ page?: string; queue?: string; cluster?: string }>
 }) {
   const session = await auth()
   if (!session) redirect("/login")
   await requirePermission(session, Feature.CorpusCandidatesReview)
 
-  const { page: pageStr, queue: queueStr } = await searchParams
+  const { page: pageStr, queue: queueStr, cluster: clusterStr } = await searchParams
+  const cluster = (clusterStr || "").trim().slice(0, 250)
   const page = Math.max(1, parseInt(pageStr ?? "1", 10) || 1)
   const queue: QueueKey = queueStr === "endings" || queueStr === "deferred" ? queueStr : "words"
   const config = QUEUES[queue]
@@ -78,7 +81,7 @@ export default async function CorpusCandidatesPage({
       const q = QUEUES[key]
       const rows = await prismaCorpus.$queryRaw<{ n: bigint }[]>`
         SELECT COUNT(*) AS n FROM (
-          SELECT clusterKey FROM "CorpusCandidateProposal" ${clusterFilter(q.status, q.gap)}
+          SELECT clusterKey FROM "CorpusCandidateProposal" ${clusterFilter(q.status, q.gap, cluster)}
         )`
       return [key, Number(rows[0]?.n ?? 0)] as const
     }),
@@ -92,7 +95,7 @@ export default async function CorpusCandidatesPage({
   const clusterRows = await prismaCorpus.$queryRaw<ClusterRow[]>`
     SELECT clusterKey, MAX(occurrenceCount) AS occurrenceCount, MAX(possibleEndingGap) AS gap
     FROM "CorpusCandidateProposal"
-    ${clusterFilter(config.status, config.gap)}
+    ${clusterFilter(config.status, config.gap, cluster)}
     ORDER BY occurrenceCount DESC
     LIMIT ${PAGE_SIZE} OFFSET ${offset}`
 
@@ -105,6 +108,10 @@ export default async function CorpusCandidatesPage({
       })
     : []
 
+  const exampleIds = [...new Set(proposals.filter((p) => p.ruleSource === "editor_workbench").flatMap((p) => Array.isArray(p.exampleTokenIds) ? p.exampleTokenIds.filter(validTokenId).slice(0, 5) : []))].slice(0, 100)
+  const examples = exampleIds.length ? withHomonymReviewDb((db) => db.prepare(`SELECT CAST(t.id AS TEXT) tokenId, t.documentSlug, t.surfaceForm, substr(s.rawText,1,600) sentenceText
+    FROM CorpusToken t JOIN CorpusSentence s ON s.id=t.sentenceId WHERE t.id IN (${exampleIds.map(() => "?").join(",")})`).all(...exampleIds) as { tokenId: string; documentSlug: string; surfaceForm: string; sentenceText: string }[]) : []
+  const examplesById = new Map(examples.map((t) => [t.tokenId, t]))
   const proposalsByCluster = new Map<string, typeof proposals>()
   for (const p of proposals) {
     const arr = proposalsByCluster.get(p.clusterKey)
@@ -149,6 +156,7 @@ export default async function CorpusCandidatesPage({
       siblingWordSlug: p.siblingWordSlug,
       possibleEndingGap: p.possibleEndingGap,
       exampleTokenIds: p.exampleTokenIds as string[],
+      examples: p.ruleSource === "editor_workbench" && Array.isArray(p.exampleTokenIds) ? p.exampleTokenIds.filter(validTokenId).slice(0, 5).flatMap((id) => { const example = examplesById.get(id); return example ? [example] : [] }) : [],
       existingLexemes: (existingByForm.get(p.reconstructedForm) ?? []).map(({ slug, value, pos }) => ({ slug, value, pos })),
     })),
   }))
@@ -156,6 +164,7 @@ export default async function CorpusCandidatesPage({
   return (
     <CorpusCandidatesClient
       clusters={clusters}
+      clusterFilter={cluster}
       page={page}
       totalPages={totalPages}
       totalClusters={totalClusters}

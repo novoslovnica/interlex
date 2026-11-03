@@ -16,6 +16,7 @@ export interface HypothesisDTO {
   siblingWordSlug: string | null
   possibleEndingGap: boolean
   exampleTokenIds: string[]
+  examples?: { documentSlug: string; tokenId: string; surfaceForm: string; sentenceText: string }[]
   /** Лексемы, чья словарная форма совпадает с reconstructedForm с точностью до диакритики. */
   existingLexemes: { slug: string; value: string | null; pos: string | null }[]
 }
@@ -41,6 +42,7 @@ export interface ClusterDTO {
 }
 
 const RULE_SOURCE_LABEL: Record<string, string> = {
+  editor_workbench: "гипотеза редактора из контекста корпуса",
   red_reverse_lookup: "красный — основа не найдена",
   yellow_stem_sibling: "жёлтый — основа похожа на существующее слово",
 }
@@ -131,8 +133,9 @@ function HypothesisCard({ h }: { h: HypothesisDTO }) {
         </div>
       )}
       <div className="text-xs text-muted-foreground space-y-0.5">
-        <div>Класс основы: <span className="font-mono">{h.guessedStemType}</span>, основа: <span className="font-mono">{h.guessedStem}</span></div>
+        <div>{h.ruleSource === "editor_workbench" ? "Основа и её класс не установлены — нужна проверка редактором." : <>Класс основы: <span className="font-mono">{h.guessedStemType}</span>, основа: <span className="font-mono">{h.guessedStem}</span></>}</div>
         <div>{RULE_SOURCE_LABEL[h.ruleSource] ?? h.ruleSource}</div>
+        {h.examples?.map((example) => <div key={example.tokenId} className="mt-2 rounded border p-2 text-sm"><p className="whitespace-pre-wrap break-words">{example.sentenceText}</p><Link target="_blank" className="text-xs underline" href={`/admin/corpus/workbench/${encodeURIComponent(example.documentSlug)}?token=${example.tokenId}&filter=all`}>Открыть исходное вхождение ↗</Link></div>)}
         {h.siblingWordSlug && (
           <div>
             Похоже на корень слова{" "}
@@ -282,6 +285,7 @@ export default function CorpusCandidatesClient({
   queueCounts,
   queueTitle,
   queueHint,
+  clusterFilter = "",
 }: {
   clusters: ClusterDTO[]
   page: number
@@ -291,6 +295,7 @@ export default function CorpusCandidatesClient({
   queueCounts: Record<QueueKey, number>
   queueTitle: string
   queueHint: string
+  clusterFilter?: string
 }) {
   return (
     <div className="flex-1 min-h-0 overflow-auto p-6 space-y-4">
@@ -299,6 +304,7 @@ export default function CorpusCandidatesClient({
         <span className="text-sm text-muted-foreground">Слов в этой очереди: {totalClusters.toLocaleString("ru")}</span>
       </div>
 
+      {clusterFilter && <p className="text-sm">Форма: <strong>{clusterFilter}</strong> · <Link className="underline" href="/admin/corpus-candidates">Показать всю очередь</Link></p>}
       {/* Три очереди вместо одного плоского списка: это три разные задачи, и
           смешивать их — значит прятать 3 721 дефект парадигм среди 77 тысяч
           новых слов, а те, в свою очередь, среди 109 тысяч гапаксов. */}
@@ -306,7 +312,7 @@ export default function CorpusCandidatesClient({
         {(Object.keys(QUEUE_LABEL) as QueueKey[]).map((key) => (
           <Link
             key={key}
-            href={`/admin/corpus-candidates?queue=${key}`}
+            href={`/admin/corpus-candidates?queue=${key}${clusterFilter ? `&cluster=${encodeURIComponent(clusterFilter)}` : ""}`}
             className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
               key === queue ? "bg-foreground text-background" : "hover:bg-muted"
             }`}
@@ -345,12 +351,12 @@ export default function CorpusCandidatesClient({
           <span>Страница {page} из {totalPages}</span>
           <div className="flex gap-2">
             {page > 1 && (
-              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page - 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
+              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page - 1}${clusterFilter ? `&cluster=${encodeURIComponent(clusterFilter)}` : ""}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
                 ← Назад
               </Link>
             )}
             {page < totalPages && (
-              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page + 1}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
+              <Link href={`/admin/corpus-candidates?queue=${queue}&page=${page + 1}${clusterFilter ? `&cluster=${encodeURIComponent(clusterFilter)}` : ""}`} className="px-2 py-1 rounded border hover:bg-muted transition-colors">
                 Вперёд →
               </Link>
             )}

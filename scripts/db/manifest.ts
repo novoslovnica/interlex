@@ -69,6 +69,8 @@ export const MANIFEST: ManifestEntry[] = [
 
     { path: "scripts/db/2026-10-19-add-corpus-workbench.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "отдельное рабочее место: версии токенов и журнал точечных правок" },
 
+    { path: "scripts/db/2026-11-03-add-corpus-editor-assistance.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "личные задачи редактора и индекс похожих вхождений; анализ токенов не меняется" },
+
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },

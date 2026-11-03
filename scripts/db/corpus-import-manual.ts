@@ -10,6 +10,8 @@
 // Usage:
 //   npx tsx scripts/db/corpus-import-manual.ts <export.json> [--db=corpus-release.db] [--apply] [--allow-missing]
 
+import { randomUUID } from "node:crypto"
+import { createWorkbenchAutomationSchema } from "../../lib/corpus/workbenchAutomationSchema"
 import { createWorkbenchSchema } from "../../lib/corpus/workbenchSchema"
 import { createHomonymReviewSchema } from "../../lib/corpus/homonymReviewSchema"
 import Database from "better-sqlite3"
@@ -139,6 +141,36 @@ export function importManual(db: Database.Database, data: ManualExport): ImportR
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
         for (const e of data.pointEditHistory) insert.run(e.id, e.documentSlug, e.tokenId, e.userId, e.userEmail, e.createdAt,
             e.beforeState, e.afterState, e.state === "active" ? "conflict" : e.state, e.undoneAt, e.undoneBy)
+    }
+    if (data.workbenchWorkflow) {
+        createWorkbenchSchema(db)
+        createWorkbenchAutomationSchema(db)
+        const proposal = db.prepare(`INSERT INTO CorpusCandidateProposal
+            (clusterKey,ruleSource,guessedPos,guessedStemType,guessedGrammeme,guessedStem,reconstructedForm,siblingWordSlug,possibleEndingGap,rank,occurrenceCount,exampleTokenIds,firstSeenAt,lastSeenAt,status,resolutionNote,candidateId,reviewedByEmail,reviewedAt)
+            VALUES (@clusterKey,@ruleSource,@guessedPos,@guessedStemType,@guessedGrammeme,@guessedStem,@reconstructedForm,@siblingWordSlug,@possibleEndingGap,@rank,@occurrenceCount,'[]',@firstSeenAt,@lastSeenAt,@status,@resolutionNote,@candidateId,@reviewedByEmail,@reviewedAt)
+            ON CONFLICT(clusterKey,ruleSource,guessedStemType,guessedGrammeme) DO UPDATE SET status=excluded.status,resolutionNote=excluded.resolutionNote,candidateId=excluded.candidateId,reviewedByEmail=excluded.reviewedByEmail,reviewedAt=excluded.reviewedAt`)
+        for (const p of data.workbenchWorkflow.proposals) proposal.run(p)
+        const target = db.prepare(`SELECT t.tokenIndex, t.surfaceForm, substr(s.rawText,1,16000) sentenceText FROM CorpusToken t JOIN CorpusSentence s ON s.id=t.sentenceId WHERE t.id=?`)
+        const put = db.prepare(`INSERT INTO corpus_review_tasks
+            (id,userId,documentSlug,tokenId,tokenIndex,surfaceForm,sentenceText,ordinal,reason,note,tokenRevision,tokenStamp,state,version,proposalKey,proposalSeenStatus,completedByEditId,createdAt,updatedAt)
+            VALUES (@id,@userId,@documentSlug,@tokenId,@tokenIndex,@surfaceForm,@sentenceText,@ordinal,@reason,@note,@tokenRevision,@tokenStamp,@state,@version,@proposalKey,@proposalSeenStatus,@completedByEditId,@createdAt,@updatedAt)
+            ON CONFLICT(id) DO UPDATE SET tokenId=excluded.tokenId,tokenIndex=excluded.tokenIndex,sentenceText=excluded.sentenceText,state=excluded.state,version=excluded.version,tokenStamp=excluded.tokenStamp,tokenRevision=excluded.tokenRevision,note=excluded.note,reason=excluded.reason,proposalKey=excluded.proposalKey,proposalSeenStatus=excluded.proposalSeenStatus,completedByEditId=excluded.completedByEditId,updatedAt=excluded.updatedAt`)
+        const examples = new Map<string, Set<string>>()
+        for (const task of data.workbenchWorkflow.tasks) {
+            const match = locate({ documentSlug: task.documentSlug, tokenIndex: task.tokenIndex, surfaceForm: task.surfaceForm, sentenceText: task.sentenceText, ordinal: task.ordinal })
+            const t = match ? target.get(match.id) as { tokenIndex: number; surfaceForm: string; sentenceText: string } : undefined
+            const safe = t && t.surfaceForm === task.surfaceForm && t.sentenceText === task.sentenceText
+            const tokenId = safe ? String(match!.id) : `unmatched:${task.id}`
+            put.run({ ...task, tokenId, tokenIndex: safe ? t.tokenIndex : task.tokenIndex,
+                state: task.state === "closed" ? "closed" : safe ? "deferred" : "conflict",
+                tokenStamp: `imported:${randomUUID()}`, tokenRevision: "", version: randomUUID() })
+            if (safe && task.proposalKey) {
+                const ids = examples.get(task.proposalKey) || new Set<string>()
+                if (ids.size < 5) ids.add(tokenId)
+                examples.set(task.proposalKey, ids)
+            }
+        }
+        for (const [key, ids] of examples) db.prepare("UPDATE CorpusCandidateProposal SET exampleTokenIds=? WHERE ruleSource='editor_workbench' AND guessedGrammeme=?").run(JSON.stringify([...ids]), key)
     }
     return report
 }

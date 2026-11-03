@@ -123,6 +123,7 @@ model CorpusToken {
   // тот же класс проблемы, что и дрейф interlex.db, см. CLAUDE.md).
   @@index([documentSlug, wordIndex])
 
+  @@index([documentSlug, surfaceForm, tokenIndex, id], map: "CorpusToken_document_surface_position")
   @@index([wordSlug])
   // Для каскадного удаления предложения — без него каждое удаление просматривало
   // всю таблицу; scripts/db/2026-09-15-add-corpus-fk-indexes.ts.
@@ -389,4 +390,31 @@ model CorpusTokenEdit {
   @@index([documentSlug, createdAt], map: "corpus_token_edits_document")
   @@index([tokenId, state], map: "corpus_token_edits_token")
   @@map("corpus_token_edits")
+}
+
+// Personal workflow, not a linguistic annotation. No FK: retain tasks on rebuild.
+model CorpusReviewTask {
+  id String @id
+  userId String
+  documentSlug String
+  tokenId String
+  tokenIndex Int
+  surfaceForm String
+  sentenceText String
+  ordinal Int
+  reason String
+  note String @default("")
+  tokenRevision String
+  tokenStamp String
+  state String @default("deferred")
+  version String
+  proposalKey String?
+  proposalSeenStatus String?
+  completedByEditId String?
+  createdAt String
+  updatedAt String
+  @@unique([userId, documentSlug, tokenId])
+  @@index([userId, documentSlug, state, updatedAt], map: "corpus_review_tasks_queue")
+  @@index([proposalKey], map: "corpus_review_tasks_proposal")
+  @@map("corpus_review_tasks")
 }
