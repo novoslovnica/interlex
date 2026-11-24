@@ -33,6 +33,7 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
     start: number;
     end: number;
     text: string;
+    type: MorphemeType;
   }
 
   const allMatches: Match[] = [];
@@ -40,6 +41,7 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
   for (const root of roots) {
     if (!root.value || isNumeric(root.value)) continue;
     const candidates = generateMorphemeCandidates(root.value, root.type);
+    const type = root.type === MorphemeType.SUFFIX ? MorphemeType.SUFFIX : MorphemeType.ROOT;
 
     for (const candidate of candidates) {
       if (candidate.length < 2 && candidate.length < wordLower.length) continue;
@@ -49,6 +51,7 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
           start: pos,
           end: pos + candidate.length,
           text: word.slice(pos, pos + candidate.length),
+          type,
         });
         pos++;
       }
@@ -76,11 +79,11 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
   for (const m of resolved) {
     if (m.start > cursor) {
       parts.push({
-        type: cursor === 0 ? MorphemeType.PREFIX : MorphemeType.UNKNOWN,
+        type: m.type === MorphemeType.ROOT && cursor === 0 ? MorphemeType.PREFIX : MorphemeType.UNKNOWN,
         text: word.slice(cursor, m.start),
       });
     }
-    parts.push({ type: MorphemeType.ROOT, text: m.text });
+    parts.push({ type: m.type, text: m.text });
     cursor = m.end;
   }
 
@@ -104,6 +107,7 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
           type: MorphemeType.ENDING,
           text: word.slice(cursor),
         });
+        cursor = word.length;
       }
     }
   } else {
@@ -112,10 +116,13 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
         type: MorphemeType.SUFFIX,
         text: word.slice(cursor),
       });
+      cursor = word.length;
     }
   }
 
-  if (!parts.some(p => p.type === MorphemeType.ROOT)) return null;
+  if (cursor < word.length) {
+    parts.push({ type: MorphemeType.UNKNOWN, text: word.slice(cursor) });
+  }
   return parts;
 }
 
@@ -146,7 +153,7 @@ function measureWidths(parts: { text: string }[]): number[] {
 
 export default function MorphemeAnalysis({ word, roots, base }: MorphemeAnalysisProps) {
   const t = useTranslations("word");
-  const raw = useMemo(() => extractMorphemes(word, base, roots), [word, roots]);
+  const raw = useMemo(() => extractMorphemes(word, base, roots), [word, base, roots]);
 
   const morphemes: MorphemePart[] | null = raw;
 

@@ -1,11 +1,11 @@
 import { prismaData } from "@/lib/prisma"
 import { DbAnalyzer, WordBaseRecord, AnomalyMatch, InflectionAnomalyIndex, FoldedBaseIndex } from "./dbAnalyzer"
 import { generateWordForms } from "@/lib/grammar/morphology/engine"
-import type { GeneratedForm } from "@/lib/grammar/morphology"
+import type { EngineWordInput, GeneratedForm } from "@/lib/grammar/morphology"
 import type { Prisma } from "@/prisma/generated/data/client"
 import { CollocationRecord } from "./collocationMatcher"
 import { normalizeSurfaceForm } from "@/lib/corpus/candidates/reconstruct"
-import { isValidPos } from "@/lib/grammar/common"
+import { isValidPos, MorphemeType, PosType } from "@/lib/grammar/common"
 import { foldDiacritics } from "./foldDiacritics"
 import { expandVariants, lexemeVariants } from "./lexemeVariants"
 
@@ -22,6 +22,21 @@ import { expandVariants, lexemeVariants } from "./lexemeVariants"
 // доработку), просто не участвуют в распознавании. Снимается одной правкой,
 // если блок когда-нибудь наполнят значениями.
 const HAS_MEANING = { meanings: { some: {} } } as const
+
+export const adjectiveSuffixSelection = {
+  lexemes_morphemes: {
+    where: { lexeme: { pos: PosType.ADJ }, morpheme: { type: MorphemeType.SUFFIX } },
+    select: { morpheme: { select: { value: true, type: true } } },
+  },
+} satisfies Prisma.LexemeSelect
+
+export type AdjectiveSuffixLinks = Prisma.LexemeGetPayload<{ select: typeof adjectiveSuffixSelection }>
+
+export function adjectiveMorphemes(row: AdjectiveSuffixLinks): EngineWordInput["morphemes"] {
+  return row.lexemes_morphemes.flatMap(({ morpheme }) =>
+    morpheme?.value ? [{ value: morpheme.value, type: morpheme.type }] : [],
+  )
+}
 
 // InflectionAnomaly (`inflection_anomalies`, data.db) хранит суппletивные/
 // нерегулярные формы конкретных лексем (напр. "jest"/"sųt" у "byti" — не
@@ -268,6 +283,7 @@ export async function forEachLexemeForms(
       stemExtension: true, paradigm: true, stem: true, secondaryStem: true,
       tertiaryStem: true, gender: true, animacy: true, isCollocation: true,
       isPublic: true, properNoun: true,
+      ...adjectiveSuffixSelection,
     },
   })
 
@@ -276,6 +292,7 @@ export async function forEachLexemeForms(
     // Каждый вариант склоняется отдельно: подать движку стем
     // "altana, altank" целиком — значит получить мусорную парадигму.
     const variantPairs = lexemeVariants(l.value, l.stem)
+    const morphemes = adjectiveMorphemes(l)
     const forms: GeneratedForm[] = []
     for (const variant of variantPairs) {
       try {
@@ -299,6 +316,7 @@ export async function forEachLexemeForms(
           flavor: "CORE",
           isCollocation: l.isCollocation ?? false,
           knownPrepositions,
+          morphemes,
         }, true))
       } catch {
         // Одна лексема с кривыми грамматическими полями не должна ронять
@@ -410,6 +428,7 @@ export function createQueryWordsByBase(
         animacy: true,
         isCollocation: true,
         corpusFrequencyPerMln: true,
+        ...adjectiveSuffixSelection,
       },
     })
     return rows.map((r) => ({
@@ -431,6 +450,7 @@ export function createQueryWordsByBase(
       flavor: lexemeFlavors.get(r.id) ?? "CORE",
       isCollocation: r.isCollocation,
       corpusFrequencyPerMln: r.corpusFrequencyPerMln,
+      morphemes: adjectiveMorphemes(r),
     }))
   }
 }

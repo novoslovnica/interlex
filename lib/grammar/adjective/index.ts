@@ -5,9 +5,9 @@ import {
 } from '@/lib/grammar/common'; // Системные Enum из таблицы Word
 import { Case, NumberType } from '../endingsRegistry';
 import { FourSlavicTones } from '../fourTonesGenerator';
-import { stripAccents } from '../accentUtils';
 import { findEnding } from '@/lib/grammar/endingLoader';
 import { resolveStressOverride } from '@/lib/grammar/stress';
+export { classifyAdjectiveType } from './relativeSuffixes';
 
 // =========================================================================
 // 1. СТРОГИЕ ИНТЕРФЕЙСЫ И ТИПЫ ДАННЫХ
@@ -182,29 +182,6 @@ export function identifyAdjStemType(item: EnhancedAdjDbItem): AdjStemType {
         return 'adj_soft';
     }
     return 'adj_hard';
-}
-
-// Суффиксы, маркирующие ОТНОСИТЕЛЬНЫЕ прилагательные (не имеют степеней сравнения).
-// Единственное место с этой логикой — используется и движком (processors.ts), и живой
-// страницей слова (Word.tsx), вместо двух независимых, разошедшихся друг с другом копий.
-//
-// Эвристика приблизительна (в схеме нет отдельного поля "тип прилагательного" — в
-// перспективе классификацию стоит перенести на явное поле в БД; морфемный подход сейчас
-// неприменим, т.к. суффикс-морфемы вроде "-ов-"/"-ев-"/"-ск-"/"-н-" в данных не тегированы).
-// MIN_STEM_LEN отсекает случайное совпадение суффикса с концом качественного корня
-// (напр. "novy" оканчивается на "ovy", но это корень "nov-" + окончание "-y", а не
-// существительное + суффикс "-ов-", как в "otcovy").
-const RELATIVE_SUFFIXES = ['ovy', 'evy', 'ny', 'sky'] as const;
-const MIN_STEM_LEN = 2;
-
-export function classifyAdjectiveType(lemma: string): 'qualitative' | 'relative' {
-    const cleanLemma = lemma.toLowerCase().trim();
-    for (const suffix of RELATIVE_SUFFIXES) {
-        if (cleanLemma.endsWith(suffix) && cleanLemma.length - suffix.length >= MIN_STEM_LEN) {
-            return 'relative';
-        }
-    }
-    return 'qualitative';
 }
 
 // =========================================================================

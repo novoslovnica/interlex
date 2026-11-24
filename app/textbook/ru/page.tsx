@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { BEGINNER_ROUTE } from '@/lib/beginner-route';
 
 export default function TextbookPage() {
     const t = useTranslations("textbook");
+    const beginner = useTranslations("beginner");
     const [activeChapter, setActiveChapter] = useState('pronunciation');
 
     const categories = t.raw("categories") as string[];
@@ -80,7 +82,7 @@ export default function TextbookPage() {
             </aside>
 
             <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
-                <header className="border-b px-6 py-4 flex items-center justify-between bg-background/50 backdrop-blur shrink-0">
+                <header className="border-b px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3 bg-background/50 backdrop-blur shrink-0">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span>{t("breadcrumb")}</span>
                         <span>/</span>
@@ -89,6 +91,12 @@ export default function TextbookPage() {
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Link
+                            href={BEGINNER_ROUTE}
+                            className="text-xs font-semibold px-3 py-1.5 rounded-lg text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                            {beginner("title")}
+                        </Link>
                         <Link
                             href="/lexicon"
                             className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
@@ -157,6 +165,12 @@ export default function TextbookPage() {
                                         {t("chapter1.factText")}
                                     </p>
                                 </section>
+                                <Link
+                                    href="/textbook/phonetic-laws"
+                                    className="inline-block font-semibold text-primary underline underline-offset-4"
+                                >
+                                    {t("phoneticLaws.title")}
+                                </Link>
                             </>
                         )}
 

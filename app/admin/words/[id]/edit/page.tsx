@@ -13,6 +13,7 @@ import { updateWord } from "@/lib/actions/word-actions"
 import { fetchSymmetricSemanticRelations, fetchOutgoingSemanticRelations, fetchIncomingSemanticRelations } from "@/lib/relations"
 import { fetchTranslationsForMeaningIds } from "@/lib/translations"
 import { RELATION_CONFIG } from "../../../relations/relation-config"
+import { RELATIVE_ADJECTIVE_SUFFIXES } from "@/lib/grammar/adjective/relativeSuffixes"
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 const rootSelectStructure = {
   id: true,
   value: true,
+  type: true,
   lexemes_morphemes: {
     take: 10,
     select: {
@@ -46,7 +48,7 @@ export type MorphemeWithLexemes = Prisma.MorphemeGetPayload<{
 
 interface EditPageProps {
   params: Promise<{ id: string }>
-  searchParams: Promise<{ tab?: string }>
+  searchParams: Promise<{ tab?: string; morpheme?: string }>
 }
 
 function extractTranslations(
@@ -65,8 +67,9 @@ function extractTranslations(
 
 export default async function EditArticlePage({ params, searchParams }: EditPageProps) {
   const { id } = await params
-  const { tab } = await searchParams
+  const { tab, morpheme } = await searchParams
   const activeTab = tab === "relations" ? "relations" : "article"
+  const initialMorphemeQuery = RELATIVE_ADJECTIVE_SUFFIXES.find((suffix) => suffix === morpheme)
   const wordId = parseInt(id, 10)
 
   if (isNaN(wordId)) notFound()
@@ -88,11 +91,10 @@ export default async function EditArticlePage({ params, searchParams }: EditPage
           },
         },
         lexemes_morphemes: {
-          take: 1,
+          orderBy: { id: "asc" },
           select: {
-            morphemeId: true,
             morpheme: {
-              select: { value: true },
+              select: { id: true, value: true, type: true },
             },
           },
         },
@@ -120,9 +122,9 @@ export default async function EditArticlePage({ params, searchParams }: EditPage
     grammeme: a.grammeme,
   }))
 
-const attachedRoots = (wordData.lexemes_morphemes || [])
-    .map((rw) => rw.morpheme)
-    .filter((r): r is { id: number; value: string } => !!r && !!r.value)
+  const attachedRoots = Array.from(new Map(wordData.lexemes_morphemes.flatMap(({ morpheme }) =>
+    morpheme ? [[morpheme.id, { ...morpheme, value: morpheme.value ?? `ID: ${morpheme.id}` }] as const] : [],
+  )).values())
 
   // Derive homonym base keys from stem using same heuristic as seed scripts
   const stemCandidates = wordData.stem
@@ -187,7 +189,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
 
   async function handleUpdate(formData: any) {
     "use server"
-    return updateWord({ ...formData, wordId })
+    return updateWord({ ...formData, wordId }, initialMorphemeQuery !== undefined)
   }
 
   // Read-only summary tab — mirrors the semantic_relations relationType/direction
@@ -265,6 +267,7 @@ const attachedRoots = (wordData.lexemes_morphemes || [])
               <ArticleForm
                 title={`Редактирование статьи: ${wordData.value || "Без названия"}`}
                 submitButtonText="Сохранить изменения"
+                initialMorphemeQuery={initialMorphemeQuery}
                 initialRoots={initialRoots}
                 onSubmit={handleUpdate}
                 initialData={{

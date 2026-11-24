@@ -1,5 +1,19 @@
 import { NextResponse } from "next/server"
 import { prismaData as db } from "@/lib/prisma"
+import type { Prisma } from "@/prisma/generated/data/client"
+
+const MORPHEME_SELECT = {
+  id: true,
+  value: true,
+  type: true,
+  lexemes_morphemes: {
+    take: 10,
+    select: {
+      id: true,
+      lexeme: { select: { id: true, value: true } },
+    },
+  },
+} satisfies Prisma.MorphemeSelect
 
 export async function GET(request: Request) {
   try {
@@ -34,29 +48,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ items, total })
     }
 
-    const roots = await db.morpheme.findMany({
-      where: query.trim() ? where : undefined,
-      select: {
-        id: true,
-        value: true,
-        lexemes_morphemes: {
-          take: 10,
-          select: {
-            id: true,
-            lexeme: {
-              select: {
-                id: true,
-                value: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: { value: "asc" },
+    const term = query.trim()
+    const exact = term ? await db.morpheme.findMany({
+      where: { value: term },
+      select: MORPHEME_SELECT,
+      orderBy: [{ type: "desc" }, { id: "asc" }],
       take: 30,
-    })
+    }) : []
+    const remaining = exact.length < 30 ? await db.morpheme.findMany({
+      select: MORPHEME_SELECT,
+      where: term ? { value: { contains: term, not: term } } : undefined,
+      orderBy: [{ value: "asc" }, { id: "asc" }],
+      take: 30 - exact.length,
+    }) : []
 
-    return NextResponse.json(roots)
+    return NextResponse.json([...exact, ...remaining])
   } catch (error) {
     console.error("API Roots Error:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })

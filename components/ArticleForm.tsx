@@ -8,6 +8,7 @@ import { generateStemCandidates } from "@/lib/grammar/common/stem-candidates"
 import { generateAllFlavors } from "@/lib/flavors"
 import { PosType } from "@/lib/grammar/common/pos"
 import { GrammaticalCase } from "@/lib/grammar/common/case"
+import { MorphemeType } from "@/lib/grammar/common/morpheme"
 
 const LANGUAGES: { key: string; label: string }[] = [
   { key: "en", label: "English" },
@@ -221,17 +222,20 @@ interface InflectionAnomalyItem {
 interface SelectedRootItem {
   id: number
   value: string
+  type?: number | null
 }
 
 interface RootOption {
   id: number
   value: string | null
-  roots_words?: { word?: { id: number; value: string } | null }[]
+  type?: number | null
+  lexemes_morphemes?: { lexeme: { id: number; value: string | null } | null }[]
 }
 
 interface ArticleFormProps {
   title: string
   submitButtonText: string
+  initialMorphemeQuery?: string
   initialData?: {
     wordId?: number
     word: string
@@ -442,6 +446,7 @@ function NumberField({ label, value, onChange, placeholder }: {
 export default function ArticleForm({
   title,
   submitButtonText,
+  initialMorphemeQuery = "",
   initialData,
   initialRoots,
   onSubmit,
@@ -555,8 +560,8 @@ export default function ArticleForm({
   const [selectedMeaningIdx, setSelectedMeaningIdx] = useState(0)
   const [activeLang, setActiveLang] = useState("en")
 
-  const [searchQuery, setSearchQuery] = useState("")
-  const [roots, setRoots] = useState<any[]>(initialRoots)
+  const [searchQuery, setSearchQuery] = useState(initialMorphemeQuery)
+  const [roots, setRoots] = useState<RootOption[]>(initialRoots)
   const [isLoadingRoots, setIsLoadingRoots] = useState(false)
   const [selectedRoots, setSelectedRoots] = useState<SelectedRootItem[]>(
     initialData?.attachedRoots || []
@@ -685,7 +690,7 @@ export default function ArticleForm({
     setSelectedRoots((prev) => {
       const exists = prev.some((r) => r.id === root.id)
       if (exists) return prev.filter((r) => r.id !== root.id)
-      return [...prev, { id: root.id, value: root.value || `ID: ${root.id}` }]
+      return [...prev, { id: root.id, value: root.value || `ID: ${root.id}`, type: root.type }]
     })
   }, [])
 
@@ -1189,32 +1194,33 @@ export default function ArticleForm({
           </div>
 
           {/* Right column: Roots */}
-          <div className="p-3 border rounded-md bg-muted/10">
+          <div id="morphemes" tabIndex={-1} className="p-3 border rounded-md bg-muted/10 focus-visible:outline-2 focus-visible:outline-primary">
             <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-medium">Состав слова (Корни / Морфемы)</label>
+              <label htmlFor="morpheme-search" className="block text-sm font-medium">Состав слова</label>
               {isLoadingRoots && <span className="text-xs text-muted-foreground animate-pulse">Поиск...</span>}
             </div>
 
             <input
+              id="morpheme-search"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-3 py-2 border rounded-md text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-primary mb-3"
-              placeholder="Поиск корней, приставок..."
+              placeholder="Поиск корней, приставок, суффиксов"
             />
 
             {(selectedRoots.length > 0 || newRoots.length > 0) && (
               <div className="mb-2 p-2 border border-dashed rounded-md bg-muted/10 flex flex-wrap gap-1.5 max-h-[80px] overflow-y-auto">
                 {selectedRoots.map((root) => (
                   <span key={`sel-${root.id}`} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-                    {root.value}
-                    <button type="button" onClick={() => setSelectedRoots((prev) => prev.filter((r) => r.id !== root.id))} className="ml-1.5 text-primary hover:text-destructive font-bold">×</button>
+                    {root.type === MorphemeType.SUFFIX ? `${root.value} (суффикс)` : root.value}
+                    <button type="button" aria-label={`Убрать морфему ${root.value}`} onClick={() => setSelectedRoots((prev) => prev.filter((r) => r.id !== root.id))} className="ml-1.5 text-primary hover:text-destructive font-bold">×</button>
                   </span>
                 ))}
                 {newRoots.map((val, idx) => (
                   <span key={`new-${idx}`} className="inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold bg-green-500/10 text-green-600 border border-green-500/20">
                     [Новый]: {val}
-                    <button type="button" onClick={() => setNewRoots((prev) => prev.filter((v) => v !== val))} className="ml-1.5 text-green-600 hover:text-destructive font-bold">×</button>
+                    <button type="button" aria-label={`Убрать новый компонент ${val}`} onClick={() => setNewRoots((prev) => prev.filter((v) => v !== val))} className="ml-1.5 text-green-600 hover:text-destructive font-bold">×</button>
                   </span>
                 ))}
               </div>
@@ -1224,17 +1230,20 @@ export default function ArticleForm({
               {roots.length > 0 ? (
                 roots.map((root) => {
                   const isSelected = selectedRoots.some((r) => r.id === root.id)
-                  const attachedWords = (root.roots_words || []).map((rw: any) => rw.word).filter((w: any): w is { id: number; value: string } => !!w && !!w.value)
+                  const attachedWords = new Map((root.lexemes_morphemes ?? []).flatMap(({ lexeme }) =>
+                    lexeme?.value ? [[lexeme.id, lexeme.value] as const] : [],
+                  ))
                   return (
                     <div key={root.id} className={`p-2 rounded-md border transition-colors ${isSelected ? "bg-primary/5 border-primary/40" : "bg-background border-border"}`}>
-                      <button type="button" onClick={() => handleToggleRoot(root)} className="w-full text-left flex justify-between items-center font-medium text-sm">
+                      <button type="button" aria-pressed={isSelected} onClick={() => handleToggleRoot(root)} className="w-full text-left flex justify-between items-center gap-2 font-medium text-sm">
                         <span>{root.value || `ID: ${root.id}`}</span>
-                        <input type="checkbox" checked={isSelected} readOnly className="h-3.5 w-3.5 rounded border-muted text-primary" />
+                        {root.type === MorphemeType.SUFFIX && <span className="ml-auto text-xs text-muted-foreground">суффикс</span>}
+                        <span aria-hidden="true" className="w-4 text-center text-primary">{isSelected ? "✓" : ""}</span>
                       </button>
-                      {attachedWords.length > 0 && (
+                      {attachedWords.size > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1">
-                          {attachedWords.map((w: any) => (
-                            <span key={w.id} className="px-1.5 py-0.5 rounded text-[10px] bg-muted border text-muted-foreground">{w.value}</span>
+                          {[...attachedWords].map(([id, value]) => (
+                            <span key={id} className="px-1.5 py-0.5 rounded text-[10px] bg-muted border text-muted-foreground">{value}</span>
                           ))}
                         </div>
                       )}

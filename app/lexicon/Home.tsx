@@ -1,31 +1,20 @@
 'use client';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
+import Link from "next/link";
 import {isvToCyr, standardToSimple} from "@/lib/isv";
 import {mapNslToEtymologized} from "@/lib/nsl";
 import {useTranslations} from "next-intl";
 import {saveScriptPreference} from "@/app/settings/actions";
 import BookmarkButton from "@/components/BookmarkButton";
 import DiacriticsHelper from "@/components/DiacriticsHelper";
+import LexiconSearchInput from "./LexiconSearchInput";
 import {ScriptMode} from "@/lib/script-mode";
 import type {LexiconItem} from "@/app/api/lexicon/services";
 import {TRANSLATION_LANGUAGES} from "@/config/features";
+import {ALL_MAIN_CATEGORIES} from "@/lib/enums/MainCategory";
 
 import "./main-page.css";
-
-const MAIN_CATEGORY_LABELS: Record<string, string> = {
-  '': 'Вси категории',
-  everyday_life: 'Бытова',
-  nature: 'Природа',
-  geography: 'География',
-  history: 'История',
-  religion: 'Религия',
-  science: 'Наука',
-  culture_art: 'Култура/Изкуство',
-  medicine: 'Медицина',
-  law_economy: 'Право/Економия',
-  abstract: 'Абстрактно',
-};
 
 const USAGE_TYPE_LABELS: Record<string, string> = {
   '': 'Вси типы',
@@ -44,26 +33,22 @@ const USAGE_TYPE_LABELS: Record<string, string> = {
 
 const PAGE_SIZE = 20
 
-const WordCard = ({ onClickCard, item, currentScript }: { onClickCard: (item: LexiconItem) => () => void; item: LexiconItem; currentScript: ScriptMode }) => {
+const WordCard = ({ item, currentScript }: { item: LexiconItem; currentScript: ScriptMode }) => {
     const wordValue = item.word?.value || item.value || "";
     const cyrillicVariant = isvToCyr(wordValue);
     const latinVariant = wordValue.toLowerCase();
-    const title = useMemo(() => {
-        if (currentScript === ScriptMode.CYRILLIC) {
-            return `${cyrillicVariant} (${latinVariant})`
-        }
-        return `${latinVariant} (${cyrillicVariant})`;
-    }, [currentScript, cyrillicVariant]);
+    const title = currentScript === ScriptMode.CYRILLIC
+        ? `${cyrillicVariant} (${latinVariant})`
+        : `${latinVariant} (${cyrillicVariant})`;
 
     return (
-        <li
-            className="card"
-            onClick={onClickCard(item)}
-        >
-            <div className="card-title">{title}</div>
+        <li className="card">
+            <Link href={`/words/${item.id}`} prefetch={false} className="card-title block after:absolute after:inset-0 after:rounded-lg focus-visible:after:outline-2 focus-visible:after:outline-primary">
+                {title}
+            </Link>
             <div className="card-meta">{`${item.pos}`}</div>
             <div className="card-desc">{item.meaningText}</div>
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2 z-10">
                 <BookmarkButton wordId={item.id} />
             </div>
         </li>
@@ -139,7 +124,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
         void performSearch(criteria.query, criteria.mc, criteria.ut, criteria.lang, items.length);
     };
 
-    const executeSearch = useCallback(() => {
+    function submitSearch(category: string) {
         // Реверс-поиск идёт по натуральному языку (ru/en/...), а не по ISV —
         // кириллическую/этимологическую нормализацию форм ISV к нему
         // применять не нужно.
@@ -147,27 +132,37 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
             ? standardToSimple(mapNslToEtymologized(searchValue))
             : searchValue;
 
-        const params = new URLSearchParams({ q: searchValue });
-        if (mainCategory) params.set('mainCategory', mainCategory);
+        const params = new URLSearchParams();
+        if (searchValue) params.set('q', searchValue);
+        if (category) params.set('mainCategory', category);
         if (usageType) params.set('usageType', usageType);
         if (reverseLang) params.set('lang', reverseLang);
-        performSearch(sValue, mainCategory, usageType, reverseLang);
-        router.replace(`/lexicon?${params}`);
+        void performSearch(sValue, category, usageType, reverseLang);
+        const query = params.toString();
+        router.replace(query ? `/lexicon?${query}` : '/lexicon', {scroll: false});
+    }
+
+    function executeSearch() {
+        submitSearch(mainCategory);
         setFiltersVisible(false);
-    }, [searchValue, mainCategory, usageType, reverseLang, formScript, performSearch, router]);
+    }
 
     useEffect(() => {
-        const q = searchParams.get('q');
-        const mc = searchParams.get('mainCategory') || '';
+        const q = searchParams.get('q') || '';
+        const mc = ALL_MAIN_CATEGORIES.find(category => category === searchParams.get('mainCategory')) || '';
         const ut = searchParams.get('usageType') || '';
         const lang = searchParams.get('lang') || '';
-        if (q) {
+        if (q || (!lang && (mc || ut))) {
             setSearchValue(q);
             setMainCategory(mc);
             setUsageType(ut);
             setReverseLang(lang);
             if (lang) {
                 performSearch(q, mc, ut, lang);
+                return;
+            }
+            if (!q) {
+                void performSearch('', mc, ut, '');
                 return;
             }
             const detectedScript = /[а-яА-ЯёЁ]/.test(q) ? ScriptMode.CYRILLIC : ScriptMode.LATIN;
@@ -190,20 +185,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
         }
     }, []);
 
-    const onKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && searchValue.trim()) {
-            executeSearch();
-        }
-    }, [executeSearch, searchValue]);
-
-    const onClickCard = useCallback((item: LexiconItem) => () => {
-        router.push(`/words/${item.id}`);
-    }, [router]);
-
-    const onChangeSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(e.target.value);
-    }, []);
-
     const toggleScript = useCallback(() => {
         setFormScript(prev => {
             const next = prev === ScriptMode.CYRILLIC ? ScriptMode.LATIN : ScriptMode.CYRILLIC;
@@ -221,16 +202,22 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
     return (
         <>
             <div className="search-container">
-                <div className={`filter-row${filtersVisible ? '' : ' filter-row--collapsed'}`}>
+                <div id="lexicon-filters" inert={!filtersVisible} className={`filter-row${filtersVisible ? '' : ' filter-row--collapsed'}`}>
                     <select
                         className="filter-select"
                         value={mainCategory}
-                        onChange={e => setMainCategory(e.target.value)}
+                        onChange={e => {
+                            const category = e.target.value;
+                            setMainCategory(category);
+                            submitSearch(category);
+                        }}
                         disabled={!!reverseLang}
+                        aria-label={t("categoryLabel")}
                         title={reverseLang ? "Недоступно при реверс-поиске" : undefined}
                     >
-                        {Object.entries(MAIN_CATEGORY_LABELS).map(([value, label]) => (
-                            <option key={value} value={value}>{label}</option>
+                        <option value="">{t("categories.all")}</option>
+                        {ALL_MAIN_CATEGORIES.map(category => (
+                            <option key={category} value={category}>{t(`categories.${category}`)}</option>
                         ))}
                     </select>
                     <select
@@ -238,6 +225,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         value={usageType}
                         onChange={e => setUsageType(e.target.value)}
                         disabled={!!reverseLang}
+                        aria-label={t("usageLabel")}
                         title={reverseLang ? "Недоступно при реверс-поиске" : undefined}
                     >
                         {Object.entries(USAGE_TYPE_LABELS).map(([value, label]) => (
@@ -248,6 +236,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         className="script-switcher"
                         onClick={toggleScript}
                         title={formScript === ScriptMode.CYRILLIC ? "Преключи на латиницу" : "Преключи на кириллицу"}
+                        aria-label={t(formScript === ScriptMode.CYRILLIC ? "toLatin" : "toCyrillic")}
                         disabled={!!reverseLang}
                     >
                         {formScript === ScriptMode.CYRILLIC ? "Кир" : "Lat"}
@@ -257,6 +246,7 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                         className="filter-select"
                         value={reverseLang}
                         onChange={e => setReverseLang(e.target.value)}
+                        aria-label={t("directionLabel")}
                         title="Искати по значению на другом языке (реверс-словарь)"
                     >
                         <option value="">Меджуслвнски → ...</option>
@@ -268,16 +258,16 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                     </select>
                 </div>
 
-                <div className="flex gap-2">
-                    <input
-                        type="text"
-                        id="searchInput"
-                        className="search-box flex-1"
-                        placeholder={reverseLang ? "Слово на другом языке..." : t("searchPlaceholder")}
+                <div className="relative flex gap-2">
+                    <LexiconSearchInput
+                        inputRef={searchInputRef}
                         value={searchValue}
-                        onKeyDown={onKeyDown}
-                        onChange={onChangeSearch}
-                        ref={searchInputRef}
+                        onChange={setSearchValue}
+                        onSearch={executeSearch}
+                        reverse={!!reverseLang}
+                        category={mainCategory}
+                        usage={usageType}
+                        script={formScript}
                     />
                     <DiacriticsHelper
                         targetRef={searchInputRef}
@@ -288,7 +278,9 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                     <button
                         className="search-btn"
                         onClick={toggleFilters}
-                        title={filtersVisible ? "Сховати филтры" : "Показати филтры"}
+                        aria-controls="lexicon-filters"
+                        aria-expanded={filtersVisible}
+                        aria-label={t(filtersVisible ? "hideFilters" : "showFilters")}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z" clipRule="evenodd" />
@@ -297,13 +289,17 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                     <button
                         className="search-btn"
                         onClick={executeSearch}
-                        title="Искати"
+                        aria-label={t("searchLabel")}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
                         </svg>
                     </button>
                 </div>
+
+                <Link href="/lexicon/topics" className="mt-3 inline-block text-sm font-medium text-primary dark:text-blue-400 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                    {t("topics.title")}
+                </Link>
 
                 {isGuest && (
                     <div className="flex items-center gap-1.5 px-1 mt-2 text-[11px] text-muted-foreground font-normal animate-fade-in">
@@ -335,7 +331,6 @@ export default function Home({ currentScript, isGuest }: { currentScript: Script
                             {items.map((item) => (
                                 <WordCard
                                     key={`${item.id}:${item.meaningId ?? "none"}`}
-                                    onClickCard={onClickCard}
                                     item={item}
                                     currentScript={formScript}
                                 />

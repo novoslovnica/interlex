@@ -1,5 +1,5 @@
 import { prismaCorpus, prismaData } from "@/lib/prisma"
-import { buildCollocationRecords, createDbAnalyzer } from "@/lib/corpus/tokenizer/analyzer-factory"
+import { adjectiveMorphemes, adjectiveSuffixSelection, buildCollocationRecords, createDbAnalyzer, type AdjectiveSuffixLinks } from "@/lib/corpus/tokenizer/analyzer-factory"
 import { CollocationMatcher } from "@/lib/corpus/tokenizer/collocationMatcher"
 import { foldDiacritics } from "@/lib/corpus/tokenizer/foldDiacritics"
 import { lexemeVariants } from "@/lib/corpus/tokenizer/lexemeVariants"
@@ -83,9 +83,10 @@ function surfaceCandidatesFor(lexeme: {
   gender: string | null
   animacy: string | null
   isCollocation: boolean | null
-}): string[] {
+} & AdjectiveSuffixLinks): string[] {
   if (!lexeme.value || !lexeme.pos || !isValidPos(lexeme.pos.toUpperCase())) return []
   const out = new Set<string>()
+  const morphemes = adjectiveMorphemes(lexeme)
   for (const variant of lexemeVariants(lexeme.value, lexeme.stem)) {
     let forms
     try {
@@ -104,6 +105,7 @@ function surfaceCandidatesFor(lexeme: {
         fleetingVowelAt: null,
         flavor: "CORE",
         isCollocation: lexeme.isCollocation ?? false,
+        morphemes,
       }, true)
     } catch {
       continue
@@ -186,6 +188,7 @@ export async function refreshCorpusForChangedLexemes(options: {
       id: true, slug: true, value: true, pos: true, protoStemClass: true,
       stemExtension: true, paradigm: true, stem: true, gender: true,
       animacy: true, isCollocation: true,
+      ...adjectiveSuffixSelection,
     },
   })
   log(`Изменившихся лексем с ${since ? since.toISOString() : "начала времён"}: ${changed.length}`)

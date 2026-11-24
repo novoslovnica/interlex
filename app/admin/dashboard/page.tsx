@@ -5,6 +5,7 @@ import { prismaAuth as dbAuth, prismaData, prismaCorpus } from "@/lib/prisma"
 import { Feature } from "@/config/features"
 import { requireRole } from "@/lib/permissions"
 import { countHomonymGroups } from "@/lib/corpus/fetchHomonymGroups"
+import { Prisma } from "@/prisma/generated/data/client"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -66,7 +67,13 @@ export default async function ModerationDashboardPage() {
     canSee(Feature.ReportsReview) ? prismaData.contentReport.count({ where: { status: "pending" } }) : Promise.resolve(0),
     // OR вместо NOT { verified: 1 }: SQL-ное NOT (verified = 1) отбросило бы
     // строки с verified = NULL, а это вся массовая заливка hsb/dsb.
-    canSee(Feature.WordsEdit) ? prismaData.properNounSignal.count() : Promise.resolve(0),
+    canSee(Feature.WordsEdit)
+      ? prismaData.properNounSignal.count().catch((error: unknown) => {
+          // Таблицу создаёт ручной пересчёт, поэтому на новом снимке её может не быть.
+          if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021") return null
+          throw error
+        })
+      : Promise.resolve(null),
     canSee(Feature.CommunityReview)
       ? prismaData.translation.count({
           where: { communityStatus: { in: ["rejected", "disputed"] }, OR: [{ verified: null }, { verified: { not: 1 } }] },
@@ -87,7 +94,14 @@ export default async function ModerationDashboardPage() {
     },
     { key: "suggestions", label: "Предложенные слова", href: "/admin/suggestions", feature: Feature.SuggestionsReview, count: suggestionsPending },
     { key: "reports", label: "Жалобы на ошибки", href: "/admin/reports", feature: Feature.ReportsReview, count: reportsPending },
-    { key: "proper-nouns", label: "Имена собственные", href: "/admin/proper-nouns", feature: Feature.WordsEdit, count: properNounsPending },
+    {
+      key: "lexicon-quality",
+      label: "Качество словаря",
+      href: "/admin/dashboard/lexicon-quality",
+      feature: Feature.WordsEdit,
+      count: null,
+      note: "Кандидаты на разметку суффиксов и пробелы в словарных статьях",
+    },
     { key: "community-review", label: "Ответы сообщества", href: "/admin/community-review", feature: Feature.CommunityReview, count: communityReviewPending },
     {
       key: "deduplication",
@@ -99,6 +113,9 @@ export default async function ModerationDashboardPage() {
     },
   ]
 
+  if (properNounsPending !== null) {
+    allTiles.push({ key: "proper-nouns", label: "Имена собственные", href: "/admin/proper-nouns", feature: Feature.WordsEdit, count: properNounsPending })
+  }
   const tiles = allTiles.filter((t) => canSee(t.feature))
 
   return (

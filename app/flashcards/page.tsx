@@ -6,6 +6,7 @@ import type { Metadata } from "next"
 import { ScriptPreference } from "@/prisma/generated/auth/enums"
 import { FlashcardsClient } from "./flashcards-client"
 import { ScriptMode } from "@/lib/script-mode"
+import { BEGINNER_FLASHCARDS } from "@/lib/beginner-route"
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("flashcards")
@@ -15,10 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-export default async function FlashcardsPage() {
+export default async function FlashcardsPage({ searchParams }: { searchParams: Promise<{ path?: string }> }) {
+    const beginner = (await searchParams).path === "beginner"
     const session = await auth()
     if (!session?.user?.id) {
-        redirect("/")
+        redirect(beginner ? `/login?callbackUrl=${encodeURIComponent(BEGINNER_FLASHCARDS)}` : "/")
     }
 
     const userSettings = await dbAuth.userSettings.findUnique({
@@ -27,5 +29,5 @@ export default async function FlashcardsPage() {
     })
     const currentScript = (userSettings?.script || ScriptPreference.CYRILLIC) as ScriptMode
 
-    return <FlashcardsClient currentScript={currentScript} />
+    return <FlashcardsClient key={String(beginner)} currentScript={currentScript} beginner={beginner} />
 }

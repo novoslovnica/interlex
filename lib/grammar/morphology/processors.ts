@@ -6,7 +6,6 @@ import {
     AccentParadigm,
     ProtoStemClass,
     VerbalAspect,
-    AdjectiveTypeClass,
 } from '@/lib/grammar/common';
 // Импортируем изолированные движки трех классов числительных
 import { generateNumeralForm, EnhancedNumDbItem, applyFourTonesMark, getAcuteToneType } from '../numerals/cardinal';
@@ -490,15 +489,13 @@ export function processAdjective(word: EngineWordInput): GeneratedForm[] {
         return stem && withEnding !== value && canonicalPronounLemma(value, withEnding) === withEnding ? withEnding : word.isv;
     })();
 
-    // Детекшн типа прилагательного — единая функция, см. lib/grammar/adjective/index.ts
-    const adjClass: AdjectiveTypeClass = classifyAdjectiveType(adjLemma);
+    const adjClass = classifyAdjectiveType(word.morphemes);
 
     const dbItem: EnhancedAdjDbItem = {
         interslavic: adjLemma,
         protoSlavic: adjLemma,
         paradigm,
         protoStemClass,
-        adjClass,
         stressPosition: word.stressPosition,
         morphemes: word.morphemes,
     };

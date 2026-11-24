@@ -1,14 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { isvToCyr } from "@/lib/isv"
 import { ScriptMode } from "@/lib/script-mode"
 import { addWordToCollection } from "@/app/profile/actions"
+import { BEGINNER_READING, BEGINNER_ROUTE } from "@/lib/beginner-route"
 
 interface FlashcardsClientProps {
     currentScript: ScriptMode
+    beginner: boolean
 }
 
 interface FlashcardSessionCard {
@@ -32,15 +34,16 @@ const WEAK_BUTTONS: ReviewButton[] = ["again", "hard"]
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
 
 const REVIEW_BUTTONS: { key: ReviewButton; className: string }[] = [
-    { key: "again", className: "bg-red-500/10 border-red-500/40 text-red-600 hover:bg-red-500/20" },
-    { key: "hard", className: "bg-orange-500/10 border-orange-500/40 text-orange-600 hover:bg-orange-500/20" },
-    { key: "good", className: "bg-blue-500/10 border-blue-500/40 text-blue-600 hover:bg-blue-500/20" },
-    { key: "easy", className: "bg-green-500/10 border-green-500/40 text-green-600 hover:bg-green-500/20" },
+    { key: "again", className: "bg-red-500/10 border-red-500/40 text-red-800 dark:text-red-300 hover:bg-red-500/20" },
+    { key: "hard", className: "bg-orange-500/10 border-orange-500/40 text-orange-800 dark:text-orange-300 hover:bg-orange-500/20" },
+    { key: "good", className: "bg-blue-500/10 border-blue-500/40 text-blue-800 dark:text-blue-300 hover:bg-blue-500/20" },
+    { key: "easy", className: "bg-green-500/10 border-green-500/40 text-green-800 dark:text-green-300 hover:bg-green-500/20" },
 ]
 
-export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
+export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientProps) {
     const t = useTranslations("flashcards")
-    const [level, setLevel] = useState<string>("")
+    const route = useTranslations("beginner")
+    const [level, setLevel] = useState(beginner ? "A1" : "")
     const [cards, setCards] = useState<FlashcardSessionCard[] | null>(null)
     const [index, setIndex] = useState(0)
     const [flipped, setFlipped] = useState(false)
@@ -52,6 +55,16 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
     const [weakWords, setWeakWords] = useState<FlashcardSessionCard[]>([])
     const [exporting, setExporting] = useState(false)
     const [exportError, setExportError] = useState<string | null>(null)
+    const startButton = useRef<HTMLButtonElement>(null)
+    const answerButton = useRef<HTMLButtonElement>(null)
+    const outcome = useRef<HTMLElement>(null)
+    const hasStarted = useRef(false)
+
+    useEffect(() => {
+        if (cards && index < cards.length) answerButton.current?.focus()
+        else if (cards) outcome.current?.focus()
+        else if (hasStarted.current && !loading) startButton.current?.focus()
+    }, [cards, index, loading])
 
     const displayValue = (value: string) => {
         return currentScript === ScriptMode.CYRILLIC ? isvToCyr(value) : value
@@ -82,6 +95,7 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
     }
 
     const startSession = async () => {
+        hasStarted.current = true
         setLoading(true)
         setError(null)
         setCards(null)
@@ -93,6 +107,7 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
         try {
             const params = new URLSearchParams()
             if (level) params.set("cefrLevel", level)
+            if (beginner) params.set("limit", "5")
             const res = await fetch(`/api/flashcards/session?${params.toString()}`)
             if (!res.ok) throw new Error("request failed")
             const data = await res.json()
@@ -136,7 +151,13 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
     }
 
     return (
-        <div className="max-w-2xl mx-auto px-4 md:px-6 py-10 space-y-6">
+        <main className="min-h-0 flex-1 w-full max-w-2xl mx-auto overflow-y-auto px-4 md:px-6 py-10 space-y-6 [&_:is(a,button):focus-visible]:outline-2 [&_:is(a,button):focus-visible]:outline-offset-2 [&_:is(a,button):focus-visible]:outline-primary">
+            {beginner && (
+                <nav aria-label={route("title")} className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                    <Link href={BEGINNER_ROUTE} className="text-primary underline underline-offset-4">{route("title")}</Link>
+                    <Link href={BEGINNER_READING} className="text-primary underline underline-offset-4">{route("reading.title")} →</Link>
+                </nav>
+            )}
             <div>
                 <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
                 <p className="text-muted-foreground text-sm">{t("description")}</p>
@@ -144,13 +165,14 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
 
             {!cards && (
                 <div className="border rounded-xl bg-background p-6 shadow-sm border-border/60 space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+                    <fieldset className="space-y-2">
+                        <legend className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
                             {t("levelLabel")}
-                        </label>
+                        </legend>
                         <div className="flex flex-wrap gap-2">
                             <button
                                 onClick={() => setLevel("")}
+                                aria-pressed={level === ""}
                                 className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
                                     level === "" ? "bg-blue-500/10 border-blue-500 ring-1 ring-blue-500/20" : "bg-background border-border hover:bg-muted/40"
                                 }`}
@@ -161,6 +183,7 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                                 <button
                                     key={lvl}
                                     onClick={() => setLevel(lvl)}
+                                    aria-pressed={level === lvl}
                                     className={`px-3 py-1.5 rounded-lg border text-sm transition-all ${
                                         level === lvl ? "bg-blue-500/10 border-blue-500 ring-1 ring-blue-500/20" : "bg-background border-border hover:bg-muted/40"
                                     }`}
@@ -169,15 +192,16 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                                 </button>
                             ))}
                         </div>
-                    </div>
+                    </fieldset>
                     <button
+                        ref={startButton}
                         onClick={startSession}
                         disabled={loading}
                         className="w-full py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
                         {loading ? t("loading") : t("start")}
                     </button>
-                    {error && <p className="text-sm text-red-600">{error}</p>}
+                    {error && <p role="alert" className="text-sm text-red-600 dark:text-red-300">{error}</p>}
                     <button
                         onClick={handleExport}
                         disabled={exporting}
@@ -191,7 +215,7 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
 
             {cards && cards.length === 0 && (
                 <div className="border rounded-xl bg-background p-6 shadow-sm border-border/60 text-center space-y-4">
-                    <p className="text-muted-foreground">{t("empty")}</p>
+                    <p ref={element => { outcome.current = element }} tabIndex={-1} className="text-muted-foreground">{t("empty")}</p>
                     <button
                         onClick={() => setCards(null)}
                         className="px-4 py-2 rounded-lg border border-border hover:bg-muted/40 text-sm font-medium"
@@ -204,7 +228,7 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
             {cards && cards.length > 0 && index >= cards.length && (
                 <div className="border rounded-xl bg-background p-8 shadow-sm border-border/60 text-center space-y-6">
                     <div className="space-y-2">
-                        <h2 className="text-xl font-bold">{t("sessionComplete")}</h2>
+                        <h2 ref={element => { outcome.current = element }} tabIndex={-1} className="text-xl font-bold">{t("sessionComplete")}</h2>
                         <p className="text-muted-foreground">{t("sessionCompleteDescription", { count: reviewedCount })}</p>
                     </div>
 
@@ -246,6 +270,11 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                     )}
 
                     <div className="flex flex-col sm:flex-row gap-2">
+                        {beginner && (
+                            <Link href={BEGINNER_READING} className="flex-1 px-4 py-2 rounded-lg border font-medium text-primary hover:bg-muted">
+                                {route("reading.title")} →
+                            </Link>
+                        )}
                         <button
                             onClick={() => setCards(null)}
                             className="flex-1 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700"
@@ -273,20 +302,21 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                         </span>
                     </div>
 
-                    <div
-                        onClick={() => !flipped && setFlipped(true)}
-                        className="border rounded-2xl bg-background p-10 shadow-sm border-border/60 min-h-[220px] flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center"
+                    <button
+                        ref={answerButton}
+                        type="button"
+                        onClick={() => setFlipped(value => !value)}
+                        aria-expanded={flipped}
+                        aria-controls="flashcard-answer"
+                        className="w-full border rounded-2xl bg-background p-10 shadow-sm border-border/60 min-h-[220px] flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center"
                     >
-                        <div className="text-3xl font-bold tracking-tight">{displayValue(cards[index].value)}</div>
-                        {cards[index].pos && <div className="text-xs text-muted-foreground uppercase tracking-wider">{cards[index].pos}</div>}
-                        {flipped ? (
-                            <div className="text-xl text-foreground/90 pt-2 border-t border-border/60 w-full">
-                                {cards[index].translation || "—"}
-                            </div>
-                        ) : (
-                            <div className="text-sm text-muted-foreground pt-2">{t("showAnswer")}</div>
-                        )}
-                    </div>
+                        <span className="text-3xl font-bold tracking-tight" lang="isv">{displayValue(cards[index].value)}</span>
+                        {cards[index].pos && <span className="text-xs text-muted-foreground uppercase tracking-wider">{cards[index].pos}</span>}
+                        <span id="flashcard-answer" hidden={!flipped} className="text-xl text-foreground/90 pt-2 border-t border-border/60 w-full">
+                            {cards[index].translation || "—"}
+                        </span>
+                        <span className="text-sm text-muted-foreground">{t(flipped ? "hideAnswer" : "showAnswer")}</span>
+                    </button>
 
                     {flipped && (
                         <div className="grid grid-cols-4 gap-2">
@@ -304,6 +334,6 @@ export function FlashcardsClient({ currentScript }: FlashcardsClientProps) {
                     )}
                 </div>
             )}
-        </div>
+        </main>
     )
 }

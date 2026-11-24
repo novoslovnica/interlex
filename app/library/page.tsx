@@ -15,7 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function LibraryPage() {
+export default async function LibraryPage({ searchParams }: { searchParams: Promise<{ level?: string }> }) {
+  const beginner = (await searchParams).level === "A1-A2"
   const tGenres = await getTranslations("library.genres");
   const tTopics = await getTranslations("library.topics");
 
@@ -49,8 +50,12 @@ export default async function LibraryPage() {
   const isAdmin = canCreate
 
   const entries = await db.libraryEntry.findMany({
-    orderBy: { createdAt: "desc" },
-    where: isAdmin ? undefined : { isPublic: true },
+    orderBy: beginner
+      ? [{ readabilityLevel: "asc" }, { bodyLength: "asc" }, { title: "asc" }, { id: "asc" }]
+      : { createdAt: "desc" },
+    where: beginner
+      ? { isPublic: true, readabilityLevel: { in: ["A1", "A2"] }, bodyLength: { gt: 0 } }
+      : isAdmin ? undefined : { isPublic: true },
     select: {
       id: true,
       slug: true,
@@ -114,5 +119,5 @@ export default async function LibraryPage() {
     ...Object.values(topicMap),
   ]
 
-  return <LibraryClient genres={genres} topics={topics} items={items} canCreate={canCreate} />
+  return <LibraryClient key={String(beginner)} genres={genres} topics={topics} items={items} canCreate={canCreate} beginner={beginner} />
 }

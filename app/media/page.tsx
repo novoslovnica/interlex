@@ -40,7 +40,7 @@ export default async function MediaPage() {
   ]
 
   return (
-    <div className="min-h-full py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
+    <main className="flex-1 min-h-0 overflow-y-auto py-10 bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0f172a] dark:text-slate-100">
       <div className="max-w-4xl mx-auto px-4 md:px-6 space-y-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
@@ -101,6 +101,6 @@ export default async function MediaPage() {
           </section>
         ))}
       </div>
-    </div>
+    </main>
   )
 }

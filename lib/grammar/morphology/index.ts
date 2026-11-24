@@ -38,7 +38,7 @@ export interface EngineWordInput {
     flavor?: string;
     animacy?: string | null;
     stressPosition?: number | null;      // Переопределение ударения словом целиком (заимствования)
-    morphemes?: { value: string; stressPosition?: number | null }[]; // Переопределение ударным суффиксом/корнем
+    morphemes?: { value: string; type?: number | null; stressPosition?: number | null }[];
     isCollocation?: boolean; // Многословная единица без единой парадигмы — см. Lexeme.isCollocation
     knownPrepositions?: string[]; // Однословные ADP из БД — для распознавания механического хвоста у VERB (processVerb)
 }

@@ -3,7 +3,7 @@ import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 
 const {initMock} = vi.hoisted(() => ({initMock: vi.fn()}));
 vi.mock("@/lib/sqlite", () => ({init: initMock}));
-import {getDictItems, getReverseDictItems} from "./services";
+import {getDictItems, getLexiconSuggestions, getReverseDictItems} from "./services";
 
 const connections: Database.Database[] = [];
 function createDb() {
@@ -78,6 +78,12 @@ describe("lexicon SQL pagination", () => {
         expect(keys(await getDictItems('jez', 0, 1, 'nature', 'technical'))).toEqual([[2, 20]]);
         expect(await getDictItems('jez', 1, 1, 'nature', 'technical')).toEqual([]);
     });
+    it("browses a topic with an empty search and paginates only its public entries", async () => {
+        expect(keys(await getDictItems('', 0, 2, 'nature'))).toEqual([[1, 10], [1, 11]]);
+        expect(keys(await getDictItems('', 2, 2, 'nature'))).toEqual([[1, 12], [2, 20]]);
+        expect(keys(await getDictItems('', 4, 2, 'nature'))).toEqual([]);
+        expect(keys(await getDictItems('', 0, 3, 'science'))).toEqual([[4, 40], [5, 50], [6, 60]]);
+    });
     it("paginates matching review rows, never drops matches after LIMIT", async () => {
         expect(keys(await getDictItems('jez', 0, 2, '', '', 'ru', true))).toEqual([[1, 12], [4, 40]]);
         expect(keys(await getDictItems('jez', 2, 2, '', '', 'ru', true))).toEqual([[5, 50], [6, 60]]);
@@ -125,5 +131,43 @@ describe("lexicon SQL pagination", () => {
         initMock.mockImplementation(async () => { const db = createDb(); db.exec('DROP TABLE meanings'); return db; });
         await expect(getDictItems('jez', 0, 10)).rejects.toThrow();
         expect(connections.every(db => !db.open)).toBe(true);
+    });
+});
+
+describe("lexicon suggestions", () => {
+    it("ranks exact and prefix matches ahead of infix matches and caps the response at eight distinct public lexemes", async () => {
+        initMock.mockImplementation(async () => {
+            const db = createDb();
+            const insert = db.prepare("INSERT INTO lexemes (id, value, slug) VALUES (?, ?, ?)");
+            const insertFts = db.prepare("INSERT INTO lexemes_text (rowid, value) VALUES (?, ?)");
+            for (const [id, value] of [[7, "ajez"], [8, "jez8"], [9, "jez9"], [10, "jez10"], [11, "jez11"]] as const) {
+                insert.run(id, value, value);
+                insertFts.run(id, value);
+            }
+            return db;
+        });
+        const rows = await getLexiconSuggestions("jez");
+        expect(rows).toHaveLength(8);
+        expect(rows[0]).toEqual({id: 1, value: "jez", pos: "NOUN"});
+        expect(new Set(rows.map(row => row.id)).size).toBe(8);
+        expect(rows.every(({id, value}) => id !== 3 && value.startsWith("jez"))).toBe(true);
+        expect(connections.every(db => !db.open)).toBe(true);
+    });
+
+    it("matches both scripts, returns the CORE spelling, and applies active filters", async () => {
+        initMock.mockImplementation(async () => {
+            const db = createDb();
+            db.exec(`UPDATE lexemes SET value = 'jezyk' WHERE id = 1;
+                UPDATE lexemes_text SET value = 'jezyk' WHERE rowid = 1;
+                UPDATE lexeme_allophones SET value = 'język' WHERE id = 1;
+                UPDATE lexeme_allophones_text SET value = 'język' WHERE rowid = 1;`);
+            return db;
+        });
+        const expected = [{id: 1, value: "język", pos: "NOUN"}];
+        expect(await getLexiconSuggestions("jĘzYk")).toEqual(expected);
+        expect(await getLexiconSuggestions("јѧзык")).toEqual(expected);
+        expect(await getLexiconSuggestions("JE", "nature", "general")).toEqual(expected);
+        expect(await getLexiconSuggestions("język", "science")).toEqual([]);
+        expect(await getLexiconSuggestions("_")).toEqual([]);
     });
 });

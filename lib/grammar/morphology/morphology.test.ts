@@ -3,7 +3,8 @@ import {
     AccentParadigm,
     ProtoStemClass,
     StemExtension,
-    GrammaticalGender
+    GrammaticalGender,
+    MorphemeType,
 } from '@/lib/grammar/common';
 import { EngineWordInput } from '@/lib/grammar/morphology';
 import {
@@ -135,15 +136,22 @@ describe('3. Прилагательные (ADJ)', () => {
         expect(findForm(novyForms, { case: 'nom', number: 'sg', gender: 'Masc', degree: 'comp' })).toBe('nově̂jši');
     });
 
-    // Пример Б: "kamienny" (Относительное прилагательное, Парадигма A)
-    const adjKamienny: EngineWordInput = {
-        id: 6, slug: 'kamienny-adj', isv: 'kamienny', pos: 'ADJ',
-        paradigm: AccentParadigm.A, protoStemClass: ProtoStemClass.O_SHORT
-    };
-    const kamiennyForms = processAdjective(adjKamienny);
+    it.each(['ov', '-ев-', 'sk'])('суффикс %s оставляет 63 формы положительной степени', (value) => {
+        const forms = processAdjective({ ...adjNovy, morphemes: [{ value, type: MorphemeType.SUFFIX }] });
+        expect(forms).toHaveLength(63);
+        expect(forms.every(({ feats }) => feats.degree === 'pos')).toBe(true);
+    });
 
-    it('kamienny: Относительное прилагательное генерирует ТОЛЬКО базовую степень сравнения (63 формы)', () => {
-        expect(kamiennyForms.length).toBe(63);
+    it('строка в корне и суффикс -n- не ограничивают степени сравнения', () => {
+        const forms = processAdjective({
+            ...adjNovy,
+            isv: 'kamienny',
+            morphemes: [
+                { value: 'ov', type: MorphemeType.ROOT },
+                { value: 'n', type: MorphemeType.SUFFIX },
+            ],
+        });
+        expect(forms).toHaveLength(189);
     });
 });
 

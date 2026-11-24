@@ -81,9 +81,39 @@
     }
   },
   "lexicon": {
+    "categories": {
+      "all": "Vse temy",
+      "everyday_life": "Vsakodnevno žitje",
+      "nature": "Priroda",
+      "geography": "Geografija",
+      "history": "Istorija",
+      "religion": "Religija",
+      "science": "Nauka",
+      "culture_art": "Kultura i izkustvo",
+      "medicine": "Medicina",
+      "law_economy": "Pravo i ekonomija",
+      "abstract": "Abstraktne ponętja"
+    },
+    "topics": {
+      "title": "Slovnik po temah",
+      "description": "Izberi temu, da by pregledati slova. Tu sut temy s opublikovanymi slovami.",
+      "back": "Nazad do leksikona",
+      "empty": "Tematičnyh zborkov ješče nema.",
+      "count": "{count, plural, one {# slovo} few {# slova} other {# slov}}"
+    },
     "title": "Glåvna | Medžuslověnsky lexikon",
     "description": "Iskanje po slovniku medžuslovjanskogo jezyka. Značenja, prěvody, gramatične formy, etimologija i jednokorenne slova.",
     "searchPlaceholder": "Vvedite tekst dlja iskanja...",
+    "searchLabel": "Iskanje v leksikonu",
+    "reversePlaceholder": "Slovo na drugom jezyku...",
+    "categoryLabel": "Kategorija",
+    "usageLabel": "Typ upotrěby",
+    "directionLabel": "Směr iskanja",
+    "toLatin": "Prěključiti na latinicu",
+    "toCyrillic": "Prěključiti na kirilicu",
+    "hideFilters": "Skryti filtry",
+    "showFilters": "Pokazati filtry",
+    "searchSuggestions": "Podskazky leksikona",
     "guestBanner": "Pri prěvodě s medžuslovjanskogo lokal avtomatično podstrojen pod lokal vašego brauzera.",
     "noResults": "Ničego ne najdeno",
     "searchError": "Ne udalo se načitati rezultaty iskanja. Poprobujte ješče raz.",
@@ -178,6 +208,7 @@
     }
   },
   "library": {
+    "searchPlaceholder": "Iskati tekst ili avtora",
     "title": "Sbornik / Biblioteka",
     "description": "Kolekcija izbranyh tekstov na medžuslovjanskom jezyku.",
     "emptyFilter": "Poprobujte izměniti parametry filtracije",
@@ -376,6 +407,7 @@
     "loading": "Gruzju kartočky...",
     "empty": "Za tutu uroveń trenutno němaje dostupnyh kartočok.",
     "error": "Ne udalo se gruziti kartočky. Poprobujte ješče råz.",
+    "hideAnswer": "Skryti otvět",
     "showAnswer": "Pokazati otvět",
     "progress": "Kartočka {current} z {total}",
     "due": "Povtorenje",
@@ -539,7 +571,59 @@
       ]
     }
   },
+  "beginner": {
+    "title": "Put dlja početnikov",
+    "description": "Poznaj znajeme zvukove sootvětnosti, povtori slova i pročitai kratky tekst.",
+    "backToTextbook": "Do učebnika",
+    "reference": {
+      "title": "Otvoriti priručnik",
+      "description": "Sravni medžuslovjanska slova s rodstvenymi formami v svojem jezyku."
+    },
+    "cards": {
+      "title": "Trenovati se s kartočkami",
+      "description": "Počni na urovi A1. Vojdi, da by trenovati se i sohraniti svoj progres."
+    },
+    "reading": {
+      "title": "Teksty A1–A2",
+      "description": "Izberi kratky tekst iz biblioteki. Čitati može vsaky.",
+      "note": "Teksty sut grupovane po približnom urovi CEFR. Na každome urovi najkratše teksty idut prve."
+    },
+    "allTexts": "Vsi teksty"
+  },
   "textbook": {
+    "phoneticLaws": {
+      "table": {
+        "title": "Reguljarne zvukove sootvětnosti",
+        "description": "Sravnite označene medžuslovjanske kombinacije i bukvy s rodstvenymi slovami v vašem jezyku. Medžuslovjanska kolona koristi etymologičnu ortografiju. Každa stroka pokazuje jedin priměr, druge rezultaty zavisęt od okruženja i historije slova.",
+        "pattern": "Kombinacija ili bukva",
+        "interslavic": "Medžuslovjansky",
+        "sources": "Izvory",
+        "derivation": "Proishodženje slov",
+        "orthography": "Etymologična ortografija"
+      },
+      "title": "Fonetične zakony slovjanskyh jezykov",
+      "back": "Nazad do učebnika",
+      "description": "Tri zvukove izměny na priměrah rodstvenyh slov v ruskom, poljskom i češskom jezyku.",
+      "proto": "Praslovjansky",
+      "legend": "Zvězdočka označaje rekonstruovanu formu. Strělky vedut do sučasnyh form.",
+      "languages": {
+        "ru": "Rusky",
+        "pl": "Poljsky",
+        "cs": "Češsky"
+      },
+      "liquids": {
+        "title": "Metateza likvid i polnoglasje",
+        "description": "V poljskom i češskom jezyku glasna i r zaměnili města. V ruskom jezyku medžu suglasnymi vozniklo -oro-."
+      },
+      "nasals": {
+        "title": "Refleksy nosovyh glasnyh",
+        "description": "V tom slovu praslovjansko *ǫ stalo у v ruskom i u v češskom jezyku. V poljskom jezyku nosovost ostala i piše se ę."
+      },
+      "yers": {
+        "title": "Padenje redukovanyh glasnyh",
+        "description": "Konečno slabo *ъ izčezlo. Prědhodno silno *ъ stalo о v ruskom jezyku i e v poljskom i češskom."
+      }
+    },
     "backToLexicon": "← Na glavnu leksikona",
     "sidebarTitle": "Učebnik panslovjanskogo",
     "breadcrumb": "Učebnik",

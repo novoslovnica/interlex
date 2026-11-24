@@ -27,7 +27,7 @@ const baseHomonymFindMany = vi.fn(async (args?: { where?: { base?: { in: string[
 const lexemeFindMany = vi.fn(async (args?: { where?: { id?: { in: number[] } } }) => {
     const filter = args?.where?.id?.in;
     const rows = filter ? LEXEMES.filter((l) => filter.includes(l.id)) : LEXEMES;
-    return rows.map((l) => ({ ...l, slug: `${l.value}-x`, pos: "ADP", protoStemClass: null, stemExtension: null, paradigm: null, gender: null, animacy: null, isCollocation: false, corpusFrequencyPerMln: 1 }));
+    return rows.map((l) => ({ ...l, slug: `${l.value}-x`, pos: "ADP", protoStemClass: null, stemExtension: null, paradigm: null, gender: null, animacy: null, isCollocation: false, corpusFrequencyPerMln: 1, lexemes_morphemes: [] }));
 });
 
 vi.mock("@/lib/prisma", () => ({

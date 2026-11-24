@@ -9,9 +9,12 @@ import { logAudit, type FieldChange } from "@/lib/audit-log"
 import { init } from "@/lib/sqlite"
 import { upsertTranslation, syncTranslationsForMeaning } from "@/lib/translations"
 import { syncValencyFramesForMeaning } from "@/lib/valency"
+import { requirePermission } from "@/lib/permissions"
+import { Feature } from "@/config/features"
 
-export async function updateWord(formData: any) {
+export async function updateWord(formData: any, returnToLexiconQuality = false) {
   const session = await auth()
+  await requirePermission(session, Feature.WordsEdit)
 
   const wordId = parseInt(formData.wordId, 10)
   if (isNaN(wordId)) throw new Error("Invalid wordId")
@@ -194,16 +197,28 @@ export async function updateWord(formData: any) {
     }
   }
 
-  const finalRootIds = [...(formData.rootIds || []), ...createdRootIds]
-  await db.lexemeMorpheme.deleteMany({ where: { lexemeId: wordId } })
-  if (finalRootIds.length > 0) {
-    await db.lexemeMorpheme.createMany({
-      data: finalRootIds.map((rId: number) => ({
-        lexemeId: wordId,
-        morphemeId: rId,
-      })),
+  const finalRootIds = new Set<number>([...(formData.rootIds || []), ...createdRootIds])
+  await db.$transaction(async (tx) => {
+    const currentLinks = await tx.lexemeMorpheme.findMany({
+      where: { lexemeId: wordId },
+      select: { id: true, morphemeId: true },
     })
-  }
+    const currentRootIds = new Set(currentLinks.flatMap(({ morphemeId }) => morphemeId ?? []))
+    const removed = currentLinks.filter(({ morphemeId }) => morphemeId != null && !finalRootIds.has(morphemeId))
+    const added = [...finalRootIds].filter((id) => !currentRootIds.has(id))
+    if (removed.length === 0 && added.length === 0) return
+
+    if (removed.length > 0) {
+      await tx.lexemeMorpheme.deleteMany({ where: { id: { in: removed.map(({ id }) => id) } } })
+    }
+    if (added.length > 0) {
+      await tx.lexemeMorpheme.createMany({ data: added.map((morphemeId) => ({ lexemeId: wordId, morphemeId })) })
+    }
+    await tx.lexeme.update({ where: { id: wordId }, data: { updatedAt: new Date() } })
+    await logAudit(session?.user, "Lexeme", wordId, [
+      { field: "morphemeIds", oldValue: [...currentRootIds].sort((a, b) => a - b), newValue: [...finalRootIds].sort((a, b) => a - b) },
+    ], tx)
+  })
 
   const existingMeanings = await db.meaning.findMany({
     where: { lexemeId: wordId },
@@ -272,7 +287,7 @@ export async function updateWord(formData: any) {
     }
   }
 
-  redirect("/admin/translations")
+  redirect(returnToLexiconQuality ? "/admin/dashboard/lexicon-quality" : "/admin/translations")
 }
 
 export async function createWord(formData: any) {

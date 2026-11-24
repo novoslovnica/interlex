@@ -76,6 +76,7 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },
     { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "создаёт proper_noun_signals; не во время реанализа корпуса" },
     { path: "scripts/export-hunspell.ts", db: "interlex", kind: "repeatable", dryRun: false, noBackup: true, note: "только читает; пишет exports/hunspell/ (страница /downloads)" },
+    { path: "scripts/db/2026-11-24-add-relative-adjective-suffixes.ts", db: "interlex", kind: "data", dryRun: true, note: "подтверждённые суффиксы ov/ev/sk и три словарных примера" },
     {
         path: "scripts/db/analyze-homonym-duplicates.ts",
         db: "corpus",

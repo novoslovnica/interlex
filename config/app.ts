@@ -75,13 +75,17 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     version: "4.4",
-    date: "2026-07",
+    date: "2026-07 — 2026-11",
     title: "Ispravlenje ošibok i poliruvka / Исправление ошибок и шлифовка",
     titleIsv: "Poliruvka platformy",
     features: [
       { isv: "Ispravlenje ošibok i optimizacija raboty", ru: "Исправление ошибок и оптимизация работы" },
       { isv: "Obogačenje tezaurusa (sinonimy, antonimy, rodstvennyje slova)", ru: "Улучшение тезауруса (синонимы, антонимы, родственные слова)" },
       { isv: "Poliruvka morfemizatora (razbora slov na morfemy)", ru: "Улучшение работы морфемизатора (разбора слов на морфемы)" },
+      { isv: "Podskazky pri iskanju i pregled slov po temah", ru: "Автодополнение поиска и обзор словаря по темам" },
+      { isv: "Zvukove sootvětnosti i put dlja početnikov s kartočkami i tekstami A1–A2", ru: "Таблица звуковых соответствий и маршрут для новичка с карточками и текстами A1–A2" },
+      { isv: "Sufiksy odnosnyh pridavnikov i prěgled kvaliteta slovnika", ru: "Разметка суффиксов относительных прилагательных и отчёт о качестве словаря" },
+      { isv: "Ispravleno prokrųčanje medijateky i ulěpšeno upravjanje s klaviatury", ru: "Исправлена прокрутка медиатеки и улучшена клавиатурная навигация" },
     ],
   },
 ]

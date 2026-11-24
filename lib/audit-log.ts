@@ -23,7 +23,8 @@ export async function logAudit(
   user: { id?: string; email?: string | null } | null | undefined,
   entityType: string,
   entityId: number,
-  changes: FieldChange[]
+  changes: FieldChange[],
+  db: Pick<typeof prismaData, "auditLog"> = prismaData,
 ): Promise<void> {
   const meaningfulChanges = changes.filter((c) => serialize(c.oldValue) !== serialize(c.newValue))
   if (meaningfulChanges.length === 0) return
@@ -32,7 +33,7 @@ export async function logAudit(
   const userEmail = user?.email || "unknown"
   const userId = user?.id ?? null
 
-  await prismaData.auditLog.createMany({
+  await db.auditLog.createMany({
     data: meaningfulChanges.map((c) => ({
       actionId,
       entityType,

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import {useTranslations} from "next-intl"
+import { BEGINNER_READING, BEGINNER_ROUTE } from "@/lib/beginner-route"
 
 interface Category {
   id: string
@@ -34,6 +35,7 @@ interface LibraryClientProps {
   topics: Category[]
   items: LibraryItem[]
   canCreate?: boolean
+  beginner: boolean
 }
 
 function readingTimeText(bodyLength: number): string {
@@ -46,8 +48,9 @@ function pageEstimateText(bodyLength: number): string {
   return `~${pages} str.`
 }
 
-export function LibraryClient({ genres, topics, items, canCreate }: LibraryClientProps) {
+export function LibraryClient({ genres, topics, items, canCreate, beginner }: LibraryClientProps) {
   const t = useTranslations("library");
+  const route = useTranslations("beginner");
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [selectedTopic, setSelectedTopic] = useState("all")
   const [selectedOrigin, setSelectedOrigin] = useState("all")
@@ -168,14 +171,15 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
           <div className="relative flex-1 max-w-md">
             <input
               type="text"
-              placeholder="Iskati tekst ili autora..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-1.5 bg-muted/50 border rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground/60"
+              aria-label={t("searchPlaceholder")}
+              className="w-full px-3 py-1.5 bg-muted/50 border rounded-md text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary placeholder:text-muted-foreground"
             />
           </div>
           <Link
-            href="/textbook"
+            href="/textbook/ru"
             className="text-xs px-3 py-1.5 rounded-md border hover:bg-muted transition-colors shrink-0"
           >
             Učebnik
@@ -192,13 +196,27 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
 
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-5 py-6 space-y-6">
+            {beginner ? (
+              <section className="space-y-2">
+                <h1 className="text-2xl font-bold">{route("reading.title")}</h1>
+                <p className="text-sm text-muted-foreground">{route("reading.note")}</p>
+                <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                  <Link href={BEGINNER_ROUTE} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{route("title")}</Link>
+                  <Link href="/library" className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{route("allTexts")}</Link>
+                </div>
+              </section>
+            ) : (
+              <Link href={BEGINNER_READING} className="inline-block text-sm font-medium text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                {route("reading.title")}
+              </Link>
+            )}
             {filteredItems.length > 0 ? (
               <div className="divide-y">
                 {filteredItems.map(item => (
                   <Link
                     key={item.slug}
                     href={`/library/${item.slug}`}
-                    className="flex items-start gap-4 py-3 group -mx-2 px-2 rounded-md hover:bg-muted/30 transition-colors"
+                    className="flex items-start gap-4 py-3 group -mx-2 px-2 rounded-md hover:bg-muted/30 focus-visible:outline-2 focus-visible:outline-primary transition-colors"
                   >
                     {item.coverImage ? (
                       <img
@@ -216,12 +234,12 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
                         </h3>
                         {item.isCollection && <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0">Sbornik</span>}
                         {item.audioFile && <span className="text-xs shrink-0" title="Audio dostupny">🎧</span>}
-                        <span className="text-[11px] text-muted-foreground/60 shrink-0 font-mono">{item.date}</span>
+                        <span className="text-[11px] text-muted-foreground shrink-0 font-mono">{item.date}</span>
                       </div>
                       {item.summary && (
                         <p className="text-xs text-muted-foreground line-clamp-1">{item.summary}</p>
                       )}
-                      <div className="flex items-center gap-3 text-[11px] text-muted-foreground/70">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                         <span>{item.author}</span>
                         <span>{item.views} 👁</span>
                         <span>{readingTimeText(item.bodyLength)}</span>
@@ -242,7 +260,7 @@ export function LibraryClient({ genres, topics, items, canCreate }: LibraryClien
             ) : (
               <div className="py-16 text-center space-y-2">
                 <p className="text-sm text-muted-foreground">Teksty ne nahodili se</p>
-                <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
+                <p className="text-xs text-muted-foreground max-w-xs mx-auto">
                   {t("emptyFilter")}
                 </p>
               </div>

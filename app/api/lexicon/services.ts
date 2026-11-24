@@ -3,6 +3,7 @@ import {init} from "@/lib/sqlite";
 import {foldDiacritics} from "@/lib/corpus/tokenizer/foldDiacritics";
 import {fetchTranslationsForMeaningIds, TRANSLATION_LANGUAGE_CODES, type TranslationRow} from "@/lib/translations";
 import {validateLexiconPagination} from "@/lib/lexiconPagination";
+import {mapNslToEtymologized} from "@/lib/nsl";
 
 interface LexemeRow {
     id: number;
@@ -35,9 +36,13 @@ const LEXEME_COLUMNS = `
     l.hasAnomalies, l.mainCategory, l.usageType, l.isPublic, l.external_id
 `;
 
+const CORE_ALLOPHONE = `
+    LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
+`;
+
 const LEXEME_JOINS = `
     FROM lexemes l
-    LEFT JOIN lexeme_allophones la_core ON la_core.lexemeId = l.id AND la_core.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE') AND la_core.type = 'standard'
+    ${CORE_ALLOPHONE}
     LEFT JOIN lexeme_allophones la_nsl ON la_nsl.lexemeId = l.id AND la_nsl.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'NSL') AND la_nsl.type = 'standard'
 `;
 
@@ -114,6 +119,72 @@ async function fetchPage(offset: number, limit: number, filter: PageFilter): Pro
 }
 
 const likeParam = (value: string) => `%${value.replace(/[\\%_]/g, '\\$&')}%`;
+const prefixParam = (value: string) => likeParam(value).slice(1);
+
+function searchVariants(search: string): string[] {
+    return [...new Set([search, foldDiacritics(search)])];
+}
+
+function addSpellingFilter(filter: PageFilter, search: string) {
+    // Trigram FTS supports 3+ characters; shorter strings use literal LIKE.
+    const useFts = [...search].length >= 3;
+    const params = searchVariants(search).map(value => useFts ? `"${value.replace(/"/g, '""')}"` : likeParam(value));
+    const op = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
+    const orGroup = (column: string) => `(${params.map(() => `${column} ${op}`).join(' OR ')})`;
+    filter.where.push(`(l.id IN (SELECT ROWID FROM lexemes_text WHERE ${orGroup('value')})
+        OR EXISTS (SELECT 1 FROM lexeme_allophones la
+            WHERE la.lexemeId = l.id
+              AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
+              AND la.type = 'standard'
+              AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE ${orGroup('value')})))`);
+    filter.params.push(...params, ...params);
+}
+
+export interface LexiconSuggestion {
+    id: number;
+    value: string;
+    pos: string | null;
+}
+
+export async function getLexiconSuggestions(raw: string, mainCategory?: string, usageType?: string): Promise<LexiconSuggestion[]> {
+    const search = mapNslToEtymologized(raw.trim().normalize('NFC')).toLowerCase().trim();
+    if (!search) return [];
+
+    const filter: PageFilter = {where: ['l.isPublic = 1'], params: []};
+    if (mainCategory) { filter.where.push('l.mainCategory = ?'); filter.params.push(mainCategory); }
+    if (usageType) { filter.where.push('l.usageType = ?'); filter.params.push(usageType); }
+
+    const variants = searchVariants(search);
+    const prefixes = variants.map(prefixParam);
+    const matches = (op: string) => variants.flatMap(() => [`l.value ${op}`, `la_core.value ${op}`]).join(' OR ');
+    const prefixMatch = matches("LIKE ? ESCAPE '\\'");
+    const prefixBindings = prefixes.flatMap(prefix => [prefix, prefix]);
+
+    if ([...search].length < 3) {
+        filter.where.push(`(${prefixMatch})`);
+        filter.params.push(...prefixBindings);
+    } else {
+        addSpellingFilter(filter, search);
+    }
+
+    const db = await init();
+    try {
+        return db.prepare(`
+            SELECT l.id, COALESCE(NULLIF(la_core.value, ''), l.value) AS value, l.pos
+            FROM lexemes l
+            ${CORE_ALLOPHONE}
+            WHERE ${filter.where.join(' AND ')} AND COALESCE(NULLIF(la_core.value, ''), NULLIF(l.value, '')) IS NOT NULL
+            ORDER BY CASE
+                WHEN ${matches("= ? COLLATE NOCASE")} THEN 0
+                WHEN ${prefixMatch} THEN 1
+                ELSE 2 END,
+                value COLLATE NOCASE, l.id
+            LIMIT 8
+        `).all(...filter.params, ...variants.flatMap(value => [value, value]), ...prefixBindings) as LexiconSuggestion[];
+    } finally {
+        db.close();
+    }
+}
 
 export const getDictItems = async (
     search: string,
@@ -141,24 +212,7 @@ export const getDictItems = async (
             WHERE review_t.meaningId = m.id AND review_t.language = ? AND review_t.verified IS NOT 1)`);
         filter.params.push(filterLang);
     }
-    if (search) {
-        // Trigram FTS supports 3+ characters; shorter strings use literal LIKE.
-        // Search canonical and simplified forms together, deduplicating BEFORE
-        // pagination rather than materializing every matched id in JS.
-        const useFts = search.length >= 3;
-        const folded = foldDiacritics(search);
-        const variants = folded !== search ? [search, folded] : [search];
-        const params = variants.map(value => useFts ? `"${value.replace(/"/g, '""')}"` : likeParam(value));
-        const op = useFts ? 'MATCH ?' : "LIKE ? ESCAPE '\\'";
-        const orGroup = (column: string) => `(${params.map(() => `${column} ${op}`).join(' OR ')})`;
-        filter.where.push(`(l.id IN (SELECT ROWID FROM lexemes_text WHERE ${orGroup('value')})
-            OR EXISTS (SELECT 1 FROM lexeme_allophones la
-                WHERE la.lexemeId = l.id
-                  AND la.flavorId = (SELECT id FROM allophone_flavors WHERE code = 'CORE')
-                  AND la.type = 'standard'
-                  AND la.id IN (SELECT ROWID FROM lexeme_allophones_text WHERE ${orGroup('value')})))`);
-        filter.params.push(...params, ...params);
-    }
+    if (search) addSpellingFilter(filter, search);
     return fetchPage(offset, limit, filter);
 };
 

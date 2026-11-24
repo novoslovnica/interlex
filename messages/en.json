@@ -81,9 +81,39 @@
     }
   },
   "lexicon": {
+    "categories": {
+      "all": "All topics",
+      "everyday_life": "Everyday life",
+      "nature": "Nature",
+      "geography": "Geography",
+      "history": "History",
+      "religion": "Religion",
+      "science": "Science",
+      "culture_art": "Culture and art",
+      "medicine": "Medicine",
+      "law_economy": "Law and economics",
+      "abstract": "Abstract concepts"
+    },
+    "topics": {
+      "title": "Dictionary by topic",
+      "description": "Choose a topic to browse its vocabulary. Topics with published words are listed here.",
+      "back": "Back to the lexicon",
+      "empty": "There are no topics to browse yet.",
+      "count": "{count, plural, one {# word} other {# words}}"
+    },
     "title": "Lexicon",
     "description": "Search the Interslavic dictionary. Meanings, translations, grammatical forms, etymology and cognate words.",
     "searchPlaceholder": "Enter text to search...",
+    "searchLabel": "Search the lexicon",
+    "reversePlaceholder": "Word in another language...",
+    "categoryLabel": "Category",
+    "usageLabel": "Usage",
+    "directionLabel": "Search direction",
+    "toLatin": "Switch to Latin script",
+    "toCyrillic": "Switch to Cyrillic script",
+    "hideFilters": "Hide filters",
+    "showFilters": "Show filters",
+    "searchSuggestions": "Lexicon suggestions",
     "guestBanner": "When translating from Interslavic, the locale is automatically adjusted to your browser locale.",
     "noResults": "No results found",
     "searchError": "Couldn't load the search results. Please try again.",
@@ -178,6 +208,7 @@
     }
   },
   "library": {
+    "searchPlaceholder": "Search for a text or author",
     "title": "Sbornik / Library",
     "description": "A collection of selected texts in Interslavic.",
     "emptyFilter": "Try changing the filter settings",
@@ -376,6 +407,7 @@
     "loading": "Loading cards...",
     "empty": "No cards available for this level right now.",
     "error": "Failed to load flashcard session. Please try again.",
+    "hideAnswer": "Hide answer",
     "showAnswer": "Show answer",
     "progress": "Card {current} of {total}",
     "due": "Review",
@@ -539,7 +571,59 @@
       ]
     }
   },
+  "beginner": {
+    "title": "Beginner route",
+    "description": "Explore familiar sound correspondences, practise a few words, and try a short text.",
+    "backToTextbook": "Back to the textbook",
+    "reference": {
+      "title": "Open the reference guide",
+      "description": "Compare Interslavic words with related forms in your language."
+    },
+    "cards": {
+      "title": "Practise with flashcards",
+      "description": "Start at A1. Sign in to practise and save your progress."
+    },
+    "reading": {
+      "title": "A1–A2 reading",
+      "description": "Choose a short text from the library. Reading is open to everyone.",
+      "note": "Texts are grouped by estimated CEFR level, with the shortest texts first at each level."
+    },
+    "allTexts": "All texts"
+  },
   "textbook": {
+    "phoneticLaws": {
+      "table": {
+        "title": "Regular sound correspondences",
+        "description": "Compare the highlighted Interslavic letters and sequences with cognates in your language. The Interslavic column uses etymological spelling. Each row illustrates one correspondence, and other outcomes depend on context and the history of the word.",
+        "pattern": "Sequence or letter",
+        "interslavic": "Interslavic",
+        "sources": "Sources",
+        "derivation": "Derivation of words",
+        "orthography": "Etymological orthography"
+      },
+      "title": "Sound laws of the Slavic languages",
+      "back": "Back to the textbook",
+      "description": "Three sound changes illustrated by cognates in Russian, Polish, and Czech.",
+      "proto": "Proto-Slavic",
+      "legend": "An asterisk marks a reconstructed form. The arrows point to modern forms.",
+      "languages": {
+        "ru": "Russian",
+        "pl": "Polish",
+        "cs": "Czech"
+      },
+      "liquids": {
+        "title": "Liquid metathesis and pleophony",
+        "description": "The vowel and r switched places in Polish and Czech. In Russian, -oro- arose between the consonants."
+      },
+      "nasals": {
+        "title": "Reflexes of nasal vowels",
+        "description": "In this word, Proto-Slavic *ǫ became у in Russian and u in Czech. Polish retained nasality, written ę."
+      },
+      "yers": {
+        "title": "Loss of the yers",
+        "description": "The final weak *ъ disappeared. The preceding strong *ъ became о in Russian and e in Polish and Czech."
+      }
+    },
     "backToLexicon": "← Back to lexicon",
     "sidebarTitle": "Pan-Slavic Textbook",
     "breadcrumb": "Textbook",

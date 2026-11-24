@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next"
 import { init } from "@/lib/sqlite"
 import { prismaLibrary } from "@/lib/prisma"
 import { siteUrl } from "@/lib/seo/site"
+import { BEGINNER_ROUTE } from "@/lib/beginner-route"
 
 // Несколько файлов вместо одного: /sitemap/pages.xml, /sitemap/words-0.xml,
 // /sitemap/proto-0.xml. Лимит поисковиков - 50 000 адресов на файл; слов
@@ -16,12 +17,15 @@ export const revalidate = 86400
 const STATIC_PATHS: { path: string; priority: number; changeFrequency: "daily" | "weekly" | "monthly" }[] = [
     { path: "/", priority: 1, changeFrequency: "daily" },
     { path: "/lexicon", priority: 0.9, changeFrequency: "daily" },
+    { path: "/lexicon/topics", priority: 0.7, changeFrequency: "weekly" },
     { path: "/translate", priority: 0.8, changeFrequency: "weekly" },
     { path: "/library", priority: 0.8, changeFrequency: "weekly" },
     { path: "/corpus", priority: 0.7, changeFrequency: "weekly" },
     { path: "/corpus/collocations", priority: 0.5, changeFrequency: "weekly" },
     { path: "/proto", priority: 0.7, changeFrequency: "monthly" },
     { path: "/textbook/ru", priority: 0.7, changeFrequency: "monthly" },
+    { path: BEGINNER_ROUTE, priority: 0.6, changeFrequency: "monthly" },
+    { path: "/textbook/phonetic-laws", priority: 0.6, changeFrequency: "monthly" },
     { path: "/transliteration", priority: 0.6, changeFrequency: "monthly" },
     { path: "/rhyme", priority: 0.5, changeFrequency: "monthly" },
     { path: "/media", priority: 0.5, changeFrequency: "weekly" },

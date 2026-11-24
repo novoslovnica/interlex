@@ -36,6 +36,7 @@ export interface WordBaseRecord {
     flavor?: string;
     isCollocation?: boolean | null;
     corpusFrequencyPerMln?: number | null;
+    morphemes?: EngineWordInput['morphemes'];
 }
 
 type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;
@@ -350,6 +351,7 @@ export class DbAnalyzer {
                     flavor: word.flavor || 'CORE',
                     isCollocation: word.isCollocation ?? false,
                     knownPrepositions: this.knownPrepositions,
+                    morphemes: word.morphemes,
                 };
 
                 const forms = generateWordForms(engineInput, true);

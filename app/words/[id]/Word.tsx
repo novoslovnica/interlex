@@ -413,7 +413,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     isv={item.value}
                                     paradigm={item.paradigm || 'A'}
                                     protoStemClass={item.protoStemClass || 'o'}
-                                    isQualitative={classifyAdjectiveType(item.value) === 'qualitative'}
+                                    isQualitative={classifyAdjectiveType(item.roots) === 'qualitative'}
                                     properNoun={meta.properNoun}
                                 />
                             ) : isNum ? (
