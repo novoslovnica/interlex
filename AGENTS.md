@@ -173,12 +173,17 @@ Short, still-binding rules distilled from the incident chronicle in `docs/histor
 
 After the 2026-09-23 snapshot upload, **production is the source of truth** for `interlex.db`, `auth.db` and `library.db`: moderators, votes, comments and profiles accumulate there and exist nowhere else. They are changed by scripts through a registry, never by replacing the file (`release.sh --db=interlex|library` refuses without `--replace-source-of-truth`). The local databases are disposable copies.
 
+**Database synchronization is mandatory for every release.** Refresh the local `interlex.db` from a fresh production snapshot before preparing the release. After the release and its production migrations, data scripts, and recomputations have finished, pull a fresh snapshot again to update the project's working copy. Apply the same checks to any other database affected by the release, following its documented workflow. `auth.db` stays on production. Corpus releases use the snapshot workflow below, including the export and reimport of manual edits.
+
+Treat changes from other sessions as part of the current production state. Revalidate any staged data edits against the fresh snapshot and review the production dry run before applying them through the registry. Preserve pending local changes in a separate backup before refreshing the working copy. Verify that the final snapshot passes SQLite's `PRAGMA quick_check` and that the local copy matches that snapshot by a database content checksum. A release is complete only after this synchronization has been verified.
+
 **Workflow for a data change:**
 1. `bash scripts/local/pull-prod.sh --db=interlex` — fresh copy of production (server-side `.backup`, never a raw copy of a live WAL file; `auth.db` is never pulled).
 2. Write the script, add it to `scripts/db/manifest.ts` (`db`, `kind`, `dryRun`), run it locally: `npm run db:run -- scripts/db/<file>.ts` (dry run), then `--apply`.
 3. Commit, push, `bash release.sh` (the server must be on that commit — `prod.sh` checks).
 4. `bash prod.sh run scripts/db/<file>.ts` — dry run on production; read the output.
 5. `bash prod.sh run scripts/db/<file>.ts --apply` — refused unless a successful dry run of the same file version exists from the last 24h; takes a backup `<db>.db.backup-before-run-<stamp>-<name>` first (5 kept per database); refused a second time unless `--again`. Long scripts: `--detach`, then `bash prod.sh log -f`.
+6. After the last production data change, pull the affected database again and verify the local copy against the final production snapshot as described above.
 
 **Registry**: `_applied_scripts` inside the database the script changes (`scripts/db/lib/registry.ts`) — one row per attempt (dry-run / apply / baseline), with checksum, commit, exit code, backup and log path (`logs/db-runs/`, gitignored). `npm run db:status` / `bash prod.sh status` list what is applied and flag a script whose file changed after it was applied; status is read-only. `mark-applied` records a script that was applied by other means.
 
