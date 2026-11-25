@@ -41,7 +41,7 @@ const pilot: readonly Affix[] = [
   { type: 1, value: "bez", markers: ["bez", "bes"] },
   { type: 1, value: "do", markers: ["do"], pos: "VERB" },
   { type: 1, value: "na", markers: ["na"], pos: "VERB" },
-  { type: 1, value: "ne", markers: ["ne"], pos: "ADJ" },
+  { type: 1, value: "ne", markers: ["ne"], registryValues: ["ne"], pos: "ADJ" },
   { type: 1, value: "pri", markers: ["pri"], pos: "VERB" },
   { type: 2, value: "ak", markers: ["ak"], pos: "NOUN" },
   { type: 2, value: "ec", markers: ["ec"], pos: "NOUN" },
