@@ -49,6 +49,31 @@ export const DB_FILES: Record<DbName, string> = {
 }
 
 export const MANIFEST: ManifestEntry[] = [
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes.ts", db: "interlex", kind: "data", dryRun: true, note: "инвентарь 13 аффиксов и первая сверенная пачка привязок морфем" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-02.ts", db: "interlex", kind: "data", dryRun: true, note: "вторая пачка привязок по проверенным производящим словам" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-03.ts", db: "interlex", kind: "data", dryRun: true, note: "сверенные привязки pri- и исправление корней in и um" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-04.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторские решения по -ak, включая разбор kozak и kazak" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-05.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -ec по производящим основам" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-06.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -telj по глагольным основам" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-07.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка приставки do- и ложных совпадений" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-08.ts", db: "interlex", kind: "data", dryRun: true, note: "семьи lov и lěč, исправление ошибочных корневых связей lodz и zdrad" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-09.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -ost по словарным основам и значениям" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-10.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка общих корней и исправление ошибочных групп" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-11.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -stv- по словарным основам" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-12.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка приставок bez-, ne- и na-" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-13.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка приставки pri- и перенос проверенных связей" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-14.ts", db: "interlex", kind: "data", dryRun: true, note: "снятие оставшихся неверных связей с прежним корнем pri" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-15.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -nik и соседних словообразовательных моделей" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-16.ts", db: "interlex", kind: "data", dryRun: true, note: "редакторская сверка -k- и ложных совпадений на -ka" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-17.ts", db: "interlex", kind: "data", dryRun: true, note: "первая редакторская пачка -n- по существительным и прилагательным" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-18.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка значений для пар с предложенной основой -n-" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-19.ts", db: "interlex", kind: "data", dryRun: true, note: "проверенные сочетания -n- с приставками и сложением" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-20.ts", db: "interlex", kind: "data", dryRun: true, note: "разграничение относительных прилагательных на -n- и причастий" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-21.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка -n- по основам существительных и составным словам" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-22.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка -n- по подтверждённым компонентам сложных прилагательных" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-23.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка -n- с международными словообразовательными формантами" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-24.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка сложных слов, корневой n и страдательных причастий" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-25.ts", db: "interlex", kind: "data", dryRun: true, note: "фиксация случаев -n-, требующих дополнительных словарных свидетельств" },
     // Схемные миграции (идемпотентный DDL) - применяются сами при релизе
     // (run.ts migrate, служба остановлена). Порядок - по имени файла.
     //

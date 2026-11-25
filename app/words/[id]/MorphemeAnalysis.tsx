@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { MorphemeType, generateMorphemeCandidates, type MorphemePart } from '@/lib/grammar/common';
+import { foldDiacritics } from '@/lib/corpus/tokenizer/foldDiacritics';
 import {ScriptMode} from "@/lib/script-mode";
 
 interface RootData {
@@ -28,6 +29,12 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
   if (!roots || roots.length === 0) return null;
 
   const wordLower = word.toLowerCase();
+  const foldedWord = foldDiacritics(wordLower);
+  const baseLower = base?.toLowerCase();
+  const baseLength = baseLower &&
+    foldDiacritics(wordLower.slice(0, baseLower.length)) === foldDiacritics(baseLower)
+    ? baseLower.length
+    : 0;
 
   interface Match {
     start: number;
@@ -41,18 +48,26 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
   for (const root of roots) {
     if (!root.value || isNumeric(root.value)) continue;
     const candidates = generateMorphemeCandidates(root.value, root.type);
-    const type = root.type === MorphemeType.SUFFIX ? MorphemeType.SUFFIX : MorphemeType.ROOT;
+    const type = root.type === MorphemeType.PREFIX || root.type === MorphemeType.SUFFIX
+      ? root.type
+      : MorphemeType.ROOT;
 
     for (const candidate of candidates) {
-      if (candidate.length < 2 && candidate.length < wordLower.length) continue;
+      const foldedCandidate = foldDiacritics(candidate);
+      const aligned = foldedWord.length === wordLower.length && foldedCandidate.length === candidate.length;
+      const haystack = aligned ? foldedWord : wordLower;
+      const needle = aligned ? foldedCandidate : candidate;
       let pos = 0;
-      while ((pos = wordLower.indexOf(candidate, pos)) !== -1) {
-        allMatches.push({
-          start: pos,
-          end: pos + candidate.length,
-          text: word.slice(pos, pos + candidate.length),
-          type,
-        });
+      while ((pos = haystack.indexOf(needle, pos)) !== -1) {
+        const end = pos + candidate.length;
+        if (
+          (type === MorphemeType.PREFIX && pos === 0) ||
+          (type !== MorphemeType.PREFIX && candidate.length >= 2) ||
+          (type === MorphemeType.SUFFIX && end === baseLength) ||
+          candidate.length === wordLower.length
+        ) {
+          allMatches.push({ start: pos, end, text: word.slice(pos, end), type });
+        }
         pos++;
       }
     }
@@ -87,12 +102,11 @@ function extractMorphemes(word: string, base: string | null | undefined, roots: 
     cursor = m.end;
   }
 
-  if (base) {
-    const baseLower = base.toLowerCase();
-    const baseIdx = wordLower.indexOf(baseLower);
+  if (baseLower) {
+    const baseIdx = baseLength ? 0 : wordLower.indexOf(baseLower);
 
     if (baseIdx !== -1) {
-      const stemEnd = baseIdx + base.length;
+      const stemEnd = baseIdx + baseLower.length;
 
       if (cursor < stemEnd) {
         parts.push({
