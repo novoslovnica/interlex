@@ -83,6 +83,8 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-11-25-add-kolozor-podcast.ts", db: "library", kind: "data", dryRun: true, note: "подкаст Kolozor в медиатеке" },
     { path: "scripts/db/2026-11-25-realign-meaning-texts.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка определений и примеров с переводами после июльского импорта" },
     { path: "scripts/db/2026-11-25-add-znacenje-core-allophone.ts", db: "interlex", kind: "data", dryRun: true, note: "аллофон CORE značenje для записи №25508" },
+    { path: "scripts/db/2026-11-25-stage-reviewed-corpus-lexemes.ts", db: "interlex", kind: "data", dryRun: true, note: "черновики лексем, подтверждённых корпусными контекстами" },
+    { path: "scripts/db/2026-11-25-link-reviewed-corpus-forms.ts", db: "corpus", kind: "data", dryRun: true, noBackup: true, note: "привязка проверенных словоформ к черновикам после их создания, старые строки сохраняются в журнале запуска" },
     { path: "scripts/db/import-new-isv-wikipedia.ts", db: "corpus", kind: "repeatable", dryRun: true, heavy: true, note: "добавляет новые статьи Википедии после контрольного ID, сохраняет существующую разметку" },
     {
         path: "scripts/db/analyze-homonym-duplicates.ts",
