@@ -1,0 +1,1828 @@
+{
+  "confirmed": [
+    {
+      "rank": 3,
+      "affix": "iti",
+      "type": 2,
+      "lexeme": {
+        "id": 7938,
+        "value": "govoriti",
+        "slug": "govoriti-VERB",
+        "pos": "VERB",
+        "stem": "govori",
+        "ru": [
+          "говорить"
+        ]
+      },
+      "reason": "govor + i + ti. Глагол обозначает действие, соотносимое с речью, а i входит в глагольную основу.",
+      "registryNames": [
+        "iti",
+        "i"
+      ],
+      "base": {
+        "id": 7936,
+        "value": "govor",
+        "slug": "govor-NOUN",
+        "pos": "NOUN",
+        "stem": "govor",
+        "ru": [
+          "Молва",
+          "Речь",
+          "речь, разговор"
+        ]
+      },
+      "registryValue": "i"
+    },
+    {
+      "rank": 4,
+      "affix": "među",
+      "type": 1,
+      "lexeme": {
+        "id": 11322,
+        "value": "meduslovjansky",
+        "slug": "meduslovjansky-ADJ",
+        "pos": "ADJ",
+        "stem": "međuslovjańsk",
+        "ru": [
+          "межславянский, междуславянский"
+        ]
+      },
+      "reason": "među + slovjańsky. Приставка выражает отношение между славянскими языками и народами.",
+      "registryNames": [
+        "među",
+        "medžu",
+        "medzu",
+        "medu"
+      ],
+      "base": {
+        "id": 18512,
+        "value": "slovjansky",
+        "slug": "slovjansky-ADJ",
+        "pos": "ADJ",
+        "stem": "slovjańsk",
+        "ru": [
+          "славянский"
+        ]
+      },
+      "registryValue": "među"
+    },
+    {
+      "rank": 5,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 11322,
+        "value": "meduslovjansky",
+        "slug": "meduslovjansky-ADJ",
+        "pos": "ADJ",
+        "stem": "međuslovjańsk",
+        "ru": [
+          "межславянский, междуславянский"
+        ]
+      },
+      "reason": "Производное с među- сохраняет sk из прилагательного slovjańsky.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 18512,
+        "value": "slovjansky",
+        "slug": "slovjansky-ADJ",
+        "pos": "ADJ",
+        "stem": "slovjańsk",
+        "ru": [
+          "славянский"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 6,
+      "affix": "iti",
+      "type": 2,
+      "lexeme": {
+        "id": 11922,
+        "value": "mysliti",
+        "slug": "mysliti-VERB",
+        "pos": "VERB",
+        "stem": "mysli",
+        "ru": [
+          "думать, мыслить"
+        ]
+      },
+      "reason": "mysl + i + ti. Глагол обозначает мыслительную деятельность, i входит в его основу.",
+      "registryNames": [
+        "iti",
+        "i"
+      ],
+      "base": {
+        "id": 11923,
+        "value": "myslj",
+        "slug": "myslj-NOUN",
+        "pos": "NOUN",
+        "stem": "mysl",
+        "ru": [
+          "Мысль",
+          "мысль, идея"
+        ]
+      },
+      "registryValue": "i"
+    },
+    {
+      "rank": 9,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 11605,
+        "value": "mnogo",
+        "slug": "mnogo-ADV",
+        "pos": "ADV",
+        "stem": "mnog",
+        "ru": [
+          "Весьма",
+          "Много",
+          "много, многие",
+          "очень, сильно"
+        ]
+      },
+      "reason": "mnog-y → mnog-o. Наречие количества соотносится с прилагательным.",
+      "registryNames": [
+        "o",
+        "e"
+      ],
+      "base": {
+        "id": 11624,
+        "value": "mnogy",
+        "slug": "mnogy-ADJ",
+        "pos": "ADJ",
+        "stem": "mnog",
+        "ru": [
+          "многий, многочисленный"
+        ]
+      },
+      "registryValue": "o"
+    },
+    {
+      "rank": 10,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 6679,
+        "value": "dobro",
+        "slug": "dobro-ADV",
+        "pos": "ADV",
+        "stem": "dobr",
+        "ru": [
+          "хорошо"
+        ]
+      },
+      "reason": "dobr-y → dobr-o «хорошо». Наречная карточка отделена от омонимичного существительного.",
+      "registryNames": [
+        "o",
+        "e"
+      ],
+      "base": {
+        "id": 6697,
+        "value": "dobry",
+        "slug": "dobry-ADJ",
+        "pos": "ADJ",
+        "stem": "dobr",
+        "ru": [
+          "Добрый",
+          "хороший, добрый"
+        ]
+      },
+      "registryValue": "o"
+    },
+    {
+      "rank": 13,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 17884,
+        "value": "russky",
+        "slug": "russky-ADJ",
+        "pos": "ADJ",
+        "stem": "russk",
+        "ru": [
+          "русский"
+        ]
+      },
+      "reason": "rus + sk + y. Относительное прилагательное от названия народа.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 17872,
+        "value": "rus",
+        "slug": "rus-NOUN",
+        "pos": "NOUN",
+        "stem": "rus",
+        "ru": [
+          "русский"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 14,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 16781,
+        "value": "prosto",
+        "slug": "prosto-ADV",
+        "pos": "ADV",
+        "stem": "prost",
+        "ru": [
+          "просто, попросту, легко"
+        ]
+      },
+      "reason": "prost-y → prost-o. Наречие образуется заменой окончания прилагательного.",
+      "registryNames": [
+        "o",
+        "e"
+      ],
+      "base": {
+        "id": 16791,
+        "value": "prosty",
+        "slug": "prosty-ADJ",
+        "pos": "ADJ",
+        "stem": "prost",
+        "ru": [
+          "простой, лёгкий"
+        ]
+      },
+      "registryValue": "o"
+    },
+    {
+      "rank": 15,
+      "affix": "ně",
+      "type": 1,
+      "lexeme": {
+        "id": 12577,
+        "value": "nekaky",
+        "slug": "nekaky-ADJ",
+        "pos": "ADJ",
+        "stem": "někak",
+        "ru": [
+          "какой-то, некий"
+        ]
+      },
+      "reason": "ně + kaky. Неопределённое «какой-то» от вопросительного «какой».",
+      "registryNames": [
+        "ně"
+      ],
+      "base": {
+        "id": 9520,
+        "value": "kaky",
+        "slug": "kaky-PRON",
+        "pos": "PRON",
+        "stem": "kaky",
+        "ru": [
+          "какой"
+        ]
+      },
+      "registryValue": "ně"
+    },
+    {
+      "rank": 20,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 18512,
+        "value": "slovjansky",
+        "slug": "slovjansky-ADJ",
+        "pos": "ADJ",
+        "stem": "slovjańsk",
+        "ru": [
+          "славянский"
+        ]
+      },
+      "reason": "slovjań + sk + y. Относительное прилагательное от этнонима.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 18506,
+        "value": "slovjan, slovjanin",
+        "slug": "slovjan, slovjanin-NOUN",
+        "pos": "NOUN",
+        "stem": "slovjan, slovjanin",
+        "ru": [
+          "славянин"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 22,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 9296,
+        "value": "jedino",
+        "slug": "jedino-ADV",
+        "pos": "ADV",
+        "stem": "jedin",
+        "ru": [
+          "только, лишь"
+        ]
+      },
+      "reason": "jedin-y → jedin-o. Наречие с ограничительным значением «лишь» сохраняет основу прилагательного.",
+      "registryNames": [
+        "o",
+        "e"
+      ],
+      "base": {
+        "id": 9301,
+        "value": "jediny",
+        "slug": "jediny-ADJ",
+        "pos": "ADJ",
+        "stem": "jedin",
+        "ru": [
+          "Единственный",
+          "единственный, единый, одинокий"
+        ]
+      },
+      "registryValue": "o"
+    },
+    {
+      "rank": 24,
+      "affix": "ně",
+      "type": 1,
+      "lexeme": {
+        "id": 12509,
+        "value": "necto",
+        "slug": "necto-PRON",
+        "pos": "PRON",
+        "stem": "něčto",
+        "ru": [
+          "Нечто",
+          "нечто, что-то, кое-что"
+        ]
+      },
+      "reason": "ně + čto. Неопределённое «что-то» от вопросительного «что».",
+      "registryNames": [
+        "ně"
+      ],
+      "base": {
+        "id": 6244,
+        "value": "cto",
+        "slug": "cto-PRON",
+        "pos": "PRON",
+        "stem": "čto",
+        "ru": [
+          "Что",
+          "что"
+        ]
+      },
+      "registryValue": "ně"
+    },
+    {
+      "rank": 25,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 15364,
+        "value": "poljsky",
+        "slug": "poljsky-ADJ",
+        "pos": "ADJ",
+        "stem": "poljsk",
+        "ru": [
+          "Польский",
+          "польский"
+        ]
+      },
+      "reason": "polj + sk + y. Суффикс относительности в названии языка и соответствующем прилагательном.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 15363,
+        "value": "poljska",
+        "slug": "poljska-NOUN",
+        "pos": "NOUN",
+        "stem": "poljsk",
+        "ru": [
+          "Польша"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 28,
+      "affix": "s",
+      "type": 1,
+      "lexeme": {
+        "id": 18330,
+        "value": "skazati",
+        "slug": "skazati-VERB",
+        "pos": "VERB",
+        "stem": "skaza",
+        "ru": [
+          "сказать"
+        ]
+      },
+      "reason": "s + kazati. Приставка образует глагол со значением завершённого высказывания.",
+      "registryNames": [
+        "s",
+        "so"
+      ],
+      "base": {
+        "id": 9700,
+        "value": "kazati",
+        "slug": "kazati-VERB",
+        "pos": "VERB",
+        "stem": "kaza",
+        "ru": [
+          "Глаголать",
+          "Говорить",
+          "Показывать",
+          "говорить, рассказывать",
+          "приказывать, велеть"
+        ]
+      },
+      "registryValue": "s"
+    },
+    {
+      "rank": 36,
+      "affix": "iti",
+      "type": 2,
+      "lexeme": {
+        "id": 22202,
+        "value": "znaciti",
+        "slug": "znaciti-VERB",
+        "pos": "VERB",
+        "stem": "znači",
+        "ru": [
+          "значить, означать"
+        ]
+      },
+      "reason": "znak → znač-i-ti. Значение «обозначать» соотносится со знаком, k чередуется с č.",
+      "registryNames": [
+        "iti",
+        "i"
+      ],
+      "base": {
+        "id": 22212,
+        "value": "znak",
+        "slug": "znak-NOUN",
+        "pos": "NOUN",
+        "stem": "znak",
+        "ru": [
+          "Знак",
+          "Символ",
+          "знак, примета, предзнаменование",
+          "знак, сигнал",
+          "знак, символ"
+        ]
+      },
+      "registryValue": "i"
+    },
+    {
+      "rank": 38,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 4833,
+        "value": "anglijsky",
+        "slug": "anglijsky-ADJ",
+        "pos": "ADJ",
+        "stem": "anglijsk",
+        "ru": [
+          "английский"
+        ]
+      },
+      "reason": "anglij + sk + y. Относительное прилагательное от названия страны.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 4830,
+        "value": "anglija",
+        "slug": "anglija-NOUN",
+        "pos": "NOUN",
+        "stem": "angli",
+        "ru": [
+          "Англия"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 41,
+      "affix": "s",
+      "type": 1,
+      "lexeme": {
+        "id": 18040,
+        "value": "sdelati",
+        "slug": "sdelati-VERB",
+        "pos": "VERB",
+        "stem": "sděla",
+        "ru": [
+          "сделать, выполнить, совершить"
+        ]
+      },
+      "reason": "s + dělati. Производное обозначает завершённое выполнение действия.",
+      "registryNames": [
+        "s",
+        "so"
+      ],
+      "base": {
+        "id": 6422,
+        "value": "delati",
+        "slug": "delati-VERB",
+        "pos": "VERB",
+        "stem": "děla",
+        "ru": [
+          "делать, выполнять, действовать"
+        ]
+      },
+      "registryValue": "s"
+    },
+    {
+      "rank": 46,
+      "affix": "ně",
+      "type": 1,
+      "lexeme": {
+        "id": 12587,
+        "value": "nekoliko",
+        "slug": "nekoliko-ADV",
+        "pos": "ADV",
+        "stem": "několik",
+        "ru": [
+          "Несколько",
+          "Сколько-либо",
+          "Сколько-нибудь",
+          "Сколько-то",
+          "несколько"
+        ]
+      },
+      "reason": "ně + koliko. Приставка придаёт вопросительному наречию значение неопределённого количества.",
+      "registryNames": [
+        "ně"
+      ],
+      "base": {
+        "id": 9925,
+        "value": "koliko",
+        "slug": "koliko-ADV",
+        "pos": "ADV",
+        "stem": "kolik",
+        "ru": [
+          "сколько"
+        ]
+      },
+      "registryValue": "ně"
+    },
+    {
+      "rank": 49,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 6110,
+        "value": "cessky",
+        "slug": "cessky-ADJ",
+        "pos": "ADJ",
+        "stem": "češsk",
+        "ru": [
+          "чешский"
+        ]
+      },
+      "reason": "čeh → češ-sk-y. Перед sk происходит чередование h → š.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 6060,
+        "value": "ceh",
+        "slug": "ceh-NOUN",
+        "pos": "NOUN",
+        "stem": "čeh",
+        "ru": [
+          "чех"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 50,
+      "affix": "ně",
+      "type": 1,
+      "lexeme": {
+        "id": 12597,
+        "value": "nekto",
+        "slug": "nekto-PRON",
+        "pos": "PRON",
+        "stem": "někto",
+        "ru": [
+          "Кто-либо",
+          "Кто-нибудь",
+          "Кто-то",
+          "Некто",
+          "некто, кое-кто, кто-то"
+        ]
+      },
+      "reason": "ně + kto. Неопределённое местоимение от вопросительного «кто».",
+      "registryNames": [
+        "ně"
+      ],
+      "base": {
+        "id": 10478,
+        "value": "kto",
+        "slug": "kto-PRON",
+        "pos": "PRON",
+        "stem": "kto",
+        "ru": [
+          "Кто",
+          "кто"
+        ]
+      },
+      "registryValue": "ně"
+    },
+    {
+      "rank": 56,
+      "affix": "ně",
+      "type": 1,
+      "lexeme": {
+        "id": 12598,
+        "value": "nektory",
+        "slug": "nektory-ADJ",
+        "pos": "ADJ",
+        "stem": "něktor",
+        "ru": [
+          "некоторый"
+        ]
+      },
+      "reason": "ně + ktory. Неопределённое прилагательное от вопросительного местоимения.",
+      "registryNames": [
+        "ně"
+      ],
+      "base": {
+        "id": 10481,
+        "value": "ktory",
+        "slug": "ktory-PRON",
+        "pos": "PRON",
+        "stem": "ktory",
+        "ru": [
+          "который, какой",
+          "который, кто, что"
+        ]
+      },
+      "registryValue": "ně"
+    },
+    {
+      "rank": 57,
+      "affix": "iz",
+      "type": 1,
+      "lexeme": {
+        "id": 8798,
+        "value": "izgledati",
+        "slug": "izgledati-VERB",
+        "pos": "VERB",
+        "stem": "izględa",
+        "ru": [
+          "выглядеть",
+          "выглядывать, высматривать"
+        ]
+      },
+      "reason": "iz + ględati. Значение «выглядывать» сохраняет направление наружу от действия «смотреть».",
+      "registryNames": [
+        "iz",
+        "is"
+      ],
+      "base": {
+        "id": 7771,
+        "value": "gledati",
+        "slug": "gledati-VERB",
+        "pos": "VERB",
+        "stem": "ględa",
+        "ru": [
+          "смотреть, глядеть"
+        ]
+      },
+      "registryValue": "iz"
+    },
+    {
+      "rank": 58,
+      "affix": "sky",
+      "type": 2,
+      "lexeme": {
+        "id": 20293,
+        "value": "ukrajinsky",
+        "slug": "ukrajinsky-ADJ",
+        "pos": "ADJ",
+        "stem": "ukrajińsk",
+        "ru": [
+          "украинский"
+        ]
+      },
+      "reason": "ukrajin + sk + y. Относительное прилагательное от названия страны.",
+      "registryNames": [
+        "sky",
+        "ski",
+        "sk"
+      ],
+      "base": {
+        "id": 20290,
+        "value": "ukrajina",
+        "slug": "ukrajina-NOUN",
+        "pos": "NOUN",
+        "stem": "ukrajin",
+        "ru": [
+          "Украина"
+        ]
+      },
+      "registryValue": "sk"
+    },
+    {
+      "rank": 61,
+      "affix": "vati",
+      "type": 2,
+      "lexeme": {
+        "id": 6343,
+        "value": "davati",
+        "slug": "davati-VERB",
+        "pos": "VERB",
+        "stem": "dava",
+        "ru": [
+          "Давать",
+          "давать"
+        ]
+      },
+      "reason": "dati → davati. Суффикс va добавляется к глагольной основе da в форме несовершенного вида.",
+      "registryNames": [
+        "vati",
+        "va"
+      ],
+      "base": {
+        "id": 6334,
+        "value": "dati",
+        "slug": "dati-VERB",
+        "pos": "VERB",
+        "stem": "da",
+        "ru": [
+          "Дать",
+          "дать"
+        ]
+      },
+      "registryValue": "va"
+    },
+    {
+      "rank": 63,
+      "affix": "nje",
+      "type": 2,
+      "lexeme": {
+        "id": 16975,
+        "value": "pytanje",
+        "slug": "pytanje-NOUN",
+        "pos": "NOUN",
+        "stem": "pytań",
+        "ru": [
+          "вопрос"
+        ]
+      },
+      "reason": "pytati → pytanje. Отглагольное имя действия с моделью -nje.",
+      "registryNames": [
+        "nje",
+        "tje",
+        "ńe",
+        "ťe"
+      ],
+      "base": {
+        "id": 16977,
+        "value": "pytati",
+        "slug": "pytati-VERB",
+        "pos": "VERB",
+        "stem": "pyta",
+        "ru": [
+          "Спрашивать",
+          "спрашивать"
+        ]
+      },
+      "registryValue": "nje"
+    },
+    {
+      "rank": 67,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 17547,
+        "value": "razumlivo",
+        "slug": "razumlivo-ADV",
+        "pos": "ADV",
+        "stem": "råzumliv",
+        "ru": [
+          "понятно, толково, вразумительно"
+        ]
+      },
+      "reason": "råzumliv-y → råzumliv-o. Наречие от прилагательного «понятный».",
+      "registryNames": [
+        "o",
+        "e"
+      ],
+      "base": {
+        "id": 17549,
+        "value": "razumlivy",
+        "slug": "razumlivy-ADJ",
+        "pos": "ADJ",
+        "stem": "råzumliv",
+        "ru": [
+          "понятный, понимаемый, вразумительный"
+        ]
+      },
+      "registryValue": "o"
+    },
+    {
+      "rank": 72,
+      "affix": "ija",
+      "type": 2,
+      "lexeme": {
+        "id": 8203,
+        "value": "historija",
+        "slug": "historija-NOUN",
+        "pos": "NOUN",
+        "stem": "histori",
+        "ru": [
+          "история"
+        ]
+      },
+      "reason": "Histor- + международное -ija. Нормативная модель выделяется в заимствованных существительных, семейство также представлено historičny.",
+      "registryNames": [
+        "ija"
+      ],
+      "base": {
+        "id": 8202,
+        "value": "historicny",
+        "slug": "historicny-ADJ",
+        "pos": "ADJ",
+        "stem": "historičn",
+        "ru": [
+          "исторический"
+        ]
+      },
+      "registryValue": "ija"
+    },
+    {
+      "rank": 73,
+      "affix": "s",
+      "type": 1,
+      "lexeme": {
+        "id": 18920,
+        "value": "srazumeti",
+        "slug": "srazumeti-VERB",
+        "pos": "VERB",
+        "stem": "sråzumě",
+        "ru": [
+          "понять"
+        ]
+      },
+      "reason": "s + råzuměti. Приставка маркирует достижение результата «понять» относительно «понимать».",
+      "registryNames": [
+        "s",
+        "so"
+      ],
+      "base": {
+        "id": 17546,
+        "value": "razumeti",
+        "slug": "razumeti-VERB",
+        "pos": "VERB",
+        "stem": "råzumě",
+        "ru": [
+          "понимать, разуметь (устар.)"
+        ]
+      },
+      "registryValue": "s"
+    },
+    {
+      "rank": 75,
+      "affix": "s",
+      "type": 1,
+      "lexeme": {
+        "id": 19206,
+        "value": "stvoriti",
+        "slug": "stvoriti-VERB",
+        "pos": "VERB",
+        "stem": "stvori",
+        "ru": [
+          "создать, сделать, сотворить, сформировать"
+        ]
+      },
+      "reason": "s + tvoriti. Приставка образует результативное «создать».",
+      "registryNames": [
+        "s",
+        "so"
+      ],
+      "base": {
+        "id": 20135,
+        "value": "tvoriti",
+        "slug": "tvoriti-VERB",
+        "pos": "VERB",
+        "stem": "tvori",
+        "ru": [
+          "сотворять, творить, создавать, формировать"
+        ]
+      },
+      "registryValue": "s"
+    }
+  ],
+  "rejected": [
+    {
+      "rank": 1,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 12478,
+        "value": "ne",
+        "slug": "ne-ADV",
+        "pos": "ADV",
+        "stem": "ne",
+        "ru": [
+          "не"
+        ]
+      },
+      "reason": "ne — частица отрицания, в словаре оформлена как наречие. Буква e входит в саму частицу.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 2,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 19664,
+        "value": "takoze",
+        "slug": "takoze-ADV",
+        "pos": "ADV",
+        "stem": "takož",
+        "ru": [
+          "также, тоже"
+        ]
+      },
+      "reason": "tako + že. Конец слова составляет частица že.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 8,
+      "affix": "ozny",
+      "type": 2,
+      "lexeme": {
+        "id": 11803,
+        "value": "mozny",
+        "slug": "mozny-ADJ",
+        "pos": "ADJ",
+        "stem": "možn",
+        "ru": [
+          "возможный"
+        ]
+      },
+      "reason": "mož-n-y. Буквы ož принадлежат основе, международный суффикс -ozny здесь не выделяется.",
+      "registryNames": [
+        "ozny"
+      ]
+    },
+    {
+      "rank": 11,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 9389,
+        "value": "jesce",
+        "slug": "jesce-ADV",
+        "pos": "ADV",
+        "stem": "ješč",
+        "ru": [
+          "ещё"
+        ]
+      },
+      "reason": "В ješče конечное e входит в закреплённую форму частицы «ещё». Модель отыменного наречия здесь не подтверждается.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 12,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 21598,
+        "value": "vyse",
+        "slug": "vyse-ADV",
+        "pos": "ADV",
+        "stem": "vyš",
+        "ru": [
+          "более, больше, сильнее",
+          "выше, сверху"
+        ]
+      },
+      "reason": "Vyše — сравнительная форма. Конечное e относится к модели сравнительной степени, её следует учитывать отдельно.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 16,
+      "affix": "v",
+      "type": 1,
+      "lexeme": {
+        "id": 20974,
+        "value": "videti",
+        "slug": "videti-VERB",
+        "pos": "VERB",
+        "stem": "vidě",
+        "ru": [
+          "Видеть",
+          "видеть"
+        ]
+      },
+      "reason": "V входит в корень vid-. У глагола нет приставочного значения v-.",
+      "registryNames": [
+        "v",
+        "vo"
+      ]
+    },
+    {
+      "rank": 21,
+      "affix": "de",
+      "type": 1,
+      "lexeme": {
+        "id": 6422,
+        "value": "delati",
+        "slug": "delati-VERB",
+        "pos": "VERB",
+        "stem": "děla",
+        "ru": [
+          "делать, выполнять, действовать"
+        ]
+      },
+      "reason": "Děl-a-ti образовано от děl-. Совпадение с заимствованной приставкой de- случайное.",
+      "registryNames": [
+        "de"
+      ]
+    },
+    {
+      "rank": 23,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 21473,
+        "value": "vse",
+        "slug": "vse-ADV",
+        "pos": "ADV",
+        "stem": "vs",
+        "ru": [
+          "всё (наречие = всегда, всё время, постоянно)"
+        ]
+      },
+      "reason": "Vse соответствует местоименной форме vse. Конечное e унаследовано от формы местоимения.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 26,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 22038,
+        "value": "zato",
+        "slug": "zato-ADV",
+        "pos": "ADV",
+        "stem": "zat",
+        "ru": [
+          "потому, поэтому"
+        ]
+      },
+      "reason": "Za + to. Конечное o входит в местоимение to.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 27,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 9710,
+        "value": "kde",
+        "slug": "kde-ADV",
+        "pos": "ADV",
+        "stem": "kd",
+        "ru": [
+          "где"
+        ]
+      },
+      "reason": "Kdě — вопросительное местоименное наречие с закреплённой формой. Подбор по конечному e не выявляет отыменную модель.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 29,
+      "affix": "ok",
+      "type": 2,
+      "lexeme": {
+        "id": 6178,
+        "value": "clovek",
+        "slug": "clovek-NOUN",
+        "pos": "NOUN",
+        "stem": "člověk",
+        "ru": [
+          "человек"
+        ]
+      },
+      "reason": "-ek входит в лексическую основу člověk. Признаков производного с уменьшительным или результативным -ok нет.",
+      "registryNames": [
+        "ok",
+        "ek"
+      ]
+    },
+    {
+      "rank": 30,
+      "affix": "u",
+      "type": 1,
+      "lexeme": {
+        "id": 20211,
+        "value": "uciti",
+        "slug": "uciti-VERB",
+        "pos": "VERB",
+        "stem": "uči",
+        "ru": [
+          "учить"
+        ]
+      },
+      "reason": "U входит в корень uč- и не даёт приставочного значения.",
+      "registryNames": [
+        "u"
+      ]
+    },
+    {
+      "rank": 32,
+      "affix": "ik",
+      "type": 2,
+      "lexeme": {
+        "id": 18516,
+        "value": "slovnik",
+        "slug": "slovnik-NOUN",
+        "pos": "NOUN",
+        "stem": "slovnik",
+        "ru": [
+          "Словарь",
+          "словарь"
+        ]
+      },
+      "reason": "В значении «словарь» выделяется slov + nik. Связь с -nik уже есть в БД.",
+      "registryNames": [
+        "ik"
+      ]
+    },
+    {
+      "rank": 33,
+      "affix": "ovy",
+      "type": 2,
+      "lexeme": {
+        "id": 13072,
+        "value": "novy",
+        "slug": "novy-ADJ",
+        "pos": "ADJ",
+        "stem": "nov",
+        "ru": [
+          "новый"
+        ]
+      },
+      "reason": "Nov-y. Ov входит в корень nov-, прилагательное не выражает принадлежности.",
+      "registryNames": [
+        "ovy",
+        "evy",
+        "ov",
+        "ev"
+      ]
+    },
+    {
+      "rank": 34,
+      "affix": "de",
+      "type": 1,
+      "lexeme": {
+        "id": 6461,
+        "value": "denj",
+        "slug": "denj-NOUN",
+        "pos": "NOUN",
+        "stem": "dėn",
+        "ru": [
+          "день"
+        ]
+      },
+      "reason": "D входит в корень deň. Совпадение с началом заимствованной приставки de- случайное.",
+      "registryNames": [
+        "de"
+      ]
+    },
+    {
+      "rank": 35,
+      "affix": "ę",
+      "type": 2,
+      "lexeme": {
+        "id": 8469,
+        "value": "ime",
+        "slug": "ime-NOUN",
+        "pos": "NOUN",
+        "stem": "imen",
+        "ru": [
+          "Имя",
+          "имя",
+          "название"
+        ]
+      },
+      "reason": "Imę относится к атематическим основам на -men-. Совпадение с моделью -ę с косвенной основой на -et- случайное.",
+      "registryNames": [
+        "ę",
+        "et"
+      ]
+    },
+    {
+      "rank": 37,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 19885,
+        "value": "toliko",
+        "slug": "toliko-ADV",
+        "pos": "ADV",
+        "stem": "tolik",
+        "ru": [
+          "Столько",
+          "Только",
+          "столько, так много",
+          "только, лишь"
+        ]
+      },
+      "reason": "Toliko — местоименное наречие количества на -liko в ряду koliko, toliko. Конечное o входит в модель этого ряда.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 39,
+      "affix": "v",
+      "type": 1,
+      "lexeme": {
+        "id": 20790,
+        "value": "vedeti",
+        "slug": "vedeti-VERB",
+        "pos": "VERB",
+        "stem": "vědě",
+        "ru": [
+          "знать, ведать (книжн., трад-нар.)"
+        ]
+      },
+      "reason": "V входит в корень věd-. Приставка со значением движения внутрь здесь отсутствует.",
+      "registryNames": [
+        "v",
+        "vo"
+      ]
+    },
+    {
+      "rank": 42,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 15576,
+        "value": "posle",
+        "slug": "posle-ADV",
+        "pos": "ADV",
+        "stem": "poslě",
+        "ru": [
+          "затем, потом, после этого"
+        ]
+      },
+      "reason": "Posle — лексикализованное наречие/предлог. Конечное e не образует наречие от прилагательного в этой карточке.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 44,
+      "affix": "vati",
+      "type": 2,
+      "lexeme": {
+        "id": 9387,
+        "value": "jestvovati",
+        "slug": "jestvovati-VERB",
+        "pos": "VERB",
+        "stem": "jestvova",
+        "ru": [
+          "существовать, иметься"
+        ]
+      },
+      "reason": "В jestvovati совпадение с vati вложено в ovati. Пары с исходным глаголом наподобие dati → davati нет.",
+      "registryNames": [
+        "vati",
+        "va"
+      ]
+    },
+    {
+      "rank": 45,
+      "affix": "ę",
+      "type": 2,
+      "lexeme": {
+        "id": 19368,
+        "value": "svet",
+        "slug": "svet-NOUN",
+        "pos": "NOUN",
+        "stem": "svět",
+        "ru": [
+          "Свет",
+          "мир, свет (мир)"
+        ]
+      },
+      "reason": "Совпадение svet вызвано буквами et в корне svět, слово не относится к типу существительных на -ę.",
+      "registryNames": [
+        "ę",
+        "et"
+      ]
+    },
+    {
+      "rank": 47,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 12587,
+        "value": "nekoliko",
+        "slug": "nekoliko-ADV",
+        "pos": "ADV",
+        "stem": "několik",
+        "ru": [
+          "Несколько",
+          "Сколько-либо",
+          "Сколько-нибудь",
+          "Сколько-то",
+          "несколько"
+        ]
+      },
+      "reason": "В nekoliko конечное o уже присутствует в исходном koliko. Проверяемая наречная модель здесь не образует слово.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 48,
+      "affix": "ičny",
+      "type": 2,
+      "lexeme": {
+        "id": 17280,
+        "value": "razlicny",
+        "slug": "razlicny-ADJ",
+        "pos": "ADJ",
+        "stem": "råzličn",
+        "ru": [
+          "различный, разный"
+        ]
+      },
+      "reason": "Razlika даёт местную основу razli(k/č)-. Международный суффикс -ičny предполагает границу перед ič, которая здесь лежала бы внутри основы.",
+      "registryNames": [
+        "ičny",
+        "icny"
+      ]
+    },
+    {
+      "rank": 51,
+      "affix": "iti",
+      "type": 2,
+      "lexeme": {
+        "id": 22346,
+        "value": "ziti",
+        "slug": "ziti-VERB",
+        "pos": "VERB",
+        "stem": "ži",
+        "ru": [
+          "Жить",
+          "жить",
+          "жить, проживать"
+        ]
+      },
+      "reason": "В žiti после корня ži- выделяется инфинитивное ti. Буква i принадлежит корню.",
+      "registryNames": [
+        "iti",
+        "i"
+      ]
+    },
+    {
+      "rank": 52,
+      "affix": "ca",
+      "type": 2,
+      "lexeme": {
+        "id": 9739,
+        "value": "kirilica",
+        "slug": "kirilica-NOUN",
+        "pos": "NOUN",
+        "stem": "kirilic",
+        "ru": [
+          "кириллица"
+        ]
+      },
+      "reason": "Самостоятельный суффикс ca не подтверждается. Возможная граница перед ica рассмотрена отдельной парой.",
+      "registryNames": [
+        "ca"
+      ]
+    },
+    {
+      "rank": 54,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 6348,
+        "value": "daze",
+        "slug": "daze-ADV",
+        "pos": "ADV",
+        "stem": "daž",
+        "ru": [
+          "Даже",
+          "даже"
+        ]
+      },
+      "reason": "Конечное že — частица. Наречное -o/-e здесь не выделяется.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 60,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 426,
+        "value": "de",
+        "slug": "de-adv",
+        "pos": "ADV",
+        "stem": "d",
+        "ru": [
+          "Где"
+        ]
+      },
+      "reason": "De «где» — лексикализованная вопросительная форма. Сходство с суффиксом -e случайное.",
+      "registryNames": [
+        "o",
+        "e"
+      ]
+    },
+    {
+      "rank": 62,
+      "affix": "je",
+      "type": 2,
+      "lexeme": {
+        "id": 16975,
+        "value": "pytanje",
+        "slug": "pytanje-NOUN",
+        "pos": "NOUN",
+        "stem": "pytań",
+        "ru": [
+          "вопрос"
+        ]
+      },
+      "reason": "В pytanje конечное je частично совпадает с моделью -nje. Отдельное -je для этой пары не выделяется.",
+      "registryNames": [
+        "je"
+      ]
+    },
+    {
+      "rank": 64,
+      "affix": "ę",
+      "type": 2,
+      "lexeme": {
+        "id": 16975,
+        "value": "pytanje",
+        "slug": "pytanje-NOUN",
+        "pos": "NOUN",
+        "stem": "pytań",
+        "ru": [
+          "вопрос"
+        ]
+      },
+      "reason": "Для pytanje подтверждена модель отглагольного имени на -nje. Совпадение с -ę вызвано свёрткой написаний.",
+      "registryNames": [
+        "ę",
+        "et"
+      ]
+    },
+    {
+      "rank": 68,
+      "affix": "ę",
+      "type": 2,
+      "lexeme": {
+        "id": 4717,
+        "value": "alfabet",
+        "slug": "alfabet-NOUN",
+        "pos": "NOUN",
+        "stem": "alfabet",
+        "ru": [
+          "алфавит"
+        ]
+      },
+      "reason": "В alfabet совпадение вызвано буквами et в заимствованной основе. Модель существительных на -ę неприменима.",
+      "registryNames": [
+        "ę",
+        "et"
+      ]
+    },
+    {
+      "rank": 69,
+      "affix": "ę",
+      "type": 2,
+      "lexeme": {
+        "id": 21424,
+        "value": "vreme",
+        "slug": "vreme-NOUN",
+        "pos": "NOUN",
+        "stem": "vrěmen",
+        "ru": [
+          "время",
+          "время (грам.)",
+          "погода"
+        ]
+      },
+      "reason": "Vremę относится к атематическим основам на -men-. Совпадение с моделью -ę с косвенной основой на -et- случайное.",
+      "registryNames": [
+        "ę",
+        "et"
+      ]
+    },
+    {
+      "rank": 70,
+      "affix": "pri",
+      "type": 1,
+      "lexeme": {
+        "id": 12254,
+        "value": "naprimer",
+        "slug": "naprimer-ADV",
+        "pos": "ADV",
+        "stem": "napriměr",
+        "ru": [
+          "например"
+        ]
+      },
+      "reason": "Стандарт фиксирует na primer как сочетание предлога с существительным. В слитной словарной записи pri входит в primer.",
+      "registryNames": [
+        "pri"
+      ]
+    },
+    {
+      "rank": 71,
+      "affix": "ok",
+      "type": 2,
+      "lexeme": {
+        "id": 17799,
+        "value": "rok",
+        "slug": "rok-NOUN",
+        "pos": "NOUN",
+        "stem": "rok",
+        "ru": [
+          "Рок",
+          "год"
+        ]
+      },
+      "reason": "Rok «год» — самостоятельная основа. Совпадение с -ok не подкрепляется производящим словом.",
+      "registryNames": [
+        "ok",
+        "ek"
+      ]
+    }
+  ],
+  "deferred": [
+    {
+      "rank": 7,
+      "affix": "n",
+      "type": 2,
+      "lexeme": {
+        "id": 11803,
+        "value": "mozny",
+        "slug": "mozny-ADJ",
+        "pos": "ADJ",
+        "stem": "možn",
+        "ru": [
+          "возможный"
+        ]
+      },
+      "reason": "Для связи с глаголом «мочь» нужно подтвердить историческое чередование и морфемную границу."
+    },
+    {
+      "rank": 17,
+      "affix": "ěti",
+      "type": 2,
+      "lexeme": {
+        "id": 20974,
+        "value": "videti",
+        "slug": "videti-VERB",
+        "pos": "VERB",
+        "stem": "vidě",
+        "ru": [
+          "Видеть",
+          "видеть"
+        ]
+      },
+      "reason": "Проверить статус тематического ě в viděti и критерий его включения в словообразовательный реестр."
+    },
+    {
+      "rank": 18,
+      "affix": "raz",
+      "type": 1,
+      "lexeme": {
+        "id": 17546,
+        "value": "razumeti",
+        "slug": "razumeti-VERB",
+        "pos": "VERB",
+        "stem": "råzumě",
+        "ru": [
+          "понимать, разуметь (устар.)"
+        ]
+      },
+      "reason": "Проверить границу raz- и um в лексикализованном razuměti отдельно от поверхностного совпадения."
+    },
+    {
+      "rank": 19,
+      "affix": "ěti",
+      "type": 2,
+      "lexeme": {
+        "id": 17546,
+        "value": "razumeti",
+        "slug": "razumeti-VERB",
+        "pos": "VERB",
+        "stem": "råzumě",
+        "ru": [
+          "понимать, разуметь (устар.)"
+        ]
+      },
+      "reason": "Для razuměti нужна отдельная проверка функции ě и его отношения к основе razum."
+    },
+    {
+      "rank": 31,
+      "affix": "iti",
+      "type": 2,
+      "lexeme": {
+        "id": 20211,
+        "value": "uciti",
+        "slug": "uciti-VERB",
+        "pos": "VERB",
+        "stem": "uči",
+        "ru": [
+          "учить"
+        ]
+      },
+      "reason": "У глагола učiti возможен тематический i. В очереди проверяется словообразовательный суффикс, поэтому нужен отдельный критерий для таких глаголов."
+    },
+    {
+      "rank": 40,
+      "affix": "ěti",
+      "type": 2,
+      "lexeme": {
+        "id": 20790,
+        "value": "vedeti",
+        "slug": "vedeti-VERB",
+        "pos": "VERB",
+        "stem": "vědě",
+        "ru": [
+          "знать, ведать (книжн., трад-нар.)"
+        ]
+      },
+      "reason": "Проверить статус тематического ě у věděti отдельно от продуктивного образования глаголов изменения состояния."
+    },
+    {
+      "rank": 43,
+      "affix": "ovati",
+      "type": 2,
+      "lexeme": {
+        "id": 9387,
+        "value": "jestvovati",
+        "slug": "jestvovati-VERB",
+        "pos": "VERB",
+        "stem": "jestvova",
+        "ru": [
+          "существовать, иметься"
+        ]
+      },
+      "reason": "Сегмент ovati прозрачен по форме, но для jestvovati нужна подтверждённая исходная основа."
+    },
+    {
+      "rank": 53,
+      "affix": "ica",
+      "type": 2,
+      "lexeme": {
+        "id": 9739,
+        "value": "kirilica",
+        "slug": "kirilica-NOUN",
+        "pos": "NOUN",
+        "stem": "kirilic",
+        "ru": [
+          "кириллица"
+        ]
+      },
+      "reason": "У kirilica нужно сопоставить словообразовательный разбор с возможным заимствованием целого слова."
+    },
+    {
+      "rank": 55,
+      "affix": "o",
+      "type": 2,
+      "lexeme": {
+        "id": 17949,
+        "value": "samo",
+        "slug": "samo-ADV",
+        "pos": "ADV",
+        "stem": "sam",
+        "ru": [
+          "Только",
+          "лишь, только"
+        ]
+      },
+      "reason": "Сопоставить образование от sam и samy и проверить, какой разбор подходит для ограничительной частицы/наречия."
+    },
+    {
+      "rank": 59,
+      "affix": "ok",
+      "type": 2,
+      "lexeme": {
+        "id": 6169,
+        "value": "clanok",
+        "slug": "clanok-NOUN",
+        "pos": "NOUN",
+        "stem": "članȯk",
+        "ru": [
+          "статья"
+        ]
+      },
+      "reason": "Проверить связь «статья» с člen «член, элемент» при возможном заимствовании целой формы."
+    },
+    {
+      "rank": 65,
+      "affix": "ant",
+      "type": 2,
+      "lexeme": {
+        "id": 20722,
+        "value": "variant",
+        "slug": "variant-NOUN",
+        "pos": "NOUN",
+        "stem": "variant",
+        "ru": [
+          "вариант"
+        ]
+      },
+      "reason": "Variti семантически не относится к variant. Для международного -ant нужно отдельно подтвердить морфемную границу в заимствовании."
+    },
+    {
+      "rank": 66,
+      "affix": "livy",
+      "type": 2,
+      "lexeme": {
+        "id": 11799,
+        "value": "mozlivy",
+        "slug": "mozlivy-ADJ",
+        "pos": "ADJ",
+        "stem": "možliv",
+        "ru": [
+          "возможный"
+        ]
+      },
+      "reason": "У mozlivy требуется подтвердить разбор -liv и чередование относительно могти."
+    },
+    {
+      "rank": 74,
+      "affix": "ěti",
+      "type": 2,
+      "lexeme": {
+        "id": 18920,
+        "value": "srazumeti",
+        "slug": "srazumeti-VERB",
+        "pos": "VERB",
+        "stem": "sråzumě",
+        "ru": [
+          "понять"
+        ]
+      },
+      "reason": "Проверить тематическое ě в исходном razuměti. Приставочное образование уже разобрано отдельной парой."
+    }
+  ]
+}

@@ -4,12 +4,16 @@ import { readdirSync, readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { foldDiacritics } from "@/lib/corpus/tokenizer/foldDiacritics"
 import { cyrillicToLatin } from "@/lib/orthography/standard"
+import { remainingAffixes } from "./remaining-affixes"
 
 interface Affix {
   type: 1 | 2
   value: string
   markers: readonly string[]
   pos?: string
+  searchPos?: readonly string[]
+  registryValues?: readonly string[]
+  origin?: "slavic" | "borrowed"
 }
 
 interface BasePattern {
@@ -69,6 +73,7 @@ interface Lexeme {
   pos: string | null
   corpusFrequency: number | null
   isCollocation: number
+  ru?: readonly string[]
 }
 
 interface Morpheme {
@@ -87,6 +92,7 @@ interface Variant {
 
 interface ReviewedPair {
   affix: string
+  type?: Affix["type"]
   lexeme: { id: number; slug: string; value: string; pos: string; stem: string | null }
   reason?: string
   base?: { id: number; value: string }
@@ -100,7 +106,9 @@ for (const file of readdirSync(reviewDirectory).filter((name) => name.endsWith("
   const data = JSON.parse(readFileSync(resolve(reviewDirectory, file), "utf8")) as Partial<Record<ReviewStatus, ReviewedPair[]>>
   for (const status of ["confirmed", "rejected", "deferred"] as const) {
     for (const pair of data[status] ?? []) {
-      const key = `${pair.affix}:${pair.lexeme.id}`
+      const key = pair.type === undefined
+        ? `${pair.affix}:${pair.lexeme.id}`
+        : `${pair.type}:${pair.affix}:${pair.lexeme.id}`
       const previous = reviewed.get(key)
       if (status === "deferred" && previous && previous.status !== "deferred") continue
       if (previous && previous.status !== "deferred" && previous.status !== status) throw new Error(`Conflicting editorial decisions for ${key}`)
@@ -115,13 +123,15 @@ function fold(value: string | null): string {
 
 const path = process.argv[2]
 const inventory = process.argv[3]
-if (!path || (inventory !== undefined && inventory !== "--additional-prefixes") || process.argv.length > 4) {
-  throw new Error("Usage: tsx scripts/roots-discovery/report-affix-review.ts <interlex.db> [--additional-prefixes]")
+const remaining = inventory === "--remaining-affixes"
+if (!path || (inventory !== undefined && inventory !== "--additional-prefixes" && !remaining) || process.argv.length > 4) {
+  throw new Error("Usage: tsx scripts/roots-discovery/report-affix-review.ts <interlex.db> [--additional-prefixes | --remaining-affixes]")
 }
 
 const db = new Database(path, { readonly: true, fileMustExist: true })
-function editorialDecision(affix: string, lexeme: Lexeme) {
-  const review = reviewed.get(`${affix}:${lexeme.id}`)
+function editorialDecision(affix: Affix, lexeme: Lexeme) {
+  const review = reviewed.get(`${affix.type}:${affix.value}:${lexeme.id}`) ??
+    reviewed.get(`${affix.value}:${lexeme.id}`)
   if (review && lexeme.slug === review.lexeme.slug && lexeme.value === review.lexeme.value &&
       lexeme.pos === review.lexeme.pos && lexeme.stem === review.lexeme.stem) {
     return { editorialStatus: review.status, editorialReason: review.reason, editorialBase: review.base }
@@ -167,27 +177,80 @@ try {
       byLexeme.set(link.lexemeId, list)
     }
 
-    const forms = lexemes.map((lexeme) => ({ lexeme, form: fold(lexeme.value) }))
-    const byForm = new Map<string, Lexeme[]>()
-    for (const { lexeme, form } of forms) {
-      const group = byForm.get(form) ?? []
-      group.push(lexeme)
-      byForm.set(form, group)
+    const coreForms = new Map<number, string[]>()
+    if (remaining) {
+      const translations = db.prepare<[], { lexemeId: number; value: string }>(`
+        SELECT DISTINCT l.id AS lexemeId, t.value FROM translations t
+        JOIN meanings m ON m.id = t.meaningId
+        JOIN lexemes l ON l.id = m.lexemeId
+        WHERE l.isPublic = 1 AND t.language = 'ru' AND t.value IS NOT NULL
+        ORDER BY l.id, t.value
+      `).all()
+      const translationsByLexeme = new Map<number, string[]>()
+      for (const { lexemeId, value } of translations) {
+        const values = translationsByLexeme.get(lexemeId) ?? []
+        values.push(value)
+        translationsByLexeme.set(lexemeId, values)
+      }
+      for (const lexeme of publicLexemes) lexeme.ru = translationsByLexeme.get(lexeme.id) ?? []
+
+      const rows = db.prepare<[], { lexemeId: number; value: string }>(`
+        SELECT a.lexemeId, a.value FROM lexeme_allophones a
+        JOIN allophone_flavors f ON f.id = a.flavorId
+        JOIN lexemes l ON l.id = a.lexemeId
+        WHERE l.isPublic = 1 AND f.code = 'CORE' AND a.type = 'standard'
+        ORDER BY a.lexemeId, a.value
+      `).all()
+      for (const { lexemeId, value } of rows) {
+        const group = coreForms.get(lexemeId) ?? []
+        group.push(value)
+        coreForms.set(lexemeId, group)
+      }
     }
-    return (inventory === "--additional-prefixes" ? additionalPrefixes : pilot).map((affix) => {
+    const forms = (remaining ? publicLexemes : lexemes).map((lexeme) => {
+      const spellings = remaining ? [lexeme.value, ...(coreForms.get(lexeme.id) ?? [])] : [lexeme.value]
+      const normalized = (value: string | null) => remaining && lexeme.pos === "VERB"
+        ? fold(value).replace(/ se$/u, "")
+        : fold(value)
+      return {
+        lexeme,
+        spellings: spellings.flatMap((spelling) => spelling ? [{ spelling, form: normalized(spelling) }] : []),
+      }
+    })
+    const byForm = new Map<string, Lexeme[]>()
+    for (const { lexeme, spellings } of forms) {
+      for (const form of new Set(spellings.map(({ form }) => form))) {
+        const group = byForm.get(form) ?? []
+        group.push(lexeme)
+        byForm.set(form, group)
+      }
+    }
+    const families: readonly Affix[] = remaining ? remainingAffixes : inventory === "--additional-prefixes" ? additionalPrefixes : pilot
+    const registryKey = (value: string | null) => (value ?? "").normalize("NFC").trim().toLowerCase()
+    const baseParts = [nominalBase, adjectiveBase, verbalBase, { tails: [""], pos: ["ADV", "PRON", "NUM"] }]
+    const basePositions = baseParts.flatMap(({ pos }) => pos)
+    return families.map((affix) => {
       const names = new Set([fold(affix.value), ...affix.markers.map(fold)])
+      const registryNames = new Set(affix.registryValues?.map(registryKey))
+      const hasName = (value: string | null) => affix.registryValues
+        ? registryNames.has(registryKey(value))
+        : names.has(fold(value))
       const records = morphemes.filter((morpheme) => morpheme.type === affix.type && (
-        names.has(fold(morpheme.value)) ||
-        variants.some((variant) => variant.morphemeId === morpheme.id && names.has(fold(variant.value)))
+        hasName(morpheme.value) ||
+        variants.some((variant) => variant.morphemeId === morpheme.id && hasName(variant.value))
       ))
       const ids = new Set(records.map(({ id }) => id))
-      const candidates = forms.flatMap(({ lexeme, form }) => {
+      const candidates = forms.flatMap(({ lexeme, spellings }) => {
         if (affix.pos && lexeme.pos !== affix.pos) return []
-        if (!/^\p{L}+$/u.test(form)) return []
-        const matchedMarkers = affix.markers.filter((marker) => form.length > marker.length + 1 && (
-          affix.type === 1 ? form.startsWith(marker) : form.endsWith(marker)
-        ))
-        if (matchedMarkers.length === 0) return []
+        if (affix.searchPos?.length && (!lexeme.pos || !affix.searchPos.includes(lexeme.pos))) return []
+        const matches = affix.markers.flatMap((marker) => {
+          const segment = remaining ? fold(marker) : marker
+          return spellings.filter(({ form }) => /^\p{L}+$/u.test(form) &&
+            form.length > segment.length + (remaining ? 0 : 1) &&
+            (affix.type === 1 ? form.startsWith(segment) : form.endsWith(segment)),
+          ).map(({ form, spelling }) => ({ form, spelling, marker, segment }))
+        })
+        if (matches.length === 0) return []
         const currentMorphemes = byLexeme.get(lexeme.id) ?? []
         const possibleBases = new Map<number, Lexeme>()
         function collectBases(baseForm: string, allowedPos: readonly string[]) {
@@ -197,23 +260,24 @@ try {
             }
           }
         }
-        for (const marker of matchedMarkers) {
+        for (const { form, segment } of matches) {
           if (affix.type === 1) {
-            const remainder = form.slice(marker.length)
-            if (lexeme.pos) collectBases(remainder, [lexeme.pos])
+            const remainder = form.slice(segment.length)
+            if (remaining) collectBases(remainder, basePositions)
+            else if (lexeme.pos) collectBases(remainder, [lexeme.pos])
             if (affix.value === "bez" && lexeme.pos === "ADJ" && remainder.endsWith("ny")) {
               for (const tail of nominalBase.tails) collectBases(remainder.slice(0, -2) + tail, nominalBase.pos)
             }
             continue
           }
-          const remainder = form.slice(0, -marker.length)
+          const remainder = form.slice(0, -segment.length)
           const stems = new Set([remainder])
-          if (affix.value === "k" || affix.value === "nik" || affix.value === "n" || affix.value === "stv") {
+          if (remaining || affix.value === "k" || affix.value === "nik" || affix.value === "n" || affix.value === "stv") {
             const reversePalatalization: Record<string, string> = { c: "k", z: "g", s: "h" }
             const previous = reversePalatalization[remainder.slice(-1)]
             if (previous) stems.add(remainder.slice(0, -1) + previous)
           }
-          for (const { tails, pos } of suffixBases[affix.value] ?? []) {
+          for (const { tails, pos } of remaining ? baseParts : suffixBases[affix.value] ?? []) {
             for (const stem of stems) {
               for (const tail of tails) collectBases(stem + tail, pos)
             }
@@ -221,33 +285,38 @@ try {
         }
         return [{
           ...lexeme,
-          matchedMarkers,
+          matchedMarkers: [...new Set(matches.map(({ marker }) => marker))],
+          ...(remaining ? { matchedSpellings: [...new Set(matches.map(({ spelling }) => spelling))] } : {}),
           currentMorphemes,
           alreadyLinked: currentMorphemes.some(({ id }) => ids.has(id)),
-          ...editorialDecision(affix.value, lexeme),
+          ...editorialDecision(affix, lexeme),
           possibleBases: [...possibleBases.values()],
         }]
       })
       const candidateIds = new Set(candidates.map(({ id }) => id))
-      const linkedOutsideSearch = lexemes.filter(({ id }) =>
+      const linkedOutsideSearch = (remaining ? publicLexemes : lexemes).filter(({ id }) =>
         !candidateIds.has(id) && byLexeme.get(id)?.some((morpheme) => ids.has(morpheme.id))
       ).map((lexeme) => ({
         ...lexeme,
         currentMorphemes: byLexeme.get(lexeme.id) ?? [],
-        ...editorialDecision(affix.value, lexeme),
+        ...editorialDecision(affix, lexeme),
       }))
       for (const { id } of linkedOutsideSearch) candidateIds.add(id)
       // A rejected or deferred pair remains visible after its old link is removed.
       const reviewedOutsideSearch = publicLexemes.flatMap((lexeme) => {
         if (candidateIds.has(lexeme.id)) return []
-        const decision = editorialDecision(affix.value, lexeme)
+        const decision = editorialDecision(affix, lexeme)
         if (decision.editorialStatus === "pending") return []
         return [{ ...lexeme, currentMorphemes: byLexeme.get(lexeme.id) ?? [], ...decision }]
       })
       return {
         affix,
         records,
-        sameSpellingRoots: morphemes.filter(({ type, value }) => type === 0 && names.has(fold(value))),
+        ...(remaining ? {
+          registryStatus: records.length === 0 ? "missing" :
+            affix.value === "ba" && records.every(({ value }) => registryKey(value) === "b") ? "needs-review" : "registered",
+        } : {}),
+        sameSpellingRoots: morphemes.filter(({ type, value }) => type === 0 && hasName(value)),
         candidates,
         linkedOutsideSearch,
         reviewedOutsideSearch,
