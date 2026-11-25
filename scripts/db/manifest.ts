@@ -79,6 +79,7 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-28.ts", db: "interlex", kind: "data", dryRun: true, note: "вторая сверка частотных отложенных морфем" },
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-29.ts", db: "interlex", kind: "data", dryRun: true, note: "девять следующих славянских приставок и проверенные производные" },
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-30.ts", db: "interlex", kind: "data", dryRun: true, note: "первая частотная пачка полной очереди аффиксов" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-31.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка 1583 частотных пар славянских и заимствованных аффиксов" },
     // Схемные миграции (идемпотентный DDL) - применяются сами при релизе
     // (run.ts migrate, служба остановлена). Порядок - по имени файла.
     //
