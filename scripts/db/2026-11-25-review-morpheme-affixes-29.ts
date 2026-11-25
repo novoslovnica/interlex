@@ -84,7 +84,7 @@ function review() {
         }
     }
 
-    const readLinks = db.prepare<[number], { morphemeId: number }>(`
+    const readLinks = db.prepare<[number], number>(`
         SELECT DISTINCT morphemeId FROM lexemes_morphemes
         WHERE lexemeId = ? AND morphemeId IS NOT NULL ORDER BY morphemeId
     `).pluck()
