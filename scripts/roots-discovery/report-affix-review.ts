@@ -49,6 +49,18 @@ const pilot: readonly Affix[] = [
   { type: 2, value: "telj", markers: ["telj", "tel"], pos: "NOUN" },
 ]
 
+const additionalPrefixes: readonly Affix[] = [
+  { type: 1, value: "iz", markers: ["iz", "is"], pos: "VERB" },
+  { type: 1, value: "nad", markers: ["nad"], pos: "VERB" },
+  { type: 1, value: "od", markers: ["od", "ot"], pos: "VERB" },
+  { type: 1, value: "po", markers: ["po"], pos: "VERB" },
+  { type: 1, value: "pod", markers: ["pod", "pot"], pos: "VERB" },
+  { type: 1, value: "pre", markers: ["pre"], pos: "VERB" },
+  { type: 1, value: "pro", markers: ["pro"], pos: "VERB" },
+  { type: 1, value: "raz", markers: ["raz", "ras"], pos: "VERB" },
+  { type: 1, value: "za", markers: ["za"], pos: "VERB" },
+]
+
 interface Lexeme {
   id: number
   slug: string
@@ -102,8 +114,9 @@ function fold(value: string | null): string {
 }
 
 const path = process.argv[2]
-if (!path || process.argv.length !== 3) {
-  throw new Error("Usage: tsx scripts/roots-discovery/report-affix-review.ts <interlex.db>")
+const inventory = process.argv[3]
+if (!path || (inventory !== undefined && inventory !== "--additional-prefixes") || process.argv.length > 4) {
+  throw new Error("Usage: tsx scripts/roots-discovery/report-affix-review.ts <interlex.db> [--additional-prefixes]")
 }
 
 const db = new Database(path, { readonly: true, fileMustExist: true })
@@ -161,7 +174,7 @@ try {
       group.push(lexeme)
       byForm.set(form, group)
     }
-    return pilot.map((affix) => {
+    return (inventory === "--additional-prefixes" ? additionalPrefixes : pilot).map((affix) => {
       const names = new Set([fold(affix.value), ...affix.markers.map(fold)])
       const records = morphemes.filter((morpheme) => morpheme.type === affix.type && (
         names.has(fold(morpheme.value)) ||

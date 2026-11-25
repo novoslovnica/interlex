@@ -77,6 +77,7 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-26.ts", db: "interlex", kind: "data", dryRun: true, note: "исправление корня уч- и дополнение проверенной семьи" },
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-27.ts", db: "interlex", kind: "data", dryRun: true, note: "повторная сверка самых частотных отложенных пар" },
     { path: "scripts/db/2026-11-25-review-morpheme-affixes-28.ts", db: "interlex", kind: "data", dryRun: true, note: "вторая сверка частотных отложенных морфем" },
+    { path: "scripts/db/2026-11-25-review-morpheme-affixes-29.ts", db: "interlex", kind: "data", dryRun: true, note: "девять следующих славянских приставок и проверенные производные" },
     // Схемные миграции (идемпотентный DDL) - применяются сами при релизе
     // (run.ts migrate, служба остановлена). Порядок - по имени файла.
     //
