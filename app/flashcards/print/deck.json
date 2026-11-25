@@ -1,0 +1,58 @@
+[
+  {
+    "id": 5728,
+    "index": 1,
+    "word": "brat",
+    "cyrillic": "брат",
+    "translation": "брат"
+  },
+  {
+    "id": 6813,
+    "index": 2,
+    "word": "dom",
+    "cyrillic": "дом",
+    "translation": "дом"
+  },
+  {
+    "id": 9849,
+    "index": 3,
+    "word": "kniga",
+    "cyrillic": "книга",
+    "translation": "книга"
+  },
+  {
+    "id": 17847,
+    "index": 4,
+    "word": "rųka",
+    "cyrillic": "рѫка",
+    "translation": "рука"
+  },
+  {
+    "id": 18518,
+    "index": 5,
+    "word": "slovo",
+    "cyrillic": "слово",
+    "translation": "слово"
+  },
+  {
+    "id": 12490,
+    "index": 6,
+    "word": "nebo",
+    "cyrillic": "небо",
+    "translation": "небо"
+  },
+  {
+    "id": 19454,
+    "index": 7,
+    "word": "syn",
+    "cyrillic": "сын",
+    "translation": "сын"
+  },
+  {
+    "id": 14875,
+    "index": 8,
+    "word": "piśmo",
+    "cyrillic": "письмо",
+    "translation": "письмо"
+  }
+]

@@ -16,6 +16,7 @@ import {PosType} from "@/lib/grammar/common";
 import ReactMarkdown from "react-markdown";
 import CognateRadarChart from "@/app/words/[id]/CognateRadarChart";
 import MorphemeAnalysis from "@/app/words/[id]/MorphemeAnalysis";
+import MeaningTranslations from "@/app/words/[id]/MeaningTranslations";
 import {classifyAdjectiveType} from "@/lib/grammar/adjective/index";
 import {canonicalPronounLemma} from "@/lib/grammar/pronoun/index";
 import {ComprehensionWidget} from "@/app/words/[id]/ComprehensionWidget";
@@ -33,9 +34,10 @@ import type {CommentThread} from "@/lib/community/loadComments";
 import type {WordHistoryEntry} from "@/lib/community/loadWordHistory";
 import {ScriptMode} from "@/lib/script-mode";
 
-const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples, historicalAttestations, history, comments, commentViewer }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[]; historicalAttestations?: HistoricalAttestationDTO[]; history?: { entries: WordHistoryEntry[]; total: number }; comments?: CommentThread; commentViewer?: CommentViewer | null }) => {
+const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExamples, historicalAttestations, history, comments, commentViewer, note }: { item: any; currentScript: ScriptMode; nounParadigm?: { singular: Record<string, string>; dual?: Record<string, string>; plural: Record<string, string> } | null; knownPrepositions?: string[]; corpusExamples?: CorpusExample[]; historicalAttestations?: HistoricalAttestationDTO[]; history?: { entries: WordHistoryEntry[]; total: number }; comments?: CommentThread; commentViewer?: CommentViewer | null; note?: React.ReactNode }) => {
     const t = useTranslations("word");
-    const [cognateWords, setCognateWords] = useState<any[]>([]);
+    const [showFull, setShowFull] = useState(false);
+    const [cognateWords, setCognateWords] = useState<{ id: number; value: string; pos: string | null }[]>([]);
     const [synonymGraphMeaning, setSynonymGraphMeaning] = useState<any | null>(null);
 
     const word = item.word?.value || item.value;
@@ -186,16 +188,22 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
         return `${word} (${cyrillicVariant})`;
     }, [currentScript, word, cyrillicVariant]);
 
+    const rootId = item.roots?.[0]?.id;
+    const lexemeId = item.id;
     useEffect(() => {
-        if (item.roots) {
-            const rootId = item.roots[0]?.id;
-            fetch(`/api/lexicon/${rootId}/root`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setCognateWords(data.filter((w: any) => w.id !== item.id));
-                });
-        }
-    }, [item.roots]);
+        if (!showFull || rootId == null) return;
+        const controller = new AbortController();
+        fetch(`/api/lexicon/${rootId}/root`, { signal: controller.signal })
+            .then(async (response) => {
+                if (!response.ok) return;
+                const data: typeof cognateWords = await response.json();
+                if (!controller.signal.aborted) setCognateWords(data.filter((word) => word.id !== lexemeId));
+            })
+            .catch((error: unknown) => {
+                if (!controller.signal.aborted) console.error("Failed to load cognate words", error);
+            });
+        return () => controller.abort();
+    }, [showFull, rootId, lexemeId]);
 
     if (!item) {
         return (
@@ -213,14 +221,18 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
 
             <header className="border-b border-slate-200 pb-4 mb-5 flex items-baseline gap-4 flex-wrap">
                 <h1 className="text-4xl font-bold text-slate-800 tracking-tight">{title}</h1>
-                <span className="font-ipa text-slate-400 text-lg">{transcription}</span>
-                <Link
-                    href={`/rhyme?word=${encodeURIComponent(word)}`}
-                    target="_blank"
-                    className="text-xs text-slate-400 hover:text-blue-500 transition-colors underline decoration-dotted"
-                >
-                    {t("findRhymesLink")}
-                </Link>
+                {showFull && (
+                    <>
+                        <span className="font-ipa text-slate-400 text-lg">{transcription}</span>
+                        <Link
+                            href={`/rhyme?word=${encodeURIComponent(word)}`}
+                            target="_blank"
+                            className="text-xs text-slate-400 hover:text-blue-500 transition-colors underline decoration-dotted"
+                        >
+                            {t("findRhymesLink")}
+                        </Link>
+                    </>
+                )}
                 <div className="flex items-center gap-2 ml-auto">
                     {item.cefrLevel && (
                         <span className={`text-xs font-bold px-2 py-1 rounded-full ${
@@ -234,14 +246,14 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                             {item.cefrLevel}
                         </span>
                     )}
-                    {(item.corpusFrequency ?? 0) > 0 && (
+                    {showFull && (item.corpusFrequency ?? 0) > 0 && (
                         <span className="text-xs text-slate-500 font-mono whitespace-nowrap" title={`В корпусе: ${item.corpusFrequency} раз(а), ${item.corpusFrequencyPerMln?.toFixed(2)} ipm`}>
                             {item.corpusFrequencyPerMln != null && item.corpusFrequencyPerMln > 0 && (
                                 `${(Math.log10(item.corpusFrequencyPerMln) + 3).toFixed(1)} Zipf`
                             )}
                         </span>
                     )}
-                    {item.external_id != null ? (
+                    {showFull && (item.external_id != null ? (
                         <span
                             className="text-xs font-bold px-2 py-1 rounded-full bg-green-100 text-green-700"
                             title={t("codification.codifiedTooltip")}
@@ -255,115 +267,141 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                         >
                             {t("codification.notCodified")}
                         </span>
-                    )}
+                    ))}
                     <ShareButton />
                     <BookmarkButton wordId={item.id} />
                 </div>
             </header>
 
-            <div className="bg-slate-50 p-4 rounded-lg mb-6 text-sm text-slate-700 space-y-2">
-                {nslVariant && (
-                    <div>
-                        <span className="font-semibold text-slate-600">{t("display.nslCyrillic")}</span> {nslVariant}
-                    </div>
-                )}
-                <div>
-                    <span className="font-semibold text-slate-600">{t("display.stdCyrillic")}</span>{' '}
-                    <span style={{ fontFamily: "'Monomakh', 'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
-                        {cyrillicVariant}
-                    </span>
-                </div>
-                <div>
-                    <span className="font-semibold text-slate-600">{t("display.glagolitic")}</span>{' '}
-                    <span style={{ fontFamily: "'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
-                        {glagoliticVariant}
-                    </span>
-                </div>
-                <div>
-                    <span className="font-semibold text-slate-600">{t("display.simpleForm")}</span>{' '}
-                    <span className="space-x-2">
-            {scientificVariants.map((variant, idx) => (
-                <span key={idx} className="after:content-[','] last:after:content-none font-medium">
-                {variant}
-              </span>
-            ))}
-          </span>
-                </div>
+            <div role="group" aria-label={t("view.label")} className="mb-5 inline-flex flex-wrap gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1">
+                {(["brief", "full"] as const).map((view) => (
+                    <button
+                        key={view}
+                        type="button"
+                        aria-pressed={showFull === (view === "full")}
+                        onClick={() => setShowFull(view === "full")}
+                        className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 aria-pressed:bg-blue-100 aria-pressed:text-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+                    >
+                        {t(`view.${view}`)}
+                    </button>
+                ))}
             </div>
 
-            <MorphemeAnalysis
-                word={item.value}
-                roots={item.roots}
-                base={item.stem}
-                currentScript={currentScript}
-            />
+            {!showFull && meta.partOfSpeech && (
+                <p className="mb-5 text-sm text-slate-700">
+                    {meta.partOfSpeech}{meta.gender && ` · ${meta.gender}`}
+                </p>
+            )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border border-slate-200 rounded-lg mb-6 text-sm">
-                <div>
-                    <span className="block font-semibold text-slate-500">{t("meta.pos")}</span>
-                    <span className="text-slate-800">{meta.partOfSpeech}</span>
+            {showFull && (
+                <div className="bg-slate-50 p-4 rounded-lg mb-6 text-sm text-slate-700 space-y-2">
+                    {nslVariant && (
+                        <div>
+                            <span className="font-semibold text-slate-600">{t("display.nslCyrillic")}</span> {nslVariant}
+                        </div>
+                    )}
+                    <div>
+                        <span className="font-semibold text-slate-600">{t("display.stdCyrillic")}</span>{' '}
+                        <span style={{ fontFamily: "'Monomakh', 'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
+                            {cyrillicVariant}
+                        </span>
+                    </div>
+                    <div>
+                        <span className="font-semibold text-slate-600">{t("display.glagolitic")}</span>{' '}
+                        <span style={{ fontFamily: "'Noto Sans Glagolitic', serif", fontSize: '16px' }}>
+                            {glagoliticVariant}
+                        </span>
+                    </div>
+                    <div>
+                        <span className="font-semibold text-slate-600">{t("display.simpleForm")}</span>{' '}
+                        <span className="space-x-2">
+                            {scientificVariants.map((variant, idx) => (
+                                <span key={idx} className="after:content-[','] last:after:content-none font-medium">
+                                    {variant}
+                                </span>
+                            ))}
+                        </span>
+                    </div>
                 </div>
-                {meta.gender && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.gender")}</span>
-                        <span className="text-slate-800">{meta.gender}</span>
-                    </div>
-                )}
-                {meta.declension != null && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.declension")}</span>
-                        <span className="text-slate-800">{meta.declension}</span>
-                    </div>
-                )}
-                {meta.conjugation != null && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.conjugation")}</span>
-                        <span className="text-slate-800">{meta.conjugation}</span>
-                    </div>
-                )}
-                {meta.stem && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.stem")}</span>
-                        <span className="text-slate-800">{meta.stem}</span>
-                    </div>
-                )}
-                {meta.protoStemClass && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.stemClass")}</span>
-                        <span className="text-slate-800">{meta.protoStemClass}</span>
-                    </div>
-                )}
-                {meta.paradigm && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.paradigm")}</span>
-                        <span className="text-slate-800">{meta.paradigm}</span>
-                    </div>
-                )}
-                {meta.aspect && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.aspect")}</span>
-                        <span className="text-slate-800">{meta.aspect}</span>
-                    </div>
-                )}
-                {meta.transitivity && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.transitivity")}</span>
-                        <span className="text-slate-800">{meta.transitivity}</span>
-                    </div>
-                )}
-                {meta.animacy && (
-                    <div>
-                        <span className="block font-semibold text-slate-500">{t("meta.animacy")}</span>
-                        <span className="text-slate-800">{meta.animacy}</span>
-                    </div>
-                )}
-                <div>
-                    <span className="block font-semibold text-slate-500">{t("meta.articleId")}</span>
-                    <span className="text-slate-400 font-mono">#{item.id}</span>
-                </div>
-            </div>
+            )}
 
-            <ComprehensionWidget comprehensionData={item.intelligibility} />
+            {showFull && (
+                <MorphemeAnalysis
+                    word={item.value}
+                    roots={item.roots}
+                    base={item.stem}
+                    currentScript={currentScript}
+                />
+            )}
+
+            {showFull && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border border-slate-200 rounded-lg mb-6 text-sm">
+                    <div>
+                        <span className="block font-semibold text-slate-500">{t("meta.pos")}</span>
+                        <span className="text-slate-800">{meta.partOfSpeech}</span>
+                    </div>
+                    {meta.gender && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.gender")}</span>
+                            <span className="text-slate-800">{meta.gender}</span>
+                        </div>
+                    )}
+                    {meta.declension != null && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.declension")}</span>
+                            <span className="text-slate-800">{meta.declension}</span>
+                        </div>
+                    )}
+                    {meta.conjugation != null && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.conjugation")}</span>
+                            <span className="text-slate-800">{meta.conjugation}</span>
+                        </div>
+                    )}
+                    {meta.stem && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.stem")}</span>
+                            <span className="text-slate-800">{meta.stem}</span>
+                        </div>
+                    )}
+                    {meta.protoStemClass && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.stemClass")}</span>
+                            <span className="text-slate-800">{meta.protoStemClass}</span>
+                        </div>
+                    )}
+                    {meta.paradigm && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.paradigm")}</span>
+                            <span className="text-slate-800">{meta.paradigm}</span>
+                        </div>
+                    )}
+                    {meta.aspect && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.aspect")}</span>
+                            <span className="text-slate-800">{meta.aspect}</span>
+                        </div>
+                    )}
+                    {meta.transitivity && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.transitivity")}</span>
+                            <span className="text-slate-800">{meta.transitivity}</span>
+                        </div>
+                    )}
+                    {meta.animacy && (
+                        <div>
+                            <span className="block font-semibold text-slate-500">{t("meta.animacy")}</span>
+                            <span className="text-slate-800">{meta.animacy}</span>
+                        </div>
+                    )}
+                    <div>
+                        <span className="block font-semibold text-slate-500">{t("meta.articleId")}</span>
+                        <span className="text-slate-400 font-mono">#{item.id}</span>
+                    </div>
+                </div>
+            )}
+
+            {showFull && <ComprehensionWidget comprehensionData={item.intelligibility} />}
 
             {isCollocation && (
                 <div className="mb-6 p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-500 text-sm">
@@ -373,26 +411,32 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
 
             {(hasParadigm) && (
                 <div className="mb-6 border-b border-slate-100 pb-6">
-                    <button
-                        onClick={() => setShowParadigm(!showParadigm)}
-                        className="w-full flex items-center justify-between p-3.5 bg-blue-50/50 hover:bg-blue-50 border border-blue-100/70 rounded-xl text-blue-700 font-semibold text-sm transition-all duration-150 shadow-sm"
-                    >
-                        <span className="flex items-center gap-2">
-                            📊 {
-                                isVerb ? t("paradigmButtons.verb")
-                                : isNoun ? t("paradigmButtons.noun")
-                                : isAdj ? t("paradigmButtons.adjective")
-                                : isNum ? t("paradigmButtons.numeral")
-                                : isPron ? t("paradigmButtons.pronoun")
-                                : isAdv ? t("paradigmButtons.adverb")
-                                : t("paradigmButtons.default")
-                            }
+                    <div className="relative">
+                        <button
+                            type="button"
+                            aria-expanded={showParadigm}
+                            onClick={() => setShowParadigm(!showParadigm)}
+                            className="w-full flex items-center justify-between gap-3 py-3.5 pl-3.5 pr-12 bg-blue-50/50 hover:bg-blue-50 border border-blue-100/70 rounded-xl text-blue-700 font-semibold text-sm transition-all duration-150 shadow-sm text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+                        >
+                            <span className="flex items-center gap-2">
+                                <span aria-hidden="true">📊</span> {
+                                    isVerb ? t("paradigmButtons.verb")
+                                    : isNoun ? t("paradigmButtons.noun")
+                                    : isAdj ? t("paradigmButtons.adjective")
+                                    : isNum ? t("paradigmButtons.numeral")
+                                    : isPron ? t("paradigmButtons.pronoun")
+                                    : isAdv ? t("paradigmButtons.adverb")
+                                    : t("paradigmButtons.default")
+                                }
+                            </span>
+                            <span aria-hidden="true" className={`transform transition-transform duration-200 ${showParadigm ? 'rotate-180' : ''}`}>
+                                ▼
+                            </span>
+                        </button>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2">
                             <AccentLegend />
                         </span>
-                            <span className={`transform transition-transform duration-200 ${showParadigm ? 'rotate-180' : ''}`}>
-                            ▼
-                        </span>
-                    </button>
+                    </div>
 
                     {showParadigm && (
                         <div className="mt-4 p-1 bg-slate-50/50 rounded-xl border border-slate-100 animate-fadeIn">
@@ -440,7 +484,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 </div>
             )}
 
-            {cognateWords?.length > 0 && (
+            {showFull && cognateWords.length > 0 && (
                 <section className="mb-6">
                     <h2 className="text-base font-bold text-slate-400 uppercase tracking-wider mb-2.5">{t("sections.cognates")}</h2>
                     <div className="flex flex-wrap gap-2">
@@ -470,8 +514,8 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 )}
 
                 {meaningsArray.map((m: any, idx: number) => {
-                    const meaningTranslations = m.id ? getTranslationsForMeaning(m.id) : {};
-                    const translationMarks = m.id ? getTranslationMarksForMeaning(m.id) : {};
+                    const meaningTranslations = showFull && m.id ? getTranslationsForMeaning(m.id) : {};
+                    const translationMarks = showFull && m.id ? getTranslationMarksForMeaning(m.id) : {};
                     const hasTranslations = Object.keys(meaningTranslations).length > 0;
 
                     return (
@@ -505,7 +549,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     )}
                                 </div>
 
-                                {m.examples && (
+                                {showFull && m.examples && (
                                     <div className="bg-slate-50 border border-slate-100 rounded-lg p-3 pl-4">
                                         <span className="text-xs font-semibold tracking-wider text-slate-400 uppercase block mb-1">
                                             {t("sections.examples")}
@@ -519,7 +563,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     </div>
                                 )}
 
-                                {m.valencyFrames?.length > 0 && (
+                                {showFull && m.valencyFrames?.length > 0 && (
                                     <div className="text-xs text-slate-500">
                                         <span className="font-semibold uppercase tracking-wider text-slate-400 mr-1">Управление:</span>
                                         {m.valencyFrames.map((frame: any, fIdx: number) => (
@@ -590,7 +634,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     </Link>
                                 )}
 
-                                {m.synonyms?.length > 0 && (
+                                {showFull && m.synonyms?.length > 0 && (
                                     <div className="mt-2">
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs font-semibold tracking-wider text-green-600 uppercase">{t("sections.synonyms")}</span>
@@ -626,7 +670,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                                     </div>
                                 )}
 
-                                {m.antonyms?.length > 0 && (
+                                {showFull && m.antonyms?.length > 0 && (
                                     <div className="mt-2">
                                         <span className="text-xs font-semibold tracking-wider text-red-600 uppercase">{t("sections.antonyms")}</span>
                                         <div className="flex flex-wrap gap-1.5 mt-1">
@@ -651,9 +695,13 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 })}
             </section>
 
-            <CognateRadarChart item={item} />
+            <MeaningTranslations meanings={meaningsArray} translations={item} expanded={!showFull} />
 
-            {corpusExamples && corpusExamples.length > 0 && (
+            {note}
+
+            {showFull && <CognateRadarChart item={item} />}
+
+            {showFull && corpusExamples && corpusExamples.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t("sections.corpusExamples")}</h2>
                     <ul className="space-y-3">
@@ -687,7 +735,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 </section>
             )}
 
-            {historicalAttestations && historicalAttestations.length > 0 && (
+            {showFull && historicalAttestations && historicalAttestations.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-1">{t("sections.historicalAttestations")}</h2>
                     <p className="text-xs text-slate-400 mb-3">{t("sections.historicalAttestationsHint")}</p>
@@ -710,7 +758,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 </section>
             )}
 
-            {comments && (
+            {showFull && comments && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-1">{t("comments.sectionTitle")}{comments.total > 0 && ` (${comments.total})`}</h2>
                     <p className="text-xs text-slate-400 mb-3">{t("comments.sectionHint")}</p>
@@ -718,7 +766,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 </section>
             )}
 
-            {history && history.total > 0 && (
+            {showFull && history && history.total > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-1">{t("history.sectionTitle")}</h2>
                     <p className="text-xs text-slate-400 mb-3">{t("history.sectionHint")}</p>
@@ -726,7 +774,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
                 </section>
             )}
 
-            {etymologyLinks.length > 0 && (
+            {showFull && etymologyLinks.length > 0 && (
                 <section className="mt-8 pt-4 border-t border-slate-100">
                     <h2 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3 mb-3">{t("sections.etymology")}</h2>
                     <ul className="space-y-2 text-sm">
@@ -748,7 +796,7 @@ const Word = ({ item, currentScript, nounParadigm, knownPrepositions, corpusExam
 
         </article>
 
-            {synonymGraphMeaning && (
+            {showFull && synonymGraphMeaning && (
                 <SynonymGraph
                     word={word}
                     wordId={item.id}

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
-import { BEGINNER_FLASHCARDS, BEGINNER_ROUTE } from "@/lib/beginner-route"
+import { BEGINNER_FLASHCARDS, BEGINNER_ROUTE, FALSE_FRIENDS } from "@/lib/beginner-route"
 
 const examples = [
   {
@@ -65,6 +65,9 @@ export default async function PhoneticLawsPage() {
             </Link>
             <Link href={BEGINNER_ROUTE} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
               {beginner("title")}
+            </Link>
+            <Link href={FALSE_FRIENDS} className="text-primary underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+              {beginner("falseFriends")}
             </Link>
           </div>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t("title")}</h1>

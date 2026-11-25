@@ -4,23 +4,12 @@ import { analyzeWord } from './morphology';
 import { DbAnalyzer } from './dbAnalyzer';
 import { CollocationMatcher } from './collocationMatcher';
 import { applyDocumentFlavorBias } from './flavorBias';
+import { TOKEN_PATTERN, PUNCTUATION_TEST, NON_TEXT_SPANS } from './patterns';
+
+export { TOKEN_PATTERN, PUNCTUATION_TEST, NON_TEXT_SPANS } from './patterns';
 
 const SEGMENT_SPLIT = /\n\s*\n/;
 const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
-// \p{L} — буква любого письма (покрывает всю латиницу ISV с диакритикой: ę,
-// ų, ć, đ, ľ, ń, ś, ź, ť, ď, á, é, í, ó, ú, ý, ȯ, ě, ž, č, š, ... — а не
-// вручную поддерживаемый список конкретных букв, из которого ę/ų когда-то
-// выпали, разрывая токены вроде "atomų" на "atom"+"ų"); \p{M} — комбинируемые
-// диакритические знаки (тоновые акценты, см. ACCENT_CHARS в engine.ts);
-// \p{N} — цифры любого письма (супернабор старого \d из \w).
-export const TOKEN_PATTERN = /[\p{L}\p{M}\p{N}_]+|[^\s\p{L}\p{M}\p{N}_]+/gu;
-export const PUNCTUATION_TEST = /^[^\p{L}\p{M}\p{N}_]+$/u;
-
-// Не текст, а разметка чата и веба: Discord-эмодзи "<:NAME:id>", ссылки,
-// команды TeX из формул Википедии. Без этого их куски становились токенами —
-// "ZLUNSKYSMIEH" (1 306 вхождений), "https", "www", "displaystyle" — и уходили
-// в очередь кандидатов как нераспознанные слова.
-export const NON_TEXT_SPANS = /<a?:\w+:\d+>|https?:\/\/\S+|www\.\S+|\\[A-Za-z]+/g;
 
 export class Tokenizer {
     public static splitIntoSegments(rawText: string): string[] {

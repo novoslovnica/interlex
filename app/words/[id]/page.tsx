@@ -14,6 +14,7 @@ import {loadWordHistory} from "@/lib/community/loadWordHistory";
 import {loadCommentThread} from "@/lib/community/loadComments";
 import {auth} from "@/auth";
 import {prismaAuth} from "@/lib/prisma";
+import {WordNoteEditor} from "@/components/WordNoteEditor";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
@@ -65,6 +66,10 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const commentViewer = viewerId ? { handle: viewerProfile?.handle ?? null } : null;
     const comments = item?.id ? await loadCommentThread(item.id, viewerId) : { comments: [], total: 0 };
 
+    const note = viewerId && item.isPublic
+        ? await prismaAuth.userWordNote.findUnique({ where: { userId_wordId: { userId: viewerId, wordId: item.id } }, select: { body: true } })
+        : null;
+    const tNotes = await getTranslations("wordNotes");
     const wordValue = (item?.value ?? item?.isv ?? item?.nsl) as string | undefined;
 
     // Та же функция, что у ботов (lib/bots) - одна парадигма на сайт и ботов.
@@ -89,7 +94,12 @@ const WordPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             )}
             <div className="scroll-container w-full pt-6 px-4">
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Word item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} historicalAttestations={historicalAttestations} history={history} comments={comments} commentViewer={commentViewer} />
+                    <Word key={id} item={item} currentScript={currentScript} nounParadigm={nounParadigm} knownPrepositions={knownPrepositions} corpusExamples={corpusExamples} historicalAttestations={historicalAttestations} history={history} comments={comments} commentViewer={commentViewer} note={viewerId && item.isPublic && (
+                        <details className="mb-6 rounded-xl border border-slate-200 p-3 text-slate-800">
+                            <summary className="cursor-pointer rounded font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">{tNotes("personal")}</summary>
+                            <div className="pt-3"><WordNoteEditor wordId={item.id} initialBody={note?.body ?? ""} label={tNotes("personal")} /></div>
+                        </details>
+                    )} />
                 </Suspense>
             </div>
         </main>

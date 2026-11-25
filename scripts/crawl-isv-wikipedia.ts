@@ -9,23 +9,31 @@
  *    старые segments/sentences/tokens и создаёт новые в одной транзакции —
  *    токены не накапливаются поверх старых.
  *
- * Запуск: npm run crawl:isv-wikipedia
+ * Только новые страницы: npm run crawl:isv-wikipedia -- --new-only
+ * Только список недостающих страниц: npm run crawl:isv-wikipedia -- --new-only --dry-run
+ * Пропустить страницы до ID прошлого сбора включительно: --after-page-id=5685
+ * Без пересчёта словаря: --skip-frequencies
  * Ограничить количество страниц (для теста): CRAWL_LIMIT=20 npm run crawl:isv-wikipedia
  */
-import * as path from "path"
-
-// Реальные .db-файлы лежат в корне репозитория, а не в prisma/ (см. CLAUDE.md).
-// Скрипт запускается через `npx tsx` в обход Next.js, поэтому lib/prisma.ts не
-// получит эти пути от Next-рантайма — выставляем их сами до импорта модулей,
-// которые транзитивно тянут lib/prisma (используем динамический import, чтобы
-// эти присваивания гарантированно выполнились раньше вычисления модуля).
-process.env.DATA_DATABASE_URL = `file:${path.resolve(process.cwd(), "interlex.db")}`
-process.env.CORPUS_DATABASE_URL = `file:${path.resolve(process.cwd(), "corpus.db")}`
-
-import { listArticles, fetchArticleExtract, WikiArticleMeta } from "@/lib/corpus/wikipedia/isvWikipediaClient"
+import { fileURLToPath } from "node:url"
+import { resolve } from "node:path"
+import { resolveDatabaseUrls } from "@/lib/databaseUrls"
+import { listArticles, fetchArticleExtract, type WikiArticleMeta } from "@/lib/corpus/wikipedia/isvWikipediaClient"
 
 const EXTRACT_FETCH_DELAY_MS = 300
 const CRAWL_LIMIT = process.env.CRAWL_LIMIT ? Number(process.env.CRAWL_LIMIT) : undefined
+const newOnly = process.argv.includes("--new-only")
+const dryRun = process.argv.includes("--dry-run")
+const skipFrequencies = process.argv.includes("--skip-frequencies")
+const checkpoint = process.argv.find((arg) => arg.startsWith("--after-page-id="))
+const afterPageId = checkpoint === undefined ? 0 : Number(checkpoint.split("=")[1])
+if (!Number.isSafeInteger(afterPageId) || afterPageId < 0) throw new Error("Некорректный --after-page-id")
+
+if (!process.env.DATA_DATABASE_URL && process.env.SQLITE_DB) {
+    process.env.DATA_DATABASE_URL = `file:${resolve(process.env.SQLITE_DB)}`
+}
+const dataUrl = resolveDatabaseUrls().data
+process.env.SQLITE_DB = dataUrl.startsWith("file://") ? fileURLToPath(dataUrl) : dataUrl.replace(/^file:/, "")
 
 function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -57,22 +65,35 @@ async function loadKnownRevisions(
     return map
 }
 
-async function main() {
-    const { prismaCorpus } = await importPrisma()
+async function loadImporter() {
     const { buildCollocationRecords, createDbAnalyzer } = await import("@/lib/corpus/tokenizer/analyzer-factory")
     const { CollocationMatcher } = await import("@/lib/corpus/tokenizer/collocationMatcher")
     const { upsertCorpusDocument } = await import("@/lib/corpus/upsertDocument")
-    const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
-    const { computeCefrLevels } = await import("@/lib/corpus/frequencies/compute-cefr-levels")
+    const analyzer = await createDbAnalyzer()
+    const matcher = new CollocationMatcher(await buildCollocationRecords())
+    return (article: WikiArticleMeta, rawText: string) => upsertCorpusDocument({
+        title: article.title,
+        slug: `iswiki-${article.pageId}`,
+        rawText,
+        language: "is",
+        genre: "encyclopedic",
+        externalId: externalIdFor(article.pageId),
+        sourceUrl: article.fullUrl,
+        sourceRevisionId: article.revisionId,
+        createOnly: newOnly,
+    }, analyzer, matcher)
+}
 
+async function crawl(prismaCorpus: PrismaCorpusClient) {
     console.log("Собираю список статей isv.wikipedia.org...")
 
-    const analyzer = await createDbAnalyzer()
-    const collocationMatcher = new CollocationMatcher(await buildCollocationRecords())
-
+    let importArticle: Awaited<ReturnType<typeof loadImporter>> | undefined
     let seen = 0
+    let pending = 0
     let created = 0
     let updated = 0
+    let skippedExisting = 0
+    let skippedBeforeCheckpoint = 0
     let skippedUnchanged = 0
     let skippedEmpty = 0
     let failed = 0
@@ -90,8 +111,22 @@ async function main() {
             const externalId = externalIdFor(article.pageId)
             const knownRevisionId = knownRevisions.get(externalId)
 
+            if (newOnly && knownRevisions.has(externalId)) {
+                skippedExisting++
+                continue
+            }
+            if (article.pageId <= afterPageId) {
+                skippedBeforeCheckpoint++
+                continue
+            }
             if (knownRevisionId !== undefined && knownRevisionId === article.revisionId) {
                 skippedUnchanged++
+                continue
+            }
+
+            if (dryRun) {
+                pending++
+                console.log(`${article.pageId}\t${article.title}`)
                 continue
             }
 
@@ -104,20 +139,8 @@ async function main() {
                     continue
                 }
 
-                const result = await upsertCorpusDocument(
-                    {
-                        title: article.title,
-                        slug: `iswiki-${article.pageId}`,
-                        rawText,
-                        language: "is",
-                        genre: "encyclopedic",
-                        externalId,
-                        sourceUrl: article.fullUrl,
-                        sourceRevisionId: article.revisionId,
-                    },
-                    analyzer,
-                    collocationMatcher,
-                )
+                importArticle ??= await loadImporter()
+                const result = await importArticle(article, rawText)
 
                 if (result.status === "created") {
                     created++
@@ -151,24 +174,39 @@ async function main() {
 
     console.log("\n--- Итог ---")
     console.log(`Просмотрено: ${seen}`)
+    if (dryRun) console.log(`К импорту: ${pending}`)
     console.log(`Создано: ${created}`)
     console.log(`Обновлено: ${updated}`)
+    if (newOnly) console.log(`Пропущено (уже в корпусе): ${skippedExisting}`)
+    if (afterPageId) console.log(`Пропущено (до контрольного ID): ${skippedBeforeCheckpoint}`)
     console.log(`Пропущено (без изменений): ${skippedUnchanged}`)
     console.log(`Пропущено (пустой текст): ${skippedEmpty}`)
     console.log(`Ошибок: ${failed}`)
 
-    if (created > 0 || updated > 0) {
+    if (failed > 0) process.exitCode = 1
+
+    if (!skipFrequencies && (created > 0 || updated > 0)) {
         console.log("\nПересчитываю частотность и CEFR-уровни...")
         try {
+            const { computeLexiconFrequencies } = await import("@/lib/corpus/frequencies/compute-frequencies")
+            const { computeCefrLevels } = await import("@/lib/corpus/frequencies/compute-cefr-levels")
             await computeLexiconFrequencies()
             await computeCefrLevels()
             console.log("Готово.")
         } catch (e) {
             console.error("Пересчёт частотности не удался:", e)
+            process.exitCode = 1
         }
     }
+}
 
-    await prismaCorpus.$disconnect()
+async function main() {
+    const { prismaCorpus, prismaData } = await importPrisma()
+    try {
+        await crawl(prismaCorpus)
+    } finally {
+        await Promise.all([prismaCorpus.$disconnect(), prismaData.$disconnect()])
+    }
 }
 
 main().catch((err) => {

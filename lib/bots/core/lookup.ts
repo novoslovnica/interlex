@@ -88,7 +88,7 @@ function loadEntries(db: Database.Database, ids: number[], languages: string[]):
 
 function slugsToIds(db: Database.Database, slugs: string[]): number[] {
     if (slugs.length === 0) return []
-    const rows = db.prepare(`SELECT id, slug FROM lexemes WHERE slug IN (${slugs.map(() => "?").join(",")})`).all(...slugs) as { id: number; slug: string }[]
+    const rows = db.prepare(`SELECT id, slug FROM lexemes WHERE isPublic = 1 AND slug IN (${slugs.map(() => "?").join(",")})`).all(...slugs) as { id: number; slug: string }[]
     const bySlug = new Map(rows.map((r) => [r.slug, r.id]))
     return slugs.map((s) => bySlug.get(s)).filter((id): id is number => id !== undefined)
 }
@@ -116,11 +116,11 @@ function getFoldedIndex(db: Database.Database) {
     return entries
 }
 
-function searchDictionary(db: Database.Database, latin: string): { ids: number[]; exact: boolean } {
+function searchDictionary(db: Database.Database, latin: string, exactOnly: boolean): { ids: number[]; exact: boolean } {
     const folded = foldDiacritics(latin.toLowerCase())
     const entries = getFoldedIndex(db)
     const exact = entries.filter((e) => e.variants.includes(folded)).map((e) => e.id)
-    if (exact.length > 0) return { ids: exact, exact: true }
+    if (exact.length > 0 || exactOnly) return { ids: exact, exact: exact.length > 0 }
 
     // Опечатка или начало слова: расстояние не больше трети длины запроса.
     const maxDistance = Math.max(1, Math.floor(folded.length / 3))
@@ -141,10 +141,10 @@ function searchDictionary(db: Database.Database, latin: string): { ids: number[]
 
 /** Минимум анализатора, который нужен поиску (DbAnalyzer; в тестах - заглушка). */
 export interface FormAnalyzer {
-    analyzeWord(surfaceForm: string): Promise<{ wordSlug: string | null; isPartialMatch?: boolean; feats?: object; candidates?: { wordSlug: string; feats?: object }[] } | null>
+    analyzeWord(surfaceForm: string, context?: { exactOnly?: boolean }): Promise<{ wordSlug: string | null; isPartialMatch?: boolean; feats?: object; candidates?: { wordSlug: string; feats?: object }[] } | null>
 }
 
-export async function lookupInDb(db: Database.Database, query: string, languages: string[], analyzer: FormAnalyzer | null): Promise<LookupResult> {
+export async function lookupInDb(db: Database.Database, query: string, languages: string[], analyzer: FormAnalyzer | null, exactOnly = false): Promise<LookupResult> {
     const trimmed = query.trim().replace(/\s+/g, " ").slice(0, 80)
     const latinQuery = isCyrillicText(trimmed) ? cyrillicToLatin(trimmed) : trimmed
     const empty: LookupResult = { query: trimmed, latinQuery, entries: [], via: "none" }
@@ -152,7 +152,7 @@ export async function lookupInDb(db: Database.Database, query: string, languages
 
     // Форма слова ("vodu", "pišeš") - через анализатор корпуса, если он уже собран.
     if (analyzer && !latinQuery.includes(" ")) {
-        const analysis = await analyzer.analyzeWord(latinQuery)
+        const analysis = exactOnly ? await analyzer.analyzeWord(latinQuery, { exactOnly: true }) : await analyzer.analyzeWord(latinQuery)
         if (analysis && !analysis.isPartialMatch) {
             const slugs = [...new Set([analysis.wordSlug, ...(analysis.candidates ?? []).map((c) => c.wordSlug)].filter((s): s is string => !!s))]
             const entries = loadEntries(db, slugsToIds(db, slugs).slice(0, MAX_ENTRIES), languages)
@@ -167,7 +167,7 @@ export async function lookupInDb(db: Database.Database, query: string, languages
             }
         }
     }
-    const { ids, exact } = searchDictionary(db, latinQuery)
+    const { ids, exact } = searchDictionary(db, latinQuery, exactOnly)
     const entries = loadEntries(db, ids.slice(0, MAX_ENTRIES), languages)
     return entries.length ? { query: trimmed, latinQuery, entries, via: exact ? "exact" : "fuzzy" } : empty
 }

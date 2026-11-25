@@ -5,20 +5,10 @@ import Link from 'next/link';
 import {isvToCyr} from "@/lib/isv";
 import {useTranslations} from "next-intl";
 import BookmarkButton from "@/components/BookmarkButton";
-
-interface WordOfDayData {
-    id: number;
-    value: string | null;
-    isv: string | null;
-    pos: string | null;
-    meanings: {
-        id: number;
-        translations: { id: number; language: string; value: string | null }[];
-    }[];
-}
+import type {RandomWordResult} from "./aggregate";
 
 interface WordOfDayWidgetProps {
-    data: WordOfDayData;
+    data: RandomWordResult;
 }
 
 export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
@@ -52,7 +42,7 @@ export const WordOfDayWidget: React.FC<WordOfDayWidgetProps> = ({ data }) => {
             text-slate-900 group-hover:text-blue-600
             dark:text-white dark:group-hover:text-blue-400"
                             >
-                                {isvToCyr(data.isv || data.value || "")}
+                                {isvToCyr(data.isv)}
                             </h3>
                             <span className="text-sm font-medium font-mono text-slate-500 dark:text-slate-400">
                             ({data.isv})

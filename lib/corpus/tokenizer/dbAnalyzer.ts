@@ -44,6 +44,7 @@ type WordQueryFn = (bases: string[]) => Promise<WordBaseRecord[]>;
 export interface AnalyzeContext {
     /** Сырой предыдущий токен в предложении (может быть предлогом) — единственный сигнал контекста Фазы 2. */
     leftNeighbor?: string;
+    exactOnly?: boolean;
 }
 
 // Одна суппletивная/нерегулярная форма конкретной лексемы из
@@ -141,7 +142,7 @@ export class DbAnalyzer {
         // же слова находилась ещё и аномальная форма (см. случай "sųt":
         // и byti-VERB через аномалию, и sut-AUX через стем-префикс — оба
         // реальные представления одного и того же слова в словаре).
-        const stemPrefixWord = exactMatches.length === 0 && words.length > 0
+        const stemPrefixWord = !context?.exactOnly && exactMatches.length === 0 && words.length > 0
             ? this.findBestStemPrefixWord(cleanVariants, words)
             : null;
 
@@ -194,7 +195,7 @@ export class DbAnalyzer {
             return result;
         }
 
-        if (words.length === 0) return null;
+        if (context?.exactOnly || words.length === 0) return null;
 
         return {
             lemma: words[0].slug,

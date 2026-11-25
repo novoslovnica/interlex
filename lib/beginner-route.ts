@@ -1,3 +1,6 @@
 export const BEGINNER_ROUTE = "/textbook/beginner"
 export const BEGINNER_FLASHCARDS = "/flashcards?path=beginner"
 export const BEGINNER_READING = "/library?level=A1-A2"
+export const BEGINNER_VOCABULARY = "/textbook/vocabulary"
+export const VERB_PRACTICE = "/textbook/verb-practice"
+export const FALSE_FRIENDS = "/textbook/false-friends"

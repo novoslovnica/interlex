@@ -2,6 +2,8 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { prismaLibrary as db } from "@/lib/prisma"
 import { MarkdownRenderer } from "./MarkdownRenderer"
+import { ReadingAssistant } from "./ReadingAssistant"
+import { supportsReadingHighlights } from "@/lib/library/readingLevels"
 import { decompressBody } from "@/lib/body"
 import { getFlavorLabel } from "@/config/flavor"
 import { getCollectionBodyLength } from "@/lib/library-stats"
@@ -109,6 +111,7 @@ export default async function LibraryReadingPage({ params }: PageProps) {
     },
   })
   if (!entry) notFound()
+  const content = entry.body ? decompressBody(entry.body) : ""
 
   await db.libraryEntry.update({
     where: { slug },
@@ -293,9 +296,11 @@ export default async function LibraryReadingPage({ params }: PageProps) {
           </header>
 
           {entry.body ? (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <MarkdownRenderer content={decompressBody(entry.body)} />
-            </div>
+            entry.isPublic && (entry.readabilityLevel === "A1" || entry.readabilityLevel === "A2")
+              ? <ReadingAssistant key={entry.slug} slug={entry.slug} content={content} canHighlight={supportsReadingHighlights(entry.readabilityLevel, content)} />
+              : <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <MarkdownRenderer content={content} />
+                </div>
           ) : !isCollection ? (
             <p className="text-muted-foreground italic">{t("emptyBody")}</p>
           ) : null}

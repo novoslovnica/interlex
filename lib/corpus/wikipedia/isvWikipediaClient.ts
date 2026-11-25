@@ -11,8 +11,12 @@ export interface WikiArticleMeta {
     fullUrl: string
 }
 
-interface AllPagesApiResponse {
-    continue?: { gapcontinue?: string }
+interface ApiResponse {
+    error?: { code: string; info: string }
+}
+
+interface AllPagesApiResponse extends ApiResponse {
+    continue?: Record<string, string>
     query?: {
         pages?: Record<
             string,
@@ -28,7 +32,7 @@ interface AllPagesApiResponse {
     }
 }
 
-interface ExtractApiResponse {
+interface ExtractApiResponse extends ApiResponse {
     query?: {
         pages?: Record<
             string,
@@ -39,15 +43,23 @@ interface ExtractApiResponse {
     }
 }
 
-async function apiGet<T>(params: Record<string, string>): Promise<T> {
+async function apiGet<T extends ApiResponse>(params: Record<string, string>): Promise<T> {
     const url = new URL(API_BASE)
     url.search = new URLSearchParams({ format: "json", maxlag: "5", ...params }).toString()
 
-    const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } })
-    if (!res.ok) {
-        throw new Error(`isv.wikipedia.org API request failed: ${res.status} ${res.statusText}`)
+    for (let attempt = 1; ; attempt++) {
+        const res = await fetch(url, { headers: { "User-Agent": USER_AGENT }, signal: AbortSignal.timeout(30000) })
+        const data = res.ok ? await res.json() as T : undefined
+        if (data && !data.error) return data
+
+        const retryable = res.status === 429 || res.status === 503 || data?.error?.code === "maxlag"
+        if (!retryable || attempt === 3) {
+            throw new Error(data?.error?.info ?? `isv.wikipedia.org API request failed: ${res.status} ${res.statusText}`)
+        }
+        await res.body?.cancel().catch(() => undefined)
+        const retryAfter = Number(res.headers.get("Retry-After")) || 5 * attempt
+        await new Promise((resolve) => setTimeout(resolve, Math.max(1, Math.min(60, retryAfter)) * 1000))
     }
-    return (await res.json()) as T
 }
 
 /**
@@ -56,7 +68,7 @@ async function apiGet<T>(params: Record<string, string>): Promise<T> {
  * с прошлого запуска, не скачивая текст заново без нужды.
  */
 export async function* listArticles(): AsyncGenerator<WikiArticleMeta> {
-    let gapcontinue: string | undefined
+    let continuation: AllPagesApiResponse["continue"]
 
     do {
         const data = await apiGet<AllPagesApiResponse>({
@@ -68,7 +80,7 @@ export async function* listArticles(): AsyncGenerator<WikiArticleMeta> {
             prop: "info|revisions",
             rvprop: "ids",
             inprop: "url",
-            ...(gapcontinue ? { gapcontinue } : {}),
+            ...continuation,
         })
 
         const pages = Object.values(data.query?.pages ?? {})
@@ -82,8 +94,8 @@ export async function* listArticles(): AsyncGenerator<WikiArticleMeta> {
             }
         }
 
-        gapcontinue = data.continue?.gapcontinue
-    } while (gapcontinue)
+        continuation = data.continue
+    } while (continuation)
 }
 
 /**

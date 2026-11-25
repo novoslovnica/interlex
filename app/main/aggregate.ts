@@ -1,9 +1,11 @@
 import {prismaData as db } from "@/lib/prisma";
 
+const standardCore = { flavor: { code: "CORE" }, type: "standard", value: { not: "" } };
+const eligibleWord = { isPublic: true, lexemeAllophones: { some: standardCore } };
+
 export interface RandomWordResult {
     id: number;
-    value: string | null;
-    isv: string | null;
+    isv: string;
     pos: string | null;
     meanings: {
         id: number;
@@ -13,14 +15,13 @@ export interface RandomWordResult {
 
 async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWordResult | null> {
     const word = await db.lexeme.findFirst({
-        where: { isPublic: true, id: { gte: randomId } },
+        where: { ...eligibleWord, id: { gte: randomId } },
         orderBy: { id: "asc" },
         select: {
             id: true,
-            value: true,
             pos: true,
             lexemeAllophones: {
-                where: { flavor: { code: 'CORE' }, type: 'standard' },
+                where: standardCore,
                 select: { value: true },
                 take: 1,
             },
@@ -36,12 +37,12 @@ async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWo
         },
     });
 
-    if (!word) return null;
+    const isv = word?.lexemeAllophones[0]?.value.trim();
+    if (!word || !isv) return null;
 
     return {
         id: word.id,
-        value: word.value,
-        isv: word.lexemeAllophones[0]?.value ?? word.value,
+        isv,
         pos: word.pos,
         meanings: word.meanings,
     };
@@ -49,7 +50,7 @@ async function fetchRandomWordWithAllophones(randomId: number): Promise<RandomWo
 
 export async function getRandomWordWithTranslations(): Promise<RandomWordResult | null> {
     const aggregations = await db.lexeme.aggregate({
-        where: { isPublic: true },
+        where: eligibleWord,
         _max: { id: true },
     });
 
@@ -60,7 +61,6 @@ export async function getRandomWordWithTranslations(): Promise<RandomWordResult 
 
     const randomWord = await fetchRandomWordWithAllophones(randomId);
 
-    // A deletion between the aggregate and selection can leave the upper
-    // range empty. Fallback must obey the same visibility constraint.
+    // An edit between the queries can leave the upper range empty.
     return randomWord ?? fetchRandomWordWithAllophones(0);
 }

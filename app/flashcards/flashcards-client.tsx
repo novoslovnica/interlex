@@ -2,15 +2,20 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { isvToCyr } from "@/lib/isv"
 import { ScriptMode } from "@/lib/script-mode"
 import { addWordToCollection } from "@/app/profile/actions"
-import { BEGINNER_READING, BEGINNER_ROUTE } from "@/lib/beginner-route"
+import { BEGINNER_READING, BEGINNER_ROUTE, BEGINNER_VOCABULARY } from "@/lib/beginner-route"
+
+import type { FlashcardWeek } from "@/lib/srs/weeklySchedule"
 
 interface FlashcardsClientProps {
     currentScript: ScriptMode
     beginner: boolean
+    initialWeek: FlashcardWeek
+    initialLevel: string
+    language?: "ru" | "en"
 }
 
 interface FlashcardSessionCard {
@@ -40,10 +45,18 @@ const REVIEW_BUTTONS: { key: ReviewButton; className: string }[] = [
     { key: "easy", className: "bg-green-500/10 border-green-500/40 text-green-800 dark:text-green-300 hover:bg-green-500/20" },
 ]
 
-export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientProps) {
+export function FlashcardsClient({ currentScript, beginner, initialWeek, initialLevel, language }: FlashcardsClientProps) {
     const t = useTranslations("flashcards")
     const route = useTranslations("beginner")
-    const [level, setLevel] = useState(beginner ? "A1" : "")
+    const locale = useLocale()
+    const [week, setWeek] = useState(initialWeek)
+    const dateLabel = new Intl.DateTimeFormat(locale === "isv" ? "en-GB" : locale, {
+        timeZone: "UTC",
+        weekday: locale === "isv" ? undefined : "short",
+        day: "numeric",
+        month: locale === "isv" ? "numeric" : "short",
+    })
+    const [level, setLevel] = useState(initialLevel)
     const [cards, setCards] = useState<FlashcardSessionCard[] | null>(null)
     const [index, setIndex] = useState(0)
     const [flipped, setFlipped] = useState(false)
@@ -76,6 +89,7 @@ export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientPr
         try {
             const params = new URLSearchParams()
             if (level) params.set("cefrLevel", level)
+            if (language) params.set("lang", language)
             const res = await fetch(`/api/flashcards/export?${params.toString()}`)
             if (!res.ok) throw new Error("export failed")
             const blob = await res.blob()
@@ -107,6 +121,7 @@ export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientPr
         try {
             const params = new URLSearchParams()
             if (level) params.set("cefrLevel", level)
+            if (language) params.set("lang", language)
             if (beginner) params.set("limit", "5")
             const res = await fetch(`/api/flashcards/session?${params.toString()}`)
             if (!res.ok) throw new Error("request failed")
@@ -124,11 +139,15 @@ export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientPr
         const card = cards[index]
         setReviewing(true)
         try {
-            await fetch("/api/flashcards/review", {
+            const response = await fetch("/api/flashcards/review", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ wordId: card.wordId, button }),
             })
+            if (response.ok) {
+                const data: { week?: FlashcardWeek | null } = await response.json()
+                if (data.week) setWeek(data.week)
+            }
         } catch {
             // Non-fatal: the session continues locally even if this single
             // review fails to persist - the card will simply reappear in a
@@ -161,7 +180,24 @@ export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientPr
             <div>
                 <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
                 <p className="text-muted-foreground text-sm">{t("description")}</p>
+                <p role="status" className="mt-2 text-sm font-semibold">{t("dueToday", { count: week.dueCount })}</p>
+                <p className="text-xs text-muted-foreground">{t("dueTodayHint")}</p>
             </div>
+
+            <section className="space-y-2 rounded-xl border bg-card p-4">
+                <h2 className="font-semibold">{t("weekTitle")}</h2>
+                <p className="text-xs text-muted-foreground">{t("weekHint")}</p>
+                <dl className="grid grid-cols-2 gap-2 sm:grid-cols-7">
+                    {week.days.map((day, index) => (
+                        <div key={day.date} className="rounded-lg bg-muted px-2 py-2">
+                            <dt className="text-xs">
+                                <time dateTime={day.date}>{index === 0 ? t("today") : dateLabel.format(new Date(day.date))}</time>
+                            </dt>
+                            <dd className="font-semibold tabular-nums">{day.count}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
 
             {!cards && (
                 <div className="border rounded-xl bg-background p-6 shadow-sm border-border/60 space-y-4">
@@ -209,6 +245,12 @@ export function FlashcardsClient({ currentScript, beginner }: FlashcardsClientPr
                     >
                         {exporting ? t("exportingAnki") : t("exportAnki")}
                     </button>
+                    <Link href={BEGINNER_VOCABULARY} className="rounded-lg px-3 py-2 text-sm font-medium underline">
+                        {route("vocabularyQuiz")}
+                    </Link>
+                    <Link href="/flashcards/print" className="rounded-lg px-3 py-2 text-sm font-medium underline focus-visible:outline-2 focus-visible:outline-primary">
+                        {route("printCards")}
+                    </Link>
                     {exportError && <p className="text-sm text-red-600">{exportError}</p>}
                 </div>
             )}

@@ -208,6 +208,57 @@
     }
   },
   "library": {
+    "reader": {
+      "highlightLabel": "Označiti slova vyše urovnja",
+      "highlightOff": "Bez označenja",
+      "highlightHint": "Dvojno podčrknjenje označa slova vyše izbranogo urovnja.",
+      "highlightLoading": "Prověrjam urovnje slov…",
+      "highlightError": "Ne udało sę naložiti urovnje slov.",
+      "toggle": "Slovnikove podskazy",
+      "instructions": "Pritisnite slovo, da by otvoriti podskaz. Na klaviaturě prějdite k slovam s Tab, potom koristajte strělky i Enter.",
+      "close": "Zatvoriti",
+      "loading": "Iskanje v slovniku…",
+      "error": "Ne udało sę naložiti podskaz.",
+      "warmingUp": "Analizator form ješče sę naloži. Možete povtoriti iskanje pozdněje.",
+      "found": "Slovo najdeno v slovniku.",
+      "empty": "Točnogo sovpaděnja ne našlo sę.",
+      "alternatives": "Možne slovnikove varianty",
+      "retry": "Pokušati ješče raz",
+      "forms": "Razbor formy: {readings}",
+      "pos": {
+        "NOUN": "imennik",
+        "PROPN": "vlastno imę",
+        "VERB": "glagol",
+        "AUX": "pomočny glagol",
+        "ADJ": "pridavnik",
+        "PRON": "městoimenje",
+        "NUM": "čislovnik",
+        "ADV": "prislovje",
+        "ADP": "prědlog",
+        "CCONJ": "sojuz",
+        "SCONJ": "podrędny sojuz",
+        "PART": "čestica",
+        "INTJ": "međumetje"
+      },
+      "tags": {
+        "nom": "im.",
+        "gen": "rod.",
+        "dat": "dat.",
+        "acc": "vin.",
+        "ins": "tvor.",
+        "loc": "měst.",
+        "voc": "zvat.",
+        "sg": "jed.",
+        "du": "dvoj.",
+        "pl": "množ.",
+        "pres": "nast.",
+        "past": "min.",
+        "fut": "bųd.",
+        "1": "1. osoba",
+        "2": "2. osoba",
+        "3": "3. osoba"
+      }
+    },
     "searchPlaceholder": "Iskati tekst ili avtora",
     "title": "Sbornik / Biblioteka",
     "description": "Kolekcija izbranyh tekstov na medžuslovjanskom jezyku.",
@@ -380,8 +431,25 @@
     "saving": "Sohranjaju..."
   },
   "downloads": {
+    "stardict": {
+      "heading": "Offline slovnik StarDict",
+      "about": "Publikovane medžuslovjanske slova, značenja i prěvody. Možno iskati slova latinicejų i kirilicejų.",
+      "download": "Skačati StarDict (ZIP)",
+      "install": "Rozpakuj arhiv v jednu papků i dodaj ju do žrědel slovnikov v GoldenDict ili drugoj aplikaciji s podporoj StarDict."
+    },
+    "badge": {
+      "heading": "Znak statistiky",
+      "description": "Vstavite HTML na svoj sajt, da by pokazati čislo publikovanyh slov i tokenov korpusa. Znak obnovja sę avtomatično.",
+      "alt": "Interlex — statistika slovnika i korpusa",
+      "code": "HTML za vstavjenje"
+    },
+    "lexicon": {
+      "heading": "Eksport slovnika",
+      "about": "Publikovane slova, značenja i prěvody. Každy prěvod imaje svoj red. Čislo značenja svęzuje različne prěvody s odnym opisom. Apostrof na načętku ščiti tekst podobny na formulu. Slova i značenja bez prěvodov imajųt prazdne polja prěvoda.",
+      "download": "Skopirovati slovnik v CSV"
+    },
     "title": "Skačati",
-    "description": "Slovniky prověrky pravopisa medžuslovjanskogo jezyka za LibreOffice, Firefox i vsake redaktory s podporoju Hunspell.",
+    "description": "Eksport javnogo medžuslovjanskogo slovnika i slovniki za prověrku pravopisa v redaktorah s poddrženjem Hunspell.",
     "spellcheck": {
       "heading": "Prověrka pravopisa (Hunspell)",
       "about": "Dva slovnika — latinica i kirilica, — sobrane iz leksikona: vse javne slova vo vsih formah, ktore tvori gramatičny motor.",
@@ -399,6 +467,11 @@
     }
   },
   "flashcards": {
+    "weekTitle": "Povtorjenja na sedm dnjev",
+    "weekHint": "Dnes i slědujųče šest dnjev po UTC. Opozdněle kartky sųt v sčętniku vyše.",
+    "today": "Dnes",
+    "dueToday": "Za povtorjenje dnes: {count}",
+    "dueTodayHint": "Kartky, čas povtorjenja ktoryh uže nastal, vključajuči opozdněle kartky.",
     "title": "Kartočky",
     "description": "Povtarjajte slova s pomoćų sistemy intervalnogo povtorenja. Dobro znane kartočky pojavjajų sę rěže, a te, ke su trudne — čęsťěje.",
     "levelLabel": "Uroveń",
@@ -571,7 +644,127 @@
       ]
     }
   },
+  "verbPractice": {
+    "title": "Nastojęće vrěmę glagolov",
+    "instructions": "Vpiši formų nastojęćego vrěmene za ukazano lice i čislo. Možno pisati latinicejų ili kirilicejų. Znaky naglašenja ne sųt obvezne.",
+    "prompt": "{word} · {person}",
+    "persons": {
+      "1sg": "1. lice jedniny",
+      "2sg": "2. lice jedniny",
+      "3sg": "3. lice jedniny",
+      "1pl": "1. lice množiny",
+      "2pl": "2. lice množiny",
+      "3pl": "3. lice množiny"
+    }
+  },
+  "falseFriends": {
+    "title": "Lažne prijatelje v prěvodu",
+    "description": "Podobne slova v medžuslovjanskom i sučasnom russkom mogųt iměti råzne značenja.",
+    "navigation": "Učebne materijaly",
+    "reference": "Zvukove odpovědnosti",
+    "interslavic": "Medžuslovjansky",
+    "russian": "Russky",
+    "usageSource": "Priklad iz medžuslovjanskogo standarda",
+    "pairs": {
+      "krasny": {
+        "isvMeaning": "lěpy",
+        "ruMeaning": "črveny, cvěta krve",
+        "note": "V russkom značenje «lěpy» ostalo v narodnoj poezii."
+      },
+      "nedelja": {
+        "isvMeaning": "denj poslě soboty",
+        "ruMeaning": "period od sedm dnjev",
+        "note": "Za period od sedm dnjev v medžuslovjanskom jest slovo {word}."
+      },
+      "zivot": {
+        "isvMeaning": "žitje",
+        "ruMeaning": "brjuho",
+        "note": "Značenje «žitje» v russkom jest ustarělo i ostalo v izråzu «не на живот, а на смерть»."
+      }
+    }
+  },
+  "nounPractice": {
+    "lessonNav": "Uroky sklanjanja",
+    "singular": "Jedino čislo",
+    "plural": "Množstveno čislo",
+    "pluralInstructions": "Napišite formų množstvenogo čisla v ukazanom padežu. Možno pisati latinicejų ili kirilicejų. Znak akcenta ne jest obvezny.",
+    "title": "Upražnjenje v sklanjanju",
+    "instructions": "Napišite formų jedinogo čisla v ukazanom padežu. Možno pisati latinicejų ili kirilicejų. Znak akcenta ne jest obvezny.",
+    "textbook": "Učebnik",
+    "beginner": "Prvy krok",
+    "navigation": "Učebne materialy",
+    "unavailable": "Upražnjenja sejčas ne sųt dostupne.",
+    "progress": "Upražnjenje {current} od {total}",
+    "prompt": "{word} — {nounCase}",
+    "check": "Prověriti",
+    "next": "Dalje",
+    "finish": "Pokazati rezultat",
+    "correct": "Pravilno. Forma: {answer}.",
+    "incorrect": "Pravilna forma: {answer}.",
+    "score": "Pravilne odpovědi: {score} od {total}",
+    "restart": "Načęti iznova",
+    "cases": {
+      "nom": "imeniteljny",
+      "gen": "roditeljny",
+      "dat": "dateljny",
+      "acc": "viniteljny",
+      "ins": "tvoriteljny",
+      "loc": "městny",
+      "voc": "zvateljny"
+    }
+  },
+  "printCards": {
+    "title": "Kartky A1 za pečat",
+    "instructions": "Osm kartok s medžuslovjanskym slovom na prědnoj straně i russkym prěvodom na obratnoj. Pečatajte na A4 v měrilu 100% i obračajte po dolgoj straně.",
+    "download": "Skopirovati PDF",
+    "back": "Prvy krok",
+    "front": "A1 · Medžuslovjanske slova",
+    "backSide": "A1 · Russke prěvody"
+  },
+  "wordNotes": {
+    "personal": "Lična zamětka",
+    "collection": "Lične zamětky",
+    "empty": "Tut pojavet sę vaše zamětky k slovam.",
+    "missingWord": "Slovo №{wordId} ne jest dostupno",
+    "openWord": "Otvoriti kartkų slova",
+    "save": "Shraniti",
+    "delete": "Udaliti",
+    "status": {
+      "saved": "Zamětka jest shranjena.",
+      "deleted": "Zamětka jest udaljena.",
+      "signedOut": "Vojdite, da by shraniti zamětkų.",
+      "invalid": "Vpišite od 1 do 2000 znakov.",
+      "unavailable": "Slovo ne jest dostupno.",
+      "error": "Ne udało sę shraniti izměnų."
+    }
+  },
+  "vocabulary": {
+    "title": "Prověrka slovnogo zapasa",
+    "description": "Izberite prěvody za 12 slov A1–B1. Rezultat pokaže, od kogo urovnja kartok možete načęti.",
+    "back": "Prvy krok",
+    "translationLanguage": "Jezyk prěvoda",
+    "unavailable": "Prověrka sejčas ne jest dostupna.",
+    "progress": "Pytanje {current} od {total}",
+    "choose": "Izberite prěvod",
+    "next": "Dalje",
+    "finish": "Pokazati rezultat",
+    "skip": "Propustiti",
+    "result": "Načnite s kartkami {level}",
+    "score": "Pravilne odpovědi: {count} od {total}",
+    "levelScore": "{level} — {count} od 4",
+    "train": "Upražnjati {level}",
+    "restart": "Prějdti ješče raz"
+  },
   "beginner": {
+    "vocabularyQuiz": "Prověrka slovnogo zapasa",
+    "verbPractice": "Nastojęće vrěmę glagolov",
+    "falseFriends": "Lažne prijatelje v prěvodu",
+    "nounPractice": "Upražnjenje v sklanjanju",
+    "printCards": "Kartky A1 za pečat",
+    "libraryFilters": "Filtry",
+    "libraryGenre": "Žanr",
+    "libraryTopic": "Tema",
+    "libraryOrigin": "Pohod",
     "title": "Put dlja početnikov",
     "description": "Poznaj znajeme zvukove sootvětnosti, povtori slova i pročitai kratky tekst.",
     "backToTextbook": "Do učebnika",
@@ -700,6 +893,19 @@
     "title": "Slovo",
     "notFound": "Informacija otsutstvuje",
     "findRhymesLink": "Najti rimy",
+    "view": {
+      "label": "Prikaz kartky slova",
+      "brief": "Kratko",
+      "full": "Polna kartka"
+    },
+    "comparison": {
+      "title": "Sravnjenje prěvodov",
+      "language": "Jezyk",
+      "translation": "Prěvod",
+      "showMissing": "Pokazati jezyky bez prěvoda",
+      "empty": "Dlja togo značenja ješče ne imaje prěvodov.",
+      "missing": "Bez prěvoda"
+    },
     "meta": {
       "pos": "Čast rěči",
       "gender": "Rod",

@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const flashcardProgressFindMany = vi.fn();
+const lexemeFindMany = vi.fn();
 vi.mock("@/lib/prisma", () => ({
+    prismaData: { lexeme: { findMany: (...args: unknown[]) => lexemeFindMany(...args) } },
     prismaAuth: {
         flashcardProgress: { findMany: (...args: unknown[]) => flashcardProgressFindMany(...args) },
     },
@@ -15,6 +17,7 @@ function queueAll(match: (sql: string) => boolean, rows: unknown[]) {
     allQueue.push({ match, rows });
 }
 const fakeDb = {
+    close: vi.fn(),
     prepare: (sql: string) => ({
         all: (..._params: unknown[]) => {
             const entry = allQueue.find((e) => e.match(sql));
@@ -36,6 +39,7 @@ import { fetchFlashcardSession } from "./fetchFlashcardSession";
 describe("fetchFlashcardSession", () => {
     beforeEach(() => {
         flashcardProgressFindMany.mockReset();
+        lexemeFindMany.mockReset();
         fetchTranslationsForLexemeIds.mockReset();
         allQueue.length = 0;
     });
@@ -45,6 +49,7 @@ describe("fetchFlashcardSession", () => {
             .mockResolvedValueOnce([{ wordId: 101 }]) // due
             .mockResolvedValueOnce([{ wordId: 101 }]); // all progress (same word, already started)
 
+        lexemeFindMany.mockResolvedValueOnce([{ id: 101 }]);
         queueAll((sql) => sql.includes("id IN"), [
             { id: 101, slug: "byti-VERB", value: "byti", pos: "VERB", cefrLevel: "A1" },
         ]);

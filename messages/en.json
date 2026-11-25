@@ -208,6 +208,57 @@
     }
   },
   "library": {
+    "reader": {
+      "highlightLabel": "Highlight words above level",
+      "highlightOff": "Highlighting off",
+      "highlightHint": "A double underline marks words above the selected level.",
+      "highlightLoading": "Checking word levels…",
+      "highlightError": "Could not load word levels.",
+      "toggle": "Dictionary hints",
+      "instructions": "Select a word to open it. With a keyboard, press Tab to reach the words, then use the arrow keys and Enter.",
+      "close": "Close",
+      "loading": "Looking up the word…",
+      "error": "Could not load the dictionary hint.",
+      "warmingUp": "The form analyzer is still loading. Try the lookup again in a moment.",
+      "found": "A dictionary entry was found.",
+      "empty": "No exact match found.",
+      "alternatives": "Possible dictionary matches",
+      "retry": "Try again",
+      "forms": "Form analysis: {readings}",
+      "pos": {
+        "NOUN": "noun",
+        "PROPN": "proper noun",
+        "VERB": "verb",
+        "AUX": "auxiliary verb",
+        "ADJ": "adjective",
+        "PRON": "pronoun",
+        "NUM": "numeral",
+        "ADV": "adverb",
+        "ADP": "preposition",
+        "CCONJ": "coordinating conjunction",
+        "SCONJ": "subordinating conjunction",
+        "PART": "particle",
+        "INTJ": "interjection"
+      },
+      "tags": {
+        "nom": "nom.",
+        "gen": "gen.",
+        "dat": "dat.",
+        "acc": "acc.",
+        "ins": "instr.",
+        "loc": "loc.",
+        "voc": "voc.",
+        "sg": "singular",
+        "du": "dual",
+        "pl": "plural",
+        "pres": "present",
+        "past": "past",
+        "fut": "future",
+        "1": "1st person",
+        "2": "2nd person",
+        "3": "3rd person"
+      }
+    },
     "searchPlaceholder": "Search for a text or author",
     "title": "Sbornik / Library",
     "description": "A collection of selected texts in Interslavic.",
@@ -380,8 +431,25 @@
     "saving": "Saving..."
   },
   "downloads": {
+    "stardict": {
+      "heading": "Offline StarDict dictionary",
+      "about": "Published Interslavic words, definitions and translations. Look up headwords in Latin and Cyrillic.",
+      "download": "Download StarDict (ZIP)",
+      "install": "Extract the archive into one folder and add that folder as a dictionary source in GoldenDict or another StarDict reader."
+    },
+    "badge": {
+      "heading": "Statistics badge",
+      "description": "Embed this HTML on your site to show the number of published words and corpus tokens. The badge updates automatically.",
+      "alt": "Interlex dictionary and corpus statistics",
+      "code": "HTML embed code"
+    },
+    "lexicon": {
+      "heading": "Dictionary export",
+      "about": "Published words, meanings and translations. Each translation has its own row. The meaning number links alternate translations to the same definition. An apostrophe protects text cells that spreadsheet apps might read as formulas. Words and meanings without translations have empty translation fields.",
+      "download": "Download dictionary CSV"
+    },
     "title": "Downloads",
-    "description": "Interslavic spell-checking dictionaries for LibreOffice, Firefox and any editor that supports Hunspell.",
+    "description": "The public Interslavic dictionary export and spellcheck dictionaries for editors that support Hunspell.",
     "spellcheck": {
       "heading": "Spell checking (Hunspell)",
       "about": "Two dictionaries — Latin and Cyrillic — built from the lexicon: every public word in every form the grammar engine produces.",
@@ -399,6 +467,11 @@
     }
   },
   "flashcards": {
+    "weekTitle": "Seven-day review schedule",
+    "weekHint": "Today and the next six days in UTC. Overdue cards are included in the counter above.",
+    "today": "Today",
+    "dueToday": "Due for review today: {count}",
+    "dueTodayHint": "Cards whose review time has arrived, including overdue cards.",
     "title": "Flashcards",
     "description": "Review vocabulary with spaced repetition. Cards you know well appear less often; cards you struggle with come back sooner.",
     "levelLabel": "Level",
@@ -571,7 +644,127 @@
       ]
     }
   },
+  "verbPractice": {
+    "title": "Verb practice: present tense",
+    "instructions": "Enter the present-tense form for the person and number shown. Latin and Cyrillic are accepted. Stress marks are optional.",
+    "prompt": "{word} · {person}",
+    "persons": {
+      "1sg": "1st person singular",
+      "2sg": "2nd person singular",
+      "3sg": "3rd person singular",
+      "1pl": "1st person plural",
+      "2pl": "2nd person plural",
+      "3pl": "3rd person plural"
+    }
+  },
+  "falseFriends": {
+    "title": "Interslavic–Russian false friends",
+    "description": "Words that look alike in Interslavic and modern Russian can have different meanings.",
+    "navigation": "Learning resources",
+    "reference": "Sound correspondences",
+    "interslavic": "Interslavic",
+    "russian": "Russian",
+    "usageSource": "Example from the Interslavic standard",
+    "pairs": {
+      "krasny": {
+        "isvMeaning": "beautiful",
+        "ruMeaning": "red, the colour of blood",
+        "note": "In Russian, the sense “beautiful” survives in folk poetry."
+      },
+      "nedelja": {
+        "isvMeaning": "Sunday",
+        "ruMeaning": "a period of seven days",
+        "note": "In Interslavic, {word} means a period of seven days."
+      },
+      "zivot": {
+        "isvMeaning": "life",
+        "ruMeaning": "belly, abdomen",
+        "note": "The sense “life” is archaic in Russian and survives in the expression «не на живот, а на смерть» (“to the death”)."
+      }
+    }
+  },
+  "nounPractice": {
+    "lessonNav": "Declension lessons",
+    "singular": "Singular",
+    "plural": "Plural",
+    "pluralInstructions": "Enter the plural form in the requested case. Latin and Cyrillic are accepted. Stress marks are optional.",
+    "title": "Noun declension practice",
+    "instructions": "Enter the singular form in the requested case. Latin and Cyrillic are accepted. Stress marks are optional.",
+    "textbook": "Textbook",
+    "beginner": "Beginner route",
+    "navigation": "Learning resources",
+    "unavailable": "The exercises are currently unavailable.",
+    "progress": "Question {current} of {total}",
+    "prompt": "{word} — {nounCase}",
+    "check": "Check",
+    "next": "Next",
+    "finish": "Show result",
+    "correct": "Correct. The form is {answer}.",
+    "incorrect": "The correct form is {answer}.",
+    "score": "Correct answers: {score} of {total}",
+    "restart": "Start again",
+    "cases": {
+      "nom": "nominative",
+      "gen": "genitive",
+      "dat": "dative",
+      "acc": "accusative",
+      "ins": "instrumental",
+      "loc": "locative",
+      "voc": "vocative"
+    }
+  },
+  "printCards": {
+    "title": "Printable A1 flashcards",
+    "instructions": "Eight cards with Interslavic on the front and Russian on the back. Print on A4 at 100% and flip on the long edge.",
+    "download": "Download PDF",
+    "back": "Beginner route",
+    "front": "A1 · Interslavic words",
+    "backSide": "A1 · Russian translations"
+  },
+  "wordNotes": {
+    "personal": "Personal note",
+    "collection": "Personal notes",
+    "empty": "Your notes on words will appear here.",
+    "missingWord": "Word #{wordId} is unavailable",
+    "openWord": "Open word card",
+    "save": "Save",
+    "delete": "Delete",
+    "status": {
+      "saved": "Note saved.",
+      "deleted": "Note deleted.",
+      "signedOut": "Sign in to save a note.",
+      "invalid": "Enter between 1 and 2,000 characters.",
+      "unavailable": "This word is unavailable.",
+      "error": "Could not save the change."
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabulary check",
+    "description": "Choose translations for 12 A1–B1 words. The result suggests a starting level for flashcards.",
+    "back": "Beginner route",
+    "translationLanguage": "Translation language",
+    "unavailable": "The vocabulary check is currently unavailable.",
+    "progress": "Question {current} of {total}",
+    "choose": "Choose the translation",
+    "next": "Next",
+    "finish": "Show result",
+    "skip": "Skip",
+    "result": "Start with {level} flashcards",
+    "score": "Correct answers: {count} of {total}",
+    "levelScore": "{level}: {count} of 4",
+    "train": "Practise {level}",
+    "restart": "Try again"
+  },
   "beginner": {
+    "vocabularyQuiz": "Vocabulary check",
+    "verbPractice": "Verb practice: present tense",
+    "falseFriends": "Interslavic–Russian false friends",
+    "nounPractice": "Noun declension practice",
+    "printCards": "Printable A1 flashcards",
+    "libraryFilters": "Filters",
+    "libraryGenre": "Genre",
+    "libraryTopic": "Topic",
+    "libraryOrigin": "Origin",
     "title": "Beginner route",
     "description": "Explore familiar sound correspondences, practise a few words, and try a short text.",
     "backToTextbook": "Back to the textbook",
@@ -700,6 +893,19 @@
     "title": "Word",
     "notFound": "Information not available",
     "findRhymesLink": "Find rhymes",
+    "view": {
+      "label": "Word card view",
+      "brief": "Brief",
+      "full": "Full card"
+    },
+    "comparison": {
+      "title": "Compare translations",
+      "language": "Language",
+      "translation": "Translation",
+      "showMissing": "Show languages without a translation",
+      "empty": "There are no translations for this meaning yet.",
+      "missing": "No translation"
+    },
     "meta": {
       "pos": "Part of speech",
       "gender": "Gender",

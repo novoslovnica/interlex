@@ -18,6 +18,8 @@ export interface UpsertDocumentPayload {
     sourceUrl?: string
     /** ID ревизии источника (напр. MediaWiki revid) — если не изменился с прошлого запуска, документ пропускается */
     sourceRevisionId?: number
+    /** Retain the existing document and its annotations, even when its revision changed. */
+    createOnly?: boolean
 }
 
 export type UpsertDocumentResult =
@@ -43,8 +45,7 @@ export async function upsertCorpusDocument(
 
     if (
         existing &&
-        payload.sourceRevisionId !== undefined &&
-        existing.sourceRevisionId === payload.sourceRevisionId
+        (payload.createOnly || (payload.sourceRevisionId !== undefined && existing.sourceRevisionId === payload.sourceRevisionId))
     ) {
         return { status: "skipped", slug: existing.slug }
     }

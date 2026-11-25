@@ -71,13 +71,19 @@ export const MANIFEST: ManifestEntry[] = [
 
     { path: "scripts/db/2026-11-03-add-corpus-editor-assistance.ts", db: "corpus", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "личные задачи редактора и индекс похожих вхождений; анализ токенов не меняется" },
 
+    { path: "scripts/db/2026-11-25-add-word-notes.ts", db: "auth", kind: "schema", dryRun: false, rollbackSafe: true, needsRestart: true, note: "личные заметки на словах" },
+
     // Пересчёты, которые гоняют на проде после изменений словаря или корпуса.
     { path: "scripts/compute-lexicon-frequency.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "частотность и CEFR из corpus.db в lexemes; после замены corpus.db" },
     { path: "scripts/db/recompute-contributor-stats.ts", db: "interlex", kind: "repeatable", dryRun: false },
     { path: "scripts/db/compute-proper-noun-signals.ts", db: "interlex", kind: "repeatable", dryRun: false, note: "создаёт proper_noun_signals; не во время реанализа корпуса" },
     { path: "scripts/export-hunspell.ts", db: "interlex", kind: "repeatable", dryRun: false, noBackup: true, note: "только читает; пишет exports/hunspell/ (страница /downloads)" },
     { path: "scripts/db/2026-11-24-add-relative-adjective-suffixes.ts", db: "interlex", kind: "data", dryRun: true, note: "подтверждённые суффиксы ov/ev/sk и три словарных примера" },
+    { path: "scripts/db/2026-11-25-restore-modern-participle-endings.ts", db: "interlex", kind: "data", dryRun: true, note: "восстановление подтверждённых окончаний причастий CORE из сверки 2026-09-15" },
+    { path: "scripts/db/2026-11-25-add-kolozor-podcast.ts", db: "library", kind: "data", dryRun: true, note: "подкаст Kolozor в медиатеке" },
     { path: "scripts/db/2026-11-25-realign-meaning-texts.ts", db: "interlex", kind: "data", dryRun: true, note: "сверка определений и примеров с переводами после июльского импорта" },
+    { path: "scripts/db/2026-11-25-add-znacenje-core-allophone.ts", db: "interlex", kind: "data", dryRun: true, note: "аллофон CORE značenje для записи №25508" },
+    { path: "scripts/db/import-new-isv-wikipedia.ts", db: "corpus", kind: "repeatable", dryRun: true, heavy: true, note: "добавляет новые статьи Википедии после контрольного ID, сохраняет существующую разметку" },
     {
         path: "scripts/db/analyze-homonym-duplicates.ts",
         db: "corpus",

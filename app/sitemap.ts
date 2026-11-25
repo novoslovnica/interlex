@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { init } from "@/lib/sqlite"
 import { prismaLibrary } from "@/lib/prisma"
 import { siteUrl } from "@/lib/seo/site"
-import { BEGINNER_ROUTE } from "@/lib/beginner-route"
+import { BEGINNER_ROUTE, BEGINNER_VOCABULARY, FALSE_FRIENDS, VERB_PRACTICE } from "@/lib/beginner-route"
 
 // Несколько файлов вместо одного: /sitemap/pages.xml, /sitemap/words-0.xml,
 // /sitemap/proto-0.xml. Лимит поисковиков - 50 000 адресов на файл; слов
@@ -25,6 +25,9 @@ const STATIC_PATHS: { path: string; priority: number; changeFrequency: "daily" |
     { path: "/proto", priority: 0.7, changeFrequency: "monthly" },
     { path: "/textbook/ru", priority: 0.7, changeFrequency: "monthly" },
     { path: BEGINNER_ROUTE, priority: 0.6, changeFrequency: "monthly" },
+    { path: BEGINNER_VOCABULARY, priority: 0.6, changeFrequency: "monthly" },
+    { path: VERB_PRACTICE, priority: 0.6, changeFrequency: "monthly" },
+    { path: FALSE_FRIENDS, priority: 0.6, changeFrequency: "monthly" },
     { path: "/textbook/phonetic-laws", priority: 0.6, changeFrequency: "monthly" },
     { path: "/transliteration", priority: 0.6, changeFrequency: "monthly" },
     { path: "/rhyme", priority: 0.5, changeFrequency: "monthly" },

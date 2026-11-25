@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/auth"
 import { prismaAuth } from "@/lib/prisma"
+import { getFlashcardWeek } from "@/lib/srs/dueFlashcards"
 import { sm2Review, DEFAULT_SRS_STATE, QUALITY_BY_BUTTON, type ReviewButton } from "@/lib/srs/sm2"
 
 export async function POST(request: Request) {
@@ -53,7 +54,10 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json(updated)
+    // Scheduling has already succeeded. The counter must not turn a
+    // completed review into a failed request if a read is unavailable.
+    const week = await getFlashcardWeek(userId).catch(() => null)
+    return NextResponse.json({ ...updated, dueCount: week?.dueCount ?? null, week })
   } catch (error) {
     console.error("API Flashcards Review POST Error:", error)
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })

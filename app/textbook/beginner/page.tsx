@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
-import { BEGINNER_FLASHCARDS, BEGINNER_READING } from "@/lib/beginner-route"
+import { BEGINNER_FLASHCARDS, BEGINNER_READING, BEGINNER_VOCABULARY, FALSE_FRIENDS, VERB_PRACTICE } from "@/lib/beginner-route"
 
 const steps = [
   { id: "reference", href: "/textbook/phonetic-laws#correspondences" },
@@ -35,6 +35,19 @@ export default async function BeginnerPage() {
                 </Link>
               </h2>
               <p className="text-sm text-muted-foreground">{t(`${id}.description`)}</p>
+              {id === "reference" && (
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  <Link href="/textbook/noun-practice" className="text-sm underline focus-visible:outline-2 focus-visible:outline-primary">{t("nounPractice")}</Link>
+                  <Link href={VERB_PRACTICE} className="text-sm underline focus-visible:outline-2 focus-visible:outline-primary">{t("verbPractice")}</Link>
+                  <Link href={FALSE_FRIENDS} className="text-sm underline focus-visible:outline-2 focus-visible:outline-primary">{t("falseFriends")}</Link>
+                </div>
+              )}
+              {id === "cards" && (
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  <Link href={BEGINNER_VOCABULARY} className="text-sm underline focus-visible:outline-2 focus-visible:outline-primary">{t("vocabularyQuiz")}</Link>
+                  <Link href="/flashcards/print" className="text-sm underline focus-visible:outline-2 focus-visible:outline-primary">{t("printCards")}</Link>
+                </div>
+              )}
             </li>
           ))}
         </ol>

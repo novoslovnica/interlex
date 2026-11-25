@@ -1,6 +1,7 @@
 import { init } from "@/lib/sqlite";
 import { prismaAuth } from "@/lib/prisma";
 import { fetchTranslationsForLexemeIds } from "@/lib/translations";
+import { getDueFlashcardIds } from "./dueFlashcards";
 
 export interface FlashcardSessionCard {
     wordId: number;
@@ -48,15 +49,7 @@ export async function fetchFlashcardSession(
     language: string,
     limit: number = DEFAULT_SESSION_SIZE
 ): Promise<FlashcardSessionCard[]> {
-    const now = new Date();
-
-    const dueProgress = await prismaAuth.flashcardProgress.findMany({
-        where: { userId, nextReviewAt: { lte: now } },
-        orderBy: { nextReviewAt: "asc" },
-        take: limit,
-        select: { wordId: true },
-    });
-    const dueWordIds = dueProgress.map((p) => p.wordId);
+    const dueWordIds = (await getDueFlashcardIds(userId)).slice(0, limit);
 
     const allProgress = await prismaAuth.flashcardProgress.findMany({
         where: { userId },
@@ -65,52 +58,59 @@ export async function fetchFlashcardSession(
     const knownWordIds = allProgress.map((p) => p.wordId);
 
     const db = await init();
-    const cards: FlashcardSessionCard[] = [];
+    try {
+        const cards: FlashcardSessionCard[] = [];
 
-    if (dueWordIds.length > 0) {
-        const placeholders = dueWordIds.map(() => "?").join(",");
-        const rows = db.prepare(
-            `SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel FROM lexemes l WHERE l.id IN (${placeholders}) AND l.value IS NOT NULL`
-        ).all(...dueWordIds) as LexemeRow[];
-        for (const row of rows) {
-            cards.push({ wordId: row.id, slug: row.slug, value: row.value, pos: row.pos, cefrLevel: row.cefrLevel, translation: null, isReview: true });
-        }
-    }
-
-    const remaining = limit - cards.length;
-    if (remaining > 0) {
-        const excludeIds = [...new Set([...knownWordIds, ...dueWordIds])];
-        const excludeClause = excludeIds.length > 0 ? `AND l.id NOT IN (${excludeIds.map(() => "?").join(",")})` : "";
-        const cefrClause = cefrLevel ? "AND l.cefrLevel = ?" : "AND l.cefrLevel IS NOT NULL";
-        const params: (string | number)[] = cefrLevel ? [cefrLevel, ...excludeIds] : [...excludeIds];
-
-        const rows = db.prepare(`
-            SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel
-            FROM lexemes l
-            WHERE l.value IS NOT NULL AND (l.isCollocation IS NULL OR l.isCollocation != 1) ${cefrClause} ${excludeClause}
-            ORDER BY l.corpusFrequencyPerMln DESC
-            LIMIT ?
-        `).all(...params, remaining) as LexemeRow[];
-        for (const row of rows) {
-            cards.push({ wordId: row.id, slug: row.slug, value: row.value, pos: row.pos, cefrLevel: row.cefrLevel, translation: null, isReview: false });
-        }
-    }
-
-    if (cards.length > 0) {
-        const translationRows = fetchTranslationsForLexemeIds(db, cards.map((c) => c.wordId), language);
-        const translationByLexeme = new Map<number, string>();
-        for (const t of translationRows) {
-            if (!t.value) continue;
-            // Prefer a verified translation if one exists for this lexeme;
-            // otherwise keep the first unverified one already stored.
-            if (!translationByLexeme.has(t.lexemeId) || t.verified) {
-                translationByLexeme.set(t.lexemeId, t.value);
+        if (dueWordIds.length > 0) {
+            const placeholders = dueWordIds.map(() => "?").join(",");
+            const rows = db.prepare(
+                `SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel FROM lexemes l WHERE l.id IN (${placeholders}) AND l.isPublic = 1 AND l.value IS NOT NULL`
+            ).all(...dueWordIds) as LexemeRow[];
+            const byId = new Map(rows.map(row => [row.id, row]));
+            for (const id of dueWordIds) {
+                const row = byId.get(id);
+                if (!row) continue;
+                cards.push({ wordId: row.id, slug: row.slug, value: row.value, pos: row.pos, cefrLevel: row.cefrLevel, translation: null, isReview: true });
             }
         }
-        for (const card of cards) {
-            card.translation = translationByLexeme.get(card.wordId) ?? null;
-        }
-    }
 
-    return cards;
+        const remaining = limit - cards.length;
+        if (remaining > 0) {
+            const excludeIds = [...new Set([...knownWordIds, ...dueWordIds])];
+            const excludeClause = excludeIds.length > 0 ? `AND l.id NOT IN (${excludeIds.map(() => "?").join(",")})` : "";
+            const cefrClause = cefrLevel ? "AND l.cefrLevel = ?" : "AND l.cefrLevel IS NOT NULL";
+            const params: (string | number)[] = cefrLevel ? [cefrLevel, ...excludeIds] : [...excludeIds];
+
+            const rows = db.prepare(`
+                SELECT l.id, l.slug, ${CORE_VALUE_SQL} as value, l.pos, l.cefrLevel
+                FROM lexemes l
+                WHERE l.isPublic = 1 AND l.value IS NOT NULL AND (l.isCollocation IS NULL OR l.isCollocation != 1) ${cefrClause} ${excludeClause}
+                ORDER BY l.corpusFrequencyPerMln DESC
+                LIMIT ?
+            `).all(...params, remaining) as LexemeRow[];
+            for (const row of rows) {
+                cards.push({ wordId: row.id, slug: row.slug, value: row.value, pos: row.pos, cefrLevel: row.cefrLevel, translation: null, isReview: false });
+            }
+        }
+
+        if (cards.length > 0) {
+            const translationRows = fetchTranslationsForLexemeIds(db, cards.map((c) => c.wordId), language);
+            const translationByLexeme = new Map<number, string>();
+            for (const t of translationRows) {
+                if (!t.value) continue;
+                // Prefer a verified translation if one exists for this lexeme;
+                // otherwise keep the first unverified one already stored.
+                if (!translationByLexeme.has(t.lexemeId) || t.verified) {
+                    translationByLexeme.set(t.lexemeId, t.value);
+                }
+            }
+            for (const card of cards) {
+                card.translation = translationByLexeme.get(card.wordId) ?? null;
+            }
+        }
+
+        return cards;
+    } finally {
+        db.close();
+    }
 }

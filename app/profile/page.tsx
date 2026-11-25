@@ -7,6 +7,9 @@ import { getTranslations } from "next-intl/server"
 import { init } from "@/lib/sqlite"
 import { fetchContributorSummary } from "@/lib/community/publicStats"
 import { ContributionStats } from "@/components/community/ContributionStats"
+import { WordNoteEditor } from "@/components/WordNoteEditor"
+import { listWordNotes } from "@/lib/word-notes"
+import { isvToCyr } from "@/lib/isv"
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -29,10 +32,12 @@ export default async function ProfilePage() {
 
   const wordIds = collections.map(c => c.wordId)
 
-  const [profile, tCommunity, db] = await Promise.all([
+  const [profile, tCommunity, db, notes, tNotes] = await Promise.all([
     dbAuth.userProfile.findUnique({ where: { userId: user.id }, select: { handle: true } }),
     getTranslations("community.contribute"),
     init(),
+    listWordNotes(userId),
+    getTranslations("wordNotes"),
   ])
   let summary
   try {
@@ -42,7 +47,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
+    <main className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto px-4 py-8">
       <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-8">
         <div className="flex items-center gap-4 mb-4">
           {user.image && (
@@ -71,6 +76,29 @@ export default async function ProfilePage() {
           <ContributionStats summary={summary} />
         </div>
       )}
+
+      <section className="mb-8 space-y-3 rounded-2xl border bg-card p-6 text-foreground">
+        <h2 id="profile-word-notes" tabIndex={-1} className="font-bold">{tNotes("collection")}</h2>
+        {notes.length === 0 ? <p>{tNotes("empty")}</p> : (
+          <ul className="space-y-2">
+            {notes.map(note => {
+              const title = note.title && userSettings?.script !== "LATIN" ? isvToCyr(note.title) : note.title
+              const label = title || tNotes("missingWord", { wordId: note.wordId })
+              return (
+                <li key={note.wordId} className="rounded-lg border p-3">
+                  <details>
+                    <summary className="cursor-pointer rounded font-semibold focus-visible:outline-2 focus-visible:outline-primary">{label}</summary>
+                    <div className="mt-3 space-y-2">
+                      {title && <Link className="text-sm underline" href={`/words/${note.wordId}`}>{tNotes("openWord")}</Link>}
+                      <WordNoteEditor wordId={note.wordId} initialBody={note.body} label={`${tNotes("personal")} — ${label}`} canSave={!!title} focusFallbackId="profile-word-notes" />
+                    </div>
+                  </details>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </section>
 
       <ProfileContent wordIds={wordIds} translationLang={translationLang} />
     </main>

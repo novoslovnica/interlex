@@ -1,14 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { BEGINNER_ROUTE } from '@/lib/beginner-route';
+import { BEGINNER_ROUTE, VERB_PRACTICE } from '@/lib/beginner-route';
+
+function subscribeToChapterHash(callback: () => void) {
+    window.addEventListener("hashchange", callback);
+    return () => window.removeEventListener("hashchange", callback);
+}
 
 export default function TextbookPage() {
     const t = useTranslations("textbook");
     const beginner = useTranslations("beginner");
-    const [activeChapter, setActiveChapter] = useState('pronunciation');
+    const practice = useTranslations("nounPractice");
+    const verbPractice = useTranslations("verbPractice");
+    const hash = useSyncExternalStore(subscribeToChapterHash, () => window.location.hash, () => "");
+    const [selection, setActiveChapter] = useState<string>();
+    const activeChapter = selection ?? (hash === "#nouns" || hash === "#verbs-present" ? hash.slice(1) : "pronunciation");
 
     const categories = t.raw("categories") as string[];
 
@@ -176,25 +185,35 @@ export default function TextbookPage() {
 
                         {activeChapter !== 'pronunciation' && (
                             <>
-                                <header className="space-y-3 border-b pb-6">
+                                <header id={activeChapter} className="space-y-3 border-b pb-6">
                                     <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">{t("sectionBadge")}</span>
                                     <h1 className="text-3xl md:text-4xl font-black tracking-tight">
                                         {chapters.find((ch) => ch.id === activeChapter)?.title}
                                     </h1>
                                     <p className="text-base text-muted-foreground">
-                                        {t("emptyChapter")}
+                                        {activeChapter === "nouns" ? practice("instructions") : activeChapter === "verbs-present" ? verbPractice("instructions") : t("emptyChapter")}
                                     </p>
                                 </header>
 
-                                <section className="py-12 text-center space-y-4 border border-dashed rounded-3xl bg-muted/10">
-                                    <div className="text-4xl">📖</div>
-                                    <div className="space-y-1 max-w-sm mx-auto">
-                                        <h3 className="font-bold text-sm">{t("loading")}</h3>
-                                        <p className="text-xs text-muted-foreground">
-                                            {t("loadingDesc")}
-                                        </p>
-                                    </div>
-                                </section>
+                                {activeChapter === "nouns" ? (
+                                    <Link href="/textbook/noun-practice" className="inline-block font-semibold text-primary underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                                        {practice("title")}
+                                    </Link>
+                                ) : activeChapter === "verbs-present" ? (
+                                    <Link href={VERB_PRACTICE} className="inline-block font-semibold text-primary underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                                        {verbPractice("title")}
+                                    </Link>
+                                ) : (
+                                    <section className="py-12 text-center space-y-4 border border-dashed rounded-3xl bg-muted/10">
+                                        <div className="text-4xl">📖</div>
+                                        <div className="space-y-1 max-w-sm mx-auto">
+                                            <h3 className="font-bold text-sm">{t("loading")}</h3>
+                                            <p className="text-xs text-muted-foreground">
+                                                {t("loadingDesc")}
+                                            </p>
+                                        </div>
+                                    </section>
+                                )}
                             </>
                         )}
 

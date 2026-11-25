@@ -94,8 +94,9 @@ export function LibraryClient({ genres, topics, items, canCreate, beginner }: Li
               {genres.map(genre => (
                 <button
                   key={genre.id}
+                  aria-pressed={selectedGenre === genre.id}
                   onClick={() => setSelectedGenre(genre.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-primary ${
                     selectedGenre === genre.id
                       ? "bg-muted text-foreground font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -114,8 +115,9 @@ export function LibraryClient({ genres, topics, items, canCreate, beginner }: Li
               {topics.map(topic => (
                 <button
                   key={topic.id}
+                  aria-pressed={selectedTopic === topic.id}
                   onClick={() => setSelectedTopic(topic.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-primary ${
                     selectedTopic === topic.id
                       ? "bg-muted text-foreground font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -138,8 +140,9 @@ export function LibraryClient({ genres, topics, items, canCreate, beginner }: Li
               ].map(origin => (
                 <button
                   key={origin.id}
+                  aria-pressed={selectedOrigin === origin.id}
                   onClick={() => setSelectedOrigin(origin.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-md transition-colors text-xs flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-primary ${
                     selectedOrigin === origin.id
                       ? "bg-muted text-foreground font-medium"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
@@ -196,6 +199,25 @@ export function LibraryClient({ genres, topics, items, canCreate, beginner }: Li
 
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-5 py-6 space-y-6">
+            <details className="rounded-lg border px-3 py-2 lg:hidden">
+              <summary className="cursor-pointer rounded font-medium focus-visible:outline-2 focus-visible:outline-primary">{route("libraryFilters")}</summary>
+              <div className="my-2 grid gap-2 sm:grid-cols-3">
+                {[
+                  { label: route("libraryGenre"), value: selectedGenre, setValue: setSelectedGenre, options: genres },
+                  { label: route("libraryTopic"), value: selectedTopic, setValue: setSelectedTopic, options: topics },
+                  { label: route("libraryOrigin"), value: selectedOrigin, setValue: setSelectedOrigin, options: [
+                    { id: "all", title: t("originAll") }, { id: "original", title: t("original") }, { id: "translated", title: t("translated") },
+                  ] },
+                ].map(({ label, value, setValue, options }) => (
+                  <label key={label} className="grid min-w-0 gap-1 text-sm">
+                    {label}
+                    <select value={value} onChange={event => setValue(event.target.value)} className="w-full min-w-0 rounded border bg-background px-2 py-1 text-foreground focus-visible:outline-2 focus-visible:outline-primary">
+                      {options.map(option => <option key={option.id} value={option.id}>{option.title}</option>)}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            </details>
             {beginner ? (
               <section className="space-y-2">
                 <h1 className="text-2xl font-bold">{route("reading.title")}</h1>
@@ -228,7 +250,7 @@ export function LibraryClient({ genres, topics, items, canCreate, beginner }: Li
                       <span className="text-base mt-0.5 shrink-0">{item.genreMeta.icon}</span>
                     )}
                     <div className="flex-1 min-w-0 space-y-0.5">
-                      <div className="flex items-baseline gap-2">
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                         <h3 className="font-medium text-sm group-hover:text-primary transition-colors truncate">
                           {item.title}
                         </h3>

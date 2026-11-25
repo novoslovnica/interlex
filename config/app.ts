@@ -1,4 +1,4 @@
-export const APP_VERSION = "4.4"
+export const APP_VERSION = "4.5"
 
 export interface ChangelogEntry {
   version: string
@@ -86,6 +86,20 @@ export const CHANGELOG: ChangelogEntry[] = [
       { isv: "Zvukove sootvětnosti i put dlja početnikov s kartočkami i tekstami A1–A2", ru: "Таблица звуковых соответствий и маршрут для новичка с карточками и текстами A1–A2" },
       { isv: "Sufiksy odnosnyh pridavnikov i prěgled kvaliteta slovnika", ru: "Разметка суффиксов относительных прилагательных и отчёт о качестве словаря" },
       { isv: "Ispravleno prokrųčanje medijateky i ulěpšeno upravjanje s klaviatury", ru: "Исправлена прокрутка медиатеки и улучшена клавиатурная навигация" },
+    ],
+  },
+  {
+    version: "4.5",
+    date: "2026-11-25",
+    title: "Učenje i čitanje / Учёба и чтение",
+    titleIsv: "Učenje i čitanje",
+    features: [
+      { isv: "Kratka i polna kartočki slova, tablica prěvodov dlja izbranogo značenja i osobne zamětky", ru: "Краткая и полная карточки слова, таблица переводов выбранного значения и личные заметки" },
+      { isv: "Upražnjenja iz sklonjenja imennikov i nastojęćego vrěmene glagolov, test slovnogo zapasa A1–B1", ru: "Тренажёры склонения существительных и настоящего времени глаголов, тест словарного запаса A1–B1" },
+      { isv: "Razpis povtorjenij na sedm dnjev i kartočki A1 dlja pečęti", ru: "Расписание повторений на семь дней и печатные карточки A1" },
+      { isv: "Slovnikove podskazky i označanje težkih slov v tekstah A1–A2", ru: "Словарные подсказки и подсветка сложных слов в текстах A1–A2" },
+      { isv: "Prěgled lažnyh prijateljev za medžuslovjansky i russky, ulěpšeno upravjanje s klaviatury", ru: "Ложные друзья для межславянского и русского, улучшения клавиатурной навигации" },
+      { isv: "Eksport slovnika v CSV i StarDict, števec statistiky dlja drugyh sajtov", ru: "Экспорт словаря в CSV и StarDict, счётчик статистики для других сайтов" },
     ],
   },
 ]

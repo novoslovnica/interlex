@@ -38,6 +38,16 @@ const fakeAnalyzer: FormAnalyzer = {
 
 describe("lookupInDb", () => {
     beforeEach(() => resetLookupIndex())
+    it("skips fuzzy and partial matches in exact-only reading mode", async () => {
+        const fuzzy = await lookupInDb(dictionary(), "pisatu", ["en"], noAnalyzer, true)
+        expect(fuzzy.entries).toEqual([])
+        const partial: FormAnalyzer = {
+            analyzeWord: async () => ({ wordSlug: "voda-NOUN", isPartialMatch: true }),
+        }
+        const result = await lookupInDb(dictionary(), "vodu", ["en"], partial, true)
+        expect(result.entries).toEqual([])
+    })
+
     it("finds the exact word with translations in the requested languages, verified first", async () => {
         const r = await lookupInDb(dictionary(), "voda", ["ru", "en"], noAnalyzer)
         expect(r.via).toBe("exact")
