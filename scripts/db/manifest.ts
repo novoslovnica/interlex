@@ -118,6 +118,8 @@ export const MANIFEST: ManifestEntry[] = [
     { path: "scripts/db/2026-11-25-link-reviewed-corpus-forms.ts", db: "corpus", kind: "data", dryRun: true, noBackup: true, note: "привязка проверенных словоформ к черновикам после их создания, старые строки сохраняются в журнале запуска" },
     { path: "scripts/db/2026-11-26-stage-corpus-drafts.ts", db: "interlex", kind: "data", dryRun: true, note: "новые черновики лексем по проверенным корпусным контекстам" },
     { path: "scripts/db/2026-11-26-review-corpus-wordforms.ts", db: "corpus", kind: "data", dryRun: true, noBackup: true, note: "сверенные словоформы, новые черновики и иностранные цитаты, старые строки сохраняются в журнале запуска" },
+    { path: "scripts/db/2026-11-26-stage-corpus-drafts-02.ts", db: "interlex", kind: "data", dryRun: true, note: "черновики из сверенных контекстов после синхронизации с продом" },
+    { path: "scripts/db/2026-11-26-review-corpus-wordforms-02.ts", db: "corpus", kind: "data", dryRun: true, noBackup: true, note: "сверка изменившихся групп, словоформ и технических обозначений с сохранением прежних строк в журнале" },
     { path: "scripts/db/import-new-isv-wikipedia.ts", db: "corpus", kind: "repeatable", dryRun: true, heavy: true, note: "добавляет новые статьи Википедии после контрольного ID, сохраняет существующую разметку" },
     {
         path: "scripts/db/analyze-homonym-duplicates.ts",
